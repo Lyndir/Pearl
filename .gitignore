@@ -1,0 +1,7 @@
+# OS-Specific junk.
+.DS_Store
+
+# Xcode IDE
+/*.xcodeproj/*
+!/*.xcodeproj/*.pbxproj
+/build

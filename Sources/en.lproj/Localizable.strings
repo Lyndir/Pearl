@@ -1,0 +1,11 @@
+// Fonts
+"font.size.small"                       = "18";
+"font.size.normal"                      = "34";
+"font.size.large"                       = "48";
+"font.family.default"                   = "Marker Felt";
+"font.family.fixed"                     = "American Typewriter";
+
+// Global Config
+"config.direction"                      = "ltr";
+"config.song.random"                    = "Shuffle";
+"config.song.off"                       = "Off";

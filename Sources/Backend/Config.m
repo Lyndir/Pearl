@@ -22,27 +22,6 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#define dFontSize           NSStringFromSelector(@selector(fontSize))
-#define dLargeFontSize      NSStringFromSelector(@selector(largeFontSize))
-#define dSmallFontSize      NSStringFromSelector(@selector(smallFontSize))
-#define dFixedFontName      NSStringFromSelector(@selector(fixedFontName))
-#define dFontName           NSStringFromSelector(@selector(fontName))
-
-#define dShadeColor         NSStringFromSelector(@selector(shadeColor))
-#define dTransitionDuration NSStringFromSelector(@selector(transitionDuration))
-
-#define dSoundFx            NSStringFromSelector(@selector(soundFx))
-#define dVoice              NSStringFromSelector(@selector(voice))
-#define dVibration          NSStringFromSelector(@selector(vibration))
-#define dVisualFx           NSStringFromSelector(@selector(visualFx))
-
-#define dTracks             NSStringFromSelector(@selector(tracks))
-#define dTrackNames         NSStringFromSelector(@selector(trackNames))
-#define dCurrentTrack       NSStringFromSelector(@selector(currentTrack))
-
-#define dScore              NSStringFromSelector(@selector(score))
-#define dTopScoreHistory    NSStringFromSelector(@selector(topScoreHistory))
-
 #import "AbstractAppDelegate.h"
 #import "Resettable.h"
 
@@ -75,52 +54,52 @@
 
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.normal", @"34") intValue]], dFontSize,
+                                      [NSLocalizedString(@"font.size.normal", @"34") intValue]], cFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.large", @"48") intValue]],  dLargeFontSize,
+                                      [NSLocalizedString(@"font.size.large", @"48") intValue]],  cLargeFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.small", @"18") intValue]],  dSmallFontSize,
+                                      [NSLocalizedString(@"font.size.small", @"18") intValue]],  cSmallFontSize,
                                      NSLocalizedString(@"font.family.default",
-                                                       @"Marker Felt"),                          dFontName,
+                                                       @"Marker Felt"),                          cFontName,
                                      NSLocalizedString(@"font.family.fixed",
-                                                       @"American Typewriter"),                  dFixedFontName,
+                                                       @"American Typewriter"),                  cFixedFontName,
                                      
-                                     [NSNumber numberWithLong:       0x332222cc],                dShadeColor,
-                                     [NSNumber numberWithFloat:      0.5f],                      dTransitionDuration,
+                                     [NSNumber numberWithLong:       0x332222cc],                cShadeColor,
+                                     [NSNumber numberWithFloat:      0.5f],                      cTransitionDuration,
                                 
-                                     [NSNumber numberWithBool:       YES],                       dSoundFx,
-                                     [NSNumber numberWithBool:       NO],                        dVoice,
-                                     [NSNumber numberWithBool:       YES],                       dVibration,
-                                     [NSNumber numberWithBool:       YES],                       dVisualFx,
+                                     [NSNumber numberWithBool:       YES],                       cSoundFx,
+                                     [NSNumber numberWithBool:       NO],                        cVoice,
+                                     [NSNumber numberWithBool:       YES],                       cVibration,
+                                     [NSNumber numberWithBool:       YES],                       cVisualFx,
                                 
                                      [NSArray arrayWithObjects:
                                       @"random",
                                       @"",
-                                      nil],                                                      dTracks,
+                                      nil],                                                      cTracks,
                                      [NSArray arrayWithObjects:
                                       NSLocalizedString(@"config.song.random", @"Shuffle"),
                                       NSLocalizedString(@"config.song.off", @"Off"),
-                                      nil],                                                      dTrackNames,
-                                     @"random",                                                  dCurrentTrack,
+                                      nil],                                                      cTrackNames,
+                                     @"random",                                                  cCurrentTrack,
                                 
-                                     [NSNumber numberWithInteger:    0],                         dScore,
-                                     [NSDictionary dictionary],                                  dTopScoreHistory,
+                                     [NSNumber numberWithInteger:    0],                         cScore,
+                                     [NSDictionary dictionary],                                  cTopScoreHistory,
 
                                      nil]];
     
     updateTriggers  = [[NSArray alloc] initWithObjects:
-                       dLargeFontSize,
-                       dSmallFontSize,
-                       dFontSize,
-                       dFontName,
-                       dFixedFontName,
-                       dSoundFx,
-                       dVoice,
-                       dVibration,
-                       dVisualFx,
-                       dTracks,
-                       dTrackNames,
-                       dCurrentTrack,
+                       cLargeFontSize,
+                       cSmallFontSize,
+                       cFontSize,
+                       cFontName,
+                       cFixedFontName,
+                       cSoundFx,
+                       cVoice,
+                       cVibration,
+                       cVisualFx,
+                       cTracks,
+                       cTrackNames,
+                       cCurrentTrack,
                        nil
                        ];
     resetTriggers   = [[NSDictionary alloc] init];
@@ -141,7 +120,7 @@
     
     static Config *configInstance;
     if(!configInstance)
-        configInstance = [[Config alloc] init];
+        configInstance = [[self alloc] init];
     
     return configInstance;
 }

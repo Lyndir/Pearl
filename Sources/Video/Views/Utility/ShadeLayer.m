@@ -39,17 +39,37 @@
     
     color = ccc([[Config get].shadeColor longValue]);
     
+    NSUInteger oldFontSize = [MenuItemFont fontSize];
+    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    MenuItem *back     = [MenuItemFont itemFromString:@"   <   "
+                                               target:self
+                                             selector:@selector(back:)];
+    [MenuItemFont setFontSize:oldFontSize];
+    
+    backMenu = [[Menu menuWithItems:back, nil] retain];
+    [backMenu setPosition:ccp([[Config get].fontSize unsignedIntValue],
+                              [[Config get].fontSize unsignedIntValue])];
+    [backMenu alignItemsHorizontally];
+    [self addChild:backMenu];
+    
     return self;
+}
+
+
+- (void)back:(CocosNode *)sender {
+    
+    [[AbstractAppDelegate get] popLayer];
 }
 
 
 -(void) onEnter {
         
-    CGSize winSize = [Director sharedDirector].winSize;
-    [self setPosition:ccp((pushed? -1: 1) * winSize.width, 0)];
+    [self setPosition:ccp((pushed? -1: 1) * self.contentSize.width, 0)];
 
     [self stopAllActions];
 
+    backMenu.visible = ![[AbstractAppDelegate get] isLastLayerShowing];
+    
     [super onEnter];
     
     [self runAction:[Sequence actions:
@@ -66,17 +86,16 @@
 }
 
 
--(void) dismissAsPush:(BOOL)_pushed {
+-(void) dismissAsPush:(BOOL)isPushed {
 
     [self stopAllActions];
     
-    pushed = _pushed;
+    pushed = isPushed;
     
-    CGSize winSize = [Director sharedDirector].winSize;
     [self runAction:[Sequence actions:
                      [EaseSineIn actionWithAction:
                       [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                                        position:ccp((pushed? -1: 1) * winSize.width, 0)]],
+                                        position:ccp((pushed? -1: 1) * self.contentSize.width, 0)]],
                      [CallFunc actionWithTarget:self selector:@selector(gone)],
                      [Remove action],
                      nil]];

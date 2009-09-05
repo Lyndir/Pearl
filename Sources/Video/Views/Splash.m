@@ -74,7 +74,7 @@
     
     [super onEnter];
     
-    [self performSelector:@selector(switchScene) withObject:nil afterDelay:1];
+    [self performSelector:@selector(switchScene) withObject:nil afterDelay:2];
 }
 
 

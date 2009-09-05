@@ -105,7 +105,8 @@ void IndicateInSpaceOf(CGPoint point, CocosNode *node) {
     
     ++indicatorPosition;
     indicatorPoints[indicatorPosition % INDICATORS] = point;
-    indicatorSpaces[indicatorPosition % INDICATORS] = node;
+    [indicatorSpaces[indicatorPosition % INDICATORS] release];
+    indicatorSpaces[indicatorPosition % INDICATORS] = [node retain];
     for (NSUInteger i = 0; i <= indicatorPosition; ++i)
         if (i < indicatorPosition - INDICATORS)
             indicatorColors[i % INDICATORS] = ccc(0x000000ff);
@@ -161,6 +162,7 @@ void DrawPoints(const CGPoint* points, const ccColor4B* colors, const NSUInteger
     }
     
     // Draw.
+    glPointSize(4);
     glDrawArrays(GL_POINTS, 0, n);
     
     // Reset data source.
@@ -286,4 +288,18 @@ void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color,
         glDisableClientState(GL_VERTEX_ARRAY);
     if(!cWasEnabled)
         glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to) {
+    
+    CGPoint scissorFrom = [inNode convertToWindowSpace:from];
+    CGPoint scissorTo = [inNode convertToWindowSpace:to];
+    
+    //if ([Director sharedDirector].deviceOrientation == CCDeviceOrientationPortrait ||
+    //    [Director sharedDirector].deviceOrientation == CCDeviceOrientationPortraitUpsideDown)
+        glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
+                  ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));
+    //else
+    //    glScissor(MIN(scissorFrom.y, scissorTo.y), MIN(scissorFrom.x, scissorTo.x),
+    //              ABS(scissorTo.y - scissorFrom.y), ABS(scissorTo.x - scissorFrom.x));
 }

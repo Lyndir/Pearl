@@ -22,6 +22,27 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#define cFontSize           NSStringFromSelector(@selector(fontSize))
+#define cLargeFontSize      NSStringFromSelector(@selector(largeFontSize))
+#define cSmallFontSize      NSStringFromSelector(@selector(smallFontSize))
+#define cFixedFontName      NSStringFromSelector(@selector(fixedFontName))
+#define cFontName           NSStringFromSelector(@selector(fontName))
+
+#define cShadeColor         NSStringFromSelector(@selector(shadeColor))
+#define cTransitionDuration NSStringFromSelector(@selector(transitionDuration))
+
+#define cSoundFx            NSStringFromSelector(@selector(soundFx))
+#define cVoice              NSStringFromSelector(@selector(voice))
+#define cVibration          NSStringFromSelector(@selector(vibration))
+#define cVisualFx           NSStringFromSelector(@selector(visualFx))
+
+#define cTracks             NSStringFromSelector(@selector(tracks))
+#define cTrackNames         NSStringFromSelector(@selector(trackNames))
+#define cCurrentTrack       NSStringFromSelector(@selector(currentTrack))
+
+#define cScore              NSStringFromSelector(@selector(score))
+#define cTopScoreHistory    NSStringFromSelector(@selector(topScoreHistory))
+
 
 @interface Config : NSObject {
 

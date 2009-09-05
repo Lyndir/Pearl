@@ -22,6 +22,7 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "AbstractAppDelegate.h"
 #import "MenuLayer.h"
 #import "MenuItemSpacer.h"
 #import "AudioController.h"
@@ -126,7 +127,7 @@
 }
 
 
--(void) reset {
+- (void)reset {
     
     if(menu) {
         [menu removeAllChildrenWithCleanup:YES];
@@ -156,7 +157,7 @@
 }
 
 
--(void) dealloc {
+- (void)dealloc {
     
     [menu release];
     menu = nil;

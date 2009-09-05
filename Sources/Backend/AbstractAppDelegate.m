@@ -50,7 +50,7 @@
     [window makeKeyAndVisible];
 
 	// Director and OpenGL Setup.
-    [Director useFastDirector];
+    //[Director useFastDirector];
 #if TARGET_IPHONE_SIMULATOR
     [[Director sharedDirector] setPixelFormat:kRGBA8];
 #else
@@ -75,8 +75,7 @@
     
     // Build the game scene.
     uiLayer = [[UILayer alloc] init];
-    DebugLayer *debugLayer = [DebugLayer node];
-    [uiLayer addChild:debugLayer z:99];
+    [uiLayer addChild:[DebugLayer get] z:99];
 	
     // Start the background music.
     [[AudioController get] playTrack:[Config get].currentTrack];
@@ -157,12 +156,21 @@
 
     [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:NO];
     [menuLayers removeLastObject];
-    if([menuLayers count])
+    if([self isAnyLayerShowing])
         [uiLayer addChild:[menuLayers lastObject]];
     else
         [self poppedAll];
 }
 
+- (BOOL)isLastLayerShowing {
+    
+    return [menuLayers count] == 1;
+}
+
+- (BOOL)isAnyLayerShowing {
+    
+    return [menuLayers count];
+}
 
 - (void)poppedAll {
     

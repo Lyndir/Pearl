@@ -27,6 +27,15 @@
 
 @implementation DebugLayer
 
++ (DebugLayer *)get {
+    
+    static DebugLayer *debugLayer = nil;
+    if (debugLayer == nil)
+        debugLayer = [self new];
+    
+    return debugLayer;
+}
+
 - (void)draw {
     
     DrawIndicators();

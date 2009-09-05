@@ -49,7 +49,7 @@ cccf(const float r, const float g, const float b, const float a)
 /**
  * GL types
  */
-typedef struct _Vertex {
+typedef struct Vertex {
 	CGPoint p;
     ccColor4B c;
 } Vertex;
@@ -99,3 +99,6 @@ void DrawLines(const CGPoint* points, const ccColor4B* colors, const NSUInteger 
 void DrawBoxFrom(const CGPoint from, const CGPoint to, const ccColor4B fromColor, const ccColor4B toColor);
 
 void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color, const CGFloat width);
+
+/** Apply glScissor for the given coordinates in the given node's space. */
+void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to);

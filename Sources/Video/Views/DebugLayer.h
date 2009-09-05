@@ -27,4 +27,6 @@
 
 }
 
++ (DebugLayer *)get;
+
 @end

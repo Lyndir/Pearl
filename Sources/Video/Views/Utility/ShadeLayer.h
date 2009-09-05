@@ -27,10 +27,11 @@
 
 @interface ShadeLayer : FancyLayer {
     
-    BOOL pushed;
+    BOOL            pushed;
+    Menu            *backMenu;
 }
 
--(void) dismissAsPush:(BOOL)_pushed;
+-(void) dismissAsPush:(BOOL)isPushed;
 
 -(void) ready;
 -(void) gone;

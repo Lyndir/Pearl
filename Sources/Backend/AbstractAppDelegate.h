@@ -47,6 +47,8 @@
 - (void)updateConfig;
 - (void)pushLayer:(ShadeLayer *)layer;
 - (void)popAllLayers;
+- (BOOL)isLastLayerShowing;
+- (BOOL)isAnyLayerShowing;
 - (void)popLayer;
 - (void)poppedAll;
 - (void)cleanup;

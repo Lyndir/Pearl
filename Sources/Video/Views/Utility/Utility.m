@@ -295,11 +295,6 @@ void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to) {
     CGPoint scissorFrom = [inNode convertToWindowSpace:from];
     CGPoint scissorTo = [inNode convertToWindowSpace:to];
     
-    //if ([Director sharedDirector].deviceOrientation == CCDeviceOrientationPortrait ||
-    //    [Director sharedDirector].deviceOrientation == CCDeviceOrientationPortraitUpsideDown)
-        glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
-                  ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));
-    //else
-    //    glScissor(MIN(scissorFrom.y, scissorTo.y), MIN(scissorFrom.x, scissorTo.x),
-    //              ABS(scissorTo.y - scissorFrom.y), ABS(scissorTo.x - scissorFrom.x));
+    glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
+              ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));
 }

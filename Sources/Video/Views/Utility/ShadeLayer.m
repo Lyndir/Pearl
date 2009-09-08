@@ -37,7 +37,7 @@
     
     pushed = NO;
     
-    color = ccc([[Config get].shadeColor longValue]);
+    color = ccc4l([[Config get].shadeColor longValue]);
     
     NSUInteger oldFontSize = [MenuItemFont fontSize];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];

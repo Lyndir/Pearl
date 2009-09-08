@@ -25,21 +25,36 @@
 #import "Resettable.h"
 #import "ShadeLayer.h"
 
+@class MenuLayer;
+
+@protocol MenuDelegate
+
+- (void)didEnter:(MenuLayer *)menuLayer;
+- (void)didLoad:(MenuLayer *)menuLayer;
+
+@end
+
 
 @interface MenuLayer : ShadeLayer <Resettable> {
 
 @private
-    NSArray                             *items;
-    Menu                                *menu;
-    MenuItem                            *logo;
+    NSArray                                         *items;
+    Menu                                            *menu;
+    MenuItem                                        *logo;
+    id<MenuDelegate>                                delegate;
 }
 
-@property (readwrite, copy) NSArray     *items;
-@property (readwrite, retain) MenuItem  *logo;
+@property (readonly) Menu                           *menu;
+@property (readwrite, copy) NSArray                 *items;
+@property (readwrite, retain) MenuItem              *logo;
+@property (readwrite, retain) id<MenuDelegate>      delegate;
 
-+(MenuLayer *) menuWithItems:(MenuItem *)menuItems, ...;
-+(MenuLayer *) menuWithItemsFromArray:(NSArray *)menuItems;
++(MenuLayer *) menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                          items:(MenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
++(MenuLayer *) menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                 itemsFromArray:(NSArray *)menuItems;
 
--(id) initWithItemsFromArray:(NSArray *)menuItems;
+-(id) initWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+        itemsFromArray:(NSArray *)menuItems;
 
 @end

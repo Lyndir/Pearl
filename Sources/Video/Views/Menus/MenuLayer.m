@@ -55,10 +55,10 @@
 
 @implementation MenuLayer
 
-@synthesize logo, items;
+@synthesize menu, items, logo, delegate;
 
 
-+ (MenuLayer *)menuWithItems:(MenuItem *)menuItem, ... {
++ (MenuLayer *)menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
     
     if (!menuItem)
         [NSException raise:NSInvalidArgumentException
@@ -74,22 +74,26 @@
         [menuItems addObject:item];
     va_end(list);
     
-    return [self menuWithItemsFromArray:[menuItems autorelease]];
+    return [self menuWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
 }
 
 
-+ (MenuLayer *)menuWithItemsFromArray:(NSArray *)menuItems {
++ (MenuLayer *)menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
     
-    return [[[self alloc] initWithItemsFromArray:menuItems] autorelease];
+    return [[[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems] autorelease];
 }
 
 
-- (id)initWithItemsFromArray:(NSArray *)menuItems {
+- (id)initWithDelegate:(id<MenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
     
     if(!(self = [super init]))
         return nil;
 
-    self.items = menuItems;
+    self.delegate   = aDelegate;
+    logo            = [aLogo retain];
+    items           = [menuItems retain];
+    
+    [self reset];
     
     return self;
 }
@@ -118,6 +122,8 @@
     [self load];
     
     [super onEnter];
+
+    [delegate didEnter:self];
 }
 
 
@@ -154,6 +160,8 @@
         [menu addChild:item];
     [menu alignItemsVertically];
     [self addChild:menu];
+    
+    [delegate didLoad:self];
 }
 
 

@@ -23,29 +23,6 @@
 //
 
 
-// Helpers
-static inline ccColor4B
-ccc(const long c)
-{
-    GLubyte *components = (GLubyte *)&c;
-	ccColor4B cc = { components[3], components[2], components[1], components[0] };
-    
-	return cc;
-}
-
-static inline ccColor4F
-cccf(const float r, const float g, const float b, const float a)
-{
-    ccColor4F c;
-    c.r = r;
-    c.g = g;
-    c.b = b;
-    c.a = a;
-
-	return c;
-}
-
-
 /**
  * GL types
  */
@@ -54,30 +31,22 @@ typedef struct Vertex {
     ccColor4B c;
 } Vertex;
 
-static inline Vertex
-ivc(const CGPoint p, const long c)
+//! helper macro that creates an ccColor4B type from a long
+static inline ccColor4B
+ccc4l(const long color)
 {
-    Vertex v;
-    v.p = p; //cpvtoiv(p);
-    v.c = ccc(c);
-	return v;
+    GLubyte *components = (GLubyte *)&color;
+	ccColor4B c = { components[3], components[2], components[1], components[0] };
+	return c;
 }
 
-static inline Vertex
-ivcf(const CGFloat x, const CGFloat y, const long c)
+//! helper macro that creates an ccColor4F type
+static inline ccColor4F
+ccc4f(const float r, const float g, const float b, const float a)
 {
-    Vertex v;
-    v.p = ccp(x, y);
-    v.c = ccc(c);
-	return v;
+	ccColor4F c = { r, g, b, a };
+	return c;
 }
-
-typedef struct _glPoint {
-    CGPoint p;
-    GLfloat s;
-    ccColor4B c;
-} glPoint;
-
 
 NSString* RPad(const NSString* string, NSUInteger l);
 NSString* LPad(const NSString* string, NSUInteger l);

@@ -15,21 +15,19 @@
  */
 
 //
-//  ShadeTo.h
+//  MenuItemTitle.h
 //  iLibs
 //
-//  Created by Maarten Billemont on 22/11/08.
-//  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
+//  Created by Maarten Billemont on 08/09/09.
+//  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
 
 
-@interface ShadeTo : IntervalAction {
+@interface MenuItemTitle : MenuItemFont {
 
-    long startCol, endCol;
 }
 
-+(ShadeTo *) actionWithDuration:(ccTime)_duration color:(long)_color;
--(ShadeTo *) initWithDuration:(ccTime)_duration color:(long)_color;
+- (id)initWithString:(NSString *)title;
 
 @end

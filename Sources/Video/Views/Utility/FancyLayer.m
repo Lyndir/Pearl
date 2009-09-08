@@ -37,7 +37,7 @@
     
     outerPadding    = 5.0f;
     padding         = 50.0f;
-    color           = ccc(0x000000dd);
+    color           = ccc4(0x00, 0x00, 0x00, 0xdd);
     innerRatio      = 1.0f / padding;
     
     vertexBuffer    = 0;
@@ -158,21 +158,9 @@
 }
 
 
-- (GLubyte)r {
+- (ccColor3B)color {
     
-    return color.r;
-}
-
-
-- (GLubyte)g {
-    
-    return color.g;
-}
-
-
-- (GLubyte)b {
-    
-    return color.b;
+    return ccc3(color.r, color.g, color.b);
 }
 
 
@@ -182,11 +170,11 @@
 }
 
 
-- (void)setRGB:(GLubyte)r :(GLubyte)g :(GLubyte)b {
+- (void)setColor:(ccColor3B)newColor {
     
-    color.r = r;
-    color.g = g;
-    color.b = b;
+    color.r = newColor.r;
+    color.g = newColor.g;
+    color.b = newColor.b;
     
     [self update];
 }

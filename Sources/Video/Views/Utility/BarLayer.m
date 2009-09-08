@@ -35,7 +35,7 @@
     
     if(!(self = [super initWithFile:@"bar.png"]))
         return self;
-        
+
     color           = aColor;
     renderColor     = aColor;
     showPosition    = ccpAdd(_showPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
@@ -109,10 +109,10 @@
 
     if(important) {
         renderColor = 0x993333FF;
-        [messageLabel setRGB:0xCC :0x33 :0x33];
+        [messageLabel setColor:ccc3(0xCC, 0x33, 0x33)];
     } else {
         renderColor = color;
-        [messageLabel setRGB:0xFF :0xFF :0xFF];
+        [messageLabel setColor:ccc3(0xFF, 0xFF, 0xFF)];
     }
     
     [messageLabel setPosition:ccp(self.contentSize.width / 2, fontSize / 2 + 2)];
@@ -165,7 +165,7 @@
     [super draw];
     
     CGPoint to = ccp(self.contentSize.width, self.contentSize.height);
-    DrawLinesTo(ccp(0, self.contentSize.height), &to, 1, ccc(0xFFFFFFFF), 1);
+    DrawLinesTo(ccp(0, self.contentSize.height), &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0xFF), 1);
 }
 
 -(void) dealloc {

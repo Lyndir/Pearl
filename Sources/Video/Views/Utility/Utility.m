@@ -109,7 +109,7 @@ void IndicateInSpaceOf(CGPoint point, CocosNode *node) {
     indicatorSpaces[indicatorPosition % INDICATORS] = [node retain];
     for (NSUInteger i = 0; i <= indicatorPosition; ++i)
         if (i < indicatorPosition - INDICATORS)
-            indicatorColors[i % INDICATORS] = ccc(0x000000ff);
+            indicatorColors[i % INDICATORS] = ccc4(0x00, 0x00, 0x00, 0xff);
         else {
             NSUInteger shade = 0xff - (0xff * (indicatorPosition - i) / INDICATORS);
             indicatorColors[i % INDICATORS].r = shade;

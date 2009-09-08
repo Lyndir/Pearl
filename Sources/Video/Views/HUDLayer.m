@@ -24,7 +24,6 @@
 
 #import "HUDLayer.h"
 #import "AbstractAppDelegate.h"
-#import "ShadeTo.h"
 
 @implementation HUDLayer
 
@@ -58,16 +57,16 @@
     [scoreSprite setVisible:YES];
     
     if(score) {
-        long scoreColor;
+        ccColor3B scoreColor;
         if(score > 0)
-            scoreColor = 0x99FF99ff;
+            scoreColor = ccc3(0x99, 0xFF, 0x99);
         else if(score < 0)
-            scoreColor = 0xFF9999ff;
+            scoreColor = ccc3(0xFF, 0x99, 0x99);
         
         [scoreCount runAction:[Sequence actions:
-                              [ShadeTo actionWithDuration:0.5f color:scoreColor],
-                              [ShadeTo actionWithDuration:0.5f color:0xFFFFFFff],
-                              nil]];
+                                    [TintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
+                                    [TintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
+                                    nil]];
     }
 }
 
@@ -118,16 +117,6 @@
         [self removeChild:messageBar cleanup:YES];
     
     [self updateHudWithScore:0];
-}
-
--(void) onExit {
-    
-    [super onExit];
-}
-
--(void) dismiss {
-    
-    [super dismiss];
 }
 
 

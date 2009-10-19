@@ -11,6 +11,11 @@
 
 @implementation MenuItemTitle
 
++ (MenuItemTitle *)titleWithString:(NSString *)title {
+    
+    return [[[self alloc] initWithString:title] autorelease];
+}
+
 - (id)initWithString:(NSString *)title {
     
     NSString *oldFontName = [MenuItemFont fontName];

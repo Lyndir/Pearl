@@ -43,11 +43,8 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     
 	// Init the window.
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
-	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
 	[window setUserInteractionEnabled:YES];
-	[window setMultipleTouchEnabled:YES];
-    [window makeKeyAndVisible];
 
 	// Director and OpenGL Setup.
     //[Director useFastDirector];
@@ -57,8 +54,7 @@
     //[[Director sharedDirector] setDisplayFPS:YES];
 #endif
 	[[Director sharedDirector] setDeviceOrientation:CCDeviceOrientationLandscapeLeft];
-	[[Director sharedDirector] attachInWindow:window];
-	[[Director sharedDirector] setDepthTest:NO];
+    [[Director sharedDirector] attachInView:window];
     
     // Random seed with timestamp.
     srandom(time(nil));
@@ -68,11 +64,6 @@
     [MenuItemFont setFontName:[Config get].fontName];
     menuLayers = [[NSMutableArray alloc] initWithCapacity:3];
 
-	// Build the splash scene.
-    Scene *splashScene = [Scene node];
-    Sprite *splash = [Splash node];
-    [splashScene addChild:splash];
-    
     // Build the game scene.
     uiLayer = [[UILayer alloc] init];
     [uiLayer addChild:[DebugLayer get] z:99];
@@ -84,23 +75,6 @@
     [self hideHud];
     
     [self prepareUi];
-
-    // Show the splash screen, this starts the main loop in the current thread.
-    [[Director sharedDirector] pushScene:splashScene];
-    do {
-#if ! TARGET_IPHONE_SIMULATOR
-        @try {
-#endif
-            [[Director sharedDirector] startAnimation];
-#if ! TARGET_IPHONE_SIMULATOR
-        }
-        @catch (NSException * e) {
-            NSLog(@"=== Exception Occurred! ===");
-            NSLog(@"Name: %@; Reason: %@; Context: %@.\n", [e name], [e reason], [e userInfo]);
-            [hudLayer message:[e reason] duration:5 isImportant:YES];
-        }
-#endif
-    } while ([[Director sharedDirector] runningScene]);
 }
 
 
@@ -147,12 +121,12 @@
 }
 
 
--(void) updateConfig {
+- (void)didUpdateConfigForKey:(SEL)configKey {
 
 }
 
 
--(void) popLayer {
+- (void)popLayer {
 
     [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:NO];
     [menuLayers removeLastObject];
@@ -190,8 +164,13 @@
     [self popLayer];
 }
 
+- (void)pushLayer: (ShadeLayer *)layer {
+    
+    [self pushLayer:layer hidden:NO];
+}
 
--(void) pushLayer: (ShadeLayer *)layer {
+
+- (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden {
     
     if(layer.parent) {
         if (![menuLayers containsObject:layer])
@@ -210,6 +189,7 @@
     [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:YES];
     [menuLayers addObject:layer];
     [uiLayer addChild:layer];
+    layer.visible = !hidden;
 }
 
 

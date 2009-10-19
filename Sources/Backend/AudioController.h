@@ -34,16 +34,16 @@
     NSMutableDictionary         *effects;
 }
 
--(void) clickEffect;
--(void) playTrack:(NSString *)track;
--(void) startNextTrack;
+- (void)clickEffect;
+- (void)playTrack:(NSString *)track;
+- (void)startNextTrack;
 - (void)playEffectNamed:(NSString *)bundleName;
 
-+(SystemSoundID) loadEffectWithName:(NSString *)bundleRef;
-+(void) vibrate;
-+(void) playEffect:(SystemSoundID)soundFileObject;
-+(void) disposeEffect:(SystemSoundID)soundFileObject;
++ (SystemSoundID)loadEffectWithName:(NSString *)bundleRef;
++ (void)vibrate;
++ (void)playEffect:(SystemSoundID)soundFileObject;
++ (void)disposeEffect:(SystemSoundID)soundFileObject;
 
-+(AudioController *) get;
++ (AudioController *)get;
 
 @end

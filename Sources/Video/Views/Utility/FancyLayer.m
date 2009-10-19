@@ -27,7 +27,7 @@
 
 @implementation FancyLayer
 
-@synthesize contentSize, outerPadding, padding, innerRatio;
+@synthesize contentSize, outerPadding, padding, innerRatio, colorGradient;
 
 
 - (id)init {
@@ -35,10 +35,11 @@
     if(!(self = [super init]))
         return self;
     
-    outerPadding    = 5.0f;
-    padding         = 50.0f;
+    outerPadding    = margin(5.0f, 5.0f, 5.0f, 5.0f);
+    padding         = margin(50.0f, 50.0f, 50.0f, 50.0f);
     color           = ccc4(0x00, 0x00, 0x00, 0xdd);
-    innerRatio      = 1.0f / padding;
+    colorGradient   = ccc4(0x00, 0x00, 0x00, 0xdd);
+    innerRatio      = 1.0f / 50.0f;
     
     vertexBuffer    = 0;
     colorBuffer     = 0;
@@ -95,30 +96,31 @@
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = contentSize.width / 2;                        // 1
+    vertices[0]     = contentSize.width / 2;                            // 1
     vertices[1]     = contentSize.height / 2;
-    vertices[2]     = outerPadding + inner;                         // 2
-    vertices[3]     = outerPadding;
-    vertices[4]     = outerPadding;                                 // 3
-    vertices[5]     = outerPadding + inner;
-    vertices[6]     = outerPadding;                                 // 4
-    vertices[7]     = contentSize.height - outerPadding - inner;
-    vertices[8]     = outerPadding + inner;                         // 5
-    vertices[9]     = contentSize.height - outerPadding;
-    vertices[10]    = contentSize.width - outerPadding - inner;     // 6
-    vertices[11]    = contentSize.height - outerPadding;
-    vertices[12]    = contentSize.width - outerPadding;             // 7
-    vertices[13]    = contentSize.height - outerPadding - inner;
-    vertices[14]    = contentSize.width - outerPadding;             // 8
-    vertices[15]    = outerPadding + inner;
-    vertices[16]    = contentSize.width - outerPadding - inner;     // 9
-    vertices[17]    = outerPadding;
-    vertices[18]    = outerPadding + inner;                         // 10
-    vertices[19]    = outerPadding;
+    vertices[2]     = outerPadding.left + inner;                        // 2
+    vertices[3]     = outerPadding.bottom;
+    vertices[4]     = outerPadding.left;                                // 3
+    vertices[5]     = outerPadding.bottom + inner;
+    vertices[6]     = outerPadding.left;                                // 4
+    vertices[7]     = contentSize.height - outerPadding.top - inner;
+    vertices[8]     = outerPadding.left + inner;                        // 5
+    vertices[9]     = contentSize.height - outerPadding.top;
+    vertices[10]    = contentSize.width - outerPadding.right - inner;   // 6
+    vertices[11]    = contentSize.height - outerPadding.top;
+    vertices[12]    = contentSize.width - outerPadding.right;           // 7
+    vertices[13]    = contentSize.height - outerPadding.top - inner;
+    vertices[14]    = contentSize.width - outerPadding.right;           // 8
+    vertices[15]    = outerPadding.bottom + inner;
+    vertices[16]    = contentSize.width - outerPadding.right - inner;   // 9
+    vertices[17]    = outerPadding.bottom;
+    vertices[18]    = outerPadding.left + inner;                        // 10
+    vertices[19]    = outerPadding.bottom;
 
     ccColor4B *colors = malloc(sizeof(ccColor4B) * 10);
-    for(int i = 0; i < 10; ++i)
-        colors[i] = color;
+    colors[1] = colors[2] = colors[7] = colors[8] = colors[9] = color;
+    colors[3] = colors[4] = colors[5] = colors[6] = colorGradient;
+    colors[0] = color;
     
     // Push our window data into VBOs.
     glDeleteBuffers(1, &vertexBuffer);
@@ -137,16 +139,16 @@
 }
 
 
--(void) setOuterPadding:(float)_outerPadding {
+-(void) setOuterPadding:(Margin)anOuterPadding {
     
-    outerPadding = _outerPadding;
+    outerPadding = anOuterPadding;
     [self update];
 }
 
 
--(void) setPadding:(float)_padding {
+-(void) setPadding:(Margin)aPadding {
     
-    padding = _padding;
+    padding = aPadding;
     [self update];
 }
 
@@ -175,6 +177,8 @@
     color.r = newColor.r;
     color.g = newColor.g;
     color.b = newColor.b;
+
+    self.colorGradient = color;
     
     [self update];
 }
@@ -202,7 +206,9 @@
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     // Draw our background.
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
+    glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
     
     // Reset data source.
 	glDisableClientState(GL_VERTEX_ARRAY);

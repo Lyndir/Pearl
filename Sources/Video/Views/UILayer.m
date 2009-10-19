@@ -31,6 +31,7 @@
 @interface UILayer (Private)
 
 -(void) resetMessage:(NSString *)msg;
+- (void)popMessageQueue:(ccTime)dt;
 
 @end
 
@@ -40,7 +41,7 @@
 
 -(id) init {
     
-	if (!(self = [super init]))
+	if (!(self = [super initWithColor:ccc4(0xff, 0x00, 0x00, 0xff)]))
 		return self;
     
     // Build internal structures.

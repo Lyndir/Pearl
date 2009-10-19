@@ -44,8 +44,9 @@
 - (void)prepareUi;
 - (void)hudMenuPressed;
 
-- (void)updateConfig;
+- (void)didUpdateConfigForKey:(SEL)configKey;
 - (void)pushLayer:(ShadeLayer *)layer;
+- (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden;
 - (void)popAllLayers;
 - (BOOL)isLastLayerShowing;
 - (BOOL)isAnyLayerShowing;

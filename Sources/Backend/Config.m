@@ -24,6 +24,7 @@
 
 #import "AbstractAppDelegate.h"
 #import "Resettable.h"
+#import "NSString_SEL.h"
 
 
 @interface Config ()
@@ -41,7 +42,7 @@
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
 @dynamic tracks, trackNames, currentTrack;
-@dynamic score, topScoreHistory;
+@dynamic score;
 
 #pragma mark Internal
 
@@ -54,54 +55,38 @@
 
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.normal", @"34") intValue]], cFontSize,
+                                      [NSLocalizedString(@"font.size.normal", @"34") intValue]],    cFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.large", @"48") intValue]],  cLargeFontSize,
+                                      [NSLocalizedString(@"font.size.large", @"48") intValue]],     cLargeFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.small", @"18") intValue]],  cSmallFontSize,
+                                      [NSLocalizedString(@"font.size.small", @"18") intValue]],     cSmallFontSize,
                                      NSLocalizedString(@"font.family.default",
-                                                       @"Marker Felt"),                          cFontName,
+                                                       @"Marker Felt"),                             cFontName,
                                      NSLocalizedString(@"font.family.fixed",
-                                                       @"American Typewriter"),                  cFixedFontName,
+                                                       @"American Typewriter"),                     cFixedFontName,
                                      
-                                     [NSNumber numberWithLong:       0x332222cc],                cShadeColor,
-                                     [NSNumber numberWithFloat:      0.5f],                      cTransitionDuration,
+                                     [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
+                                     [NSNumber numberWithFloat:      0.5f],                         cTransitionDuration,
                                 
-                                     [NSNumber numberWithBool:       YES],                       cSoundFx,
-                                     [NSNumber numberWithBool:       NO],                        cVoice,
-                                     [NSNumber numberWithBool:       YES],                       cVibration,
-                                     [NSNumber numberWithBool:       YES],                       cVisualFx,
+                                     [NSNumber numberWithBool:       YES],                          cSoundFx,
+                                     [NSNumber numberWithBool:       NO],                           cVoice,
+                                     [NSNumber numberWithBool:       YES],                          cVibration,
+                                     [NSNumber numberWithBool:       YES],                          cVisualFx,
                                 
                                      [NSArray arrayWithObjects:
                                       @"random",
                                       @"",
-                                      nil],                                                      cTracks,
+                                      nil],                                                         cTracks,
                                      [NSArray arrayWithObjects:
                                       NSLocalizedString(@"config.song.random", @"Shuffle"),
                                       NSLocalizedString(@"config.song.off", @"Off"),
-                                      nil],                                                      cTrackNames,
-                                     @"random",                                                  cCurrentTrack,
-                                
-                                     [NSNumber numberWithInteger:    0],                         cScore,
-                                     [NSDictionary dictionary],                                  cTopScoreHistory,
+                                      nil],                                                         cTrackNames,
+                                     @"random",                                                     cCurrentTrack,
+
+                                     [NSNumber numberWithInteger:    0],                            cScore,
 
                                      nil]];
     
-    updateTriggers  = [[NSArray alloc] initWithObjects:
-                       cLargeFontSize,
-                       cSmallFontSize,
-                       cFontSize,
-                       cFontName,
-                       cFixedFontName,
-                       cSoundFx,
-                       cVoice,
-                       cVibration,
-                       cVisualFx,
-                       cTracks,
-                       cTrackNames,
-                       cCurrentTrack,
-                       nil
-                       ];
     resetTriggers   = [[NSDictionary alloc] init];
     
     return self;
@@ -138,24 +123,15 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     
     NSString *selector = NSStringFromSelector(anInvocation.selector);
-    if ([selector hasPrefix:@"set"]) {
-        NSRange firstChar, rest;
-        firstChar.location  = 3;
-        firstChar.length    = 1;
-        rest.location       = 4;
-        rest.length         = selector.length - 5;
-        
-        selector = [NSString stringWithFormat:@"%@%@",
-                    [[selector substringWithRange:firstChar] lowercaseString],
-                    [selector substringWithRange:rest]];
+    if ([selector isSetter]) {
+        selector = [selector setterToGetter];
         
         id value;
         [anInvocation getArgument:&value atIndex:2];
         
         [self.defaults setObject:value forKey:selector];
         
-        if ([updateTriggers containsObject:selector])
-            [[AbstractAppDelegate get] updateConfig];
+        [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
         NSString *resetTriggerKey = [resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<Resettable>) [[AbstractAppDelegate get] valueForKey:resetTriggerKey] reset];
@@ -170,7 +146,7 @@
 
 #pragma mark Audio
 
--(NSString *) randomTrack {
+- (NSString *)randomTrack {
     
     NSArray *tracks = self.tracks;
     
@@ -179,12 +155,25 @@
     
     return [tracks objectAtIndex:random() % ([tracks count] - 2)];
 }
--(void) setCurrentTrack: (NSString *)currentTrack {
+- (NSNumber *)music {
+
+    return [NSNumber numberWithBool:[self.currentTrack length]];
+}
+- (void)setMusic:(NSNumber *)aMusic {
+    
+    if ([aMusic boolValue] && ![self.music boolValue])
+        [[AudioController get] playTrack:@"random"];
+    if (![aMusic boolValue] && [self.music boolValue])
+        [[AudioController get] playTrack:nil];
+}
+- (void)setCurrentTrack: (NSString *)currentTrack {
     
     if(currentTrack == nil)
         currentTrack = @"";
     
-    [[AbstractAppDelegate get] updateConfig];
+    [self.defaults setObject:currentTrack forKey:cCurrentTrack];
+    
+    [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack)];
 }
 -(NSString *) currentTrackName {
     
@@ -210,24 +199,7 @@
 
 -(void) recordScore:(NSInteger)score {
     
-    if(score < 0)
-        score = 0;
-    NSNumber *scoreObject = [NSNumber numberWithInteger:score];
-    
-    // Is this a new top score for today?
-    NSDictionary *topScores = [self topScoreHistory];
-    NSString *today = [[self today] description];
-    NSNumber *topScoreToday = [topScores objectForKey:today];
-    
-    if(topScoreToday == nil || [topScoreToday integerValue] < score) {
-        // Record top score.
-        NSMutableDictionary *newTopScores = [topScores mutableCopy];
-        [newTopScores setObject: scoreObject forKey:today];
-        [self setTopScoreHistory:newTopScores];
-        [newTopScores release];
-    }
-    
-    self.score = scoreObject;
+    self.score = [NSNumber numberWithInteger:score];
 }
 
 

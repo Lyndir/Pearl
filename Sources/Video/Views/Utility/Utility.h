@@ -31,12 +31,29 @@ typedef struct Vertex {
     ccColor4B c;
 } Vertex;
 
+//! helper macro that converts a ccColor4B into a ccColor3B by dropping the alpha value.
+static inline ccColor3B
+ccc4to3(const ccColor4B color)
+{
+	ccColor3B c = { color.r, color.g, color.b };
+	return c;
+}
+
 //! helper macro that creates an ccColor4B type from a long
 static inline ccColor4B
 ccc4l(const long color)
 {
     GLubyte *components = (GLubyte *)&color;
 	ccColor4B c = { components[3], components[2], components[1], components[0] };
+	return c;
+}
+
+//! helper macro that creates an ccColor3B type from a long
+static inline ccColor3B
+ccc3l(const long color)
+{
+    GLubyte *components = (GLubyte *)&color;
+	ccColor3B c = { components[3], components[2], components[1] };
 	return c;
 }
 
@@ -47,6 +64,26 @@ ccc4f(const float r, const float g, const float b, const float a)
 	ccColor4F c = { r, g, b, a };
 	return c;
 }
+
+//! Comparisons
+static inline int
+max(const int a, const int b)
+{
+    if (a > b)
+        return a;
+    return b;
+}
+static inline int
+min(const int a, const int b)
+{
+    if (a < b)
+        return a;
+    return b;
+}
+
+CGPoint CGPointFromSize(const CGSize size);
+CGSize CGSizeFromPoint(const CGPoint point);
+CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size);
 
 NSString* RPad(const NSString* string, NSUInteger l);
 NSString* LPad(const NSString* string, NSUInteger l);

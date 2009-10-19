@@ -32,12 +32,18 @@
 
 @end
 
+@interface ClickMenu (Private)
+
+-(MenuItem *) itemForTouch: (UITouch *) touch;
+
+@end
+
 @implementation ClickMenu
 
 -(BOOL) ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
 
     BOOL itemTouched = [super ccTouchBegan:touch withEvent:event];
-    if (itemTouched)
+    if (itemTouched && [self itemForTouch:touch].isEnabled)
         [[AudioController get] clickEffect];
     
     return itemTouched;
@@ -58,7 +64,7 @@
 @synthesize menu, items, logo, delegate;
 
 
-+ (MenuLayer *)menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
     
     if (!menuItem)
         [NSException raise:NSInvalidArgumentException
@@ -78,20 +84,20 @@
 }
 
 
-+ (MenuLayer *)menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
     
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems] autorelease];
 }
 
 
-- (id)initWithDelegate:(id<MenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
     
     if(!(self = [super init]))
         return nil;
 
-    self.delegate   = aDelegate;
-    logo            = [aLogo retain];
-    items           = [menuItems retain];
+    self.delegate       = aDelegate;
+    logo                = [aLogo retain];
+    items               = [menuItems retain];
     
     [self reset];
     
@@ -121,9 +127,16 @@
     
     [self load];
     
+    if (layoutDirty) {
+        if ([delegate respondsToSelector:@selector(didLayout:)])
+            [delegate didLayout:self];
+        layoutDirty = NO;
+    }
+    
     [super onEnter];
 
-    [delegate didEnter:self];
+    if ([delegate respondsToSelector:@selector(didEnter:)])
+        [delegate didEnter:self];
 }
 
 
@@ -161,7 +174,10 @@
     [menu alignItemsVertically];
     [self addChild:menu];
     
-    [delegate didLoad:self];
+    if ([delegate respondsToSelector:@selector(didLoad:)])
+        [delegate didLoad:self];
+    
+    layoutDirty = YES;
 }
 
 

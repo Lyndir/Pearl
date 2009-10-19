@@ -25,6 +25,13 @@
 #import "HUDLayer.h"
 #import "AbstractAppDelegate.h"
 
+
+@interface HUDLayer ()
+
+- (void) menuButton:(id) caller;
+
+@end
+
 @implementation HUDLayer
 
 

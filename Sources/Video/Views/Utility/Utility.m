@@ -25,6 +25,24 @@
 
 
 
+CGPoint CGPointFromSize(const CGSize size) {
+    
+    return CGPointMake(size.width, size.height);
+}
+
+
+CGSize CGSizeFromPoint(const CGPoint point) {
+    
+    return CGSizeMake(point.x, point.y);
+}
+
+
+CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size) {
+    
+    return CGRectMake(point.x, point.y, size.width, size.height);
+}
+
+
 NSString* RPad(const NSString* string, const NSUInteger l) {
     
     NSMutableString *newString = [string mutableCopy];
@@ -292,8 +310,8 @@ void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color,
 
 void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to) {
     
-    CGPoint scissorFrom = [inNode convertToWindowSpace:from];
-    CGPoint scissorTo = [inNode convertToWindowSpace:to];
+    CGPoint scissorFrom = [inNode convertToWorldSpace:from];
+    CGPoint scissorTo = [inNode convertToWorldSpace:to];
     
     glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
               ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));

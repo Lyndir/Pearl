@@ -47,6 +47,12 @@
 @end
 
 
+@interface Splash ()
+
+- (void)switchScene;
+
+@end
+
 
 @implementation Splash
 
@@ -74,7 +80,8 @@
     
     [super onEnter];
     
-    [self performSelector:@selector(switchScene) withObject:nil afterDelay:2];
+    [self switchScene];
+    //[self performSelector:@selector(switchScene) withObject:nil afterDelay:2];
 }
 
 

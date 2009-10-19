@@ -29,8 +29,18 @@
 
 @protocol MenuDelegate
 
-- (void)didEnter:(MenuLayer *)menuLayer;
+/** Occurs after the Menu layer was (re)constructed. */
+@optional
 - (void)didLoad:(MenuLayer *)menuLayer;
+/** Occurs after the Menu layer has been layed out according to the default layout
+ *
+ * It happens before -didEnter, and only if necessary.
+ */
+@optional
+- (void)didLayout:(MenuLayer *)menuLayer;
+/** Occurs after the MenuLayer has entered the view hierarchy. */
+@optional
+- (void)didEnter:(MenuLayer *)menuLayer;
 
 @end
 
@@ -38,23 +48,26 @@
 @interface MenuLayer : ShadeLayer <Resettable> {
 
 @private
-    NSArray                                         *items;
-    Menu                                            *menu;
-    MenuItem                                        *logo;
-    id<MenuDelegate>                                delegate;
+    NSArray                                                 *items;
+    Menu                                                    *menu;
+    MenuItem                                                *logo;
+    
+    BOOL                                                    layoutDirty;
+    
+    id<NSObject, MenuDelegate>                              delegate;
 }
 
-@property (readonly) Menu                           *menu;
-@property (readwrite, copy) NSArray                 *items;
-@property (readwrite, retain) MenuItem              *logo;
-@property (readwrite, retain) id<MenuDelegate>      delegate;
+@property (readonly) Menu                                   *menu;
+@property (readwrite, copy) NSArray                         *items;
+@property (readwrite, retain) MenuItem                      *logo;
+@property (readwrite, retain) id<NSObject, MenuDelegate>    delegate;
 
-+(MenuLayer *) menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                           items:(MenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
-+(MenuLayer *) menuWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                  itemsFromArray:(NSArray *)menuItems;
 
--(id) initWithDelegate:(id<MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
         itemsFromArray:(NSArray *)menuItems;
 
 @end

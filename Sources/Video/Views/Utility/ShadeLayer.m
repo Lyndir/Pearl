@@ -27,7 +27,16 @@
 #import "Remove.h"
 
 
+@interface ShadeLayer ()
+
+- (void)_back:(CocosNode *)sender;
+
+@end
+
+
 @implementation ShadeLayer
+
+@synthesize fadeNextEntry, background, backgroundOffset;
 
 
 -(id) init {
@@ -35,20 +44,24 @@
     if(!(self = [super init]))
         return self;
     
-    pushed = NO;
+    pushed                  = NO;
+    fadeNextEntry           = YES;
+    backgroundOffset        = CGPointZero;
     
-    color = ccc4l([[Config get].shadeColor longValue]);
+    ccColor4B shadeColor    = ccc4l([[Config get].shadeColor longValue]);
+    self.opacity            = shadeColor.a;
+    self.color              = ccc4to3(shadeColor);
     
-    NSUInteger oldFontSize = [MenuItemFont fontSize];
+    NSUInteger oldFontSize  = [MenuItemFont fontSize];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    MenuItem *back     = [MenuItemFont itemFromString:@"   <   "
-                                               target:self
-                                             selector:@selector(back:)];
+    MenuItem *back          = [MenuItemFont itemFromString:@"   <   "
+                                                    target:self
+                                                  selector:@selector(_back:)];
+    [self setBackButtonTarget:self selector:@selector(back)];
     [MenuItemFont setFontSize:oldFontSize];
     
     backMenu = [[Menu menuWithItems:back, nil] retain];
-    [backMenu setPosition:ccp([[Config get].fontSize unsignedIntValue],
-                              [[Config get].fontSize unsignedIntValue])];
+    backMenu.position = ccp([[Config get].fontSize unsignedIntValue], [[Config get].fontSize unsignedIntValue]);
     [backMenu alignItemsHorizontally];
     [self addChild:backMenu];
     
@@ -56,8 +69,25 @@
 }
 
 
-- (void)back:(CocosNode *)sender {
+- (void) setBackButtonTarget:(id)target selector:(SEL)selector {
+
+    [backInvocation release];
+    backInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+    [backInvocation setTarget:target];
+    [backInvocation setSelector:selector];
+    [backInvocation retain];
+}
+
+
+- (void)_back:(CocosNode *)sender {
     
+    [backInvocation invoke];
+}
+
+
+- (void)back {
+    
+    [[AudioController get] clickEffect];
     [[AbstractAppDelegate get] popLayer];
 }
 
@@ -68,10 +98,17 @@
 
     [self stopAllActions];
 
-    backMenu.visible = ![[AbstractAppDelegate get] isLastLayerShowing];
+    if ([[AbstractAppDelegate get] isLastLayerShowing]) {
+        if ([backMenu parent])
+            [self removeChild:backMenu cleanup:YES];
+    } else {
+        if (![backMenu parent])
+            [self addChild:backMenu];
+    }
     
     [super onEnter];
     
+    self.visible = YES;
     [self runAction:[Sequence actions:
                      [EaseSineOut actionWithAction:
                       [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue] position:CGPointZero]],
@@ -105,6 +142,33 @@
 -(void) gone {
     
     // Override me.
+}
+
+
+- (void)setBackground:(CocosNode *)aBackground {
+    
+    [background release];
+    [self removeChild:background cleanup:YES];
+    
+    background = [aBackground retain];
+    [self addChild:background z:-1];
+    
+    // Automatically set correct position of texture nodes.
+    if (CGPointEqualToPoint(background.position, CGPointZero) && [background isKindOfClass:[Sprite class]])
+        backgroundOffset = ccp(background.contentSize.width / 2, background.contentSize.height / 2);
+}
+
+
+- (void)setPosition:(CGPoint)newPosition {
+    
+    super.position      = newPosition;
+    
+    background.position = ccp(backgroundOffset.x - newPosition.x, backgroundOffset.y - newPosition.y);
+    if ([background conformsToProtocol:@protocol(CocosNodeRGBA)] && fadeNextEntry)
+        ((id<CocosNodeRGBA>)background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
+    
+    if (CGPointEqualToPoint(newPosition, CGPointZero))
+        fadeNextEntry   = YES;
 }
 
 

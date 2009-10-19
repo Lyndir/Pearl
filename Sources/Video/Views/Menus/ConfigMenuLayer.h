@@ -15,21 +15,28 @@
  */
 
 //
-//  MenuItemTitle.h
+//  ConfigMenuLayer.h
 //  iLibs
 //
-//  Created by Maarten Billemont on 08/09/09.
+//  Created by Maarten Billemont on 29/09/09.
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "MenuLayer.h"
 
 
-@interface MenuItemTitle : MenuItemFont {
+@interface ConfigMenuLayer : MenuLayer {
 
+    NSDictionary                        *itemConfigs;
 }
 
-+ (MenuItemTitle *)titleWithString:(NSString *)title;
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                             settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (id)initWithString:(NSString *)title;
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                    settingsFromArray:(NSArray *)settings;
+
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+     settingsFromArray:(NSArray *)settings;
 
 @end

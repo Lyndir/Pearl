@@ -23,7 +23,7 @@
 //
 
 
-@interface UILayer : Layer {
+@interface UILayer : ColorLayer {
     
     Label                                   *messageLabel;
     NSMutableArray                          *messageQueue, *callbackQueue;

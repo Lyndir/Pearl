@@ -1,0 +1,139 @@
+/*
+ *   Copyright 2009, Maarten Billemont
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+//
+//  ConfigMenuLayer.m
+//  iLibs
+//
+//  Created by Maarten Billemont on 29/09/09.
+//  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
+//
+
+#import "ConfigMenuLayer.h"
+#import "MenuItemTitle.h"
+#import "NSString_SEL.h"
+
+
+@interface ConfigMenuLayer ()
+
+- (void)tapped:(id)sender;
+
+@end
+
+@implementation ConfigMenuLayer
+
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                             settings:(SEL)setting, ... {
+
+    if (!setting)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"No menu items passed."];
+    
+    va_list list;
+    va_start(list, setting);
+    SEL item;
+    NSMutableArray *settings = [[NSMutableArray alloc] initWithCapacity:5];
+    [settings addObject:NSStringFromSelector(setting)];
+    
+    while ((item = va_arg(list, SEL)))
+        [settings addObject:NSStringFromSelector(item)];
+    va_end(list);
+    
+    return [self menuWithDelegate:aDelegate logo:aLogo settingsFromArray:[settings autorelease]];
+}
+
+
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+                    settingsFromArray:(NSArray *)settings {
+
+    return [[[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings] autorelease];
+}
+
+
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+     settingsFromArray:(NSArray *)settings {
+
+    NSMutableDictionary *mutableItemConfigs = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
+    itemConfigs = mutableItemConfigs;
+    
+    NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
+    for (NSString *setting in settings) {
+        // Build the setting's toggle button.
+        MenuItemToggle *menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:) items:
+                                    [MenuItemFont itemFromString:@"On"],
+                                    [MenuItemFont itemFromString:@"Off"],
+                                    nil];
+
+        [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
+        [menuItems addObject:[MenuItemTitle titleWithString:setting]];
+        [menuItems addObject:menuItem];
+    }
+    
+    return [super initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+}
+
+
+- (void)onEnter {
+    
+    [super onEnter];
+    
+    for (NSValue *itemValue in [itemConfigs allKeys]) {
+        NSString *selector = [itemConfigs objectForKey:itemValue];
+        MenuItemToggle *item = [itemValue pointerValue];
+
+        id t = [Config get];
+        SEL s = NSSelectorFromString(selector);
+        
+        // Search t's class hierarchy for the selector.
+        NSMethodSignature *sig = [t methodSignatureForSelector:s];
+        if (!sig)
+            [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+        
+        // Build an invocation for the signature & invoke it.
+        NSNumber *ret;
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+        [invocation setSelector:s];
+        [invocation invokeWithTarget:t];
+        [invocation getReturnValue:&ret];
+        
+        item.selectedIndex = [ret boolValue]? 0: 1;
+    }
+}
+
+
+- (void)tapped:(MenuItemToggle *)toggle {
+    
+    NSLog(@"%d tapped.", toggle.selectedIndex);
+    
+    id t = [Config get];
+    SEL s = NSSelectorFromString([[itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);
+    void* toggledValue = [NSNumber numberWithBool:toggle.selectedIndex == 0? YES: NO];
+    
+    // Search t's class hierarchy for the selector.
+    NSMethodSignature *sig = [t methodSignatureForSelector:s];
+    if (!sig)
+        [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+    
+    // Build an invocation for the signature & invoke it.
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+    [invocation setTarget:t];
+    [invocation setSelector:s];
+    [invocation setArgument:&toggledValue atIndex:2];
+    [invocation invoke];
+}
+
+
+@end

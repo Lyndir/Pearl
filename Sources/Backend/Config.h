@@ -32,6 +32,7 @@
 #define cTransitionDuration NSStringFromSelector(@selector(transitionDuration))
 
 #define cSoundFx            NSStringFromSelector(@selector(soundFx))
+#define cMusic              NSStringFromSelector(@selector(music))
 #define cVoice              NSStringFromSelector(@selector(voice))
 #define cVibration          NSStringFromSelector(@selector(vibration))
 #define cVisualFx           NSStringFromSelector(@selector(visualFx))
@@ -41,14 +42,11 @@
 #define cCurrentTrack       NSStringFromSelector(@selector(currentTrack))
 
 #define cScore              NSStringFromSelector(@selector(score))
-#define cTopScoreHistory    NSStringFromSelector(@selector(topScoreHistory))
-
 
 @interface Config : NSObject {
 
     NSUserDefaults                                      *defaults;
 
-    NSArray                                             *updateTriggers;
     NSDictionary                                        *resetTriggers;
 }
 
@@ -69,12 +67,12 @@
 @property (nonatomic, readonly) NSString                *currentTrackName;
 
 @property (nonatomic, readwrite, retain) NSNumber       *soundFx;
+@property (nonatomic, readwrite, retain) NSNumber       *music;
 @property (nonatomic, readwrite, retain) NSNumber       *voice;
 @property (nonatomic, readwrite, retain) NSNumber       *vibration;
 @property (nonatomic, readwrite, retain) NSNumber       *visualFx;
 
 @property (nonatomic, readwrite, retain) NSNumber       *score;
-@property (nonatomic, readwrite, retain) NSDictionary   *topScoreHistory;
 
 +(Config *)                                             get;
 

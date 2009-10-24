@@ -310,8 +310,8 @@ void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color,
 
 void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to) {
     
-    CGPoint scissorFrom = [inNode convertToWorldSpace:from];
-    CGPoint scissorTo = [inNode convertToWorldSpace:to];
+    CGPoint scissorFrom = [inNode convertToWindowSpace:from];
+    CGPoint scissorTo = [inNode convertToWindowSpace:to];
     
     glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
               ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));

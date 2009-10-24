@@ -29,6 +29,8 @@
 
 @interface ScrollLayer ()
 
+@property (readwrite) CGPoint       scroll;
+
 - (CGPoint)limitPoint:(CGPoint)point;
 
 @end
@@ -36,11 +38,11 @@
 
 @implementation ScrollLayer
 
-@synthesize scrollPerSecond, scrollRatio, scrollableContentSize;
-@synthesize origin, scroll;
+@synthesize scrollPerSecond, scrollRatio, scrollStep, scrollContentDirection, scrollContentSize, delegate;
+@synthesize scroll;
 
 
-- (id)init {
+- (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
 
     if (!(self = [super init]))
         return nil;
@@ -48,6 +50,8 @@
     self.isTouchEnabled     = YES;
     scrollRatio             = ccp(0.0f, 1.0f);
     scrollPerSecond         = kDefaultScrollPerSecond;
+    scrollContentSize       = contentSize;
+    scrollContentDirection  = direction;
     
     [self schedule:@selector(tick:)];
 
@@ -71,28 +75,44 @@
         return NO;
     
     // Instantly apply remaining scroll & reset it.
-    origin                  = [self limitPoint:ccpAdd(origin, scroll)];
-    scroll                  = CGPointZero;
+    [self scrollBy:CGPointZero];
 
     // Remember where the dragging began.
     dragFromPosition        = self.position;
     dragFromPoint           = [self.parent convertTouchToNodeSpace:touch];
     
-    return YES;
+    return isTouching = YES;
 }
 
 
 - (void)ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event {
     
     CGPoint dragToPoint     = [self.parent convertTouchToNodeSpace:touch];
-    scroll                  = ccp((dragToPoint.x - dragFromPoint.x) * scrollRatio.x,
+    self.scroll             = ccp((dragToPoint.x - dragFromPoint.x) * scrollRatio.x,
                                   (dragToPoint.y - dragFromPoint.y) * scrollRatio.y);
 }
 
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
     
-    scroll              = ccpSub([self limitPoint:ccpAdd(origin, scroll)], origin);
+    // Limit the target of the scroll (origin + scroll).
+    self.scroll             = ccpSub([self limitPoint:ccpAdd(origin, scroll)], origin);
+    
+    // Apply the scroll step.
+    self.scroll             = ccp(roundf(scroll.x / scrollStep.x) * scrollStep.x,
+                                  roundf(scroll.y / scrollStep.y) * scrollStep.y);
+    
+    isTouching              = NO;
+}
+
+
+- (void)setScrollStep:(CGPoint)aScrollStep {
+    
+    // Scroll steps < 1 make no sense.
+    aScrollStep.x           = fmaxf(aScrollStep.x, 1);
+    aScrollStep.y           = fmaxf(aScrollStep.y, 1);
+    
+    scrollStep              = aScrollStep;
 }
 
 
@@ -104,14 +124,55 @@
 
 - (CGPoint)limitPoint:(CGPoint)point {
 
-    CGPoint maxScroll       = ccp(fmaxf(scrollableContentSize.width  - self.contentSize.width,  0),
-                                  fmaxf(scrollableContentSize.height - self.contentSize.height, 0));
-    CGPoint minScroll       = CGPointZero;
+    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
+                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint limitPoint      = point;
     
-    CGPoint limitPoint      = ccp(fminf(fmaxf(point.x, minScroll.x), maxScroll.x),
-                                  fminf(fmaxf(point.y, minScroll.y), maxScroll.y));
+    if (scrollContentDirection & ScrollContentDirectionBottomToTop)
+        limitPoint.y        = fminf(fmaxf(point.y, -scrollBound.y), 0);
+    else if (scrollContentDirection & ScrollContentDirectionTopToBottom)
+        limitPoint.y        = fminf(fmaxf(point.y, 0), scrollBound.y);
+    else
+        limitPoint.y        = 0;
+
+    if (scrollContentDirection & ScrollContentDirectionLeftToRight)
+        limitPoint.x        = fminf(fmaxf(point.x, -scrollBound.x), 0);
+    else if (scrollContentDirection & ScrollContentDirectionRightToLeft)
+        limitPoint.x        = fminf(fmaxf(point.x, 0), scrollBound.x);
+    else
+        limitPoint.x        = 0;
     
     return limitPoint;
+}
+
+
+- (void)setScroll:(CGPoint)newScroll {
+    
+    if (CGPointEqualToPoint(newScroll, scroll))
+        return;
+    
+    scroll = newScroll;
+    if ([delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
+        [delegate didUpdateScrollWithOrigin:origin to:newScroll];
+}
+
+
+- (void)scrollBy:(CGPoint)scrollOffset {
+    
+    if ([self isScrollValid:scrollOffset]) {
+        origin              = [self limitPoint:ccpAdd(origin, scroll)];
+        self.scroll         = scrollOffset;
+    } else {
+        origin              = [self limitPoint:ccpAdd(origin, scroll)];
+        self.scroll         = CGPointZero;
+    }
+}
+
+
+- (BOOL)isScrollValid:(CGPoint)scrollOffset {
+    
+    CGPoint target = [self limitPoint:ccpAdd(origin, scroll)];
+    return !CGPointEqualToPoint([self limitPoint:ccpAdd(target, scrollOffset)], target);
 }
 
 
@@ -133,12 +194,14 @@
     
     if (scrollLeftLen <= 1) {
         // We're really close, short cut.
+        if (!isTouching)
+            [self scrollBy:CGPointZero];
         self.position       = scrollTarget;
         return;
     }
 
-    CGPoint scrollStep      = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * scrollPerSecond * dt);
-    self.position           = ccpAdd(self.position, scrollStep);
+    CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * scrollPerSecond * dt);
+    self.position           = ccpAdd(self.position, tickStep);
     [self didUpdateScroll];
 }
 

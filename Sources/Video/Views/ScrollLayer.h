@@ -22,6 +22,19 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+typedef enum ScrollContentDirection {
+    ScrollContentDirectionLeftToRight = 2 << 0,
+    ScrollContentDirectionRightToLeft = 2 << 1,
+    ScrollContentDirectionTopToBottom = 2 << 2,
+    ScrollContentDirectionBottomToTop = 2 << 3,
+} ScrollContentDirection;
+
+@protocol ScrollLayerDelegate
+
+-(void)didUpdateScrollWithOrigin:(CGPoint)origin to:(CGPoint)newScroll;
+
+@end
+
 
 @interface ScrollLayer : Layer {
     
@@ -31,18 +44,28 @@
 
     CGFloat                                     scrollPerSecond;
     CGPoint                                     scrollRatio;
-    CGSize                                      scrollableContentSize;
+    CGPoint                                     scrollStep;
+    ScrollContentDirection                      scrollContentDirection;
+    CGSize                                      scrollContentSize;
 
     CGPoint                                     origin;
     CGPoint                                     scroll;
+    
+    BOOL                                        isTouching;
+    id<NSObject, ScrollLayerDelegate>           delegate;
 }
 
 @property (readwrite) CGFloat                   scrollPerSecond;
 @property (readwrite) CGPoint                   scrollRatio;
-@property (readwrite) CGSize                    scrollableContentSize;
+@property (readwrite) CGPoint                   scrollStep;
+@property (readwrite) ScrollContentDirection    scrollContentDirection;
+@property (readwrite) CGSize                    scrollContentSize;
+@property (readwrite, retain) id<NSObject, ScrollLayerDelegate> delegate;
 
-@property (readwrite) CGPoint                   origin;
-@property (readwrite) CGPoint                   scroll;
+- (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
+
+- (void)scrollBy:(CGPoint)scrollOffset;
+- (BOOL)isScrollValid:(CGPoint)scrollOffset;
 
 - (void)didUpdateScroll;
 - (CGRect)visibleRect;

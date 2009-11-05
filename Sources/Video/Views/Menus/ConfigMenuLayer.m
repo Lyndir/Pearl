@@ -35,7 +35,10 @@
 
 @implementation ConfigMenuLayer
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+@synthesize configDelegate;
+
+
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                              settings:(SEL)setting, ... {
 
     if (!setting)
@@ -56,29 +59,45 @@
 }
 
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings {
 
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings] autorelease];
 }
 
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
      settingsFromArray:(NSArray *)settings {
+
+    self.configDelegate = aDelegate;
 
     NSMutableDictionary *mutableItemConfigs = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
     itemConfigs = mutableItemConfigs;
     
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
     for (NSString *setting in settings) {
+        SEL settingSel = NSSelectorFromString(setting);
+        
         // Build the setting's toggle button.
-        MenuItemToggle *menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:) items:
-                                    [MenuItemFont itemFromString:@"On"],
-                                    [MenuItemFont itemFromString:@"Off"],
-                                    nil];
+        MenuItem *menuItem = nil;
+        if (configDelegate && [configDelegate respondsToSelector:@selector(itemForSetting:)])
+            menuItem = [configDelegate itemForSetting:settingSel];
+        if (!menuItem)
+            menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:) items:
+                        [MenuItemFont itemFromString:@"On"],
+                        [MenuItemFont itemFromString:@"Off"],
+                        nil];
+        
+        // Build the setting's label.
+        NSString *label = nil;
+        if (configDelegate && [configDelegate respondsToSelector:@selector(labelForSetting:)])
+            label = [configDelegate labelForSetting:settingSel];
+        if (!label)
+            label = setting;
 
+        // Add the setting to the menu.
         [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
-        [menuItems addObject:[MenuItemTitle titleWithString:setting]];
+        [menuItems addObject:[MenuItemTitle titleWithString:label]];
         [menuItems addObject:menuItem];
     }
     

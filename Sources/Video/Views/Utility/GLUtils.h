@@ -15,7 +15,7 @@
  */
 
 //
-//  Utility.h
+//  GLUtils.h
 //  iLibs
 //
 //  Created by Maarten Billemont on 26/11/08.
@@ -84,14 +84,6 @@ min(const int a, const int b)
 CGPoint CGPointFromSize(const CGSize size);
 CGSize CGSizeFromPoint(const CGPoint point);
 CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size);
-
-NSString* RPad(const NSString* string, NSUInteger l);
-NSString* LPad(const NSString* string, NSUInteger l);
-NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix);
-
-BOOL IsIPod();
-BOOL IsIPhone();
-BOOL IsSimulator();
 
 void IndicateInSpaceOf(CGPoint point, CocosNode *node);
 void DrawIndicators();

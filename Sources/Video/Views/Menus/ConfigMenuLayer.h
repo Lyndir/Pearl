@@ -25,18 +25,34 @@
 #import "MenuLayer.h"
 
 
+@protocol ConfigMenuDelegate
+
+/** Return a string that will be the text label in the UI for the given setting. */
+@optional
+- (NSString *)labelForSetting:(SEL)setting;
+
+/** Return a node that conveys and allows toggling the given setting. */
+@optional
+- (MenuItem *)itemForSetting:(SEL)setting;
+
+@end
+
+
 @interface ConfigMenuLayer : MenuLayer {
 
     NSDictionary                        *itemConfigs;
+    id<NSObject, ConfigMenuDelegate>    configDelegate;
 }
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+@property (readwrite, retain) id<NSObject, ConfigMenuDelegate> configDelegate;
+
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                              settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;
 
 @end

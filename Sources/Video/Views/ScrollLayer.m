@@ -116,6 +116,15 @@
 }
 
 
+- (void)onEnter {
+    
+    [super onEnter];
+    
+    if ([delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
+        [delegate didUpdateScrollWithOrigin:origin to:scroll];
+}
+
+
 - (void)ccTouchCancelled:(UITouch *)touch withEvent:(UIEvent *)event {
 
     [self ccTouchEnded:touch withEvent:event];

@@ -1,19 +1,3 @@
-/*
- *   Copyright 2009, Maarten Billemont
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
-
 //
 //  Logger.m
 //  iLibs
@@ -24,18 +8,17 @@
 
 #import "Logger.h"
 
-
 @interface LogMessage : NSObject
 {
 @private
-    NSString                    *message;
-    NSDate                      *occurance;
-    LogLevel                    level;
+    NSString                            *message;
+    NSDate                              *occurance;
+    LogLevel                            level;
 }
 
-@property (readonly) NSString   *message;
-@property (readonly) NSDate     *occurance;
-@property (readonly) LogLevel   level;
+@property (readwrite, copy) NSString    *message;
+@property (readwrite, copy) NSDate      *occurance;
+@property (readwrite) LogLevel          level;
 
 + (LogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
 
@@ -46,6 +29,20 @@
 @implementation LogMessage
 
 @synthesize message, occurance, level;
+
+static NSDateFormatter *logDateFormatter = nil;
+
++ (void)initialize {
+
+    [super initialize];
+    
+    if (!logDateFormatter) {
+        logDateFormatter = [NSDateFormatter new];
+        [logDateFormatter setDateStyle:NSDateFormatterNoStyle];
+        [logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    }
+}
+
 
 + (LogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel {
 
@@ -58,14 +55,39 @@
     if (!(self = [super init]))
         return nil;
     
-    message     = [aMessage copy];
-    occurance   = [anOccurance copy];
-    level       = aLevel;
+    self.message    = aMessage;
+    self.occurance  = anOccurance;
+    self.level      = aLevel;
     
-    if (!occurance)
-        occurance = [NSDate new];
+    if (!self.occurance)
+        self.occurance = [NSDate date];
     
     return self;
+}
+
+- (NSString *)description {
+    
+    NSString *levelString = nil;
+    switch (self.level) {
+        case LogLevelDebug:
+            levelString = @"DEBUG";
+            break;
+        case LogLevelInfo:
+            levelString = @"INFO";
+            break;
+        case LogLevelWarn:
+            levelString = @"WARNING";
+            break;
+        case LogLevelError:
+            levelString = @"ERROR";
+            break;
+        default:
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"Formatting a message with a log level that is not understood."];
+    }
+    
+    return [NSString stringWithFormat:@"%@ [%-7@] %@\n",
+            [logDateFormatter stringFromDate:self.occurance], levelString, self.message];
 }
 
 @end
@@ -101,30 +123,8 @@
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     NSMutableString *formattedLog = [NSMutableString new];
-    for (LogMessage *message in messages) {
-        NSString *occurance = [dateFormatter stringFromDate:message.occurance];
-        
-        NSString *level;
-        switch (message.level) {
-            case LogLevelDebug:
-                level = @"DEBUG";
-                break;
-            case LogLevelInfo:
-                level = @"INFO";
-                break;
-            case LogLevelWarn:
-                level = @"WARNING";
-                break;
-            case LogLevelError:
-                level = @"ERROR";
-                break;
-            default:
-                [NSException raise:NSInternalInconsistencyException
-                            format:@"Formatting a message with a log level that is not understood."];
-        }
-        
-        [formattedLog appendFormat:@"%@ [%-7@] %@\n", occurance, level, message.message];
-    }
+    for (LogMessage *message in messages)
+        [formattedLog appendString:[message description]];
     
     [dateFormatter release];
     
@@ -136,11 +136,15 @@
     
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    
+    NSString *messageString = [[NSString alloc] initWithFormat:format arguments:argList];
+    LogMessage *message = [LogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
+    [messageString release];
+    
     va_end(argList);
 
     NSLog(@"%@", message);
-    [messages addObject:[LogMessage messageWithMessage:message at:nil withLevel:aLevel]];
+    [messages addObject:message];
     
     return self;
 }

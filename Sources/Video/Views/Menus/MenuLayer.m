@@ -99,8 +99,6 @@
     logo                = [aLogo retain];
     items               = [menuItems retain];
     
-    [self reset];
-    
     return self;
 }
 

@@ -24,27 +24,49 @@
 
 #import <Foundation/Foundation.h>
 
+/** Levels that determine the importance of logging events. */
 typedef enum LogLevel {
+    /** Inform the developer of certain events and information. */
     LogLevelDebug,
+    /** General notice to the user and developer that something took place. */
     LogLevelInfo,
+    /** Notice that something unexpected happened but was dealt with as best as possible. */
     LogLevelWarn,
+    /** Notice that something went wrong that should be fixed. */
     LogLevelError
 } LogLevel;
 
+/**
+ * The Logger class provides a very simple general purpose Logging framework.
+ *
+ * All logged events are emitted to the system console and stored for later retrieval.
+ * -formatMessages can be used to retrieve all logged events and format them nicely for the user.
+ */
 @interface Logger : NSObject {
 
 @private
     NSMutableArray          *messages;
 }
 
+/** Obtain the shared Logger instance. */
 + (Logger *)get;
 
+/** Obtain the logged events in a formatted string fit for display. */
 - (NSString *)formatMessages;
 
+/** Log a new event on a specified level.
+ *
+ * @andMessage  First argument is a printf(3)-style format string.
+ *              Subsequent nil-terminated arguments are arguments to the format string.
+ */
 - (Logger *)logWithLevel:(LogLevel)aLevel andMessage:(NSString *)format, ...;
+/** Log a new DEBUG-level event. */
 - (Logger *)dbg:(NSString *)format, ...;
+/** Log a new INFO-level event. */
 - (Logger *)inf:(NSString *)format, ...;
+/** Log a new WARNING-level event. */
 - (Logger *)wrn:(NSString *)format, ...;
+/** Log a new ERROR-level event. */
 - (Logger *)err:(NSString *)format, ...;
 
 @end

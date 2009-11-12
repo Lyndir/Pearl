@@ -38,11 +38,11 @@
 
 @synthesize defaults;
 
+@dynamic firstRun;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
 @dynamic tracks, trackNames, currentTrack;
-@dynamic score;
 
 #pragma mark Internal
 
@@ -54,6 +54,8 @@
     self.defaults = [NSUserDefaults standardUserDefaults];
 
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithBool:YES],                                 cFirstRun,
+                                     
                                      [NSNumber numberWithInt:
                                       [NSLocalizedString(@"font.size.normal", @"34") intValue]],    cFontSize,
                                      [NSNumber numberWithInt:
@@ -82,8 +84,6 @@
                                       NSLocalizedString(@"config.song.off", @"Off"),
                                       nil],                                                         cTrackNames,
                                      @"random",                                                     cCurrentTrack,
-
-                                     [NSNumber numberWithInteger:    0],                            cScore,
 
                                      nil]];
     
@@ -192,14 +192,6 @@
     
     long now = (long) [[NSDate date] timeIntervalSince1970];
     return [NSDate dateWithTimeIntervalSince1970:(now / (3600 * 24)) * (3600 * 24)];
-}
-
-
-#pragma mark User Status
-
--(void) recordScore:(NSInteger)score {
-    
-    self.score = [NSNumber numberWithInteger:score];
 }
 
 

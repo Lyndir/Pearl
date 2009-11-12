@@ -212,6 +212,10 @@
     [self cleanup];
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    
+    [Config get].firstRun = [NSNumber numberWithBool:NO];
+}
 
 -(void) cleanup {
     

@@ -32,8 +32,8 @@
     BarLayer            *messageBar;
 }
 
--(void) updateHudWithScore:(int)score;
-
+-(void) updateHudWasGood:(BOOL)wasGood;
+-(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood;
 -(BOOL) hitsHud: (CGPoint)pos;
 
 @end

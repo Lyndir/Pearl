@@ -55,13 +55,14 @@
 
 @interface MenuLayer ()
 
-- (void)load;
+- (void)doLoad;
+- (void)doLayout;
 
 @end
 
 @implementation MenuLayer
 
-@synthesize menu, items, logo, delegate;
+@synthesize menu, items, layout, logo, delegate;
 
 
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
@@ -98,6 +99,7 @@
     self.delegate       = aDelegate;
     logo                = [aLogo retain];
     items               = [menuItems retain];
+    layout              = MenuLayoutVertical;
     
     return self;
 }
@@ -123,7 +125,7 @@
 
 - (void)onEnter {
     
-    [self load];
+    [self doLoad];
     
     if (layoutDirty) {
         if ([delegate respondsToSelector:@selector(didLayout:)])
@@ -153,11 +155,11 @@
         menu = nil;
     }
 
-    [self load];
+    [self doLoad];
 }
 
 
-- (void)load {
+- (void)doLoad {
     
     if (menu)
         return;
@@ -167,15 +169,70 @@
         [menu addChild:logo];
         [menu addChild:[MenuItemSpacer spacerSmall]];
     }
-    for (MenuItem *item in items)
-        [menu addChild:item];
-    [menu alignItemsVertically];
+    
     [self addChild:menu];
+    [self doLayout];
     
     if ([delegate respondsToSelector:@selector(didLoad:)])
         [delegate didLoad:self];
     
     layoutDirty = YES;
+}
+
+- (void)doLayout {
+    
+    switch (layout) {
+        case MenuLayoutVertical: {
+            for (MenuItem *item in items)
+                [menu addChild:item];
+
+            [menu alignItemsVertically];
+            break;
+        }
+
+        case MenuLayoutColumns: {
+            NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
+            NSUInteger r = 0;
+
+            if (logo) {
+                rows[r++] = [NSNumber numberWithUnsignedInt:1];
+                rows[r++] = [NSNumber numberWithUnsignedInt:1];
+            }
+            
+            NSUInteger itemsLeft = [items count], i = 0;
+            if (itemsLeft % 2)
+                [NSException raise:NSInternalInconsistencyException format:@"Item amount must be even for columns layout."];
+            
+            for (; r < 10 && itemsLeft; r += 2) {
+                if (itemsLeft >= 4) {
+                    rows[r + 0] = [NSNumber numberWithUnsignedInt:2];
+                    rows[r + 1] = [NSNumber numberWithUnsignedInt:2];
+                    [menu addChild:[items objectAtIndex:i + 0]];
+                    [menu addChild:[items objectAtIndex:i + 2]];
+                    [menu addChild:[items objectAtIndex:i + 1]];
+                    [menu addChild:[items objectAtIndex:i + 3]];
+                    itemsLeft   -= 4;
+                    i           += 4;
+                } else {
+                    // itemsLeft == 2
+                    rows[r + 0] = [NSNumber numberWithUnsignedInt:1];
+                    rows[r + 1] = [NSNumber numberWithUnsignedInt:1];
+                    [menu addChild:[items objectAtIndex:i + 0]];
+                    [menu addChild:[items objectAtIndex:i + 1]];
+                    itemsLeft   -= 2;
+                    i           += 2;
+                }
+            }
+
+            [menu alignItemsInColumns:
+             rows[0], rows[1], rows[2], rows[3], rows[4],
+             rows[5], rows[6], rows[7], rows[8], rows[9], nil];
+            break;
+        }
+        
+        default:
+            [NSException raise:NSInternalInconsistencyException format:@"Unsupported layout format."];
+    }
 }
 
 

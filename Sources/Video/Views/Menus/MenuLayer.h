@@ -25,6 +25,11 @@
 #import "Resettable.h"
 #import "ShadeLayer.h"
 
+typedef enum MenuLayout {
+    MenuLayoutVertical,
+    MenuLayoutColumns,
+} MenuLayout;
+
 @class MenuLayer;
 
 @protocol MenuDelegate
@@ -52,12 +57,14 @@
     Menu                                                    *menu;
     MenuItem                                                *logo;
     
+    MenuLayout                                              layout;
     BOOL                                                    layoutDirty;
     
     id<NSObject, MenuDelegate>                              delegate;
 }
 
 @property (readonly) Menu                                   *menu;
+@property (readwrite) MenuLayout                            layout;
 @property (readwrite, copy) NSArray                         *items;
 @property (readwrite, retain) MenuItem                      *logo;
 @property (readwrite, retain) id<NSObject, MenuDelegate>    delegate;

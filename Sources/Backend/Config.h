@@ -22,6 +22,8 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#define cFirstRun           NSStringFromSelector(@selector(firstRun))
+
 #define cFontSize           NSStringFromSelector(@selector(fontSize))
 #define cLargeFontSize      NSStringFromSelector(@selector(largeFontSize))
 #define cSmallFontSize      NSStringFromSelector(@selector(smallFontSize))
@@ -41,8 +43,6 @@
 #define cTrackNames         NSStringFromSelector(@selector(trackNames))
 #define cCurrentTrack       NSStringFromSelector(@selector(currentTrack))
 
-#define cScore              NSStringFromSelector(@selector(score))
-
 @interface Config : NSObject {
 
     NSUserDefaults                                      *defaults;
@@ -50,6 +50,7 @@
     NSDictionary                                        *resetTriggers;
 }
 
+@property (nonatomic, readwrite, retain) NSNumber       *firstRun;
 
 @property (nonatomic, readwrite, retain) NSNumber       *fontSize;
 @property (nonatomic, readwrite, retain) NSNumber       *largeFontSize;
@@ -72,10 +73,6 @@
 @property (nonatomic, readwrite, retain) NSNumber       *vibration;
 @property (nonatomic, readwrite, retain) NSNumber       *visualFx;
 
-@property (nonatomic, readwrite, retain) NSNumber       *score;
-
 +(Config *)                                             get;
-
--(void) recordScore:(NSInteger)score;
 
 @end

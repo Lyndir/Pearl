@@ -29,6 +29,7 @@
 #define cSmallFontSize      NSStringFromSelector(@selector(smallFontSize))
 #define cFixedFontName      NSStringFromSelector(@selector(fixedFontName))
 #define cFontName           NSStringFromSelector(@selector(fontName))
+#define cSymbolicFontName   NSStringFromSelector(@selector(symbolicFontName))
 
 #define cShadeColor         NSStringFromSelector(@selector(shadeColor))
 #define cTransitionDuration NSStringFromSelector(@selector(transitionDuration))
@@ -57,6 +58,7 @@
 @property (nonatomic, readwrite, retain) NSNumber       *smallFontSize;
 @property (nonatomic, readwrite, retain) NSString       *fontName;
 @property (nonatomic, readwrite, retain) NSString       *fixedFontName;
+@property (nonatomic, readwrite, retain) NSString       *symbolicFontName;
 
 @property (nonatomic, readwrite, retain) NSNumber       *shadeColor;
 @property (nonatomic, readwrite, retain) NSNumber       *transitionDuration;

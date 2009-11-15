@@ -39,7 +39,7 @@
 @synthesize defaults;
 
 @dynamic firstRun;
-@dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName;
+@dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
 @dynamic tracks, trackNames, currentTrack;
@@ -66,6 +66,8 @@
                                                        @"Marker Felt"),                             cFontName,
                                      NSLocalizedString(@"font.family.fixed",
                                                        @"American Typewriter"),                     cFixedFontName,
+                                     NSLocalizedString(@"font.family.symbolic",
+                                                       @""),                                        cSymbolicFontName,
                                      
                                      [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
                                      [NSNumber numberWithFloat:      0.5f],                         cTransitionDuration,

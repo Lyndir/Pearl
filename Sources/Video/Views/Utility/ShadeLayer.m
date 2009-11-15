@@ -52,16 +52,20 @@
     self.opacity            = shadeColor.a;
     self.color              = ccc4to3(shadeColor);
     
+    NSString *oldFontName   = [MenuItemFont fontName];
     NSUInteger oldFontSize  = [MenuItemFont fontSize];
+    [MenuItemFont setFontName:[Config get].symbolicFontName];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    MenuItem *back          = [MenuItemFont itemFromString:@"   <   "
+    MenuItem *back          = [MenuItemFont itemFromString:@"   ◃   "
                                                     target:self
                                                   selector:@selector(_back:)];
     [self setBackButtonTarget:self selector:@selector(back)];
+    [MenuItemFont setFontName:oldFontName];
     [MenuItemFont setFontSize:oldFontSize];
     
     backMenu = [[Menu menuWithItems:back, nil] retain];
-    backMenu.position = ccp([[Config get].fontSize unsignedIntValue], [[Config get].fontSize unsignedIntValue]);
+    backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
+                            [[Config get].fontSize unsignedIntValue] * 1.5f);
     [backMenu alignItemsHorizontally];
     [self addChild:backMenu];
     

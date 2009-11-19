@@ -42,17 +42,44 @@
 @synthesize scroll;
 
 
++ (ScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
+
+    return [[[self alloc] initWithContentSize:contentSize direction:direction] autorelease];
+}
+
+
++ (ScrollLayer *)scrollNode:(CocosNode *)node direction:(ScrollContentDirection)direction {
+
+    ScrollLayer *scrollLayer = [self scrollWithContentSize:node.contentSize direction:direction];
+    [scrollLayer addChild:node];
+    
+    return scrollLayer;
+}
+
+
 - (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
 
     if (!(self = [super init]))
         return nil;
     
-    self.isTouchEnabled     = YES;
     scrollRatio             = ccp(0.0f, 1.0f);
     scrollPerSecond         = kDefaultScrollPerSecond;
     scrollContentSize       = contentSize;
     scrollContentDirection  = direction;
-    
+    scrollPinX              = [[Sprite alloc] initWithFile:@"scroll.pin.png"];
+    scrollPinY              = [[Sprite alloc] initWithFile:@"scroll.pin.png"];
+    scrollPinY.rotation     = -90;
+    ccBlendFunc blendFunc;
+    blendFunc.src           = GL_ONE;
+    blendFunc.dst           = GL_ONE_MINUS_SRC_ALPHA;
+    scrollPinX.blendFunc    = blendFunc;
+    scrollPinY.blendFunc    = blendFunc;
+    [self addChild:scrollPinX];
+    [self addChild:scrollPinY];
+
+    self.isTouchEnabled     = YES;
+    self.position           = CGPointZero;
+
     [self schedule:@selector(tick:)];
 
 	return self;
@@ -211,6 +238,58 @@
 
     CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * scrollPerSecond * dt);
     self.position           = ccpAdd(self.position, tickStep);
+}
+
+
+- (void)setScrollContentSize:(CGSize)newScrollContentSize {
+    
+    scrollContentSize       = newScrollContentSize;
+    self.position           = self.position;
+}
+
+
+- (void)setContentSize:(CGSize)newContentSize {
+    
+    super.contentSize       = newContentSize;
+    self.position           = self.position;
+}    
+
+
+- (void)setPosition:(CGPoint)newPosition {
+    
+    super.position = newPosition;
+
+    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
+                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint scrollProgress  = ccp(scrollBound.x? self.position.x / scrollBound.x: 0,
+                                  scrollBound.y? self.position.y / scrollBound.y: 0);
+    
+    scrollPinX.visible      = scrollBound.x != 0;
+    scrollPinY.visible      = scrollBound.y != 0;
+    
+    if (scrollPinX.visible) {
+        CGPoint from        = ccpSub(ccp(5 + scrollPinY.contentSize.width / 2, 5),
+                                     self.position);
+        CGPoint to          = ccpSub(ccp(self.contentSize.width - 10 - scrollPinY.contentSize.width / 2, 5),
+                                     self.position);
+        if (scrollContentDirection & ScrollContentDirectionLeftToRight)
+            scrollPinX.position = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x));
+        else if (scrollContentDirection & ScrollContentDirectionRightToLeft)
+            scrollPinX.position = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x));
+    }
+    if (scrollPinY.visible) {
+        CGPoint from        = ccpSub(ccp(self.contentSize.width - 5,
+                                         5 + scrollPinY.contentSize.width / 2),
+                                     self.position);
+        CGPoint to          = ccpSub(ccp(self.contentSize.width - 5,
+                                         self.contentSize.height - 10 - scrollPinY.contentSize.width / 2),
+                                     self.position);
+        if (scrollContentDirection & ScrollContentDirectionTopToBottom)
+            scrollPinY.position = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y));
+        else if (scrollContentDirection & ScrollContentDirectionBottomToTop)
+            scrollPinY.position = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y));
+    }
+    
     [self didUpdateScroll];
 }
 
@@ -232,6 +311,27 @@
     [super visit];
 
     glDisable(GL_SCISSOR_TEST);
+}
+
+
+- (void)draw {
+    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    if (scrollPinX.visible) {
+        CGPoint from        = ccpSub(ccp(5, 5), self.position);
+        CGPoint to          = ccpSub(ccp(self.contentSize.width - 10, 5), self.position);
+
+        DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
+    }
+    if (scrollPinY.visible) {
+        CGPoint from        = ccpSub(ccp(self.contentSize.width - 5, 5), self.position);
+        CGPoint to          = ccpSub(ccp(self.contentSize.width - 5, self.contentSize.height - 10), self.position);
+        
+        DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
+    }
+    
+    glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
 }
 
 

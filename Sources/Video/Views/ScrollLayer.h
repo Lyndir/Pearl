@@ -39,6 +39,8 @@ typedef enum ScrollContentDirection {
 @interface ScrollLayer : Layer {
     
     @private
+    Sprite                                      *scrollPinX, *scrollPinY;
+    
     CGPoint                                     dragFromPoint;
     CGPoint                                     dragFromPosition;
 
@@ -62,6 +64,8 @@ typedef enum ScrollContentDirection {
 @property (readwrite) CGSize                    scrollContentSize;
 @property (readwrite, retain) id<NSObject, ScrollLayerDelegate> delegate;
 
++ (ScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
++ (ScrollLayer *)scrollNode:(CocosNode *)node direction:(ScrollContentDirection)direction;
 - (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
 
 - (void)scrollBy:(CGPoint)scrollOffset;

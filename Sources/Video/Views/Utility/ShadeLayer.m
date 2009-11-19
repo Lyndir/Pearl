@@ -30,13 +30,14 @@
 @interface ShadeLayer ()
 
 - (void)_back:(CocosNode *)sender;
+- (void)_next:(CocosNode *)sender;
 
 @end
 
 
 @implementation ShadeLayer
 
-@synthesize fadeNextEntry, background, backgroundOffset;
+@synthesize backButton, nextButton, fadeNextEntry, background, backgroundOffset;
 
 
 -(id) init {
@@ -56,19 +57,31 @@
     NSUInteger oldFontSize  = [MenuItemFont fontSize];
     [MenuItemFont setFontName:[Config get].symbolicFontName];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    MenuItem *back          = [MenuItemFont itemFromString:@"   ◃   "
-                                                    target:self
-                                                  selector:@selector(_back:)];
-    [self setBackButtonTarget:self selector:@selector(back)];
+    backButton              = [[MenuItemFont itemFromString:@"   ◃   "
+                                                     target:self
+                                                   selector:@selector(_back:)] retain];
+    [MenuItemFont setFontName:[Config get].symbolicFontName];
+    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    nextButton              = [[MenuItemFont itemFromString:@"   ▹   "
+                                                     target:self
+                                                   selector:@selector(_next:)] retain];
     [MenuItemFont setFontName:oldFontName];
     [MenuItemFont setFontSize:oldFontSize];
-    
-    backMenu = [[Menu menuWithItems:back, nil] retain];
+    backMenu = [[Menu menuWithItems:backButton, nil] retain];
     backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
     [backMenu alignItemsHorizontally];
-    [self addChild:backMenu];
     
+    nextMenu = [[Menu menuWithItems:nextButton, nil] retain];
+    nextMenu.position = ccp(contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
+                            [[Config get].fontSize unsignedIntValue] * 1.5f);
+    [nextMenu alignItemsHorizontally];
+    [self addChild:backMenu];
+    [self addChild:nextMenu];
+
+    [self setBackButtonTarget:self selector:@selector(back)];
+    [self setNextButtonTarget:nil selector:nil];
+
     return self;
 }
 
@@ -76,16 +89,44 @@
 - (void) setBackButtonTarget:(id)target selector:(SEL)selector {
 
     [backInvocation release];
-    backInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
-    [backInvocation setTarget:target];
-    [backInvocation setSelector:selector];
-    [backInvocation retain];
+    
+    if (target) {
+        backInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+        [backInvocation setTarget:target];
+        [backInvocation setSelector:selector];
+        [backInvocation retain];
+    } else
+        backInvocation = nil;
+    
+    backMenu.visible = backInvocation != nil;
+}
+
+
+- (void) setNextButtonTarget:(id)target selector:(SEL)selector {
+    
+    [nextInvocation release];
+    
+    if (target) {
+        nextInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+        [nextInvocation setTarget:target];
+        [nextInvocation setSelector:selector];
+        [nextInvocation retain];
+    } else
+        nextInvocation = nil;
+    
+    nextMenu.visible = nextInvocation != nil;
 }
 
 
 - (void)_back:(CocosNode *)sender {
     
     [backInvocation invoke];
+}
+
+
+- (void)_next:(CocosNode *)sender {
+    
+    [nextInvocation invoke];
 }
 
 

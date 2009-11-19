@@ -42,6 +42,28 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     
+    // Log application details.
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString *name = [info objectForKey:@"CFBundleName"];
+    NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
+    NSString *build = [info objectForKey:@"CFBundleVersion"];
+    NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
+    NSString *copyright = [info objectForKey:@"NSHumanReadableCopyright"];
+    
+    if (!name)
+        name = displayName;
+    if (displayName && ![displayName isEqualToString:name])
+        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
+    if (!version)
+        version = build;
+    if (build && ![build isEqualToString:version])
+        version = [NSString stringWithFormat:@"%@ (%@)", version, build];
+    
+    [[Logger get] inf:@"%@ v%@", name, version];
+    if (copyright)
+        [[Logger get] inf:@"Copyright %@", copyright];
+    [[Logger get] inf:@"====================================="];
+    
 	// Init the window.
 	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
 	[window setUserInteractionEnabled:YES];

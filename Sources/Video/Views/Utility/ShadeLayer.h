@@ -29,23 +29,26 @@
     
     BOOL                                                    pushed;
     BOOL                                                    fadeNextEntry;
-    Menu                                                    *backMenu;
-    NSInvocation                                            *backInvocation;
+    MenuItemFont                                            *backButton, *nextButton;
+    Menu                                                    *backMenu, *nextMenu;
+    NSInvocation                                            *backInvocation, *nextInvocation;
 
     CocosNode                                               *background;
     CGPoint                                                 backgroundOffset;
 }
 
+@property (readonly) MenuItemFont                           *backButton;
+@property (readonly) MenuItemFont                           *nextButton;
 @property (readwrite) BOOL                                  fadeNextEntry;
 @property (readwrite, retain) CocosNode                     *background;
 @property (readwrite) CGPoint                               backgroundOffset;
 
 - (void)setBackButtonTarget:(id)target selector:(SEL)selector;
--(void) dismissAsPush:(BOOL)isPushed;
+- (void)setNextButtonTarget:(id)target selector:(SEL)selector;
+- (void)dismissAsPush:(BOOL)isPushed;
 - (void)back;
 
--(void) ready;
--(void) gone;
-
+- (void)ready;
+- (void)gone;
 
 @end

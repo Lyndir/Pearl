@@ -39,8 +39,6 @@ typedef enum ScrollContentDirection {
 @interface ScrollLayer : Layer {
     
     @private
-    Sprite                                      *scrollPinX, *scrollPinY;
-    
     CGPoint                                     dragFromPoint;
     CGPoint                                     dragFromPosition;
 

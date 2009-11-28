@@ -61,8 +61,8 @@
     
     [[Logger get] inf:@"%@ v%@", name, version];
     if (copyright)
-        [[Logger get] inf:@"Copyright %@", copyright];
-    [[Logger get] inf:@"====================================="];
+        [[Logger get] inf:@"%@", copyright];
+    [[Logger get] inf:@"==================================="];
     
 	// Init the window.
 	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
@@ -71,7 +71,7 @@
 	// Director and OpenGL Setup.
     //[Director useFastDirector];
 #if TARGET_IPHONE_SIMULATOR
-    [[Director sharedDirector] setPixelFormat:kRGBA8];
+    [[Director sharedDirector] setPixelFormat:kPixelFormatRGBA8888];
 #else
     //[[Director sharedDirector] setDisplayFPS:YES];
 #endif

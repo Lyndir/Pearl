@@ -79,14 +79,17 @@
         SEL settingSel = NSSelectorFromString(setting);
         
         // Build the setting's toggle button.
-        MenuItem *menuItem = nil;
-        if (configDelegate && [configDelegate respondsToSelector:@selector(itemForSetting:)])
-            menuItem = [configDelegate itemForSetting:settingSel];
-        if (!menuItem)
-            menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:) items:
-                        [MenuItemFont itemFromString:@"On"],
-                        [MenuItemFont itemFromString:@"Off"],
-                        nil];
+        MenuItemToggle *menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
+        if (configDelegate && [configDelegate respondsToSelector:@selector(toggleItemsForSetting:)])
+            menuItem.subItems = [configDelegate toggleItemsForSetting:settingSel];
+        if (![menuItem.subItems count])
+            menuItem.subItems = [NSMutableArray arrayWithObjects:
+                                 [MenuItemFont itemFromString:@"Off"],
+                                 [MenuItemFont itemFromString:@"On"],
+                                 nil];
+
+        // Force update.
+        [menuItem setSelectedIndex:[menuItem.subItems count] - 1];
         
         // Build the setting's label.
         NSString *label = nil;
@@ -128,18 +131,16 @@
         [invocation invokeWithTarget:t];
         [invocation getReturnValue:&ret];
         
-        item.selectedIndex = [ret boolValue]? 0: 1;
+        item.selectedIndex = [ret unsignedIntValue];
     }
 }
 
 
 - (void)tapped:(MenuItemToggle *)toggle {
     
-    NSLog(@"%d tapped.", toggle.selectedIndex);
-    
     id t = [Config get];
     SEL s = NSSelectorFromString([[itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);
-    void* toggledValue = [NSNumber numberWithBool:toggle.selectedIndex == 0? YES: NO];
+    void* toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
     
     // Search t's class hierarchy for the selector.
     NSMethodSignature *sig = [t methodSignatureForSelector:s];

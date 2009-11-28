@@ -66,19 +66,7 @@
     scrollPerSecond         = kDefaultScrollPerSecond;
     scrollContentSize       = contentSize;
     scrollContentDirection  = direction;
-    scrollPinX              = [[Sprite alloc] initWithFile:@"scroll.pin.png"];
-    scrollPinY              = [[Sprite alloc] initWithFile:@"scroll.pin.png"];
-    scrollPinY.rotation     = -90;
-    ccBlendFunc blendFunc;
-    blendFunc.src           = GL_ONE;
-    blendFunc.dst           = GL_ONE_MINUS_SRC_ALPHA;
-    scrollPinX.blendFunc    = blendFunc;
-    scrollPinY.blendFunc    = blendFunc;
-    [self addChild:scrollPinX];
-    [self addChild:scrollPinY];
-
     self.isTouchEnabled     = YES;
-    self.position           = CGPointZero;
 
     [self schedule:@selector(tick:)];
 
@@ -126,8 +114,8 @@
     self.scroll             = ccpSub([self limitPoint:ccpAdd(origin, scroll)], origin);
     
     // Apply the scroll step.
-    self.scroll             = ccp(roundf(scroll.x / scrollStep.x) * scrollStep.x,
-                                  roundf(scroll.y / scrollStep.y) * scrollStep.y);
+    self.scroll             = ccp(scrollStep.x? roundf(scroll.x / scrollStep.x) * scrollStep.x: roundf(scroll.x),
+                                  scrollStep.y? roundf(scroll.y / scrollStep.y) * scrollStep.y: roundf(scroll.y));
     
     isTouching              = NO;
 }
@@ -241,54 +229,9 @@
 }
 
 
-- (void)setScrollContentSize:(CGSize)newScrollContentSize {
-    
-    scrollContentSize       = newScrollContentSize;
-    self.position           = self.position;
-}
-
-
-- (void)setContentSize:(CGSize)newContentSize {
-    
-    super.contentSize       = newContentSize;
-    self.position           = self.position;
-}    
-
-
 - (void)setPosition:(CGPoint)newPosition {
     
     super.position = newPosition;
-
-    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
-                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
-    CGPoint scrollProgress  = ccp(scrollBound.x? self.position.x / scrollBound.x: 0,
-                                  scrollBound.y? self.position.y / scrollBound.y: 0);
-    
-    scrollPinX.visible      = scrollBound.x != 0;
-    scrollPinY.visible      = scrollBound.y != 0;
-    
-    if (scrollPinX.visible) {
-        CGPoint from        = ccpSub(ccp(5 + scrollPinY.contentSize.width / 2, 5),
-                                     self.position);
-        CGPoint to          = ccpSub(ccp(self.contentSize.width - 10 - scrollPinY.contentSize.width / 2, 5),
-                                     self.position);
-        if (scrollContentDirection & ScrollContentDirectionLeftToRight)
-            scrollPinX.position = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x));
-        else if (scrollContentDirection & ScrollContentDirectionRightToLeft)
-            scrollPinX.position = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x));
-    }
-    if (scrollPinY.visible) {
-        CGPoint from        = ccpSub(ccp(self.contentSize.width - 5,
-                                         5 + scrollPinY.contentSize.width / 2),
-                                     self.position);
-        CGPoint to          = ccpSub(ccp(self.contentSize.width - 5,
-                                         self.contentSize.height - 10 - scrollPinY.contentSize.width / 2),
-                                     self.position);
-        if (scrollContentDirection & ScrollContentDirectionTopToBottom)
-            scrollPinY.position = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y));
-        else if (scrollContentDirection & ScrollContentDirectionBottomToTop)
-            scrollPinY.position = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y));
-    }
     
     [self didUpdateScroll];
 }
@@ -317,18 +260,47 @@
 - (void)draw {
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
+                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint scrollProgress  = ccp(scrollBound.x? self.position.x / scrollBound.x: 0,
+                                  scrollBound.y? self.position.y / scrollBound.y: 0);
     
-    if (scrollPinX.visible) {
+    if (scrollBound.x) {
         CGPoint from        = ccpSub(ccp(5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 10, 5), self.position);
+        CGPoint scrollPointFrom, scrollPointTo;
+        if (scrollContentDirection & ScrollContentDirectionLeftToRight) {
+            scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f));
+            scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f - 0.05f));
+        }
+        else if (scrollContentDirection & ScrollContentDirectionRightToLeft) {
+            scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f));
+            scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f + 0.05f));
+        }
+        scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(0, 2));
+        scrollPointTo       = ccpAdd(scrollPointTo, ccp(0, 2));
 
         DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
+        DrawLinesTo(scrollPointFrom, &scrollPointTo, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 2);
     }
-    if (scrollPinY.visible) {
+    if (scrollBound.y) {
         CGPoint from        = ccpSub(ccp(self.contentSize.width - 5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 5, self.contentSize.height - 10), self.position);
-        
+        CGPoint scrollPointFrom, scrollPointTo;
+        if (scrollContentDirection & ScrollContentDirectionTopToBottom) {
+            scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f));
+            scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f + 0.05f));
+        }
+        else if (scrollContentDirection & ScrollContentDirectionBottomToTop) {
+            scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f));
+            scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f + 0.05f));
+        }
+        scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(-2, 0));
+        scrollPointTo       = ccpAdd(scrollPointTo, ccp(-2, 0));
+
         DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
+        DrawLinesTo(scrollPointFrom, &scrollPointTo, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 2);
     }
     
     glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);

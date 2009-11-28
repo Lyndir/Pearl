@@ -57,17 +57,14 @@
                                      [NSNumber numberWithBool:YES],                                 cFirstRun,
                                      
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.normal", @"34") intValue]],    cFontSize,
+                                      [l(@"font.size.normal") intValue]],                           cFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.large", @"48") intValue]],     cLargeFontSize,
+                                      [l(@"font.size.large") intValue]],                            cLargeFontSize,
                                      [NSNumber numberWithInt:
-                                      [NSLocalizedString(@"font.size.small", @"18") intValue]],     cSmallFontSize,
-                                     NSLocalizedString(@"font.family.default",
-                                                       @"Marker Felt"),                             cFontName,
-                                     NSLocalizedString(@"font.family.fixed",
-                                                       @"American Typewriter"),                     cFixedFontName,
-                                     NSLocalizedString(@"font.family.symbolic",
-                                                       @""),                                        cSymbolicFontName,
+                                      [l(@"font.size.small") intValue]],                            cSmallFontSize,
+                                     l(@"font.family.default"),                                     cFontName,
+                                     l(@"font.family.fixed"),                                       cFixedFontName,
+                                     l(@"font.family.symbolic"),                                    cSymbolicFontName,
                                      
                                      [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
                                      [NSNumber numberWithFloat:      0.5f],                         cTransitionDuration,
@@ -82,8 +79,8 @@
                                       @"",
                                       nil],                                                         cTracks,
                                      [NSArray arrayWithObjects:
-                                      NSLocalizedString(@"config.song.random", @"Shuffle"),
-                                      NSLocalizedString(@"config.song.off", @"Off"),
+                                      l(@"menu.config.song.random"),
+                                      l(@"menu.config.song.off"),
                                       nil],                                                         cTrackNames,
                                      @"random",                                                     cCurrentTrack,
 

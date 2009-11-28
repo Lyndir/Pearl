@@ -31,6 +31,10 @@
 @optional
 - (NSString *)labelForSetting:(SEL)setting;
 
+/** Return an array of MenuItem*'s to add to the toggle for the given setting. */
+@optional
+- (NSMutableArray *)toggleItemsForSetting:(SEL)setting;
+
 /** Return a node that conveys and allows toggling the given setting. */
 @optional
 - (MenuItem *)itemForSetting:(SEL)setting;

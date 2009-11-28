@@ -30,13 +30,13 @@ NSString* LPad(const NSString* string, const NSUInteger l) {
 
 NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
     
-    NSString *suffix = NSLocalizedString(@"time.day.suffix", @"th");
+    NSString *suffix = l(@"time.day.suffix", @"th");
     if(number % 10 == 1 && number != 11)
-        suffix = NSLocalizedString(@"time.day.suffix.one", @"st");
+        suffix = l(@"time.day.suffix.one", @"st");
     else if(number % 10 == 2 && number != 12)
-        suffix = NSLocalizedString(@"time.day.suffix.two", @"nd");
+        suffix = l(@"time.day.suffix.two", @"nd");
     else if(number % 10 == 3 && number != 13)
-        suffix = NSLocalizedString(@"time.day.suffix.three", @"rd");
+        suffix = l(@"time.day.suffix.three", @"rd");
     
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }

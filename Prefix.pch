@@ -21,6 +21,8 @@
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
     #import "cocos2d.h"
-    #import "Utility.h"
+    #import "Utils.h"
+    #import "Logger.h"
+    #import "GLUtils.h"
     #import "Config.h"
 #endif

@@ -6,6 +6,12 @@
 "font.family.fixed"                     = "American Typewriter";
 "font.family.symbolic"                  = "DejaVuSansMono";
 
+// Numbers
+"time.day.suffix"                       = "th";
+"time.day.suffix.one"                   = "st";
+"time.day.suffix.two"                   = "nd";
+"time.day.suffix.three"                 = "rd";
+
 // Global Config
 "config.direction"                      = "ltr";
 

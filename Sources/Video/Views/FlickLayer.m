@@ -43,18 +43,27 @@
     if (!firstSprite)
         return self;
     
-    content             = [[ScrollLayer alloc] initWithContentSize:CGSizeZero direction:ScrollContentDirectionLeftToRight];
-    content.delegate    = self;
+    content                 = [[ScrollLayer alloc] initWithContentSize:CGSizeZero direction:ScrollContentDirectionLeftToRight];
+    content.delegate        = self;
     [self addChild:content];
     
-    right               = [[MenuItemFont itemFromString:@"   >   " target:self selector:@selector(right:)] retain];
-    left                = [[MenuItemFont itemFromString:@"   <   " target:self selector:@selector(left:)] retain];
+    NSString *oldFontName   = [MenuItemFont fontName];
+    NSUInteger oldFontSize  = [MenuItemFont fontSize];
+    [MenuItemFont setFontName:[Config get].symbolicFontName];
+    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    right                   = [[MenuItemFont itemFromString:@" ▹ "
+                                                     target:self selector:@selector(right:)] retain];
+    left                    = [[MenuItemFont itemFromString:@" ◃ "
+                                                     target:self selector:@selector(left:)] retain];
+    [MenuItemFont setFontName:oldFontName];
+    [MenuItemFont setFontSize:oldFontSize];
+
     [self addChild:[Menu menuWithItems:right, nil]];
     [self addChild:[Menu menuWithItems:left, nil]];
-    right.position      = ccp(self.contentSize.width / 2, 0);
-    right.anchorPoint   = ccp(1, 0.5f);
-    left.position       = ccp(-self.contentSize.width / 2, 0);
-    left.anchorPoint    = ccp(0, 0.5f);
+    right.position          = ccp(self.contentSize.width / 2, 0);
+    right.anchorPoint       = ccp(1, 0.5f);
+    left.position           = ccp(-self.contentSize.width / 2, 0);
+    left.anchorPoint        = ccp(0, 0.5f);
     
     
     va_list list;

@@ -84,8 +84,8 @@
             menuItem.subItems = [configDelegate toggleItemsForSetting:settingSel];
         if (![menuItem.subItems count])
             menuItem.subItems = [NSMutableArray arrayWithObjects:
-                                 [MenuItemFont itemFromString:@"Off"],
-                                 [MenuItemFont itemFromString:@"On"],
+                                 [MenuItemFont itemFromString:l(@"menu.config.off")],
+                                 [MenuItemFont itemFromString:l(@"menu.config.on")],
                                  nil];
 
         // Force update.

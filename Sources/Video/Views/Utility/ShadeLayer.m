@@ -76,8 +76,8 @@
     nextMenu.position = ccp(contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
     [nextMenu alignItemsHorizontally];
-    [self addChild:backMenu];
-    [self addChild:nextMenu];
+    [self addChild:backMenu z:9];
+    [self addChild:nextMenu z:9];
 
     [self setBackButtonTarget:self selector:@selector(back)];
     [self setNextButtonTarget:nil selector:nil];

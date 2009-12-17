@@ -31,12 +31,35 @@
 
 - (void)updateBodyFrame:(ccTime)dt;
 
+@property (readwrite, retain) Texture2D            *head;
+@property (readwrite, assign) Texture2D            **body;
+@property (readwrite, retain) Texture2D            *tail;
+
+@property (readwrite, assign) CGFloat              age;
+@property (readwrite, assign) NSUInteger           bodyFrame;
+@property (readwrite, assign) NSUInteger           bodyFrames;
+
+@property (readwrite, assign) BOOL                 animatedTargetting;
+@property (readwrite, assign) ccTime               smoothTimeElapsed;
+
+@property (readwrite, assign) CGPoint              current;
+@property (readwrite, assign) CGFloat              currentLength;
+
 @end
 
 
 @implementation BarSprite
 
-@synthesize target, textureSize;
+@synthesize head = _head, body = _body, tail = _tail;
+@synthesize age = _age;
+@synthesize bodyFrame = _bodyFrame, bodyFrames = _bodyFrames;
+@synthesize animatedTargetting = _animatedTargetting;
+@synthesize smoothTimeElapsed = _smoothTimeElapsed;
+@synthesize target = _target;
+@synthesize current = _current;
+@synthesize currentLength = _currentLength;
+@synthesize textureSize = _textureSize;
+
 
 - (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting {
     
@@ -45,27 +68,27 @@
     
     self.anchorPoint        = CGPointZero;
     self.visible            = NO;
-    animatedTargetting      = anAnimatedTargetting;
+    self.animatedTargetting      = anAnimatedTargetting;
 
     if (bundleHeadReference)
-        head = [[[TextureMgr sharedTextureMgr] addImage:bundleHeadReference] retain];
+        self.head = [[TextureMgr sharedTextureMgr] addImage:bundleHeadReference];
     if (bundleBodyReference) {
-        bodyFrames = bodyFrameCount;
-        body = malloc(sizeof(Texture2D *) * bodyFrames);
-        if (bodyFrames > 1) {
-            for (NSUInteger f = 0; f < bodyFrames; ++f)
-                body[f] = [[[TextureMgr sharedTextureMgr] addImage:[NSString stringWithFormat:bundleBodyReference, f]] retain];
+        self.bodyFrames = bodyFrameCount;
+        self.body = malloc(sizeof(Texture2D *) * self.bodyFrames);
+        if (self.bodyFrames > 1) {
+            for (NSUInteger f = 0; f < self.bodyFrames; ++f)
+                self.body[f] = [[[TextureMgr sharedTextureMgr] addImage:[NSString stringWithFormat:bundleBodyReference, f]] retain];
         } else
-            body[0] = [[[TextureMgr sharedTextureMgr] addImage:bundleBodyReference] retain];
+            self.body[0] = [[[TextureMgr sharedTextureMgr] addImage:bundleBodyReference] retain];
         
-        bodyFrame = 0;
-        textureSize = CGSizeMake(body[bodyFrame].pixelsWide, body[bodyFrame].pixelsHigh);
+        self.bodyFrame = 0;
+        self.textureSize = CGSizeMake(self.body[self.bodyFrame].pixelsWide, self.body[self.bodyFrame].pixelsHigh);
     }
     if (bundleTailReference)
-        tail = [[[TextureMgr sharedTextureMgr] addImage:bundleTailReference] retain];
+        self.tail = [[TextureMgr sharedTextureMgr] addImage:bundleTailReference];
     
     [self schedule:@selector(updateBodyFrame:) interval:0.02f];
-    if (animatedTargetting)
+    if (self.animatedTargetting)
         [self schedule:@selector(update:)];
     
     return self;
@@ -74,20 +97,20 @@
 
 - (void)updateBodyFrame:(ccTime)dt {
     
-    age                 += dt;
-    bodyFrame           = ((NSUInteger) (age * 50 * body[0].pixelsWide / textureSize.width)) % bodyFrames;
+    self.age                 += dt;
+    self.bodyFrame           = ((NSUInteger) (self.age * 50 * self.body[0].pixelsWide / self.textureSize.width)) % self.bodyFrames;
 }
 
 
 - (void)update:(ccTime)dt {
     
-    smoothTimeElapsed   = fminf(kSmoothingTime, smoothTimeElapsed + dt);
+    self.smoothTimeElapsed   = fminf(kSmoothingTime, self.smoothTimeElapsed + dt);
 
-    CGFloat completion  = smoothTimeElapsed / kSmoothingTime;
-    current             = ccpAdd(current, ccpMult(ccpSub(target, current), completion));
+    CGFloat completion  = self.smoothTimeElapsed / kSmoothingTime;
+    self.current             = ccpAdd(self.current, ccpMult(ccpSub(self.target, self.current), completion));
     
-    CGPoint bar         = ccpSub(current, self.position);
-    currentLength       = ccpLength(bar);
+    CGPoint bar         = ccpSub(self.current, self.position);
+    self.currentLength       = ccpLength(bar);
     
     self.rotation       = CC_RADIANS_TO_DEGREES(ccpToAngle(ccp(bar.x, -bar.y)));
 }
@@ -95,12 +118,12 @@
 
 - (void)setTarget:(CGPoint)t {
     
-    if (animatedTargetting && self.visible) {
-        target                  = t;
-        smoothTimeElapsed       = 0;
+    if (self.animatedTargetting && self.visible) {
+        _target                     = t;
+        self.smoothTimeElapsed      = 0;
     } else {
-        target = current        = t;
-        smoothTimeElapsed       = kSmoothingTime;
+        _target = self.current      = t;
+        self.smoothTimeElapsed      = kSmoothingTime;
         [self update:0];
     }
     
@@ -118,7 +141,7 @@
     //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
     //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
 
-    GLfloat s = (currentLength * 2 - tail.pixelsWide / 2 - head.pixelsWide / 2) / textureSize.width;
+    GLfloat s = (self.currentLength * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
     GLfloat coordinates[3][8] = {
         /* head */ {
             0.0f,   1.0f,
@@ -140,31 +163,31 @@
     
     GLfloat vertices[3][12] = {
         /* head */ {
-            -textureSize.width / 2.0f + currentLength,  -textureSize.height / 2.0f, 0.0f,
-             textureSize.width / 2.0f + currentLength,  -textureSize.height / 2.0f, 0.0f,
-            -textureSize.width / 2.0f + currentLength,   textureSize.height / 2.0f, 0.0f,
-             textureSize.width / 2.0f + currentLength,   textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f,
         /* body */ }, {
-             textureSize.width / 2.0f,                  -textureSize.height / 2.0f, 0.0f,
-            -textureSize.width / 2.0f + currentLength,  -textureSize.height / 2.0f, 0.0f,
-             textureSize.width / 2.0f,                   textureSize.height / 2.0f, 0.0f,
-            -textureSize.width / 2.0f + currentLength,   textureSize.height / 2.0f, 0.0f
+             self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f
         /* tail */ }, {
-            -textureSize.width / 2.0f,                  -textureSize.height / 2.0f, 0.0f,
-             textureSize.width / 2.0f,                  -textureSize.height / 2.0f, 0.0f,
-            -textureSize.width / 2.0f,                   textureSize.height / 2.0f, 0.0f,
-             textureSize.width / 2.0f,                   textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
         }
     };
 
     /* head */
-    glBindTexture(GL_TEXTURE_2D, head.name);
+    glBindTexture(GL_TEXTURE_2D, self.head.name);
     glVertexPointer(3, GL_FLOAT, 0, vertices[0]);
     glTexCoordPointer(2, GL_FLOAT, 0, coordinates[0]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     /* body */
-    glBindTexture(GL_TEXTURE_2D, body[bodyFrame].name);
+    glBindTexture(GL_TEXTURE_2D, self.body[self.bodyFrame].name);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     
@@ -173,15 +196,15 @@
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     /* tail */
-    glBindTexture(GL_TEXTURE_2D, tail.name);
+    glBindTexture(GL_TEXTURE_2D, self.tail.name);
     glVertexPointer(3, GL_FLOAT, 0, vertices[2]);
     glTexCoordPointer(2, GL_FLOAT, 0, coordinates[2]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-    /*CGFloat x, step = body[bodyFrame].pixelsWide / 2 + 2;
-    for (x = -halfLength + tail.pixelsWide / 2; x < halfLength - head.pixelsWide / 2; x += step)
-        [body[bodyFrame] drawAtPoint:CGPointMake(x, 0)];
-    [body[bodyFrame] drawInRect:CGRectMake(x, body[bodyFrame].pixelsHigh / -2, halfLength - head.pixelsWide / 2, body[bodyFrame].pixelsHigh / 2)];*/
+    /*CGFloat x, step = self.body[self.bodyFrame].pixelsWide / 2 + 2;
+    for (x = -halfLength + self.tail.pixelsWide / 2; x < halfLength - self.head.pixelsWide / 2; x += step)
+        [self.body[self.bodyFrame] drawAtPoint:CGPointMake(x, 0)];
+    [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].pixelsHigh / -2, halfLength - self.head.pixelsWide / 2, self.body[self.bodyFrame].pixelsHigh / 2)];*/
     //[head drawAtPoint:CGPointMake(halfLength - head.pixelsWide / 2, head.pixelsWide / -2)];
     //[tail drawAtPoint:CGPointMake(-halfLength - tail.pixelsWide / 2,  tail.pixelsWide / -2)];
     
@@ -194,18 +217,15 @@
 
 - (void)dealloc {
 
-    [head release];
-    head = nil;
+    self.head = nil;
+    self.tail = nil;
     
-    [tail release];
-    tail = nil;
-    
-    for (NSUInteger f = 0; f < bodyFrames; ++f) {
-        [body[f] release];
-        body[f] = nil;
+    for (NSUInteger f = 0; f < self.bodyFrames; ++f) {
+        [self.body[f] release];
+        self.body[f] = nil;
     }
-    free(body);
-    body = nil;
+    free(self.body);
+    self.body = nil;
     
     [super dealloc];
 }

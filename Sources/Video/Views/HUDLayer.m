@@ -25,14 +25,27 @@
 #import "HUDLayer.h"
 #import "AbstractAppDelegate.h"
 
+@interface BarLayer ()
+
+@property (readwrite, retain) Menu                 *menuMenu;
+
+@end
 
 @interface HUDLayer ()
 
 - (void) menuButton:(id) caller;
 
+@property (readwrite, retain) Sprite               *scoreSprite;
+@property (readwrite, retain) LabelAtlas           *scoreCount;
+@property (readwrite, retain) BarLayer             *messageBar;
+
 @end
 
 @implementation HUDLayer
+
+@synthesize scoreSprite = _scoreSprite;
+@synthesize scoreCount = _scoreCount;
+@synthesize messageBar = _messageBar;
 
 
 -(id) init {
@@ -42,16 +55,16 @@
 
     [super setButtonImage:@"menu.png"
                  callback:self :@selector(menuButton:)];
-    messageBar          = [[BarLayer alloc] initWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
+    self.messageBar          = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     
     // Score.
-    scoreSprite = [[Sprite alloc] initWithFile:@"score.png"];
-    scoreCount = [[LabelAtlas alloc] initWithString:@""
-                                        charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    [scoreSprite setPosition:ccp(self.contentSize.width / 2, self.contentSize.height / 2)];
-    [scoreCount setPosition:ccp(90, 0)];
-    [self addChild:scoreSprite];
-    [self addChild:scoreCount];
+    self.scoreSprite = [Sprite spriteWithFile:@"score.png"];
+    self.scoreCount = [LabelAtlas labelAtlasWithString:@""
+                                           charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
+    [self.scoreSprite setPosition:ccp(self.contentSize.width / 2, self.contentSize.height / 2)];
+    [self.scoreCount setPosition:ccp(90, 0)];
+    [self addChild:self.scoreSprite];
+    [self addChild:self.scoreCount];
     
     return self;
 }
@@ -59,14 +72,14 @@
 
 -(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood {
     
-    [scoreCount setString:[NSString stringWithFormat:@"%04d", newScore]];
+    [self.scoreCount setString:[NSString stringWithFormat:@"%04d", newScore]];
     [self updateHudWasGood:wasGood];
 }
 
 -(void) updateHudWasGood:(BOOL)wasGood {
 
-    [scoreCount setVisible:YES];
-    [scoreSprite setVisible:YES];
+    [self.scoreCount setVisible:YES];
+    [self.scoreSprite setVisible:YES];
     
     ccColor3B scoreColor;
     if(wasGood)
@@ -74,7 +87,7 @@
     else
         scoreColor = ccc3(0xFF, 0x99, 0x99);
     
-    [scoreCount runAction:[Sequence actions:
+    [self.scoreCount runAction:[Sequence actions:
                            [TintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
                            [TintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
                            nil]];
@@ -84,13 +97,13 @@
 -(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important {
     // Proxy to messageBar
     
-    if([messageBar parent] && [messageBar dismissed])
-        [self removeChild:messageBar cleanup:YES];
+    if([self.messageBar parent] && [self.messageBar dismissed])
+        [self removeChild:self.messageBar cleanup:YES];
 
-    if(![messageBar parent])
-        [self addChild:messageBar z:-1];
+    if(![self.messageBar parent])
+        [self addChild:self.messageBar z:-1];
     
-    [messageBar message:msg duration:0 isImportant:important];
+    [self.messageBar message:msg duration:0 isImportant:important];
     
     if(_duration)
         [self runAction:[Sequence actions:
@@ -103,19 +116,19 @@
 -(void) dismissMessage {
     // Proxy to messageBar
 
-    [messageBar dismiss];
-    [messageBar setButtonImage:nil callback:nil :nil];
+    [self.messageBar dismiss];
+    [self.messageBar setButtonImage:nil callback:nil :nil];
     
-    if(![menuMenu parent])
-        [self addChild:menuMenu];
+    if(![self.menuMenu parent])
+        [self addChild:self.menuMenu];
 }
 
 
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
     // Proxy to messageBar
 
-    [messageBar setButtonImage:aFile callback:target :selector];
-    [self removeChild:menuMenu cleanup:NO];
+    [self.messageBar setButtonImage:aFile callback:target :selector];
+    [self removeChild:self.menuMenu cleanup:NO];
 }
 
 
@@ -123,8 +136,8 @@
 
     [super onEnter];
     
-    if([messageBar parent])
-        [self removeChild:messageBar cleanup:YES];
+    if([self.messageBar parent])
+        [self removeChild:self.messageBar cleanup:YES];
     
     [self updateHudWithNewScore:0 wasGood:YES];
 }
@@ -148,11 +161,8 @@
 
 -(void) dealloc {
     
-    [scoreSprite release];
-    scoreSprite = nil;
-    
-    [scoreCount release];
-    scoreCount = nil;
+    self.scoreSprite = nil;
+    self.scoreCount = nil;
     
     [super dealloc];
 }

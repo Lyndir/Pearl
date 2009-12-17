@@ -24,7 +24,21 @@
 
 #import "AudioController.h"
 
+@interface AudioController ()
+
+@property (readwrite, retain) AVAudioPlayer                *audioPlayer;
+@property (readwrite, copy) NSString                     *nextTrack;
+
+@property (readwrite, retain) NSMutableDictionary          *effects;
+
+@end
+
+
 @implementation AudioController
+
+@synthesize audioPlayer = _audioPlayer;
+@synthesize nextTrack = _nextTrack;
+@synthesize effects = _effects;
 
 
 -(void) clickEffect {
@@ -50,17 +64,17 @@
     if(![track length])
         track = nil;
     
-    nextTrack = track;
+    self.nextTrack = track; // Review Me
     [self startNextTrack];
 }
 
 
 -(void) audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)success {
     
-    if(player != audioPlayer)
+    if(player != self.audioPlayer)
         return;
     
-    if(nextTrack == nil)
+    if(self.nextTrack == nil) // Review Me
         [[Config get] setCurrentTrack:nil];
     
     [self startNextTrack];
@@ -68,40 +82,40 @@
 
 -(void) startNextTrack {
     
-    if([audioPlayer isPlaying]) {
-        [audioPlayer stop];
-        [self audioPlayerDidFinishPlaying:audioPlayer successfully:NO];
-    } else if(nextTrack) {
-        NSString *track = nextTrack;
+    if([self.audioPlayer isPlaying]) {
+        [self.audioPlayer stop];
+        [self audioPlayerDidFinishPlaying:self.audioPlayer successfully:NO];
+    } else if(self.nextTrack) {
+        NSString *track = self.nextTrack;
         if([track isEqualToString:@"random"])
             track = [Config get].randomTrack;
         NSURL *nextUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:track ofType:nil]];
         
-        if(audioPlayer != nil && ![audioPlayer.url isEqual:nextUrl]) {
-            [audioPlayer release];
-            audioPlayer = nil;
+        if(self.audioPlayer != nil && ![self.audioPlayer.url isEqual:nextUrl]) { // Review Me
+            [self.audioPlayer release];
+            self.audioPlayer = nil; // Review Me
         }
         
-        if(audioPlayer == nil)
-            audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil];
+        if(self.audioPlayer == nil) // Review Me
+            self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil]; // Review Me
         
-        [audioPlayer setDelegate:self];
-        [audioPlayer play];
+        [self.audioPlayer setDelegate:self];
+        [self.audioPlayer play];
         
-        [[Config get] setCurrentTrack:nextTrack];
+        [[Config get] setCurrentTrack:self.nextTrack];
     }
 }
 
 
 - (void)playEffectNamed:(NSString *)bundleName {
     
-    SystemSoundID effect = [(NSNumber *) [effects objectForKey:bundleName] unsignedIntValue];
+    SystemSoundID effect = [(NSNumber *) [self.effects objectForKey:bundleName] unsignedIntValue];
     if (effect == 0) {
         effect = [AudioController loadEffectWithName:[NSString stringWithFormat:@"%@.caf", bundleName]];
         if (effect == 0)
             return;
         
-        [effects setObject:[NSNumber numberWithUnsignedInt:effect] forKey:bundleName];
+        [self.effects setObject:[NSNumber numberWithUnsignedInt:effect] forKey:bundleName];
     }
     
     [AudioController playEffect:effect];
@@ -110,11 +124,11 @@
 
 -(void) dealloc {
     
-    [audioPlayer release];
-    audioPlayer = nil;
+    [self.audioPlayer release];
+    self.audioPlayer = nil; // Review Me
     
-    [nextTrack release];
-    nextTrack = nil;
+    [self.nextTrack release];
+    self.nextTrack = nil; // Review Me
     
     [super dealloc];
 }

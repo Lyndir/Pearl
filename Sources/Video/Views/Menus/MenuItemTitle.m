@@ -11,6 +11,8 @@
 
 @implementation MenuItemTitle
 
+
+
 + (MenuItemTitle *)titleWithString:(NSString *)title {
     
     return [[[self alloc] initWithString:title] autorelease];

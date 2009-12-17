@@ -46,10 +46,12 @@
 
 @interface Config : NSObject {
 
-    NSUserDefaults                                      *defaults;
+    NSUserDefaults                                       *_defaults;
 
-    NSDictionary                                        *resetTriggers;
+    NSDictionary                                         *_resetTriggers;
 }
+
+@property (readonly, retain) NSUserDefaults                                       *defaults;
 
 @property (nonatomic, readwrite, retain) NSNumber       *firstRun;
 
@@ -65,9 +67,9 @@
 
 @property (nonatomic, readwrite, retain) NSArray        *tracks;
 @property (nonatomic, readwrite, retain) NSArray        *trackNames;
-@property (nonatomic, readonly) NSString                *randomTrack;
+@property (nonatomic, readonly, retain) NSString                *randomTrack;
 @property (nonatomic, readwrite, retain) NSString       *currentTrack;
-@property (nonatomic, readonly) NSString                *currentTrackName;
+@property (nonatomic, readonly, retain) NSString                *currentTrackName;
 
 @property (nonatomic, readwrite, retain) NSNumber       *soundFx;
 @property (nonatomic, readwrite, retain) NSNumber       *music;

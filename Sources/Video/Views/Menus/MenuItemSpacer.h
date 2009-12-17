@@ -26,7 +26,7 @@
 
 @interface MenuItemSpacer : MenuItem {
 
-    CGFloat height;
+    CGFloat  _height;
 }
 
 +(id) spacerSmall;

@@ -37,10 +37,14 @@
 + (NSData *)doCipher:(NSData *)data key:(NSData *)aSymmetricKey
              context:(CCOperation)encryptOrDecrypt options:(CCOptions *) options;
 
+
+
 @end
 
 
 @implementation CryptUtils
+
+
 
 
 + (NSString *)md5:(NSString *)string {

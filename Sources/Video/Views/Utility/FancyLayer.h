@@ -32,21 +32,21 @@ typedef struct Margin {
 
 static inline Margin
 margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
-    
+
     Margin margin = { top, right, bottom, left };
     return margin;
 }
 
 @interface FancyLayer : Layer <CocosNodeRGBA> {
 
-    CGSize                                  contentSize;
-    Margin                                  outerPadding;
-    Margin                                  padding;
-    float                                   innerRatio;
-    ccColor4B                               color, colorGradient;
-    
-    GLuint                                  vertexBuffer;
-    GLuint                                  colorBuffer;
+    CGSize                                   _contentSize;
+    Margin                                   _outerPadding;
+    Margin                                   _padding;
+    float                                    _innerRatio;
+    ccColor4B                                _backColor, _colorGradient;
+
+    GLuint                                   _vertexBuffer;
+    GLuint                                   _colorBuffer;
 }
 
 @property (nonatomic, readonly) CGSize      contentSize;

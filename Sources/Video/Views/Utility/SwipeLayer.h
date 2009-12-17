@@ -26,14 +26,14 @@
 
 @interface SwipeLayer : Layer {
 
-    NSInvocation    *invocation;
-    
-    IntervalAction  *swipeAction;
-    CGPoint          swipeFrom;
-    CGPoint          swipeTo;
-    CGPoint          swipeStart;
-    BOOL            swipeForward;
-    BOOL            swiped;
+    NSInvocation     *_invocation;
+
+    IntervalAction   *_swipeAction;
+    CGPoint           _swipeFrom;
+    CGPoint           _swipeTo;
+    CGPoint           _swipeStart;
+    BOOL             _swipeForward;
+    BOOL             _swiped;
 }
 
 +(id) nodeWithTarget:(id)t selector:(SEL)s;

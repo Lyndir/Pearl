@@ -53,17 +53,17 @@ typedef enum MenuLayout {
 @interface MenuLayer : ShadeLayer <Resettable> {
 
 @private
-    NSArray                                                 *items;
-    Menu                                                    *menu;
-    MenuItem                                                *logo;
-    
-    MenuLayout                                              layout;
-    BOOL                                                    layoutDirty;
-    
-    id<NSObject, MenuDelegate>                              delegate;
+    NSArray                                                  *_items;
+    Menu                                                     *_menu;
+    MenuItem                                                 *_logo;
+
+    MenuLayout                                               _layout;
+    BOOL                                                     _layoutDirty;
+
+    id<NSObject, MenuDelegate>                               _delegate;
 }
 
-@property (readonly) Menu                                   *menu;
+@property (readonly, retain) Menu                                   *menu;
 @property (readwrite) MenuLayout                            layout;
 @property (readwrite, copy) NSArray                         *items;
 @property (readwrite, retain) MenuItem                      *logo;

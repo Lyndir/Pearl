@@ -29,17 +29,35 @@
 
 @interface ScrollLayer ()
 
-@property (readwrite) CGPoint       scroll;
 
 - (CGPoint)limitPoint:(CGPoint)point;
+
+@property (readwrite, assign) CGPoint                                      dragFromPoint;
+@property (readwrite, assign) CGPoint                                      dragFromPosition;
+
+
+@property (readwrite, assign) CGPoint                                      origin;
+@property (readwrite, assign) CGPoint                                      scroll;
+
+@property (readwrite, assign) BOOL                                         isTouching;
 
 @end
 
 
 @implementation ScrollLayer
 
-@synthesize scrollPerSecond, scrollRatio, scrollStep, scrollContentDirection, scrollContentSize, delegate;
-@synthesize scroll;
+@synthesize dragFromPoint = _dragFromPoint;
+@synthesize dragFromPosition = _dragFromPosition;
+@synthesize scrollPerSecond = _scrollPerSecond;
+@synthesize scrollRatio = _scrollRatio;
+@synthesize scrollStep = _scrollStep;
+@synthesize scrollContentDirection = _scrollContentDirection;
+@synthesize scrollContentSize = _scrollContentSize;
+@synthesize origin = _origin;
+@synthesize scroll = _scroll;
+@synthesize isTouching = _isTouching;
+@synthesize delegate = _delegate;
+
 
 
 + (ScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
@@ -62,10 +80,10 @@
     if (!(self = [super init]))
         return nil;
     
-    scrollRatio             = ccp(0.0f, 1.0f);
-    scrollPerSecond         = kDefaultScrollPerSecond;
-    scrollContentSize       = contentSize;
-    scrollContentDirection  = direction;
+    self.scrollRatio             = ccp(0.0f, 1.0f);
+    self.scrollPerSecond         = kDefaultScrollPerSecond;
+    self.scrollContentSize       = contentSize;
+    self.scrollContentDirection  = direction;
     self.isTouchEnabled     = YES;
 
     [self schedule:@selector(tick:)];
@@ -93,31 +111,31 @@
     [self scrollBy:CGPointZero];
 
     // Remember where the dragging began.
-    dragFromPosition        = self.position;
-    dragFromPoint           = [self.parent convertTouchToNodeSpace:touch];
+    self.dragFromPosition        = self.position;
+    self.dragFromPoint           = [self.parent convertTouchToNodeSpace:touch];
     
-    return isTouching = YES;
+    return self.isTouching = YES;
 }
 
 
 - (void)ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event {
     
     CGPoint dragToPoint     = [self.parent convertTouchToNodeSpace:touch];
-    self.scroll             = ccp((dragToPoint.x - dragFromPoint.x) * scrollRatio.x,
-                                  (dragToPoint.y - dragFromPoint.y) * scrollRatio.y);
+    self.scroll             = ccp((dragToPoint.x - self.dragFromPoint.x) * self.scrollRatio.x,
+                                  (dragToPoint.y - self.dragFromPoint.y) * self.scrollRatio.y);
 }
 
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
     
     // Limit the target of the scroll (origin + scroll).
-    self.scroll             = ccpSub([self limitPoint:ccpAdd(origin, scroll)], origin);
+    self.scroll             = ccpSub([self limitPoint:ccpAdd(self.origin, self.scroll)], self.origin);
     
     // Apply the scroll step.
-    self.scroll             = ccp(scrollStep.x? roundf(scroll.x / scrollStep.x) * scrollStep.x: roundf(scroll.x),
-                                  scrollStep.y? roundf(scroll.y / scrollStep.y) * scrollStep.y: roundf(scroll.y));
+    self.scroll             = ccp(self.scrollStep.x? roundf(self.scroll.x / self.scrollStep.x) * self.scrollStep.x: roundf(self.scroll.x),
+                                  self.scrollStep.y? roundf(self.scroll.y / self.scrollStep.y) * self.scrollStep.y: roundf(self.scroll.y));
     
-    isTouching              = NO;
+    self.isTouching              = NO;
 }
 
 
@@ -127,7 +145,7 @@
     aScrollStep.x           = fmaxf(aScrollStep.x, 1);
     aScrollStep.y           = fmaxf(aScrollStep.y, 1);
     
-    scrollStep              = aScrollStep;
+    self.scrollStep              = aScrollStep;
 }
 
 
@@ -135,8 +153,8 @@
     
     [super onEnter];
     
-    if ([delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
-        [delegate didUpdateScrollWithOrigin:origin to:scroll];
+    if ([self.delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
+        [self.delegate didUpdateScrollWithOrigin:self.origin to:self.scroll];
 }
 
 
@@ -148,20 +166,20 @@
 
 - (CGPoint)limitPoint:(CGPoint)point {
 
-    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
-                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint scrollBound     = ccp(fmaxf(self.scrollContentSize.width  - self.contentSize.width,  0),
+                                  fmaxf(self.scrollContentSize.height - self.contentSize.height, 0));
     CGPoint limitPoint      = point;
     
-    if (scrollContentDirection & ScrollContentDirectionBottomToTop)
+    if (self.scrollContentDirection & ScrollContentDirectionBottomToTop)
         limitPoint.y        = fminf(fmaxf(point.y, -scrollBound.y), 0);
-    else if (scrollContentDirection & ScrollContentDirectionTopToBottom)
+    else if (self.scrollContentDirection & ScrollContentDirectionTopToBottom)
         limitPoint.y        = fminf(fmaxf(point.y, 0), scrollBound.y);
     else
         limitPoint.y        = 0;
 
-    if (scrollContentDirection & ScrollContentDirectionLeftToRight)
+    if (self.scrollContentDirection & ScrollContentDirectionLeftToRight)
         limitPoint.x        = fminf(fmaxf(point.x, -scrollBound.x), 0);
-    else if (scrollContentDirection & ScrollContentDirectionRightToLeft)
+    else if (self.scrollContentDirection & ScrollContentDirectionRightToLeft)
         limitPoint.x        = fminf(fmaxf(point.x, 0), scrollBound.x);
     else
         limitPoint.x        = 0;
@@ -172,22 +190,22 @@
 
 - (void)setScroll:(CGPoint)newScroll {
     
-    if (CGPointEqualToPoint(newScroll, scroll))
+    if (CGPointEqualToPoint(newScroll, self.scroll))
         return;
     
-    scroll = newScroll;
-    if ([delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
-        [delegate didUpdateScrollWithOrigin:origin to:newScroll];
+    self.scroll = newScroll;
+    if ([self.delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
+        [self.delegate didUpdateScrollWithOrigin:self.origin to:newScroll];
 }
 
 
 - (void)scrollBy:(CGPoint)scrollOffset {
     
     if ([self isScrollValid:scrollOffset]) {
-        origin              = [self limitPoint:ccpAdd(origin, scroll)];
+        self.origin              = [self limitPoint:ccpAdd(self.origin, self.scroll)];
         self.scroll         = scrollOffset;
     } else {
-        origin              = [self limitPoint:ccpAdd(origin, scroll)];
+        self.origin              = [self limitPoint:ccpAdd(self.origin, self.scroll)];
         self.scroll         = CGPointZero;
     }
 }
@@ -195,7 +213,7 @@
 
 - (BOOL)isScrollValid:(CGPoint)scrollOffset {
     
-    CGPoint target = [self limitPoint:ccpAdd(origin, scroll)];
+    CGPoint target = [self limitPoint:ccpAdd(self.origin, self.scroll)];
     return !CGPointEqualToPoint([self limitPoint:ccpAdd(target, scrollOffset)], target);
 }
 
@@ -209,7 +227,7 @@
 
 - (void)tick:(ccTime)dt {
     
-    CGPoint scrollTarget    = ccpAdd(origin, scroll);
+    CGPoint scrollTarget    = ccpAdd(self.origin, self.scroll);
     CGPoint scrollLeft      = ccpSub(scrollTarget, self.position);
     CGFloat scrollLeftLen   = ccpLength(scrollLeft);
 
@@ -218,13 +236,13 @@
     
     if (scrollLeftLen <= 1) {
         // We're really close, short cut.
-        if (!isTouching)
+        if (!self.isTouching)
             [self scrollBy:CGPointZero];
         self.position       = scrollTarget;
         return;
     }
 
-    CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * scrollPerSecond * dt);
+    CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * self.scrollPerSecond * dt);
     self.position           = ccpAdd(self.position, tickStep);
 }
 
@@ -261,8 +279,8 @@
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    CGPoint scrollBound     = ccp(fmaxf(scrollContentSize.width  - self.contentSize.width,  0),
-                                  fmaxf(scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint scrollBound     = ccp(fmaxf(self.scrollContentSize.width  - self.contentSize.width,  0),
+                                  fmaxf(self.scrollContentSize.height - self.contentSize.height, 0));
     CGPoint scrollProgress  = ccp(scrollBound.x? self.position.x / scrollBound.x: 0,
                                   scrollBound.y? self.position.y / scrollBound.y: 0);
     
@@ -270,11 +288,11 @@
         CGPoint from        = ccpSub(ccp(5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 10, 5), self.position);
         CGPoint scrollPointFrom, scrollPointTo;
-        if (scrollContentDirection & ScrollContentDirectionLeftToRight) {
+        if (self.scrollContentDirection & ScrollContentDirectionLeftToRight) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f));
             scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f - 0.05f));
         }
-        else if (scrollContentDirection & ScrollContentDirectionRightToLeft) {
+        else if (self.scrollContentDirection & ScrollContentDirectionRightToLeft) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f));
             scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f + 0.05f));
         }
@@ -288,11 +306,11 @@
         CGPoint from        = ccpSub(ccp(self.contentSize.width - 5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 5, self.contentSize.height - 10), self.position);
         CGPoint scrollPointFrom, scrollPointTo;
-        if (scrollContentDirection & ScrollContentDirectionTopToBottom) {
+        if (self.scrollContentDirection & ScrollContentDirectionTopToBottom) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f));
             scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f + 0.05f));
         }
-        else if (scrollContentDirection & ScrollContentDirectionBottomToTop) {
+        else if (self.scrollContentDirection & ScrollContentDirectionBottomToTop) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f));
             scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f + 0.05f));
         }

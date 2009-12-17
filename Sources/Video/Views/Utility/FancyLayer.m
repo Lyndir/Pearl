@@ -25,9 +25,27 @@
 #import "FancyLayer.h"
 
 
+@interface FancyLayer ()
+
+@property (nonatomic, readwrite, assign) CGSize                                   contentSize;
+@property (readwrite, assign) ccColor4B                                backColor;
+
+@property (readwrite, assign) GLuint                                   vertexBuffer;
+@property (readwrite, assign) GLuint                                   colorBuffer;
+
+@end
+
+
 @implementation FancyLayer
 
-@synthesize contentSize, outerPadding, padding, innerRatio, colorGradient;
+@synthesize contentSize = _contentSize;
+@synthesize outerPadding = _outerPadding;
+@synthesize padding = _padding;
+@synthesize innerRatio = _innerRatio;
+@synthesize backColor = _backColor, colorGradient = _colorGradient;
+@synthesize vertexBuffer = _vertexBuffer;
+@synthesize colorBuffer = _colorBuffer;
+
 
 
 - (id)init {
@@ -35,14 +53,14 @@
     if(!(self = [super init]))
         return self;
     
-    outerPadding    = margin(5.0f, 5.0f, 5.0f, 5.0f);
-    padding         = margin(50.0f, 50.0f, 50.0f, 50.0f);
-    color           = ccc4(0x00, 0x00, 0x00, 0xdd);
-    colorGradient   = ccc4(0x00, 0x00, 0x00, 0xdd);
-    innerRatio      = 1.0f / 50.0f;
+    self.outerPadding    = margin(5.0f, 5.0f, 5.0f, 5.0f);
+    self.padding         = margin(50.0f, 50.0f, 50.0f, 50.0f);
+    self.backColor       = ccc4(0x00, 0x00, 0x00, 0xdd);
+    self.colorGradient   = ccc4(0x00, 0x00, 0x00, 0xdd);
+    self.innerRatio      = 1.0f / 50.0f;
     
-    vertexBuffer    = 0;
-    colorBuffer     = 0;
+    self.vertexBuffer    = 0;
+    self.colorBuffer     = 0;
     
     [self update];
     
@@ -70,8 +88,8 @@
     }
     
     CGSize winSize      = [[Director sharedDirector] winSize];
-    contentSize         = CGSizeMake(winSize.width, winSize.height - barHeight);
-    int inner           = contentSize.height * innerRatio;
+    self.contentSize         = CGSizeMake(winSize.width, winSize.height - barHeight);
+    int inner           = self.contentSize.height * self.innerRatio;
     
     /*
            pos.x + pad                                pos.x + width - pad - inner
@@ -96,40 +114,40 @@
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = contentSize.width / 2;                            // 1
-    vertices[1]     = contentSize.height / 2;
-    vertices[2]     = outerPadding.left + inner;                        // 2
-    vertices[3]     = outerPadding.bottom;
-    vertices[4]     = outerPadding.left;                                // 3
-    vertices[5]     = outerPadding.bottom + inner;
-    vertices[6]     = outerPadding.left;                                // 4
-    vertices[7]     = contentSize.height - outerPadding.top - inner;
-    vertices[8]     = outerPadding.left + inner;                        // 5
-    vertices[9]     = contentSize.height - outerPadding.top;
-    vertices[10]    = contentSize.width - outerPadding.right - inner;   // 6
-    vertices[11]    = contentSize.height - outerPadding.top;
-    vertices[12]    = contentSize.width - outerPadding.right;           // 7
-    vertices[13]    = contentSize.height - outerPadding.top - inner;
-    vertices[14]    = contentSize.width - outerPadding.right;           // 8
-    vertices[15]    = outerPadding.bottom + inner;
-    vertices[16]    = contentSize.width - outerPadding.right - inner;   // 9
-    vertices[17]    = outerPadding.bottom;
-    vertices[18]    = outerPadding.left + inner;                        // 10
-    vertices[19]    = outerPadding.bottom;
+    vertices[0]     = self.contentSize.width / 2;                            // 1
+    vertices[1]     = self.contentSize.height / 2;
+    vertices[2]     = self.outerPadding.left + inner;                        // 2
+    vertices[3]     = self.outerPadding.bottom;
+    vertices[4]     = self.outerPadding.left;                                // 3
+    vertices[5]     = self.outerPadding.bottom + inner;
+    vertices[6]     = self.outerPadding.left;                                // 4
+    vertices[7]     = self.contentSize.height - self.outerPadding.top - inner;
+    vertices[8]     = self.outerPadding.left + inner;                        // 5
+    vertices[9]     = self.contentSize.height - self.outerPadding.top;
+    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 6
+    vertices[11]    = self.contentSize.height - self.outerPadding.top;
+    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 7
+    vertices[13]    = self.contentSize.height - self.outerPadding.top - inner;
+    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 8
+    vertices[15]    = self.outerPadding.bottom + inner;
+    vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 9
+    vertices[17]    = self.outerPadding.bottom;
+    vertices[18]    = self.outerPadding.left + inner;                        // 10
+    vertices[19]    = self.outerPadding.bottom;
 
     ccColor4B *colors = malloc(sizeof(ccColor4B) * 10);
-    colors[1] = colors[2] = colors[7] = colors[8] = colors[9] = color;
-    colors[3] = colors[4] = colors[5] = colors[6] = colorGradient;
-    colors[0] = color;
+    colors[1] = colors[2] = colors[7] = colors[8] = colors[9] = self.backColor;
+    colors[3] = colors[4] = colors[5] = colors[6] = self.colorGradient;
+    colors[0] = self.backColor;
     
     // Push our window data into VBOs.
-    glDeleteBuffers(1, &vertexBuffer);
-    glDeleteBuffers(1, &colorBuffer);
-    glGenBuffers(1, &vertexBuffer);
-    glGenBuffers(1, &colorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glDeleteBuffers(1, &_vertexBuffer);
+    glDeleteBuffers(1, &_colorBuffer);
+    glGenBuffers(1, &_vertexBuffer);
+    glGenBuffers(1, &_colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat *) * 10 * 2, vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(ccColor4B) * 10, colors, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
@@ -141,44 +159,41 @@
 
 -(void) setOuterPadding:(Margin)anOuterPadding {
     
-    outerPadding = anOuterPadding;
+    _outerPadding = anOuterPadding;
     [self update];
 }
 
 
 -(void) setPadding:(Margin)aPadding {
     
-    padding = aPadding;
+    _padding = aPadding;
     [self update];
 }
 
 
--(void) setInnerRatio:(float)_innerRatio {
+-(void) setInnerRatio:(float)anInnerRatio {
     
-    innerRatio = _innerRatio;
+    _innerRatio = anInnerRatio;
     [self update];
 }
 
 
 - (ccColor3B)color {
     
-    return ccc3(color.r, color.g, color.b);
+    return ccc3(self.color.r, self.color.g, self.color.b);
 }
 
 
 - (GLubyte)opacity {
     
-    return color.a;
+    return self.backColor.a;
 }
 
 
 - (void)setColor:(ccColor3B)newColor {
     
-    color.r = newColor.r;
-    color.g = newColor.g;
-    color.b = newColor.b;
-
-    self.colorGradient = color;
+    self.backColor = ccc4(newColor.r, newColor.g, newColor.b, self.backColor.a);
+    self.colorGradient = self.backColor;
     
     [self update];
 }
@@ -186,7 +201,7 @@
 
 - (void)setOpacity: (GLubyte)anOpacity {
     
-    color.a = anOpacity;
+    _backColor.a = anOpacity;
     
     [self update];
 }
@@ -196,11 +211,11 @@
     
     // Tell OpenGL about our data.
 	glEnableClientState(GL_VERTEX_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
 	glVertexPointer(2, GL_FLOAT, 0, 0);
 
 	glEnableClientState(GL_COLOR_ARRAY);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
 	
     glBindBuffer(GL_ARRAY_BUFFER, 0);

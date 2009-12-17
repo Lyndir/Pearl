@@ -26,67 +26,86 @@
 #import "Remove.h"
 
 
+@interface BarLayer ()
+
+@property (readwrite, retain) MenuItemFont         *menuButton;
+@property (readwrite, retain) Menu                 *menuMenu;
+@property (readwrite, retain) Label                *messageLabel;
+
+@property (readwrite, assign) long                 color;
+@property (readwrite, assign) long                 renderColor;
+@property (readwrite, assign) CGPoint               showPosition;
+
+@property (nonatomic, readwrite, assign) BOOL                 dismissed;
+
+@end
+
+
 @implementation BarLayer
 
-@synthesize dismissed;
+@synthesize menuButton = _menuButton;
+@synthesize menuMenu = _menuMenu;
+@synthesize messageLabel = _messageLabel;
+@synthesize color = _color, renderColor = _renderColor;
+@synthesize showPosition = _showPosition;
+@synthesize dismissed = _dismissed;
 
++ (BarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition {
+    
+    return [[[self alloc] initWithColor:aColor position:aShowPosition] autorelease];
+}
 
--(id) initWithColor:(long)aColor position:(CGPoint)_showPosition {
+-(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition {
     
     if(!(self = [super initWithFile:@"bar.png"]))
         return self;
 
-    color           = aColor;
-    renderColor     = aColor;
-    showPosition    = ccpAdd(_showPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
-    dismissed       = YES;
+    self.color           = aColor;
+    self.renderColor     = aColor;
+    self.showPosition    = ccpAdd(aShowPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
+    self.dismissed       = YES;
 
-    menuButton      = nil;
-    menuMenu        = nil;
-    
     return self;
 }
 
 
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
 
-    if(menuMenu) {
-        [self removeChild:menuMenu cleanup:NO];
-        [menuMenu release];
-        [menuButton release];
-        menuMenu    = nil;
-        menuButton  = nil;
+    if(self.menuMenu) {
+        [self removeChild:self.menuMenu cleanup:NO];
+        self.menuMenu    = nil;
+        self.menuButton  = nil;
     }
     
     if(!aFile)
         // No string means no button.
         return;
         
-    menuButton          = [[MenuItemImage itemFromNormalImage:aFile selectedImage:aFile
-                                                       target:target selector:selector] retain];
-    menuMenu            = [[Menu menuWithItems:menuButton, nil] retain];
-    menuMenu.position   = ccp(self.contentSize.width - menuButton.contentSize.width / 2, 16);
+    self.menuButton          = [MenuItemImage itemFromNormalImage:aFile selectedImage:aFile
+                                                           target:target selector:selector];
+    self.menuMenu            = [Menu menuWithItems:self.menuButton, nil];
+    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2, 16);
 
     
-    [menuMenu alignItemsHorizontally];
-    [self addChild:menuMenu];
+    [self.menuMenu alignItemsHorizontally];
+    [self addChild:self.menuMenu];
 }
 
 
 -(void) onEnter {
     
-    dismissed = NO;
+    self.dismissed = NO;
     
     [super onEnter];
     
     [self stopAllActions];
     
-    if([messageLabel parent])
-        [self removeChild:messageLabel cleanup:NO];
+    if([self.messageLabel parent])
+        [self removeChild:self.messageLabel cleanup:NO];
     
     self.position = self.hidePosition;
     [self runAction:[MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                               position:showPosition]];
+                               position:self.showPosition]];
 }
 
 
@@ -98,28 +117,26 @@
 
 -(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important {
     
-    if (messageLabel) {
-        [self removeChild:messageLabel cleanup:YES];
-        [messageLabel release];
-    }
+    if (self.messageLabel)
+        [self removeChild:self.messageLabel cleanup:YES];
     
     CGFloat fontSize = [[Config get].smallFontSize intValue];
-    messageLabel = [[Label alloc] initWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
-                                        fontName:[Config get].fixedFontName fontSize:fontSize];
+    self.messageLabel = [Label labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
+                                      fontName:[Config get].fixedFontName fontSize:fontSize];
 
     if(important) {
-        renderColor = 0x993333FF;
-        [messageLabel setColor:ccc3(0xCC, 0x33, 0x33)];
+        self.renderColor = 0x993333FF;
+        [self.messageLabel setColor:ccc3(0xCC, 0x33, 0x33)];
     } else {
-        renderColor = color;
-        [messageLabel setColor:ccc3(0xFF, 0xFF, 0xFF)];
+        self.renderColor = self.color;
+        [self.messageLabel setColor:ccc3(0xFF, 0xFF, 0xFF)];
     }
     
-    [messageLabel setPosition:ccp(self.contentSize.width / 2, fontSize / 2 + 2)];
-    [self addChild:messageLabel];
+    [self.messageLabel setPosition:ccp(self.contentSize.width / 2, fontSize / 2 + 2)];
+    [self addChild:self.messageLabel];
     
     if(_duration)
-        [messageLabel runAction:[Sequence actions:
+        [self.messageLabel runAction:[Sequence actions:
                                  [DelayTime actionWithDuration:_duration],
                                  [CallFunc actionWithTarget:self selector:@selector(dismissMessage)],
                                  nil]];
@@ -128,24 +145,24 @@
 
 -(void) dismissMessage {
     
-    [messageLabel stopAllActions];
-    [self removeChild:messageLabel cleanup:NO];
+    [self.messageLabel stopAllActions];
+    [self removeChild:self.messageLabel cleanup:NO];
     
-    renderColor = color;
+    self.renderColor = self.color;
 }
 
 
 -(void) dismiss {
     
-    if(dismissed)
+    if(self.dismissed)
         // Already being dismissed.
         return;
     
-    dismissed = YES;
+    self.dismissed = YES;
     
     [self stopAllActions];
     
-    self.position = showPosition;
+    self.position = self.showPosition;
     [self runAction:[Sequence actions:
               [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
                                 position:self.hidePosition],
@@ -156,7 +173,7 @@
 
 -(CGPoint) hidePosition {
     
-    return ccpAdd(showPosition, ccp(0, -self.contentSize.height));
+    return ccpAdd(self.showPosition, ccp(0, -self.contentSize.height));
 }
 
 
@@ -170,14 +187,9 @@
 
 -(void) dealloc {
     
-    [messageLabel release];
-    messageLabel = nil;
-    
-    [menuButton release];
-    menuButton = nil;
-    
-    [menuMenu release];
-    menuMenu = nil;
+    self.messageLabel = nil;
+    self.menuButton = nil;
+    self.menuMenu = nil;
     
     [super dealloc];
 }

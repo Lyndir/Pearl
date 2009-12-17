@@ -27,10 +27,14 @@
 
 @interface HUDLayer : BarLayer {
 
-    Sprite              *scoreSprite;
-    LabelAtlas          *scoreCount;
-    BarLayer            *messageBar;
+    Sprite               *_scoreSprite;
+    LabelAtlas           *_scoreCount;
+    BarLayer             *_messageBar;
 }
+
+@property (readonly, retain) Sprite               *scoreSprite;
+@property (readonly, retain) LabelAtlas           *scoreCount;
+@property (readonly, retain) BarLayer             *messageBar;
 
 -(void) updateHudWasGood:(BOOL)wasGood;
 -(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood;

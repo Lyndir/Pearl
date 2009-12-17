@@ -26,14 +26,14 @@
 @interface PropertyAction : IntervalAction {
 
 @private
-    NSString    *key;
-    NSNumber    *from, *to;
-    
-    float       delta;
+    NSString     *_key;
+    NSNumber     *_from, *_to;
+
+    float        _delta;
 }
 
 + (id)actionWithDuration:(ccTime)aDuration key:(NSString *)aKey from:(NSNumber *)aFrom to:(NSNumber *)aTo;
 
 - (id)initWithDuration:(ccTime)aDuration key:(NSString *)aKey from:(NSNumber *)aFrom to:(NSNumber *)aTo;
-    
+
 @end

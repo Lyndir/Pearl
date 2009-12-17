@@ -25,7 +25,16 @@
 #import "MenuItemSpacer.h"
 
 
+@interface MenuItemSpacer ()
+
+@property (readwrite, assign) CGFloat  height;
+
+@end
+
+
 @implementation MenuItemSpacer
+
+@synthesize height = _height;
 
 +(id) spacerSmall {
     
@@ -58,12 +67,12 @@
 }
 
 
--(id) initWithHeight:(CGFloat)_height {
+-(id) initWithHeight:(CGFloat)aHeight {
     
     if(!(self = [super initWithTarget:nil selector:nil]))
         return self;
     
-    height = _height;
+    self.height = aHeight;
     [self setIsEnabled:NO];
     
     return self;
@@ -72,13 +81,13 @@
 
 -(CGRect) rect {
     
-	return CGRectMake(self.position.x, self.position.y - height / 2, self.position.x, self.position.y + height / 2);
+	return CGRectMake(self.position.x, self.position.y - self.height / 2, self.position.x, self.position.y + self.height / 2);
 }
 
 
 -(CGSize) contentSize {
     
-	return CGSizeMake(0, height);
+	return CGSizeMake(0, self.height);
 }
 
 

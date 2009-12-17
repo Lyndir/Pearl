@@ -28,7 +28,29 @@
 #define gSwipeMaxVertical 100
 
 
+@interface SwipeLayer ()
+
+@property (readwrite, retain) NSInvocation     *invocation;
+
+@property (readwrite, retain) IntervalAction   *swipeAction;
+@property (readwrite, assign) CGPoint           swipeFrom;
+@property (readwrite, assign) CGPoint           swipeTo;
+@property (readwrite, assign) CGPoint           swipeStart;
+@property (readwrite, assign) BOOL             swipeForward;
+@property (readwrite, assign) BOOL             swiped;
+
+@end
+
+
 @implementation SwipeLayer
+
+@synthesize invocation = _invocation;
+@synthesize swipeAction = _swipeAction;
+@synthesize swipeFrom = _swipeFrom;
+@synthesize swipeTo = _swipeTo;
+@synthesize swipeStart = _swipeStart;
+@synthesize swipeForward = _swipeForward;
+@synthesize swiped = _swiped;
 
 
 +(id) nodeWithTarget:(id)t selector:(SEL)s {
@@ -44,11 +66,10 @@
     
     CGSize winSize = [[Director sharedDirector] winSize];
 
-    swiped          = NO;
-    swipeStart      = ccp(-1, -1);
-    swipeAction     = nil;
-    swipeFrom       = CGPointZero;
-    swipeTo         = ccp(winSize.width, winSize.height);
+    self.swiped          = NO;
+    self.swipeStart      = ccp(-1, -1);
+    self.swipeFrom       = CGPointZero;
+    self.swipeTo         = ccp(winSize.width, winSize.height);
     [self setTarget:t selector:s];
 
     isTouchEnabled  = YES;
@@ -59,20 +80,17 @@
 
 -(void) setSwipeAreaFrom:(CGPoint)f to:(CGPoint)t {
     
-    swipeFrom = f;
-    swipeTo = t;
+    self.swipeFrom = f;
+    self.swipeTo = t;
 }
 
 
 - (void)setTarget:(id)t selector:(SEL)s {
     
-    [invocation release];
-    invocation = nil;
-    
     NSMethodSignature *sig = [[t class] instanceMethodSignatureForSelector:s];
-    invocation = [[NSInvocation invocationWithMethodSignature:sig] retain];
-    [invocation setTarget:t];
-    [invocation setSelector:s];
+    self.invocation = [NSInvocation invocationWithMethodSignature:sig];
+    [self.invocation setTarget:t];
+    [self.invocation setSelector:s];
 }
 
 
@@ -89,13 +107,13 @@
     CGPoint point = [touch locationInView:[touch view]];
     CGPoint swipePoint = ccp(point.y, point.x);
     
-    if(swipePoint.x < swipeFrom.x || swipePoint.y < swipeFrom.y
-        || swipePoint.x > swipeTo.x || swipePoint.y > swipeTo.y)
+    if(swipePoint.x < self.swipeFrom.x || swipePoint.y < self.swipeFrom.y
+        || swipePoint.x > self.swipeTo.x || swipePoint.y > self.swipeTo.y)
         // Lays outside swipeFrom - swipeTo box
         return kEventIgnored;
     
-    swipeStart  = swipePoint;
-    swiped      = NO;
+    self.swipeStart  = swipePoint;
+    self.swiped      = NO;
     
     return kEventHandled;
 }
@@ -106,7 +124,7 @@
     if([[event allTouches] count] != 1)
         return [self ccTouchesCancelled:touches withEvent:event];
     
-    if(swipeStart.x == -1 && swipeStart.y == -1)
+    if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
         // Swipe hasn't yet begun.
         return kEventIgnored;
     
@@ -114,19 +132,18 @@
     CGPoint point = [touch locationInView:[touch view]];
 
     CGPoint swipePoint = ccp(point.y, point.x);
-    if(fabsf(swipeStart.x - swipePoint.x) > gSwipeMinHorizontal
-        && fabsf(swipeStart.y - swipePoint.y) < gSwipeMaxVertical)
-        swiped = YES;
+    if(fabsf(self.swipeStart.x - swipePoint.x) > gSwipeMinHorizontal
+        && fabsf(self.swipeStart.y - swipePoint.y) < gSwipeMaxVertical)
+        self.swiped = YES;
     
     CGFloat swipeActionDuration = [[Config get].transitionDuration floatValue];
-    if(swipeAction) {
-        if(![swipeAction isDone])
-            swipeActionDuration -= swipeAction.elapsed;
-        [self stopAction:swipeAction];
-        [swipeAction release];
+    if(self.swipeAction) {
+        if(![self.swipeAction isDone])
+            swipeActionDuration -= self.swipeAction.elapsed;
+        [self stopAction:self.swipeAction];
     }
-    [self runAction:swipeAction = [[MoveTo alloc] initWithDuration:swipeActionDuration
-                                                          position:ccp(swipePoint.x - swipeStart.x, 0)]];
+    [self runAction:self.swipeAction = [MoveTo actionWithDuration:swipeActionDuration
+                                                         position:ccp(swipePoint.x - self.swipeStart.x, 0)]];
     
     return kEventHandled;
 }
@@ -134,18 +151,17 @@
 
 -(BOOL) ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if(swipeStart.x == -1 && swipeStart.y == -1)
+    if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
         return kEventIgnored;
     
-    if(swipeAction) {
-        [self stopAction:swipeAction];
-        [swipeAction release];
-        swipeAction = nil;
+    if(self.swipeAction) {
+        [self stopAction:self.swipeAction];
+        self.swipeAction = nil;
     }
     
     [self runAction:[MoveTo actionWithDuration:0.1f
                                       position:CGPointZero]];
-    swipeStart = ccp(-1, -1);
+    self.swipeStart = ccp(-1, -1);
     
     return kEventHandled;
 }
@@ -153,7 +169,7 @@
 
 -(BOOL) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if(swipeStart.x == -1 && swipeStart.y == -1)
+    if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
         return kEventIgnored;
     
     UITouch *touch = [touches anyObject];
@@ -161,24 +177,22 @@
     
     CGSize winSize = [[Director sharedDirector] winSize];
     CGPoint swipePoint = ccp(point.y, point.x);
-    CGFloat swipeDist = swipePoint.x - swipeStart.x;
-    swipeForward = swipeDist < 0;
-    CGPoint swipeTarget = ccp(winSize.width * (swipeForward? -1: 1), 0);
+    CGFloat swipeDist = swipePoint.x - self.swipeStart.x;
+    self.swipeForward = swipeDist < 0;
+    CGPoint swipeTarget = ccp(winSize.width * (self.swipeForward? -1: 1), 0);
     
-    if(swipeAction) {
-        [self stopAction:swipeAction];
-        [swipeAction release];
-    }
+    if(self.swipeAction)
+        [self stopAction:self.swipeAction];
     
-    if(swiped)
-        [self runAction:swipeAction = [[Sequence alloc] initOne:[MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                                                                                  position:swipeTarget]
-                                                            two:[CallFunc actionWithTarget:self selector:@selector(swipeDone:)]]];
+    if(self.swiped)
+        [self runAction:self.swipeAction = [Sequence actionOne:[MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                                                                                 position:swipeTarget]
+                                                           two:[CallFunc actionWithTarget:self selector:@selector(swipeDone:)]]];
     else
-        [self runAction:swipeAction = [[MoveTo alloc] initWithDuration:0.1f
-                                                              position:CGPointZero]];
+        [self runAction:self.swipeAction = [MoveTo actionWithDuration:0.1f
+                                                             position:CGPointZero]];
             
-    swipeStart = ccp(-1, -1);
+    self.swipeStart = ccp(-1, -1);
     
     return kEventHandled;
 }
@@ -186,18 +200,15 @@
 
 -(void) swipeDone:(id)sender {
 
-    [invocation setArgument:&swipeForward atIndex:2];
-    [invocation invoke];
+    [self.invocation setArgument:&_swipeForward atIndex:2];
+    [self.invocation invoke];
 }
 
 
 -(void) dealloc {
     
-    [invocation release];
-    invocation = nil;
-    
-    [swipeAction release];
-    swipeAction = nil;
+    self.invocation = nil;
+    self.swipeAction = nil;
     
     [super dealloc];
 }

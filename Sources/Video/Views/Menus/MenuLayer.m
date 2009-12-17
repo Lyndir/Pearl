@@ -58,11 +58,21 @@
 - (void)doLoad;
 - (void)doLayout;
 
+@property (readwrite, retain) Menu                                                     *menu;
+
+@property (readwrite, assign) BOOL                                                     layoutDirty;
+
 @end
 
 @implementation MenuLayer
 
-@synthesize menu, items, layout, logo, delegate;
+@synthesize items = _items;
+@synthesize menu = _menu;
+@synthesize logo = _logo;
+@synthesize layout = _layout;
+@synthesize layoutDirty = _layoutDirty;
+@synthesize delegate = _delegate;
+
 
 
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
@@ -96,10 +106,10 @@
     if(!(self = [super init]))
         return nil;
 
-    self.delegate       = aDelegate;
-    logo                = [aLogo retain];
-    items               = [menuItems retain];
-    layout              = MenuLayoutVertical;
+    self.delegate           = aDelegate;
+    self.logo               = aLogo;
+    self.items              = menuItems;
+    self.layout             = MenuLayoutVertical;
     
     return self;
 }
@@ -107,8 +117,8 @@
 
 - (void)setItems:(NSArray *)newItems {
     
-    [items release];
-    items = [newItems copy];
+    [_items release];
+    _items = [newItems copy];
     
     [self reset];
 }
@@ -116,8 +126,8 @@
 
 - (void)setLogo:(MenuItem *)aLogo {
 
-    [logo release];
-    logo = [aLogo retain];
+    [_logo release];
+    _logo = [aLogo retain];
     
     [self reset];
 }
@@ -127,16 +137,16 @@
     
     [self doLoad];
     
-    if (layoutDirty) {
-        if ([delegate respondsToSelector:@selector(didLayout:)])
-            [delegate didLayout:self];
-        layoutDirty = NO;
+    if (self.layoutDirty) {
+        if ([self.delegate respondsToSelector:@selector(didLayout:)])
+            [self.delegate didLayout:self];
+        self.layoutDirty = NO;
     }
     
     [super onEnter];
 
-    if ([delegate respondsToSelector:@selector(didEnter:)])
-        [delegate didEnter:self];
+    if ([self.delegate respondsToSelector:@selector(didEnter:)])
+        [self.delegate didEnter:self];
 }
 
 
@@ -148,11 +158,10 @@
 
 - (void)reset {
     
-    if(menu) {
-        [menu removeAllChildrenWithCleanup:YES];
-        [self removeChild:menu cleanup:YES];
-        [menu release];
-        menu = nil;
+    if(self.menu) {
+        [self.menu removeAllChildrenWithCleanup:YES];
+        [self removeChild:self.menu cleanup:YES];
+        self.menu = nil;
     }
 
     [self doLoad];
@@ -161,32 +170,32 @@
 
 - (void)doLoad {
     
-    if (menu)
+    if (self.menu)
         return;
     
-    menu = [[ClickMenu alloc] initWithItems:nil vaList:nil];
-    if (logo) {
-        [menu addChild:logo];
-        [menu addChild:[MenuItemSpacer spacerSmall]];
+    self.menu = [ClickMenu menuWithItems:nil];
+    if (self.logo) {
+        [self.menu addChild:self.logo];
+        [self.menu addChild:[MenuItemSpacer spacerSmall]];
     }
     
-    [self addChild:menu];
+    [self addChild:self.menu];
     [self doLayout];
     
-    if ([delegate respondsToSelector:@selector(didLoad:)])
-        [delegate didLoad:self];
+    if ([self.delegate respondsToSelector:@selector(didLoad:)])
+        [self.delegate didLoad:self];
     
-    layoutDirty = YES;
+    self.layoutDirty = YES;
 }
 
 - (void)doLayout {
     
-    switch (layout) {
+    switch (self.layout) {
         case MenuLayoutVertical: {
-            for (MenuItem *item in items)
-                [menu addChild:item];
+            for (MenuItem *item in self.items)
+                [self.menu addChild:item];
 
-            [menu alignItemsVertically];
+            [self.menu alignItemsVertically];
             break;
         }
 
@@ -194,12 +203,12 @@
             NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
             NSUInteger r = 0;
 
-            if (logo) {
+            if (self.logo) {
                 rows[r++] = [NSNumber numberWithUnsignedInt:1];
                 rows[r++] = [NSNumber numberWithUnsignedInt:1];
             }
             
-            NSUInteger itemsLeft = [items count], i = 0;
+            NSUInteger itemsLeft = [self.items count], i = 0;
             if (itemsLeft % 2)
                 [NSException raise:NSInternalInconsistencyException format:@"Item amount must be even for columns layout."];
             
@@ -207,24 +216,24 @@
                 if (itemsLeft >= 4) {
                     rows[r + 0] = [NSNumber numberWithUnsignedInt:2];
                     rows[r + 1] = [NSNumber numberWithUnsignedInt:2];
-                    [menu addChild:[items objectAtIndex:i + 0]];
-                    [menu addChild:[items objectAtIndex:i + 2]];
-                    [menu addChild:[items objectAtIndex:i + 1]];
-                    [menu addChild:[items objectAtIndex:i + 3]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 0]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 2]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 1]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 3]];
                     itemsLeft   -= 4;
                     i           += 4;
                 } else {
                     // itemsLeft == 2
                     rows[r + 0] = [NSNumber numberWithUnsignedInt:1];
                     rows[r + 1] = [NSNumber numberWithUnsignedInt:1];
-                    [menu addChild:[items objectAtIndex:i + 0]];
-                    [menu addChild:[items objectAtIndex:i + 1]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 0]];
+                    [self.menu addChild:[self.items objectAtIndex:i + 1]];
                     itemsLeft   -= 2;
                     i           += 2;
                 }
             }
 
-            [menu alignItemsInColumns:
+            [self.menu alignItemsInColumns:
              rows[0], rows[1], rows[2], rows[3], rows[4],
              rows[5], rows[6], rows[7], rows[8], rows[9], nil];
             break;
@@ -238,8 +247,7 @@
 
 - (void)dealloc {
     
-    [menu release];
-    menu = nil;
+    self.menu = nil;
     
     [super dealloc];
 }

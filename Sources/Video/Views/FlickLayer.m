@@ -30,10 +30,18 @@
 - (void)right:(id)sender;
 - (void)left:(id)sender;
     
+@property (readwrite, retain) ScrollLayer          *content;
+
+@property (readwrite, retain) MenuItem             *right;
+@property (readwrite, retain) MenuItem             *left;
+
 @end
 
 
 @implementation FlickLayer
+
+@synthesize content = _content;
+@synthesize right = _right, left = _left;
 
 + (FlickLayer *)flickSprites:(Sprite *)firstSprite, ... {
     
@@ -75,58 +83,58 @@
     if (!(self = [super init]))
         return nil;
     
-    content                 = [[ScrollLayer alloc] initWithContentSize:CGSizeZero direction:ScrollContentDirectionLeftToRight];
-    content.delegate        = self;
-    [self addChild:content];
+    self.content                 = [[ScrollLayer alloc] initWithContentSize:CGSizeZero direction:ScrollContentDirectionLeftToRight]; // Review Me
+    self.content.delegate        = self;
+    [self addChild:self.content];
     
     NSString *oldFontName   = [MenuItemFont fontName];
     NSUInteger oldFontSize  = [MenuItemFont fontSize];
     [MenuItemFont setFontName:[Config get].symbolicFontName];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    right                   = [[MenuItemFont itemFromString:@" ▹ "
+    self.right                   = [[MenuItemFont itemFromString:@" ▹ " // Review Me
                                                      target:self selector:@selector(right:)] retain];
-    left                    = [[MenuItemFont itemFromString:@" ◃ "
+    self.left                    = [[MenuItemFont itemFromString:@" ◃ " // Review Me
                                                      target:self selector:@selector(left:)] retain];
     [MenuItemFont setFontName:oldFontName];
     [MenuItemFont setFontSize:oldFontSize];
     
-    [self addChild:[Menu menuWithItems:right, nil]];
-    [self addChild:[Menu menuWithItems:left, nil]];
-    right.position          = ccp(self.contentSize.width / 2, 0);
-    right.anchorPoint       = ccp(1, 0.5f);
-    left.position           = ccp(-self.contentSize.width / 2, 0);
-    left.anchorPoint        = ccp(0, 0.5f);
+    [self addChild:[Menu menuWithItems:self.right, nil]];
+    [self addChild:[Menu menuWithItems:self.left, nil]];
+    self.right.position          = ccp(self.contentSize.width / 2, 0);
+    self.right.anchorPoint       = ccp(1, 0.5f);
+    self.left.position           = ccp(-self.contentSize.width / 2, 0);
+    self.left.anchorPoint        = ccp(0, 0.5f);
     
     CGFloat x = 0;
     for (Sprite *sprite in sprites) {
-        [content addChild:sprite];
+        [self.content addChild:sprite];
         
         sprite.position             = ccp(x + self.contentSize.width / 2, self.contentSize.height / 2);
         sprite.anchorPoint          = ccp(0.5f, 0.5f);
         x += self.contentSize.width;
     }
     
-    content.scrollRatio             = ccp(1.0f, 0.0f);
-    content.scrollContentSize       = CGSizeMake(x, 0);
-    content.scrollStep              = ccp(self.contentSize.width, 0);
+    self.content.scrollRatio             = ccp(1.0f, 0.0f);
+    self.content.scrollContentSize       = CGSizeMake(x, 0);
+    self.content.scrollStep              = ccp(self.contentSize.width, 0);
     
     return self;
 }
 
 -(void)didUpdateScrollWithOrigin:(CGPoint)origin to:(CGPoint)newScroll {
     
-    right.visible                   = [content isScrollValid:ccpMult(content.scrollStep, -1)];
-    left.visible                    = [content isScrollValid:content.scrollStep];
+    self.right.visible                   = [self.content isScrollValid:ccpMult(self.content.scrollStep, -1)];
+    self.left.visible                    = [self.content isScrollValid:self.content.scrollStep];
 }
 
 - (void)right:(id)sender {
     
-    [content scrollBy:ccpMult(content.scrollStep, -1)];
+    [self.content scrollBy:ccpMult(self.content.scrollStep, -1)];
 }
 
 - (void)left:(id)sender {
     
-    [content scrollBy:content.scrollStep];
+    [self.content scrollBy:self.content.scrollStep];
 }
 
 

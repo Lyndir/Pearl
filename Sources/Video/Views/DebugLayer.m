@@ -27,6 +27,8 @@
 
 @implementation DebugLayer
 
+
+
 + (DebugLayer *)get {
     
     static DebugLayer *debugLayer = nil;

@@ -27,11 +27,11 @@
 
 
 @interface AudioController : NSObject <AVAudioPlayerDelegate> {
-    
-    AVAudioPlayer               *audioPlayer;
-    NSString                    *nextTrack;
-    
-    NSMutableDictionary         *effects;
+
+    AVAudioPlayer                *_audioPlayer;
+    NSString                     *_nextTrack;
+
+    NSMutableDictionary          *_effects;
 }
 
 - (void)clickEffect;

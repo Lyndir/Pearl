@@ -28,6 +28,8 @@
 @implementation Remove
 
 
+
+
 - (void)startWithTarget:(CocosNode *)aTarget {
     
     [super startWithTarget:aTarget];

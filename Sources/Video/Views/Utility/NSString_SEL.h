@@ -16,5 +16,5 @@
 
 - (NSString *)getterToSetter;
 - (NSString *)setterToGetter;
-    
+
 @end

@@ -22,9 +22,9 @@
 @interface Layout : NSObject {
 
 @private
-    UIScrollView    *scrollView;
-    UIView          *contentView;
-    UIView *lastChild;
+    UIScrollView     *_scrollView;
+    UIView           *_contentView;
+    UIView  *_lastChild;
 }
 
 
@@ -78,7 +78,7 @@
  *
  * The given view's position and size are NOT determined by its frame.  Instead, all components are picked to maximize the given views
  * surface in the layout's frame.
- * 
+ *
  * @param top           If equal to the default argument, the view is added below the last view added to the layout (some padding added).
  *                      If equal to the default argument and this is the first view being added, the origin.y component is set to 20.
  *                      If not equal to the default argument, the view's origin.y component is set to this argument's value.
@@ -125,6 +125,6 @@
  *
  * This is the view to which all views are added using the add methods.
  */
-@property (readonly) UIView *scrollView;
+@property (readonly, retain) UIScrollView *scrollView;
 
 @end

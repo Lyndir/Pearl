@@ -28,16 +28,31 @@
 #import "DebugLayer.h"
 #import "ShadeLayer.h"
 
-@interface Director (Reveal)
+@interface Director ()
 
 -(void) startAnimation;
 
 @end
 
 
+@interface AbstractAppDelegate ()
+
+@property (nonatomic, readwrite, retain) UIWindow                                                 *window;
+
+@property (nonatomic, readwrite, retain) UILayer                                                  *uiLayer;
+
+@property (readwrite, retain) NSMutableArray                                           *menuLayers;
+
+@end
+
+
 @implementation AbstractAppDelegate
 
-@synthesize uiLayer;
+@synthesize window = _window;
+@synthesize uiLayer = _uiLayer;
+@synthesize hudLayer = _hudLayer;
+@synthesize menuLayers = _menuLayers;
+
 
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
@@ -65,8 +80,8 @@
     [[Logger get] inf:@"==================================="];
     
 	// Init the window.
-	window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame];
-	[window setUserInteractionEnabled:YES];
+	self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
+	[self.window setUserInteractionEnabled:YES];
 
 	// Director and OpenGL Setup.
     //[Director useFastDirector];
@@ -76,7 +91,7 @@
     //[[Director sharedDirector] setDisplayFPS:YES];
 #endif
 	[[Director sharedDirector] setDeviceOrientation:CCDeviceOrientationLandscapeLeft];
-    [[Director sharedDirector] attachInView:window];
+    [[Director sharedDirector] attachInView:self.window];
     
     // Random seed with timestamp.
     srandom(time(nil));
@@ -84,11 +99,11 @@
     // Menu items font.
     [MenuItemFont setFontSize:[[Config get].fontSize intValue]];
     [MenuItemFont setFontName:[Config get].fontName];
-    menuLayers = [[NSMutableArray alloc] initWithCapacity:3];
+    self.menuLayers = [NSMutableArray arrayWithCapacity:3];
 
     // Build the game scene.
-    uiLayer = [[UILayer alloc] init];
-    [uiLayer addChild:[DebugLayer get] z:99];
+    self.uiLayer = [UILayer node];
+    [self.uiLayer addChild:[DebugLayer get] z:99];
 	
     // Start the background music.
     [[AudioController get] playTrack:[Config get].currentTrack];
@@ -114,32 +129,32 @@
 
 -(void) revealHud {
     
-    if(hudLayer) {
-        if(![hudLayer dismissed])
+    if(self.hudLayer) {
+        if(![self.hudLayer dismissed])
             // Already showing and not dismissed.
             return;
     
-        if([hudLayer parent])
+        if([self.hudLayer parent])
             // Already showing and being dismissed.
-            [uiLayer removeChild:hudLayer cleanup:YES];
+            [self.uiLayer removeChild:self.hudLayer cleanup:YES];
     }
 
-    [uiLayer addChild:[self hudLayer]];
+    [self.uiLayer addChild:self.hudLayer];
 }
 
 
--(void) hideHud {
+- (void)hideHud {
     
-    [hudLayer dismiss];
+    [self.hudLayer dismiss];
 }
 
 
--(HUDLayer *) hudLayer {
+- (HUDLayer *)hudLayer {
     
-    if(!hudLayer)
-        hudLayer = [[HUDLayer alloc] init];
+    if(!_hudLayer)
+        self.hudLayer = [HUDLayer node];
     
-    return hudLayer;
+    return _hudLayer;
 }
 
 
@@ -150,22 +165,22 @@
 
 - (void)popLayer {
 
-    [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:NO];
-    [menuLayers removeLastObject];
+    [(ShadeLayer *) [self.menuLayers lastObject] dismissAsPush:NO];
+    [self.menuLayers removeLastObject];
     if([self isAnyLayerShowing])
-        [uiLayer addChild:[menuLayers lastObject]]; // FIXME: double tap back breaks me.
+        [self.uiLayer addChild:[self.menuLayers lastObject]]; // FIXME: double tap back breaks me.
     else
         [self poppedAll];
 }
 
 - (BOOL)isLastLayerShowing {
     
-    return [menuLayers count] == 1;
+    return [self.menuLayers count] == 1;
 }
 
 - (BOOL)isAnyLayerShowing {
     
-    return [menuLayers count];
+    return [self.menuLayers count];
 }
 
 - (void)poppedAll {
@@ -175,13 +190,13 @@
 
 -(void) popAllLayers {
     
-    if(![menuLayers count])
+    if(![self.menuLayers count])
         return;
 
-    id last = [menuLayers lastObject];
-    [menuLayers makeObjectsPerformSelector:@selector(dismissAsPush:) withObject:NO];
-    [menuLayers removeAllObjects];
-    [menuLayers addObject:last];
+    id last = [self.menuLayers lastObject];
+    [self.menuLayers makeObjectsPerformSelector:@selector(dismissAsPush:) withObject:NO];
+    [self.menuLayers removeAllObjects];
+    [self.menuLayers addObject:last];
 
     [self popLayer];
 }
@@ -195,9 +210,9 @@
 - (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden {
     
     if(layer.parent) {
-        if (![menuLayers containsObject:layer])
+        if (![self.menuLayers containsObject:layer])
             // Layer is showing but shouldn't have been; probably being dismissed.
-            [uiLayer removeChild:layer cleanup:YES];
+            [self.uiLayer removeChild:layer cleanup:YES];
         
         else {
             // Layer is already showing.
@@ -208,9 +223,9 @@
         }
     }
 
-    [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:YES];
-    [menuLayers addObject:layer];
-    [uiLayer addChild:layer];
+    [(ShadeLayer *) [self.menuLayers lastObject] dismissAsPush:YES];
+    [self.menuLayers addObject:layer];
+    [self.uiLayer addChild:layer];
     layer.visible = !hidden;
 }
 
@@ -246,10 +261,9 @@
 
 -(void) cleanup {
     
-    if(hudLayer && ![hudLayer parent]) {
-        [hudLayer stopAllActions];
-        [hudLayer release];
-        hudLayer = nil;
+    if(self.hudLayer && ![self.hudLayer parent]) {
+        [self.hudLayer stopAllActions];
+        self.hudLayer = nil;
     }
 
     [[AudioController get] playTrack:nil];
@@ -258,17 +272,10 @@
 
 - (void)dealloc {
     
-    [uiLayer release];
-    uiLayer = nil;
-    
-    [menuLayers release];
-    menuLayers = nil;
-    
-    [hudLayer release];
-    hudLayer = nil;
-    
-    [window release];
-    window = nil;
+    self.uiLayer = nil;
+    self.menuLayers = nil;
+    self.hudLayer = nil;
+    self.window = nil;
     
     [super dealloc];
 }

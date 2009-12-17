@@ -28,15 +28,29 @@
 #define kAccelerometerFrequency     50 //Hz
 
 
-@interface UILayer (Private)
+@interface UILayer ()
 
 -(void) resetMessage:(NSString *)msg;
 - (void)popMessageQueue:(ccTime)dt;
+
+@property (readwrite, retain) Label                                    *messageLabel;
+@property (readwrite, retain) NSMutableArray                           *messageQueue;
+@property (readwrite, retain) NSMutableArray                           *callbackQueue;
+
+@property (readwrite, retain) RotateTo                                 *rotateAction;
+@property (readwrite, assign) UIAccelerationValue                      accelX;
+@property (readwrite, assign) UIAccelerationValue                      accelY;
+@property (readwrite, assign) UIAccelerationValue                      accelZ;
 
 @end
 
 
 @implementation UILayer
+
+@synthesize messageLabel = _messageLabel;
+@synthesize messageQueue = _messageQueue, callbackQueue = _callbackQueue;
+@synthesize rotateAction = _rotateAction;
+@synthesize accelX = _accelX, accelY = _accelY, accelZ = _accelZ;
 
 
 -(id) init {
@@ -45,9 +59,9 @@
 		return self;
     
     // Build internal structures.
-    messageQueue = [[NSMutableArray alloc] initWithCapacity:3];
-    callbackQueue = [[NSMutableArray alloc] initWithCapacity:3];
-    messageLabel = nil;
+    self.messageQueue = [[NSMutableArray alloc] initWithCapacity:3]; // Review Me
+    self.callbackQueue = [[NSMutableArray alloc] initWithCapacity:3]; // Review Me
+    self.messageLabel = nil; // Review Me
     
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
     //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
@@ -88,26 +102,26 @@
 -(void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
     
     // Use a basic low-pass filter to keep only the gravity component of each axis.
-    accelX = (acceleration.x * kFilteringFactor) + (accelX * (1.0f - kFilteringFactor));
-    accelY = (acceleration.y * kFilteringFactor) + (accelY * (1.0f - kFilteringFactor));
-    accelZ = (acceleration.z * kFilteringFactor) + (accelZ * (1.0f - kFilteringFactor));
+    self.accelX = (acceleration.x * kFilteringFactor) + (self.accelX * (1.0f - kFilteringFactor));
+    self.accelY = (acceleration.y * kFilteringFactor) + (self.accelY * (1.0f - kFilteringFactor));
+    self.accelZ = (acceleration.z * kFilteringFactor) + (self.accelZ * (1.0f - kFilteringFactor));
     
     // Use the acceleration data.
-    if(accelX > 0.5)
+    if(self.accelX > 0.5)
         [self rotateTo:180];
-    else if(accelX < -0.5)
+    else if(self.accelX < -0.5)
         [self rotateTo:0];
 }
 
 
 -(void) rotateTo:(float)aRotation {
     
-    if(rotateAction) {
-        [self stopAction:rotateAction];
-        [rotateAction release];
+    if(self.rotateAction) {
+        [self stopAction:self.rotateAction];
+        [self.rotateAction release];
     }
     
-    [self runAction:rotateAction = [[RotateTo alloc] initWithDuration:0.2f angle:aRotation]];
+    [self runAction:self.rotateAction = [[RotateTo alloc] initWithDuration:0.2f angle:aRotation]]; // Review Me
 }
 
 
@@ -127,9 +141,9 @@
         [callback setSelector:selector];
     }
     
-    @synchronized(messageQueue) {
-        [messageQueue insertObject:msg atIndex:0];
-        [callbackQueue insertObject:callback? callback: (id)[NSNull null] atIndex:0];
+    @synchronized(self.messageQueue) {
+        [self.messageQueue insertObject:msg atIndex:0];
+        [self.callbackQueue insertObject:callback? callback: (id)[NSNull null] atIndex:0];
         
         //if(![self isScheduled:@selector(popMessageQueue:)])
             [self schedule:@selector(popMessageQueue:)];
@@ -139,24 +153,24 @@
 
 -(void) popMessageQueue: (ccTime)dt {
     
-    @synchronized(messageQueue) {
+    @synchronized(self.messageQueue) {
         [self unschedule:@selector(popMessageQueue:)];
         
-        if(![messageQueue count])
+        if(![self.messageQueue count])
             // No messages left, don't reschedule.
             return;
         
         [self schedule:@selector(popMessageQueue:) interval:1.5f];
     }
     
-    NSString *msg = [[messageQueue lastObject] retain];
-    [messageQueue removeLastObject];
+    NSString *msg = [[self.messageQueue lastObject] retain];
+    [self.messageQueue removeLastObject];
     
-    NSInvocation *callback = [[callbackQueue lastObject] retain];
-    [callbackQueue removeLastObject];
+    NSInvocation *callback = [[self.callbackQueue lastObject] retain];
+    [self.callbackQueue removeLastObject];
     
     [self resetMessage:msg];
-    [messageLabel runAction:[Sequence actions:
+    [self.messageLabel runAction:[Sequence actions:
                              [MoveBy actionWithDuration:1 position:ccp(0, -([[Config get].fontSize intValue] * 2))],
                              [FadeTo actionWithDuration:2 opacity:0x00],
                              nil]];
@@ -171,47 +185,47 @@
 
 -(void) resetMessage:(NSString *)msg {
     
-    if(!messageLabel || [messageLabel numberOfRunningActions]) {
+    if(!self.messageLabel || [self.messageLabel numberOfRunningActions]) {
         // Detach existing label & create a new message label for the next message.
-        if(messageLabel) {
-            [messageLabel stopAllActions];
-            [messageLabel runAction:[Sequence actions:
+        if(self.messageLabel) {
+            [self.messageLabel stopAllActions];
+            [self.messageLabel runAction:[Sequence actions:
                                      [MoveTo actionWithDuration:1
-                                                       position:ccp(-[messageLabel contentSize].width / 2, [messageLabel position].y)],
+                                                       position:ccp(-[self.messageLabel contentSize].width / 2, [self.messageLabel position].y)],
                                      [FadeOut actionWithDuration:1],
                                      [Remove action],
                                      nil]];
-            [messageLabel release];
+            [self.messageLabel release];
         }
         
-        messageLabel = [[Label alloc] initWithString:msg
+        self.messageLabel = [[Label alloc] initWithString:msg // Review Me
                                             fontName:[Config get].fixedFontName
                                             fontSize:[[Config get].fontSize intValue]];
-        [self addChild: messageLabel z:1];
+        [self addChild: self.messageLabel z:1];
     }
     else
-        [messageLabel setString:msg];
+        [self.messageLabel setString:msg];
     
     CGSize winSize = [[Director sharedDirector] winSize];
-    [messageLabel setPosition:ccp([messageLabel contentSize].width / 2 + [[Config get].fontSize intValue],
+    [self.messageLabel setPosition:ccp([self.messageLabel contentSize].width / 2 + [[Config get].fontSize intValue],
                                   winSize.height + [[Config get].fontSize intValue])];
-    [messageLabel setOpacity:0xff];
+    [self.messageLabel setOpacity:0xff];
 }
 
 
 -(void) dealloc {
     
-    [rotateAction release];
-    rotateAction = nil;
+    [self.rotateAction release];
+    self.rotateAction = nil; // Review Me
     
-    [messageQueue release];
-    messageQueue = nil;
+    [self.messageQueue release];
+    self.messageQueue = nil; // Review Me
     
-    [callbackQueue release];
-    callbackQueue = nil;
+    [self.callbackQueue release];
+    self.callbackQueue = nil; // Review Me
 
-    [messageLabel release];
-    messageLabel = nil;
+    [self.messageLabel release];
+    self.messageLabel = nil; // Review Me
     
     [super dealloc];
 }

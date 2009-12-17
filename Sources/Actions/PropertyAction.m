@@ -25,7 +25,22 @@
 #import "PropertyAction.h"
 
 
+@interface PropertyAction ()
+
+@property (readwrite, copy) NSString     *key;
+@property (readwrite, retain) NSNumber     *from;
+@property (readwrite, retain) NSNumber     *to;
+
+@property (readwrite, assign) float        delta;
+
+@end
+
+
 @implementation PropertyAction
+
+@synthesize key = _key;
+@synthesize from = _from, to = _to;
+@synthesize delta = _delta;
 
 + (id)actionWithDuration:(ccTime)aDuration key:(NSString *)aKey from:(NSNumber *)aFrom to:(NSNumber *)aTo {
 
@@ -38,9 +53,9 @@
     if (!(self = [super initWithDuration:aDuration]))
         return nil;
     
-    key     = [aKey copy];
-    from    = [aFrom copy];
-    to      = [aTo copy];
+    self.key     = aKey;
+    self.from    = aFrom;
+    self.to      = aTo;
     
     return self;
 }
@@ -49,20 +64,20 @@
     
     [super startWithTarget:aTarget];
     
-    if (from)
-        [self.target setValue:from forKey:key];
+    if (self.from)
+        [self.target setValue:self.from forKey:self.key];
     
-    delta = [to floatValue] - [from floatValue];
+    self.delta = [self.to floatValue] - [self.from floatValue];
 }
 
 - (void) update:(ccTime) dt {
     
-    [self.target setValue:[NSNumber numberWithFloat:[to floatValue] - delta * (1 - dt)] forKey:key];
+    [self.target setValue:[NSNumber numberWithFloat:[self.to floatValue] - self.delta * (1 - dt)] forKey:self.key];
 }
 
 - (IntervalAction *) reverse
 {
-	return [[self class] actionWithDuration:self.duration key:key from:to to:from];
+	return [[self class] actionWithDuration:self.duration key:self.key from:self.to to:self.from];
 }
 
 @end

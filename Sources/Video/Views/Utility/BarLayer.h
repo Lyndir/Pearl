@@ -25,18 +25,19 @@
 
 
 @interface BarLayer : Sprite {
-    
-    MenuItemFont        *menuButton;
-    Menu                *menuMenu;
-    Label               *messageLabel;
-    
-    long                color, renderColor;
-    CGPoint              showPosition;
-    
-    BOOL                dismissed;
+
+    MenuItemFont         *_menuButton;
+    Menu                 *_menuMenu;
+    Label                *_messageLabel;
+
+    long                 _color, _renderColor;
+    CGPoint               _showPosition;
+
+    BOOL                 _dismissed;
 }
 
--(id) initWithColor:(long)aColor position:(CGPoint)_showPosition;
++ (BarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition;
+-(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition;
 
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector;
 -(CGPoint) hidePosition;

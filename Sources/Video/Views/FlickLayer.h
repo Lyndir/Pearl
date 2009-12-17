@@ -27,9 +27,9 @@
 
 @interface FlickLayer : Layer<ScrollLayerDelegate> {
 
-    ScrollLayer         *content;
-    
-    MenuItem            *right, *left;
+    ScrollLayer          *_content;
+
+    MenuItem             *_right, *_left;
 }
 
 + (id)flickSprites:(Sprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;

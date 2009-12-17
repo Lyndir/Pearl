@@ -29,17 +29,18 @@
 
 
 @interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
-    
-    UIWindow                                                *window;
-    
-    UILayer                                                 *uiLayer;
-    HUDLayer                                                *hudLayer;
 
-    NSMutableArray                                          *menuLayers;
+    UIWindow                                                 *_window;
+
+    UILayer                                                  *_uiLayer;
+    HUDLayer                                                 *_hudLayer;
+
+    NSMutableArray                                           *_menuLayers;
 }
 
-@property (nonatomic, readonly) UILayer                     *uiLayer;
-@property (nonatomic, readonly) HUDLayer                    *hudLayer;
+@property (nonatomic, readonly, retain) UILayer                     *uiLayer;
+@property (nonatomic, readwrite, retain) HUDLayer                                                 *hudLayer;
+@property (nonatomic, readonly, retain) UIWindow                                                 *window;
 
 - (void)prepareUi;
 - (void)hudMenuPressed;

@@ -32,12 +32,27 @@
 - (void)_back:(CocosNode *)sender;
 - (void)_next:(CocosNode *)sender;
 
+@property (readwrite, assign) BOOL                                                     pushed;
+@property (readwrite, retain) MenuItemFont                                             *backButton;
+@property (readwrite, retain) MenuItemFont                                             *nextButton;
+@property (readwrite, retain) Menu                                                     *backMenu;
+@property (readwrite, retain) Menu                                                     *nextMenu;
+@property (readwrite, retain) NSInvocation                                             *backInvocation;
+@property (readwrite, retain) NSInvocation                                             *nextInvocation;
+
 @end
 
 
 @implementation ShadeLayer
 
-@synthesize backButton, nextButton, fadeNextEntry, background, backgroundOffset;
+@synthesize pushed = _pushed;
+@synthesize fadeNextEntry = _fadeNextEntry;
+@synthesize backButton = _backButton, nextButton = _nextButton;
+@synthesize backMenu = _backMenu, nextMenu = _nextMenu;
+@synthesize backInvocation = _backInvocation, nextInvocation = _nextInvocation;
+@synthesize background = _background;
+@synthesize backgroundOffset = _backgroundOffset;
+
 
 
 -(id) init {
@@ -45,9 +60,9 @@
     if(!(self = [super init]))
         return self;
     
-    pushed                  = NO;
-    fadeNextEntry           = YES;
-    backgroundOffset        = CGPointZero;
+    self.pushed                  = NO;
+    self.fadeNextEntry           = YES;
+    self.backgroundOffset        = CGPointZero;
     
     ccColor4B shadeColor    = ccc4l([[Config get].shadeColor longValue]);
     self.opacity            = shadeColor.a;
@@ -57,27 +72,27 @@
     NSUInteger oldFontSize  = [MenuItemFont fontSize];
     [MenuItemFont setFontName:[Config get].symbolicFontName];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    backButton              = [[MenuItemFont itemFromString:@"   ◃   "
-                                                     target:self
-                                                   selector:@selector(_back:)] retain];
+    self.backButton              = [MenuItemFont itemFromString:@"   ◃   "
+                                                         target:self
+                                                       selector:@selector(_back:)];
     [MenuItemFont setFontName:[Config get].symbolicFontName];
     [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    nextButton              = [[MenuItemFont itemFromString:@"   ▹   "
-                                                     target:self
-                                                   selector:@selector(_next:)] retain];
+    self.nextButton              = [MenuItemFont itemFromString:@"   ▹   "
+                                                         target:self
+                                                       selector:@selector(_next:)];
     [MenuItemFont setFontName:oldFontName];
     [MenuItemFont setFontSize:oldFontSize];
-    backMenu = [[Menu menuWithItems:backButton, nil] retain];
-    backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
+    self.backMenu = [Menu menuWithItems:self.backButton, nil];
+    self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
-    [backMenu alignItemsHorizontally];
+    [self.backMenu alignItemsHorizontally];
     
-    nextMenu = [[Menu menuWithItems:nextButton, nil] retain];
-    nextMenu.position = ccp(contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
+    self.nextMenu = [Menu menuWithItems:self.nextButton, nil];
+    self.nextMenu.position = ccp(self.contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
-    [nextMenu alignItemsHorizontally];
-    [self addChild:backMenu z:9];
-    [self addChild:nextMenu z:9];
+    [self.nextMenu alignItemsHorizontally];
+    [self addChild:self.backMenu z:9];
+    [self addChild:self.nextMenu z:9];
 
     [self setBackButtonTarget:self selector:@selector(back)];
     [self setNextButtonTarget:nil selector:nil];
@@ -88,45 +103,39 @@
 
 - (void) setBackButtonTarget:(id)target selector:(SEL)selector {
 
-    [backInvocation release];
-    
     if (target) {
-        backInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
-        [backInvocation setTarget:target];
-        [backInvocation setSelector:selector];
-        [backInvocation retain];
+        self.backInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+        [self.backInvocation setTarget:target];
+        [self.backInvocation setSelector:selector];
     } else
-        backInvocation = nil;
+        self.backInvocation = nil;
     
-    backMenu.visible = backInvocation != nil;
+    self.backMenu.visible = self.backInvocation != nil;
 }
 
 
 - (void) setNextButtonTarget:(id)target selector:(SEL)selector {
     
-    [nextInvocation release];
-    
     if (target) {
-        nextInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
-        [nextInvocation setTarget:target];
-        [nextInvocation setSelector:selector];
-        [nextInvocation retain];
+        self.nextInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
+        [self.nextInvocation setTarget:target];
+        [self.nextInvocation setSelector:selector];
     } else
-        nextInvocation = nil;
+        self.nextInvocation = nil;
     
-    nextMenu.visible = nextInvocation != nil;
+    self.nextMenu.visible = self.nextInvocation != nil;
 }
 
 
 - (void)_back:(CocosNode *)sender {
     
-    [backInvocation invoke];
+    [self.backInvocation invoke];
 }
 
 
 - (void)_next:(CocosNode *)sender {
     
-    [nextInvocation invoke];
+    [self.nextInvocation invoke];
 }
 
 
@@ -139,16 +148,16 @@
 
 -(void) onEnter {
         
-    [self setPosition:ccp((pushed? -1: 1) * self.contentSize.width, 0)];
+    [self setPosition:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)];
 
     [self stopAllActions];
 
     if ([[AbstractAppDelegate get] isLastLayerShowing]) {
-        if ([backMenu parent])
-            [self removeChild:backMenu cleanup:YES];
+        if ([self.backMenu parent])
+            [self removeChild:self.backMenu cleanup:YES];
     } else {
-        if (![backMenu parent])
-            [self addChild:backMenu];
+        if (![self.backMenu parent])
+            [self addChild:self.backMenu];
     }
     
     [super onEnter];
@@ -172,12 +181,12 @@
 
     [self stopAllActions];
     
-    pushed = isPushed;
+    self.pushed = isPushed;
     
     [self runAction:[Sequence actions:
                      [EaseSineIn actionWithAction:
                       [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                                        position:ccp((pushed? -1: 1) * self.contentSize.width, 0)]],
+                                        position:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)]],
                      [CallFunc actionWithTarget:self selector:@selector(gone)],
                      [Remove action],
                      nil]];
@@ -192,15 +201,15 @@
 
 - (void)setBackground:(CocosNode *)aBackground {
     
-    [background release];
-    [self removeChild:background cleanup:YES];
+    [self removeChild:self.background cleanup:YES];
     
-    background = [aBackground retain];
-    [self addChild:background z:-1];
+    [_background release];
+    _background = aBackground;
+    [self addChild:self.background z:-1];
     
     // Automatically set correct position of texture nodes.
-    if (CGPointEqualToPoint(background.position, CGPointZero) && [background isKindOfClass:[Sprite class]])
-        backgroundOffset = ccp(background.contentSize.width / 2, background.contentSize.height / 2);
+    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[Sprite class]])
+        self.backgroundOffset = ccp(self.background.contentSize.width / 2, self.background.contentSize.height / 2);
 }
 
 
@@ -208,12 +217,12 @@
     
     super.position      = newPosition;
     
-    background.position = ccp(backgroundOffset.x - newPosition.x, backgroundOffset.y - newPosition.y);
-    if ([background conformsToProtocol:@protocol(CocosNodeRGBA)] && fadeNextEntry)
-        ((id<CocosNodeRGBA>)background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
+    self.background.position = ccp(self.backgroundOffset.x - newPosition.x, self.backgroundOffset.y - newPosition.y);
+    if ([self.background conformsToProtocol:@protocol(CocosNodeRGBA)] && self.fadeNextEntry)
+        ((id<CocosNodeRGBA>)self.background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
-        fadeNextEntry   = YES;
+        self.fadeNextEntry   = YES;
 }
 
 

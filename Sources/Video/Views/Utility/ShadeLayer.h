@@ -26,22 +26,22 @@
 
 
 @interface ShadeLayer : FancyLayer {
-    
-    BOOL                                                    pushed;
-    BOOL                                                    fadeNextEntry;
-    MenuItemFont                                            *backButton, *nextButton;
-    Menu                                                    *backMenu, *nextMenu;
-    NSInvocation                                            *backInvocation, *nextInvocation;
 
-    CocosNode                                               *background;
-    CGPoint                                                 backgroundOffset;
+    BOOL                                                     _pushed;
+    BOOL                                                     _fadeNextEntry;
+    MenuItemFont                                             *_backButton, *_nextButton;
+    Menu                                                     *_backMenu, *_nextMenu;
+    NSInvocation                                             *_backInvocation, *_nextInvocation;
+
+    CocosNode                                                *_background;
+    CGPoint                                                  _backgroundOffset;
 }
 
-@property (readonly) MenuItemFont                           *backButton;
-@property (readonly) MenuItemFont                           *nextButton;
+@property (readonly, retain) MenuItemFont                           *backButton;
+@property (readonly, retain) MenuItemFont                           *nextButton;
 @property (readwrite) BOOL                                  fadeNextEntry;
 @property (readwrite, retain) CocosNode                     *background;
-@property (readwrite) CGPoint                               backgroundOffset;
+@property (readwrite, assign) CGPoint                               backgroundOffset;
 
 - (void)setBackButtonTarget:(id)target selector:(SEL)selector;
 - (void)setNextButtonTarget:(id)target selector:(SEL)selector;

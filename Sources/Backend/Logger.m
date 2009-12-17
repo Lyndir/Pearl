@@ -93,14 +93,23 @@ static NSDateFormatter *logDateFormatter = nil;
 @end
 
 
+@interface Logger ()
+
+@property (readwrite, retain) NSMutableArray           *messages;
+
+@end
+
+
 @implementation Logger
+
+@synthesize messages = _messages;
 
 - (id)init {
     
     if (!(self = [super init]))
         return nil;
     
-    messages = [[NSMutableArray alloc] initWithCapacity:20];
+    self.messages = [NSMutableArray arrayWithCapacity:20];
     
     return self;
 }
@@ -123,7 +132,7 @@ static NSDateFormatter *logDateFormatter = nil;
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     NSMutableString *formattedLog = [NSMutableString new];
-    for (LogMessage *message in messages)
+    for (LogMessage *message in self.messages)
         [formattedLog appendString:[message description]];
     
     [dateFormatter release];
@@ -144,7 +153,7 @@ static NSDateFormatter *logDateFormatter = nil;
     va_end(argList);
 
     NSLog(@"%@", message);
-    [messages addObject:message];
+    [self.messages addObject:message];
     
     return self;
 }

@@ -44,8 +44,8 @@
 
 @interface ConfigMenuLayer : MenuLayer {
 
-    NSDictionary                        *itemConfigs;
-    id<NSObject, ConfigMenuDelegate>    configDelegate;
+    NSDictionary                         *_itemConfigs;
+    id<NSObject, ConfigMenuDelegate>     _configDelegate;
 }
 
 @property (readwrite, retain) id<NSObject, ConfigMenuDelegate> configDelegate;

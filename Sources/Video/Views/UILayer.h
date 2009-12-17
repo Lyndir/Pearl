@@ -24,12 +24,12 @@
 
 
 @interface UILayer : ColorLayer {
-    
-    Label                                   *messageLabel;
-    NSMutableArray                          *messageQueue, *callbackQueue;
-    
-    RotateTo                                *rotateAction;
-    UIAccelerationValue                     accelX, accelY, accelZ;
+
+    Label                                    *_messageLabel;
+    NSMutableArray                           *_messageQueue, *_callbackQueue;
+
+    RotateTo                                 *_rotateAction;
+    UIAccelerationValue                      _accelX, _accelY, _accelZ;
 }
 
 -(void) rotateTo:(float)aRotation;

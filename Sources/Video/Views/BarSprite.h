@@ -28,19 +28,19 @@
 @interface BarSprite : Layer {
 
 @private
-    Texture2D           *head, **body, *tail;
+    Texture2D            *_head, **_body, *_tail;
 
-    CGFloat             age;
-    NSUInteger          bodyFrame, bodyFrames;
-    
-    BOOL                animatedTargetting;
-    ccTime              smoothTimeElapsed;
-    CGPoint             target;
-    
-    CGPoint             current;
-    CGFloat             currentLength;
-    
-    CGSize              textureSize;
+    CGFloat              _age;
+    NSUInteger           _bodyFrame, _bodyFrames;
+
+    BOOL                 _animatedTargetting;
+    ccTime               _smoothTimeElapsed;
+    CGPoint              _target;
+
+    CGPoint              _current;
+    CGFloat              _currentLength;
+
+    CGSize               _textureSize;
 }
 
 

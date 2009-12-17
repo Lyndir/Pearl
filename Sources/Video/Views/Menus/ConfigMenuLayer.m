@@ -31,11 +31,15 @@
 
 - (void)tapped:(id)sender;
 
+@property (readwrite, retain) NSDictionary                         *itemConfigs;
+
 @end
 
 @implementation ConfigMenuLayer
 
-@synthesize configDelegate;
+@synthesize itemConfigs = _itemConfigs;
+@synthesize configDelegate = _configDelegate;
+
 
 
 + (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
@@ -72,7 +76,7 @@
     self.configDelegate = aDelegate;
 
     NSMutableDictionary *mutableItemConfigs = [NSMutableDictionary dictionaryWithCapacity:[settings count]];
-    itemConfigs = [mutableItemConfigs retain];
+    self.itemConfigs = [mutableItemConfigs retain]; // Review Me
     
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
     for (NSString *setting in settings) {
@@ -80,8 +84,8 @@
         
         // Build the setting's toggle button.
         MenuItemToggle *menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
-        if (configDelegate && [configDelegate respondsToSelector:@selector(toggleItemsForSetting:)])
-            menuItem.subItems = [configDelegate toggleItemsForSetting:settingSel];
+        if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(toggleItemsForSetting:)])
+            menuItem.subItems = [self.configDelegate toggleItemsForSetting:settingSel];
         if (![menuItem.subItems count])
             menuItem.subItems = [NSMutableArray arrayWithObjects:
                                  [MenuItemFont itemFromString:l(@"menu.config.off")],
@@ -93,8 +97,8 @@
         
         // Build the setting's label.
         NSString *label = nil;
-        if (configDelegate && [configDelegate respondsToSelector:@selector(labelForSetting:)])
-            label = [configDelegate labelForSetting:settingSel];
+        if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(labelForSetting:)])
+            label = [self.configDelegate labelForSetting:settingSel];
         if (!label)
             label = setting;
 
@@ -112,8 +116,8 @@
     
     [super onEnter];
     
-    for (NSValue *itemValue in [itemConfigs allKeys]) {
-        NSString *selector = [itemConfigs objectForKey:itemValue];
+    for (NSValue *itemValue in [self.itemConfigs allKeys]) {
+        NSString *selector = [self.itemConfigs objectForKey:itemValue];
         MenuItemToggle *item = [itemValue pointerValue];
 
         id t = [Config get];
@@ -139,7 +143,7 @@
 - (void)tapped:(MenuItemToggle *)toggle {
     
     id t = [Config get];
-    SEL s = NSSelectorFromString([[itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);
+    SEL s = NSSelectorFromString([[self.itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);
     void* toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
     
     // Search t's class hierarchy for the selector.

@@ -29,14 +29,18 @@
 
 @interface Config ()
 
-@property (readwrite, retain) NSUserDefaults    *defaults;
+@property (readwrite, retain) NSUserDefaults                                       *defaults;
+
+@property (readwrite, retain) NSDictionary                                         *resetTriggers;
 
 @end
 
 
 @implementation Config
 
-@synthesize defaults;
+@synthesize defaults = _defaults;
+@synthesize resetTriggers = _resetTriggers;
+
 
 @dynamic firstRun;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
@@ -86,7 +90,7 @@
 
                                      nil]];
     
-    resetTriggers   = [NSDictionary new];
+    self.resetTriggers = [NSDictionary dictionary];
     
     return self;
 }
@@ -131,7 +135,7 @@
         [self.defaults setObject:value forKey:selector];
         
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
-        NSString *resetTriggerKey = [resetTriggers objectForKey:selector];
+        NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<Resettable>) [[AbstractAppDelegate get] valueForKey:resetTriggerKey] reset];
     }
@@ -147,12 +151,10 @@
 
 - (NSString *)randomTrack {
     
-    NSArray *tracks = self.tracks;
-    
-    if ([tracks count] <= 2)
+    if ([self.tracks count] <= 2)
         return @"";
     
-    return [tracks objectAtIndex:random() % ([tracks count] - 2)];
+    return [self.tracks objectAtIndex:random() % ([self.tracks count] - 2)];
 }
 - (NSNumber *)music {
 

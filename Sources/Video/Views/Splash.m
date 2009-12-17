@@ -51,10 +51,14 @@
 
 - (void)switchScene;
 
+@property (readwrite, assign) BOOL  switching;
+
 @end
 
 
 @implementation Splash
+
+@synthesize switching = _switching;
 
 
 -(id) init {
@@ -70,7 +74,7 @@
     [self addChild:loadingBar];
     [loadingBar release];
     
-    switching = NO;
+    self.switching = NO;
     
     return self;
 }
@@ -88,9 +92,9 @@
 -(void) switchScene {
     
     @synchronized(self) {
-        if(switching)
+        if(self.switching)
             return;
-        switching = YES;
+        self.switching = YES;
 
         Scene *uiScene = [Scene new];
         [uiScene addChild:[AbstractAppDelegate get].uiLayer];

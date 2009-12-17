@@ -9,9 +9,21 @@
 #import "Layout.h"
 
 
+@interface Layout ()
+
+@property (readwrite, retain) UIScrollView     *scrollView;
+@property (readwrite, retain) UIView           *contentView;
+@property (readwrite, retain) UIView  *lastChild;
+
+@end
+
+
 @implementation Layout
 
-@synthesize scrollView;
+@synthesize scrollView = _scrollView;
+@synthesize contentView = _contentView;
+@synthesize lastChild = _lastChild;
+
 
 
 - (id)init {
@@ -32,12 +44,12 @@
     CGRect contentFrame         = applicationFrame;
     contentFrame.origin         = CGPointZero;
 
-    scrollView                  = [[UIScrollView alloc] initWithFrame:applicationFrame];
-    contentView                 = [aView retain];
-    contentView.frame           = contentFrame;
-    contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.scrollView                  = [[[UIScrollView alloc] initWithFrame:applicationFrame] autorelease];
+    self.contentView                 = aView;
+    self.contentView.frame           = contentFrame;
+    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    [scrollView addSubview:contentView];
+    [self.scrollView addSubview:self.contentView];
     
     return self;
 }
@@ -52,7 +64,7 @@
 - (Layout *)addLogo:(UIImage *)logoImage {
 
     UIImageView *logo   = [[[UIImageView alloc] initWithImage:logoImage] autorelease];
-    [logo setCenter:CGPointMake(contentView.frame.size.width / 2, logo.frame.size.height / 2)];
+    [logo setCenter:CGPointMake(self.contentView.frame.size.width / 2, logo.frame.size.height / 2)];
     [logo setAutoresizingMask:
      UIViewAutoresizingFlexibleLeftMargin |
      UIViewAutoresizingFlexibleRightMargin];
@@ -83,16 +95,16 @@
 
     CGFloat y = top;
     if(y == d) {
-        if (lastChild)
-            y = [lastChild frame].origin.y + [lastChild frame].size.height + kPadding;
+        if (self.lastChild)
+            y = [self.lastChild frame].origin.y + [self.lastChild frame].size.height + kPadding;
         else
             y = 20;
     }
 
     [newView setFrame:CGRectMake(0,
                                  y,
-                                 contentView.frame.size.width,
-                                 scrollView.frame.size.height / 1 - y - kPadding - minus)];
+                                 self.contentView.frame.size.width,
+                                 self.scrollView.frame.size.height / 1 - y - kPadding - minus)];
     
     return [self add:newView usingDefault:-1];
 }
@@ -119,23 +131,22 @@
     CGFloat w = newView.frame.size.width;
     CGFloat h = newView.frame.size.height;
     if(w == d)
-        w = contentView.frame.size.width;
+        w = self.contentView.frame.size.width;
     if(h == d)
         h = 30;
     if(x == d)
-        x = (contentView.bounds.size.width - w) / 2;
+        x = (self.contentView.bounds.size.width - w) / 2;
     if(y == d) {
-        if (lastChild)
-            y = lastChild.frame.origin.y + lastChild.frame.size.height + kPadding;
+        if (self.lastChild)
+            y = self.lastChild.frame.origin.y + self.lastChild.frame.size.height + kPadding;
         else
             y = 20;
     }
     
     newView.frame = CGRectMake(x, y, w, h);
-    [contentView addSubview:newView];
+    [self.contentView addSubview:newView];
 
-    [lastChild release];
-    lastChild = [newView retain];
+    self.lastChild = newView;
     
     return self;
 }
@@ -143,14 +154,9 @@
 
 - (void)dealloc {
     
-    [scrollView release];
-    scrollView = nil;
-    
-    [contentView release];
-    contentView = nil;
-    
-    [lastChild release];
-    lastChild = nil;
+    self.scrollView = nil;
+    self.contentView = nil;
+    self.lastChild = nil;
     
     [super dealloc];
 }

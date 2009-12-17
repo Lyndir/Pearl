@@ -37,22 +37,22 @@ typedef enum ScrollContentDirection {
 
 
 @interface ScrollLayer : Layer {
-    
+
     @private
-    CGPoint                                     dragFromPoint;
-    CGPoint                                     dragFromPosition;
+    CGPoint                                      _dragFromPoint;
+    CGPoint                                      _dragFromPosition;
 
-    CGFloat                                     scrollPerSecond;
-    CGPoint                                     scrollRatio;
-    CGPoint                                     scrollStep;
-    ScrollContentDirection                      scrollContentDirection;
-    CGSize                                      scrollContentSize;
+    CGFloat                                      _scrollPerSecond;
+    CGPoint                                      _scrollRatio;
+    CGPoint                                      _scrollStep;
+    ScrollContentDirection                       _scrollContentDirection;
+    CGSize                                       _scrollContentSize;
 
-    CGPoint                                     origin;
-    CGPoint                                     scroll;
-    
-    BOOL                                        isTouching;
-    id<NSObject, ScrollLayerDelegate>           delegate;
+    CGPoint                                      _origin;
+    CGPoint                                      _scroll;
+
+    BOOL                                         _isTouching;
+    id<NSObject, ScrollLayerDelegate>            _delegate;
 }
 
 @property (readwrite) CGFloat                   scrollPerSecond;

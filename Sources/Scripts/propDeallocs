@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+#
+### IMPORTANT:
+#
+# Do this afterwards manually:
+#   - Search for all properties that are assigned a [cmv]alloc pointer and free them manually in dealloc.
+source bashlib
+
+noop=0
+while [[ $1 = -* ]]; do
+    case $1 in
+        -n) noop=1 ;;
+    esac
+    shift
+done
+
+apply() {
+    if (( noop )); then
+        colordiff -u "$1" "$1~" | less
+    else
+        mv "$1~" "$1"
+    fi
+}
+
+c=${1%.*}; c=${c##*/}
+h=${1%.*}.h
+m=${1%.*}.m
+
+propNames=()
+echo "SCANNING $c FOR PROPERTIES" >&2
+while IFS= read -r line; do
+
+    propName=${line##* }
+    propName=${propName//[*;,]/}
+
+    if [[ $line = *'@property'* ]]; then
+        if [[ $line != *'readonly'* && $line = *retain* || $line = *copy* ]]; then
+            echo " - found property that needs to be dealloc'ed: $propName." >&2
+            propNames+=("$propName")
+        fi
+    fi
+
+done < <(cat "$h" "$m")
+
+echo "PARSING $m" >&2
+hasdealloc=0
+while IFS= read -r line; do
+
+    if [[ $line = "@implementation $c"* ]]; then
+        block=implementation
+    fi
+    if [[ $block = implementation && $line = -*dealloc* ]]; then
+        hasdealloc=1
+        method=dealloc
+        methodblocks=0
+    fi
+    if [[ $block = implementation && $method && $line = *'{' ]]; then
+        (( ++methodblocks ))
+    fi
+    if [[ $block = implementation && $method = dealloc && $line = *'[super dealloc]'* ]]; then
+        if (( ${#propNames[@]} )); then
+            echo " - super dealloc called, adding missing properties: ${propNames[*]}." >&2
+            printf '    self.%s = nil;\n' "${propNames[@]}"
+            echo
+            propNames=()
+        fi
+    fi
+    if [[ $block = implementation && $method = dealloc ]]; then
+        for v in "${!propNames[@]}"; do
+            [[ $line = *"${propNames[v]}"* ]] && {
+                echo " - found ${propNames[v]}: already being dealloced." >&2
+                unset 'propNames[v]'
+            }
+        done
+    fi
+    if [[ $block = implementation && $method && $line = *'}' ]]; then
+        if (( ! --methodblocks )); then
+            case $method in
+                dealloc)
+                    if (( ${#propNames[@]} )); then
+                        echo " - dealloc ends, adding missing properties: ${propNames[*]}." >&2
+                        printf '    self.%s = nil;\n' "${propNames[@]}"
+                        echo
+                        echo "    [super dealloc];"
+                        propNames=()
+                    fi
+                ;;
+            esac
+            method=
+        fi
+    fi
+    if [[ $line = '@end'* ]]; then
+        if [[ $block = implementation ]] && (( ! hasdealloc )); then
+            echo " - implementation ends without a dealloc, adding dealloc with properties: ${propNames[*]}." >&2
+
+            echo "- (void)dealloc {"
+            echo
+            printf '    self.%s = nil;\n' "${propNames[@]}"
+            echo
+            echo "    [super dealloc];"
+            echo "}"
+            echo
+            propNames=()
+        fi
+
+        block=
+    fi
+
+    echo "$line"
+
+done < "$m" > "$m~"
+
+apply "$m"
+
+#echo "$props"
+#echo "$synths"
+

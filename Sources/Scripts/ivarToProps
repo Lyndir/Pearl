@@ -1,0 +1,254 @@
+#!/usr/bin/env bash
+#
+# We search for ivars and generate properties for them in the implementation files.
+# We then replace all access to the ivars in the implementation to use the properties instead.
+#
+source bashlib
+
+noop=0
+while [[ $1 = -* ]]; do
+    case $1 in
+        -n) noop=1 ;;
+        -h)
+            echo "${0##*/} - by lhunath"
+            echo "  Convert a class that accesses ivars directly to using properties."
+            echo
+            echo "Usage: ${0##*/} [-n] file"
+            echo
+            echo "        -n    Don't apply any changes, just show diffs of what would be changed."
+            echo "      file    Either the header (.h) or the implementation (.m) file."
+            echo
+            echo
+            echo "NOTE:"
+            echo "      This is merely a tool to ease the amount of manual labour required to accomplish the task."
+            echo "      Results are in no way reliable or trustworthy. Manual evaluation of the result is indispensible."
+            echo
+            echo
+            echo "IMPORTANT:"
+            echo "      Before running this on your code:"
+            echo "          - In your header files: define ivars that should have different retain/assign/copy on separate lines."
+            echo "      After applying changes, do the following manually:"
+            echo "          - Fix build errors ;-)"
+            echo "          - Resolve the limitations in implementation files with multiple classes:"
+            echo "              - @property, @interface and @synthesize are only applied for filename class."
+            echo "              - Properties of all classes are added to the filename class."
+            echo "          - Search for "// Review Me" lines, and correct the memory management."
+            echo "          - Search for "self." stuff where it does not belong.  For example:"
+            echo "              - In strings."
+            echo "              - Set in their own setters, returned in their own getters."
+            echo "          - Re-evaluate all retain/release statements; for example: [self.foo release]."
+            exit
+        ;;
+    esac
+    shift
+done
+
+apply() {
+    if (( noop )); then
+        colordiff -u "$1" "$1~" | less
+    else
+        mv "$1~" "$1"
+    fi
+}
+
+# Initialize.
+c=${1%.*}; c=${c##*/}
+h=${1%.*}.h
+m=${1%.*}.m
+
+allVars=()
+propSeds=()
+existingProps=()
+declare -A roPropParams
+
+emit "Scanning for existing properties in ${h##*/}"
+block=
+while IFS= read -r line; do
+
+    propName=${line##* }
+    propName=${propName//[;,]/}
+
+    existingProp=0
+    if [[ $line = '@interface'* ]]; then
+        block=interface
+    fi
+    if [[ $block = interface && $line = '}'* ]]; then
+        block=
+    fi
+    if [[ $block = interface ]]; then
+        varNames=($(perl -pe 's/^.*?(( [a-zA-Z0-9_*]*[,;])*)$/\1/' <<< "${line%%*([[:space:]])}"))
+        type=${line%"$varNames"*}
+        line=$type
+        for v in "${!varNames[@]}"; do
+            line+=" $(sed 's/[a-z]/_&/' <<< "${varNames[v]}")"
+        done
+    fi
+
+    if [[ $line = *'@property'* ]]; then
+        if [[ $line = *'readonly'* ]]; then
+            [[ $propName = '*'[^*]* ]] && {
+                [[ $line != *'retain'* ]] || {
+                    if [[ $line = *'assign'* ]]; then
+                        line=${line/assign/retain}
+                    else
+                        line=${line/readonly/readonly, retain}
+                    fi
+                }
+            }
+            roPropParams[$propName]=$(gsed 's:^.*(\([^)]*\)).*$:\1:' <<< "$line")
+        else
+            existingProp=1
+        fi
+    fi
+
+    (( existingProp )) && {
+        emit $'\t'"- Found $propName${roPropParams[$propName]:+ (${roPropParams[$propName]})}"
+        existingProps+=("$propName")
+    }
+
+    echo "${line%%*([[:space:]])}"
+
+done > "$h~" < "$h"
+apply "$h"
+
+emit "Scanning for ivars that need properties in ${h##*/}"
+while IFS= read -r line; do
+
+    if [[ $line = *[^[:space:]]* ]]; then
+        varNames=($(perl -pe 's/^.*?(( [a-zA-Z0-9_*]*[,;])*)$/\1/' <<< "${line%%*([[:space:]])}"))
+        type=${line%"$varNames"*}
+        emit $'\t'"- Found ivars: ${varNames[*]}"
+
+        [[ $varNames = '*'[^*]* ]] && memtype=retain || memtype=assign
+        case $type in
+            *'NSString'*)
+                memtype=copy ;;
+        esac
+
+        synths+="@synthesize "
+        notfirst=
+        for v in "${!varNames[@]}"; do
+            varName=${varNames[v]//[;,]/}
+            allVars+=("$varName")
+            propName=${varName//_/}
+            propSeds+=(-e "$(printf 's:\([^a-zA-Z0-9_\.]\)%q\([^a-zA-Z0-9_:]\|$\):\\1self.%q\\2:g' "${propName//'*'/}" "${propName//'*'/}")")
+
+            propExists=0
+            for existingProp in "${existingProps[@]}"; do
+                [[ $propName = $existingProp ]] && { propExists=1; break; }
+            done
+
+            params="readwrite, $memtype"
+            [[ ${roPropParams[$propName]} ]] && params=${roPropParams[$propName]/readonly/readwrite}
+            (( ! propExists )) && \
+                props+=$(sed "s/^ */@property ($params) /" <<< "$type")$propName$';\n'
+
+            synths+=$(printf "%s%s = %s" "${notfirst:+, }" "${propName//'*'/}" "${varName//'*'/}")
+            notfirst=1
+        done
+        synths+=$';\n'
+
+    else
+        props+=$'\n'
+
+    fi
+
+done < <(gsed -ne "1,/@interface $c.*{/!{/}/,/@interface $c.*{/!{/@/!p};}" "$([[ -e "$h~" ]] && echo "$h~" || echo "$h")")
+
+# Trim leading and trailing newlines.
+IFS=$'\n' read -d '' props <<< "$props"
+IFS=$'\n' read -d '' synths <<< "$synths"
+
+emit "Adding property declarations and converting ivar to property accesses in ${m##*/}"
+lineno=0
+block=
+class=
+hasinterface=0
+while IFS= read -r line; do
+    (( ++lineno ))
+
+    [[ $line = "@interface"* ]] && {
+        read _ class _ <<< "$line"
+        line=${line/(*)/()}
+
+        if [[ $class = $c ]]; then
+            hasinterface=1
+        fi
+
+        block=interface
+    }
+    [[ $line = "@implementation"* ]] && {
+        read _ class _ <<< "$line"
+
+        if [[ $class = $c ]]; then
+            if (( ! hasinterface )) && [[ $props ]]; then
+                sed -e 's:@implementation:@interface:' -e 's:$: ():' <<< "$line"
+                echo
+                echo "$props"
+                echo
+                echo "@end"
+                echo
+                echo
+            fi
+
+            echo "$line"
+            echo
+            echo "$synths"
+        else
+            echo "$line"
+        fi
+
+        block=implementation
+        continue
+    }
+    [[ $line = '@end'* ]] && {
+        if [[ $block = interface && $class = $c ]]; then
+            echo "$props"
+            echo
+        fi
+        echo "$line"
+
+        block=
+        class=
+        continue
+    }
+
+    [[ $line = '@property'* && $class = $c ]] && continue
+    [[ $line = '@synthesize'* && $class = $c ]] && continue
+
+    if [[ $block = implementation ]]; then
+        review=0
+        if (( ${#propSeds[@]} )); then
+            newline=$(gsed "${propSeds[@]}" <<< "$line")
+        else
+            newline=$line
+        fi
+
+        [[ $line = *'='* ]] && {
+            oldpart="${line%%=*}"
+            newpart="${newline%%=*}"
+            [[ $oldpart != "$newpart" && $newpart != *.*.* ]] && \
+                for varName in "${allVars[@]}"; do
+                    propName=${varName//'*'/}
+                    propName=${propName#_}
+                    [[ $newpart = *"$propName"* && $varName = '*'[^*]* ]] && {
+                        review=1
+                        break
+                    }
+                done
+        }
+
+        (( review )) && {
+            emit $'\t'"- Line $lineno needs review."
+            newline="$newline // Review Me"
+        }
+
+        [[ $line = *'//'* && "${line%%//*}" = "${newline%%//*}" ]] && newline=$line
+
+        echo "$newline"
+    else
+        echo "$line"
+    fi
+
+done < "$m" > "$m~"
+apply "$m"

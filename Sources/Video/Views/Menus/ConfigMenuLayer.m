@@ -71,8 +71,8 @@
 
     self.configDelegate = aDelegate;
 
-    NSMutableDictionary *mutableItemConfigs = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
-    itemConfigs = mutableItemConfigs;
+    NSMutableDictionary *mutableItemConfigs = [NSMutableDictionary dictionaryWithCapacity:[settings count]];
+    itemConfigs = [mutableItemConfigs retain];
     
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
     for (NSString *setting in settings) {

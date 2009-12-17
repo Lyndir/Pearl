@@ -29,17 +29,17 @@
 
 +(id) spacerSmall {
     
-    return [[[MenuItemSpacer alloc] initSmall] autorelease];
+    return [[[self alloc] initSmall] autorelease];
 }
 
 +(id) spacerNormal {
     
-    return [[[MenuItemSpacer alloc] initNormal] autorelease];
+    return [[[self alloc] initNormal] autorelease];
 }
 
 +(id) spacerLarge {
     
-    return [[[MenuItemSpacer alloc] initLarge] autorelease];
+    return [[[self alloc] initLarge] autorelease];
 }
 
 -(id) initSmall {

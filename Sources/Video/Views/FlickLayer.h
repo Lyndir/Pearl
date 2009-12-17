@@ -32,6 +32,10 @@
     MenuItem            *right, *left;
 }
 
-- (id)initWithSprites:(Sprite *)sprites, ... NS_REQUIRES_NIL_TERMINATION;
++ (id)flickSprites:(Sprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
++ (id)flickSpritesFromArray:(NSArray *)sprites;
+
+- (id)initWithSprites:(Sprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithSpritesFromArray:(NSArray *)sprites;
 
 @end

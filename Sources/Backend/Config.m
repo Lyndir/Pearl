@@ -86,7 +86,7 @@
 
                                      nil]];
     
-    resetTriggers   = [[NSDictionary alloc] init];
+    resetTriggers   = [NSDictionary new];
     
     return self;
 }
@@ -104,7 +104,7 @@
     
     static Config *configInstance;
     if(!configInstance)
-        configInstance = [[self alloc] init];
+        configInstance = [self new];
     
     return configInstance;
 }

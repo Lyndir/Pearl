@@ -53,6 +53,7 @@
 - (void)popLayer;
 - (void)poppedAll;
 - (void)cleanup;
+- (void)shutdown:(id)caller;
 
 - (void)revealHud;
 - (void)hideHud;

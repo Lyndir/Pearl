@@ -157,7 +157,7 @@ static NSDateFormatter *logDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
  
-    return [self logWithLevel:LogLevelDebug andMessage:message];
+    return [self logWithLevel:LogLevelDebug andMessage:[message autorelease]];
 }
 
 
@@ -168,7 +168,7 @@ static NSDateFormatter *logDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelInfo andMessage:message];
+    return [self logWithLevel:LogLevelInfo andMessage:[message autorelease]];
 }
 
 
@@ -179,7 +179,7 @@ static NSDateFormatter *logDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelWarn andMessage:message];
+    return [self logWithLevel:LogLevelWarn andMessage:[message autorelease]];
 }
 
 
@@ -190,7 +190,7 @@ static NSDateFormatter *logDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelError andMessage:message];
+    return [self logWithLevel:LogLevelError andMessage:[message autorelease]];
 }
 
 

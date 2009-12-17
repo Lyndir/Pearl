@@ -153,7 +153,7 @@
     [(ShadeLayer *) [menuLayers lastObject] dismissAsPush:NO];
     [menuLayers removeLastObject];
     if([self isAnyLayerShowing])
-        [uiLayer addChild:[menuLayers lastObject]];
+        [uiLayer addChild:[menuLayers lastObject]]; // FIXME: double tap back breaks me.
     else
         [self poppedAll];
 }
@@ -214,6 +214,11 @@
     layer.visible = !hidden;
 }
 
+- (void)shutdown:(id)caller {
+    
+    [[Director sharedDirector] end];
+    [[Director sharedDirector] release];
+}
 
 -(void) applicationWillResignActive:(UIApplication *)application {
     

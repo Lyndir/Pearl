@@ -92,7 +92,7 @@
             return;
         switching = YES;
 
-        Scene *uiScene = [[Scene alloc] init];
+        Scene *uiScene = [Scene new];
         [uiScene addChild:[AbstractAppDelegate get].uiLayer];
         
         // Build a transition scene from the splash scene to the game scene.

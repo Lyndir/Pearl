@@ -156,7 +156,7 @@
     
     static AudioController *sharedAudioController = nil;
     if(sharedAudioController == nil)
-        sharedAudioController = [[AudioController alloc] init];
+        sharedAudioController = [self new];
     
     return sharedAudioController;
 }

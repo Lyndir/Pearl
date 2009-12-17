@@ -186,7 +186,7 @@
         
         messageLabel = [[Label alloc] initWithString:msg
                                             fontName:[Config get].fixedFontName
-                                            fontSize: [[Config get].fontSize intValue]];
+                                            fontSize:[[Config get].fontSize intValue]];
         [self addChild: messageLabel z:1];
     }
     else

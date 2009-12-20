@@ -90,6 +90,14 @@ static NSDateFormatter *logDateFormatter = nil;
             [logDateFormatter stringFromDate:self.occurance], levelString, self.message];
 }
 
+- (void)dealloc {
+    
+    self.message = nil;
+    self.occurance = nil;
+
+    [super dealloc];
+}
+
 @end
 
 
@@ -202,5 +210,12 @@ static NSDateFormatter *logDateFormatter = nil;
     return [self logWithLevel:LogLevelError andMessage:[message autorelease]];
 }
 
+
+- (void)dealloc {
+
+    self.messages = nil;
+
+    [super dealloc];
+}
 
 @end

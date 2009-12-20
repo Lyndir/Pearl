@@ -100,6 +100,25 @@
     
     self.defaults = nil;
     
+    self.firstRun = nil;
+    self.fontSize = nil;
+    self.largeFontSize = nil;
+    self.smallFontSize = nil;
+    self.fontName = nil;
+    self.fixedFontName = nil;
+    self.symbolicFontName = nil;
+    self.shadeColor = nil;
+    self.transitionDuration = nil;
+    self.tracks = nil;
+    self.trackNames = nil;
+    self.currentTrack = nil;
+    self.soundFx = nil;
+    self.music = nil;
+    self.voice = nil;
+    self.vibration = nil;
+    self.visualFx = nil;
+    self.resetTriggers = nil;
+
     [super dealloc];
 }
 

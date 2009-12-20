@@ -46,6 +46,8 @@ apply() {
 c=${1%.*}; c=${c##*/}
 h=${1%.*}.h
 m=${1%.*}.m
+methodRegex='^[[:space:]]*-[[:space:]]*\([a-zA-Z0-9_[:space:]*]*\)[[:space:]]*([a-zA-Z0-9_]*)(:[a-zA-Z*:\(\)[:space:]]*)?[[:space:]]*{?[[:space:]]*$'
+propAssignmentRegex='self.([a-zA-Z0-9_]*)[[:space:]]*=[^=]'
 propNames=()
 
 
@@ -65,22 +67,35 @@ while IFS= read -r line; do
 
 done < <(cat "$h" "$m")
 
+if (( ! ${#propNames[@]} )); then
+    emit -y $'\t'"- No properties with owned references, skipping phase 2."
+    exit
+fi
 
 # Phase 2
 emit "Updating -dealloc in ${m##*/}"
-hasdealloc=0
+blockLevel=0
 while IFS= read -r line; do
 
-    if [[ $line = "@implementation $c"* ]]; then
+    if [[ $line = "@implementation"* ]]; then
         block=implementation
+        read _ class _ <<< "$line"
     fi
-    if [[ $block = implementation && $line = -*dealloc* ]]; then
+    if [[ $block = implementation && $blockLevel -eq 0 && $line =~ $methodRegex ]]; then
         hasdealloc=1
-        method=dealloc
-        methodblocks=0
+        method=${BASH_REMATCH[1]}
+        echo "entered method: $method" >&2
     fi
     if [[ $block = implementation && $method && $line = *'{' ]]; then
-        (( ++methodblocks ))
+        (( ++blockLevel ))
+    fi
+    if [[ $block = implementation && $method = set* && $line =~ $propAssignmentRegex ]]; then
+        assignedProp=${BASH_REMATCH[1]}
+        echo "assignedProp: $assignedProp" >&2
+        if [[ $method = set${assignedProp^} ]]; then
+            emit $'\t'"- Line $lineno needs review."
+            line="$line // Review Me: Recursive Setter Invocation?"
+        fi
     fi
     if [[ $block = implementation && $method = dealloc && $line = *'[super dealloc]'* ]]; then
         if (( ${#propNames[@]} )); then
@@ -93,13 +108,13 @@ while IFS= read -r line; do
     if [[ $block = implementation && $method = dealloc ]]; then
         for v in "${!propNames[@]}"; do
             [[ $line = *"${propNames[v]}"* ]] && {
-                emit $'\t'"- Skipping: ${propNames[v]}, already being released."
+                emit -y $'\t'"- Skipping: ${propNames[v]}, already being released."
                 unset 'propNames[v]'
             }
         done
     fi
     if [[ $block = implementation && $method && $line = *'}' ]]; then
-        if (( ! --methodblocks )); then
+        if (( ! --blockLevel )); then
             case $method in
                 dealloc)
                     if (( ${#propNames[@]} )); then
@@ -116,16 +131,18 @@ while IFS= read -r line; do
     fi
     if [[ $line = '@end'* ]]; then
         if [[ $block = implementation ]] && (( ! hasdealloc )); then
-            emit $'\t'"- Adding missing -dealloc and properties: ${propNames[*]}."
+            if (( ${#propNames[@]} )); then
+                emit $'\t'"- Adding missing -dealloc and properties: ${propNames[*]}."
 
-            echo "- (void)dealloc {"
-            echo
-            printf '    self.%s = nil;\n' "${propNames[@]}"
-            echo
-            echo "    [super dealloc];"
-            echo "}"
-            echo
-            propNames=()
+                echo "- (void)dealloc {"
+                echo
+                printf '    self.%s = nil;\n' "${propNames[@]}"
+                echo
+                echo "    [super dealloc];"
+                echo "}"
+                echo
+                propNames=()
+            fi
         fi
 
         block=

@@ -76,7 +76,7 @@
     self.configDelegate = aDelegate;
 
     NSMutableDictionary *mutableItemConfigs = [NSMutableDictionary dictionaryWithCapacity:[settings count]];
-    self.itemConfigs = [mutableItemConfigs retain]; // Review Me
+    self.itemConfigs = mutableItemConfigs;
     
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
     for (NSString *setting in settings) {
@@ -159,5 +159,13 @@
     [invocation invoke];
 }
 
+
+- (void)dealloc {
+
+    self.configDelegate = nil;
+    self.itemConfigs = nil;
+
+    [super dealloc];
+}
 
 @end

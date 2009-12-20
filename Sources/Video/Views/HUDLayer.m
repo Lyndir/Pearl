@@ -164,6 +164,9 @@
     self.scoreSprite = nil;
     self.scoreCount = nil;
     
+    self.menuMenu = nil;
+    self.messageBar = nil;
+
     [super dealloc];
 }
 

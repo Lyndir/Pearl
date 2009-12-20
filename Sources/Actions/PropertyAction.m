@@ -80,4 +80,13 @@
 	return [[self class] actionWithDuration:self.duration key:self.key from:self.to to:self.from];
 }
 
+- (void)dealloc {
+
+    self.key = nil;
+    self.from = nil;
+    self.to = nil;
+
+    [super dealloc];
+}
+
 @end

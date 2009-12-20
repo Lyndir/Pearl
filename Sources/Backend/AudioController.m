@@ -64,7 +64,7 @@
     if(![track length])
         track = nil;
     
-    self.nextTrack = track; // Review Me
+    self.nextTrack = track;
     [self startNextTrack];
 }
 
@@ -74,7 +74,7 @@
     if(player != self.audioPlayer)
         return;
     
-    if(self.nextTrack == nil) // Review Me
+    if(self.nextTrack == nil)
         [[Config get] setCurrentTrack:nil];
     
     [self startNextTrack];
@@ -91,13 +91,12 @@
             track = [Config get].randomTrack;
         NSURL *nextUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:track ofType:nil]];
         
-        if(self.audioPlayer != nil && ![self.audioPlayer.url isEqual:nextUrl]) { // Review Me
-            [self.audioPlayer release];
-            self.audioPlayer = nil; // Review Me
+        if(self.audioPlayer != nil && ![self.audioPlayer.url isEqual:nextUrl]) {
+            self.audioPlayer = nil;
         }
         
-        if(self.audioPlayer == nil) // Review Me
-            self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil]; // Review Me
+        if(self.audioPlayer == nil)
+            self.audioPlayer = [[[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil] autorelease];
         
         [self.audioPlayer setDelegate:self];
         [self.audioPlayer play];
@@ -124,12 +123,10 @@
 
 -(void) dealloc {
     
-    [self.audioPlayer release];
-    self.audioPlayer = nil; // Review Me
-    
-    [self.nextTrack release];
-    self.nextTrack = nil; // Review Me
-    
+    self.audioPlayer = nil;
+    self.nextTrack = nil;
+    self.effects = nil;
+
     [super dealloc];
 }
 

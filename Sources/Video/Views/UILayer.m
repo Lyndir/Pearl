@@ -59,9 +59,8 @@
 		return self;
     
     // Build internal structures.
-    self.messageQueue = [[NSMutableArray alloc] initWithCapacity:3]; // Review Me
-    self.callbackQueue = [[NSMutableArray alloc] initWithCapacity:3]; // Review Me
-    self.messageLabel = nil; // Review Me
+    self.messageQueue = [NSMutableArray arrayWithCapacity:3];
+    self.callbackQueue = [NSMutableArray arrayWithCapacity:3];
     
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
     //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
@@ -116,12 +115,10 @@
 
 -(void) rotateTo:(float)aRotation {
     
-    if(self.rotateAction) {
+    if(self.rotateAction)
         [self stopAction:self.rotateAction];
-        [self.rotateAction release];
-    }
     
-    [self runAction:self.rotateAction = [[RotateTo alloc] initWithDuration:0.2f angle:aRotation]]; // Review Me
+    [self runAction:self.rotateAction = [RotateTo actionWithDuration:0.2f angle:aRotation]];
 }
 
 
@@ -195,12 +192,11 @@
                                      [FadeOut actionWithDuration:1],
                                      [Remove action],
                                      nil]];
-            [self.messageLabel release];
         }
         
-        self.messageLabel = [[Label alloc] initWithString:msg // Review Me
-                                            fontName:[Config get].fixedFontName
-                                            fontSize:[[Config get].fontSize intValue]];
+        self.messageLabel = [Label labelWithString:msg
+                                          fontName:[Config get].fixedFontName
+                                          fontSize:[[Config get].fontSize intValue]];
         [self addChild: self.messageLabel z:1];
     }
     else
@@ -215,17 +211,10 @@
 
 -(void) dealloc {
     
-    [self.rotateAction release];
-    self.rotateAction = nil; // Review Me
-    
-    [self.messageQueue release];
-    self.messageQueue = nil; // Review Me
-    
-    [self.callbackQueue release];
-    self.callbackQueue = nil; // Review Me
-
-    [self.messageLabel release];
-    self.messageLabel = nil; // Review Me
+    self.rotateAction = nil;
+    self.messageQueue = nil;
+    self.callbackQueue = nil;
+    self.messageLabel = nil;
     
     [super dealloc];
 }

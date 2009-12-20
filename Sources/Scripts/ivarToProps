@@ -225,7 +225,6 @@ while IFS= read -r line; do
     [[ $line = '@synthesize'* && $class = $c ]] && continue
 
     if [[ $block = implementation ]]; then
-        review=0
         if (( ${#propSeds[@]} )); then
             newline=$(gsed "${propSeds[@]}" <<< "$line")
         else
@@ -233,22 +232,18 @@ while IFS= read -r line; do
         fi
 
         [[ $line = *'='* ]] && {
-            oldpart="${line%%=*}"
-            newpart="${newline%%=*}"
+            oldpart=${line%%[^=]=[^=]*}
+            newpart=${newline%%[^=]=[^=]*}
             [[ $oldpart != "$newpart" && $newpart != *.*.* ]] && \
                 for varName in "${allVars[@]}"; do
                     propName=${varName//'*'/}
                     propName=${propName#_}
                     [[ $newpart = *"$propName"* && $varName = '*'[^*]* ]] && {
-                        review=1
+                        emit $'\t'"- Line $lineno needs review."
+                        newline="$newline // Review Me: Assignment of Owned Reference?"
                         break
                     }
                 done
-        }
-
-        (( review )) && {
-            emit $'\t'"- Line $lineno needs review."
-            newline="$newline // Review Me"
         }
 
         [[ $line = *'//'* && "${line%%//*}" = "${newline%%//*}" ]] && newline=$line

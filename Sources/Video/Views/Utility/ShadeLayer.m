@@ -226,4 +226,17 @@
 }
 
 
+- (void)dealloc {
+
+    self.background = nil;
+    self.backButton = nil;
+    self.nextButton = nil;
+    self.backMenu = nil;
+    self.nextMenu = nil;
+    self.backInvocation = nil;
+    self.nextInvocation = nil;
+
+    [super dealloc];
+}
+
 @end

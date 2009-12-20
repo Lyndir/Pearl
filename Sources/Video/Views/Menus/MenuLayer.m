@@ -249,6 +249,10 @@
     
     self.menu = nil;
     
+    self.items = nil;
+    self.logo = nil;
+    self.delegate = nil;
+
     [super dealloc];
 }
 

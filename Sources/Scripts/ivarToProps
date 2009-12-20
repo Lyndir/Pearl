@@ -168,12 +168,12 @@ IFS=$'\n' read -d '' synths <<< "$synths"
 
 # Phase 3
 emit "Adding property declarations and converting ivar to property accesses in ${m##*/}"
-lineno=0
+l=0
 block=
 class=
 hasinterface=0
 while IFS= read -r line; do
-    (( ++lineno ))
+    (( ++l ))
 
     [[ $line = "@interface"* ]] && {
         read _ class _ <<< "$line"
@@ -239,7 +239,7 @@ while IFS= read -r line; do
                     propName=${varName//'*'/}
                     propName=${propName#_}
                     [[ $newpart = *"$propName"* && $varName = '*'[^*]* ]] && {
-                        emit $'\t'"- Line $lineno needs review."
+                        emit $'\t'"- Line $l needs review."
                         newline="$newline // Review Me: Assignment of Owned Reference?"
                         break
                     }

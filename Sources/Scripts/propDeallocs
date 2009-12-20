@@ -5,10 +5,10 @@
 # Do this afterwards manually:
 source bashlib
 
-noop=0
 while [[ $1 = -* ]]; do
     case $1 in
         -n) noop=1 ;;
+        -d) debug=1 ;;
         -h)
             echo "${0##*/} - by lhunath"
             echo "  Add all properties to the class' -dealloc (and create it if needed)."
@@ -74,28 +74,37 @@ fi
 
 # Phase 2
 emit "Updating -dealloc in ${m##*/}"
+l=0
 blockLevel=0
 while IFS= read -r line; do
+    (( ++l ))
 
+    if [[ $line = "@interface"* ]]; then
+        block=interface
+    fi
     if [[ $line = "@implementation"* ]]; then
         block=implementation
         read _ class _ <<< "$line"
+        (( debug )) && emit "[DEBUG] $m:$l: Found implementation for $class."
     fi
     if [[ $block = implementation && $blockLevel -eq 0 && $line =~ $methodRegex ]]; then
         method=${BASH_REMATCH[1]}
+        (( debug )) && emit "[DEBUG] $m:$l: Found $class method $method."
         [[ $class = $c && $method = dealloc ]] && hasDealloc=1
     fi
-    if [[ $block = implementation && $method && $line = *'{' ]]; then
+    if [[ $block = implementation && $method && $line = *'{'* ]]; then
         (( ++blockLevel ))
+        (( debug )) && emit "[DEBUG] $m:$l: blockLevel++ -> $blockLevel."
     fi
     if [[ $block = implementation && $method = set* && $line =~ $propAssignmentRegex ]]; then
         assignedProp=${BASH_REMATCH[1]}
         if [[ $method = set${assignedProp^} ]]; then
-            emit $'\t'"- Line $lineno needs review."
+            emit $'\t'"- Line $l needs review."
+            (( debug )) && emit "[DEBUG] $m:$l: Setter $method assigns to $assignedProp."
             line="$line // Review Me: Recursive Setter Invocation?"
         fi
     fi
-    if [[ $block = implementation && $method = dealloc && $line = *'[super dealloc]'* ]]; then
+    if [[ $block = implementation && $class = $c && $method = dealloc && $line = *'[super dealloc]'* ]]; then
         if (( ${#propNames[@]} )); then
             emit $'\t'"- Adding missing properties: ${propNames[*]}."
             printf '    self.%s = nil;\n' "${propNames[@]}"
@@ -111,8 +120,10 @@ while IFS= read -r line; do
             }
         done
     fi
-    if [[ $block = implementation && $method && $line = *'}' ]]; then
-        if (( ! --blockLevel )); then
+    if [[ $block = implementation && $method && $line = *'}'* ]]; then
+        (( --blockLevel ))
+        (( debug )) && emit "[DEBUG] $m:$l: blockLevel-- -> $blockLevel."
+        if (( ! blockLevel )) && [[ $class = $c ]]; then
             case $method in
                 dealloc)
                     if (( ${#propNames[@]} )); then
@@ -124,10 +135,14 @@ while IFS= read -r line; do
                     fi
                 ;;
             esac
+            (( debug )) && emit "[DEBUG] $m:$l: Ending method $method of class $class."
             method=
         fi
     fi
-    if [[ $line = '@end'* ]]; then
+    if [[ $block && $line = '@end'* ]]; then
+        if (( blockLevel )); then
+            emit -r "Unexpected @end on line $l!"
+        fi
         if [[ $block = implementation && $class = $c ]] && (( ! hasDealloc )); then
             if (( ${#propNames[@]} )); then
                 emit $'\t'"- Adding missing -dealloc and properties: ${propNames[*]}."
@@ -143,6 +158,7 @@ while IFS= read -r line; do
             fi
         fi
 
+        (( debug )) && emit "[DEBUG] $m:$l: Ending $block of $class."
         block=
     fi
 

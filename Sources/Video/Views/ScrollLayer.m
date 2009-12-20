@@ -145,7 +145,7 @@
     aScrollStep.x           = fmaxf(aScrollStep.x, 1);
     aScrollStep.y           = fmaxf(aScrollStep.y, 1);
     
-    self.scrollStep              = aScrollStep;
+    _scrollStep             = aScrollStep;
 }
 
 
@@ -193,7 +193,7 @@
     if (CGPointEqualToPoint(newScroll, self.scroll))
         return;
     
-    self.scroll = newScroll;
+    _scroll = newScroll;
     if ([self.delegate respondsToSelector:@selector(didUpdateScrollWithOrigin:to:)])
         [self.delegate didUpdateScrollWithOrigin:self.origin to:newScroll];
 }

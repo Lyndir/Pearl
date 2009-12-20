@@ -60,7 +60,7 @@ while IFS= read -r line; do
 
     if [[ $line = *'@property'* ]]; then
         if [[ $line != *'readonly'* && $line = *retain* || $line = *copy* ]]; then
-            emit $'\t'"- Property with owned reference: $propName." >&2
+            emit $'\t'"- Property with owned reference: $propName."
             propNames+=("$propName")
         fi
     fi
@@ -82,16 +82,14 @@ while IFS= read -r line; do
         read _ class _ <<< "$line"
     fi
     if [[ $block = implementation && $blockLevel -eq 0 && $line =~ $methodRegex ]]; then
-        hasdealloc=1
         method=${BASH_REMATCH[1]}
-        echo "entered method: $method" >&2
+        [[ $class = $c && $method = dealloc ]] && hasDealloc=1
     fi
     if [[ $block = implementation && $method && $line = *'{' ]]; then
         (( ++blockLevel ))
     fi
     if [[ $block = implementation && $method = set* && $line =~ $propAssignmentRegex ]]; then
         assignedProp=${BASH_REMATCH[1]}
-        echo "assignedProp: $assignedProp" >&2
         if [[ $method = set${assignedProp^} ]]; then
             emit $'\t'"- Line $lineno needs review."
             line="$line // Review Me: Recursive Setter Invocation?"
@@ -130,7 +128,7 @@ while IFS= read -r line; do
         fi
     fi
     if [[ $line = '@end'* ]]; then
-        if [[ $block = implementation ]] && (( ! hasdealloc )); then
+        if [[ $block = implementation && $class = $c ]] && (( ! hasDealloc )); then
             if (( ${#propNames[@]} )); then
                 emit $'\t'"- Adding missing -dealloc and properties: ${propNames[*]}."
 

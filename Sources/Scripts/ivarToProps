@@ -51,6 +51,7 @@ apply() {
     fi
 }
 
+
 # Initialize.
 c=${1%.*}; c=${c##*/}
 h=${1%.*}.h
@@ -61,6 +62,8 @@ propSeds=()
 existingProps=()
 declare -A roPropParams
 
+
+# Phase 1
 emit "Scanning for existing properties in ${h##*/}"
 block=
 while IFS= read -r line; do
@@ -102,7 +105,7 @@ while IFS= read -r line; do
     fi
 
     (( existingProp )) && {
-        emit $'\t'"- Found $propName${roPropParams[$propName]:+ (${roPropParams[$propName]})}"
+        emit $'\t'"- Found $propName${roPropParams[$propName]:+ (${roPropParams[$propName]})}."
         existingProps+=("$propName")
     }
 
@@ -111,13 +114,15 @@ while IFS= read -r line; do
 done > "$h~" < "$h"
 apply "$h"
 
+
+# Phase 2
 emit "Scanning for ivars that need properties in ${h##*/}"
 while IFS= read -r line; do
 
     if [[ $line = *[^[:space:]]* ]]; then
         varNames=($(perl -pe 's/^.*?(( [a-zA-Z0-9_*]*[,;])*)$/\1/' <<< "${line%%*([[:space:]])}"))
         type=${line%"$varNames"*}
-        emit $'\t'"- Found ivars: ${varNames[*]}"
+        emit $'\t'"- Found ivars: ${varNames[*]}."
 
         [[ $varNames = '*'[^*]* ]] && memtype=retain || memtype=assign
         case $type in
@@ -155,10 +160,13 @@ while IFS= read -r line; do
 
 done < <(gsed -ne "1,/@interface $c.*{/!{/}/,/@interface $c.*{/!{/@/!p};}" "$([[ -e "$h~" ]] && echo "$h~" || echo "$h")")
 
+
 # Trim leading and trailing newlines.
 IFS=$'\n' read -d '' props <<< "$props"
 IFS=$'\n' read -d '' synths <<< "$synths"
 
+
+# Phase 3
 emit "Adding property declarations and converting ivar to property accesses in ${m##*/}"
 lineno=0
 block=

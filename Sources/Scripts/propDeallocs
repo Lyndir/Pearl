@@ -3,13 +3,32 @@
 ### IMPORTANT:
 #
 # Do this afterwards manually:
-#   - Search for all properties that are assigned a [cmv]alloc pointer and free them manually in dealloc.
 source bashlib
 
 noop=0
 while [[ $1 = -* ]]; do
     case $1 in
         -n) noop=1 ;;
+        -h)
+            echo "${0##*/} - by lhunath"
+            echo "  Add all properties to the class' -dealloc (and create it if needed)."
+            echo
+            echo "Usage: ${0##*/} [-n] file"
+            echo
+            echo "        -n    Don't apply any changes, just show diffs of what would be changed."
+            echo "      file    Either the header (.h) or the implementation (.m) file."
+            echo
+            echo
+            echo "NOTE:"
+            echo "      This is merely a tool to ease the amount of manual labour required to accomplish the task."
+            echo "      Results are in no way reliable or trustworthy. Manual evaluation of the result is indispensible."
+            echo
+            echo
+            echo "IMPORTANT:"
+            echo "      After applying changes, do the following manually:"
+            echo "          - Search for all properties that are assigned a [cmv]alloc pointer and free them manually in dealloc."
+            exit
+        ;;
     esac
     shift
 done
@@ -22,12 +41,16 @@ apply() {
     fi
 }
 
+
+# Initialize
 c=${1%.*}; c=${c##*/}
 h=${1%.*}.h
 m=${1%.*}.m
-
 propNames=()
-echo "SCANNING $c FOR PROPERTIES" >&2
+
+
+# Phase 1
+emit "Scanning for properties in $c's header and implementation"
 while IFS= read -r line; do
 
     propName=${line##* }
@@ -35,14 +58,16 @@ while IFS= read -r line; do
 
     if [[ $line = *'@property'* ]]; then
         if [[ $line != *'readonly'* && $line = *retain* || $line = *copy* ]]; then
-            echo " - found property that needs to be dealloc'ed: $propName." >&2
+            emit $'\t'"- Property with owned reference: $propName." >&2
             propNames+=("$propName")
         fi
     fi
 
 done < <(cat "$h" "$m")
 
-echo "PARSING $m" >&2
+
+# Phase 2
+emit "Updating -dealloc in ${m##*/}"
 hasdealloc=0
 while IFS= read -r line; do
 
@@ -59,7 +84,7 @@ while IFS= read -r line; do
     fi
     if [[ $block = implementation && $method = dealloc && $line = *'[super dealloc]'* ]]; then
         if (( ${#propNames[@]} )); then
-            echo " - super dealloc called, adding missing properties: ${propNames[*]}." >&2
+            emit $'\t'"- Adding missing properties: ${propNames[*]}."
             printf '    self.%s = nil;\n' "${propNames[@]}"
             echo
             propNames=()
@@ -68,7 +93,7 @@ while IFS= read -r line; do
     if [[ $block = implementation && $method = dealloc ]]; then
         for v in "${!propNames[@]}"; do
             [[ $line = *"${propNames[v]}"* ]] && {
-                echo " - found ${propNames[v]}: already being dealloced." >&2
+                emit $'\t'"- Skipping: ${propNames[v]}, already being released."
                 unset 'propNames[v]'
             }
         done
@@ -78,7 +103,7 @@ while IFS= read -r line; do
             case $method in
                 dealloc)
                     if (( ${#propNames[@]} )); then
-                        echo " - dealloc ends, adding missing properties: ${propNames[*]}." >&2
+                        emit $'\t'"- Adding missing properties: ${propNames[*]}, and [super dealloc]."
                         printf '    self.%s = nil;\n' "${propNames[@]}"
                         echo
                         echo "    [super dealloc];"
@@ -91,7 +116,7 @@ while IFS= read -r line; do
     fi
     if [[ $line = '@end'* ]]; then
         if [[ $block = implementation ]] && (( ! hasdealloc )); then
-            echo " - implementation ends without a dealloc, adding dealloc with properties: ${propNames[*]}." >&2
+            emit $'\t'"- Adding missing -dealloc and properties: ${propNames[*]}."
 
             echo "- (void)dealloc {"
             echo
@@ -109,9 +134,4 @@ while IFS= read -r line; do
     echo "$line"
 
 done < "$m" > "$m~"
-
 apply "$m"
-
-#echo "$props"
-#echo "$synths"
-

@@ -33,8 +33,6 @@
 - (void)_next:(CocosNode *)sender;
 
 @property (readwrite, assign) BOOL                                                     pushed;
-@property (readwrite, retain) MenuItemFont                                             *backButton;
-@property (readwrite, retain) MenuItemFont                                             *nextButton;
 @property (readwrite, retain) Menu                                                     *backMenu;
 @property (readwrite, retain) Menu                                                     *nextMenu;
 @property (readwrite, retain) NSInvocation                                             *backInvocation;
@@ -101,6 +99,29 @@
 }
 
 
+- (void)setBackButton:(MenuItem *)aBackButton {
+    
+    if (self.backButton)
+        [self.backMenu removeChild:self.backButton cleanup:YES];
+    
+    [_backButton release];
+    _backButton = [aBackButton retain];
+    if (!self.backButton)
+        return;
+    
+    [self.backMenu addChild:self.backButton];
+    [self.backMenu alignItemsHorizontally];
+    
+    if (!self.backButton.invocation) {
+        self.backButton.invocation = [NSInvocation invocationWithMethodSignature:
+                                      [[self class] instanceMethodSignatureForSelector:@selector(_back:)]];
+        [self.backButton.invocation setTarget:self];
+        [self.backButton.invocation setSelector:@selector(_back:)];
+        [self.backButton.invocation setArgument:&_backButton atIndex:2];
+    }
+}
+
+
 - (void) setBackButtonTarget:(id)target selector:(SEL)selector {
 
     if (target) {
@@ -111,6 +132,29 @@
         self.backInvocation = nil;
     
     self.backMenu.visible = self.backInvocation != nil;
+}
+
+
+- (void)setNextButton:(MenuItem *)aNextButton {
+    
+    if (self.nextButton)
+        [self.nextMenu removeChild:self.nextButton cleanup:YES];
+
+    [_nextButton release];
+    _nextButton = [aNextButton retain];
+    if (!self.nextButton)
+        return;
+
+    [self.nextMenu addChild:self.nextButton];
+    [self.nextMenu alignItemsHorizontally];
+    
+    if (!self.nextButton.invocation) {
+        self.nextButton.invocation = [NSInvocation invocationWithMethodSignature:
+                                      [[self class] instanceMethodSignatureForSelector:@selector(_next:)]];
+        [self.nextButton.invocation setTarget:self];
+        [self.nextButton.invocation setSelector:@selector(_next:)];
+        [self.nextButton.invocation setArgument:&_nextButton atIndex:2];
+    }
 }
 
 
@@ -204,7 +248,10 @@
     [self removeChild:self.background cleanup:YES];
     
     [_background release];
-    _background = aBackground;
+    _background = [aBackground retain];
+    if (!self.background)
+        return;
+    
     [self addChild:self.background z:-1];
     
     // Automatically set correct position of texture nodes.

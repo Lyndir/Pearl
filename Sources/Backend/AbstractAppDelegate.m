@@ -78,6 +78,9 @@
     if (copyright)
         [[Logger get] inf:@"%@", copyright];
     [[Logger get] inf:@"==================================="];
+	
+    // Start the background music.
+    [[AudioController get] playTrack:[Config get].currentTrack];
     
 	// Init the window.
 	self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
@@ -104,9 +107,6 @@
     // Build the game scene.
     self.uiLayer = [UILayer node];
     [self.uiLayer addChild:[DebugLayer get] z:99];
-	
-    // Start the background music.
-    [[AudioController get] playTrack:[Config get].currentTrack];
     
     [self revealHud];
     [self hideHud];

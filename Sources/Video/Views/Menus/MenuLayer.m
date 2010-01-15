@@ -69,6 +69,7 @@
 @synthesize items = _items;
 @synthesize menu = _menu;
 @synthesize logo = _logo;
+@synthesize offset = _offset;
 @synthesize layout = _layout;
 @synthesize layoutDirty = _layoutDirty;
 @synthesize delegate = _delegate;
@@ -133,6 +134,21 @@
 }
 
 
+- (void)setOffset:(CGPoint)newOffset {
+
+    _offset = newOffset;
+    self.menu.position = newOffset;
+}
+
+
+- (void)setLayout:(MenuLayout)newLayout {
+    
+    _layout = newLayout;
+    
+    [self reset];
+}
+
+
 - (void)onEnter {
     
     [self doLoad];
@@ -147,12 +163,6 @@
 
     if ([self.delegate respondsToSelector:@selector(didEnter:)])
         [self.delegate didEnter:self];
-}
-
-
-- (void)onExit {
-    
-    [super onExit];
 }
 
 
@@ -174,10 +184,12 @@
         return;
     
     self.menu = [ClickMenu menuWithItems:nil];
-    if (self.logo) {
+    self.menu.relativeAnchorPoint = YES;
+    self.menu.anchorPoint = ccp(-0.5f, -0.5f);
+    self.menu.position = self.offset;
+    
+    if (self.logo)
         [self.menu addChild:self.logo];
-        [self.menu addChild:[MenuItemSpacer spacerSmall]];
-    }
     
     [self addChild:self.menu];
     [self doLayout];
@@ -203,10 +215,8 @@
             NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
             NSUInteger r = 0;
 
-            if (self.logo) {
+            if (self.logo)
                 rows[r++] = [NSNumber numberWithUnsignedInt:1];
-                rows[r++] = [NSNumber numberWithUnsignedInt:1];
-            }
             
             NSUInteger itemsLeft = [self.items count], i = 0;
             if (itemsLeft % 2)

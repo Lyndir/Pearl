@@ -79,6 +79,7 @@
                                      [NSNumber numberWithBool:       YES],                          cVisualFx,
                                 
                                      [NSArray arrayWithObjects:
+                                      @"sequential",
                                       @"random",
                                       @"",
                                       nil],                                                         cTracks,
@@ -170,10 +171,21 @@
 
 - (NSString *)randomTrack {
     
-    if ([self.tracks count] <= 2)
+    if ([self.tracks count] <= 3)
         return @"";
     
-    return [self.tracks objectAtIndex:random() % ([self.tracks count] - 2)];
+    return [self.tracks objectAtIndex:random() % ([self.tracks count] - 3)];
+}
+- (NSString *)nextTrack {
+    
+    if ([self.tracks count] <= 3)
+        return @"";
+    
+    NSUInteger currentTrackIndex = [[self tracks] indexOfObject:self.currentTrack];
+    if (currentTrackIndex == NSNotFound)
+        currentTrackIndex = -1;
+
+    return [self.tracks objectAtIndex:(currentTrackIndex + 1) % ([self.tracks count] - 3)];
 }
 - (NSNumber *)music {
 
@@ -182,7 +194,7 @@
 - (void)setMusic:(NSNumber *)aMusic {
     
     if ([aMusic boolValue] && ![self.music boolValue])
-        [[AudioController get] playTrack:@"random"];
+        [[AudioController get] playTrack:@"sequential"];
     if (![aMusic boolValue] && [self.music boolValue])
         [[AudioController get] playTrack:nil];
 }
@@ -197,7 +209,7 @@
 }
 -(NSString *) currentTrackName {
     
-    id currentTrack = [self currentTrack];
+    id currentTrack = self.currentTrack;
     if(!currentTrack)
         currentTrack = @"";
     

@@ -15,7 +15,7 @@
  */
 
 //
-//  MenuItemTitle.h
+//  MenuItemSymbolic.h
 //  iLibs
 //
 //  Created by Maarten Billemont on 08/09/09.
@@ -24,12 +24,14 @@
 
 
 
-@interface MenuItemTitle : MenuItemFont {
+@interface MenuItemSymbolic : MenuItemFont {
 
 }
 
-+ (MenuItemTitle *)itemWithString:(NSString *)title;
++ (MenuItemSymbolic *)itemFromString:(NSString *)symbol;
++ (MenuItemSymbolic *)itemFromString:(NSString *)symbol target:(id)target selector:(SEL)selector;
 
-- (id)initWithString:(NSString *)title;
+- (id)initFromString:(NSString *)symbol;
+- (id)initFromString:(NSString *)symbol target:(id)target selector:(SEL)selector;
 
 @end

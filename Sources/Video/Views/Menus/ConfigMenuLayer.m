@@ -104,7 +104,7 @@
 
         // Add the setting to the menu.
         [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
-        [menuItems addObject:[MenuItemTitle titleWithString:label]];
+        [menuItems addObject:[MenuItemTitle itemWithString:label]];
         [menuItems addObject:menuItem];
     }
     

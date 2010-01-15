@@ -56,6 +56,7 @@ typedef enum MenuLayout {
     NSArray                                                  *_items;
     Menu                                                     *_menu;
     MenuItem                                                 *_logo;
+    CGPoint                                                  _offset;
 
     MenuLayout                                               _layout;
     BOOL                                                     _layoutDirty;
@@ -67,6 +68,7 @@ typedef enum MenuLayout {
 @property (readwrite) MenuLayout                            layout;
 @property (readwrite, copy) NSArray                         *items;
 @property (readwrite, retain) MenuItem                      *logo;
+@property (readwrite, assign) CGPoint                       offset;
 @property (readwrite, retain) id<NSObject, MenuDelegate>    delegate;
 
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo

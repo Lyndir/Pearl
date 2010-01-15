@@ -89,6 +89,8 @@
         NSString *track = self.nextTrack;
         if([track isEqualToString:@"random"])
             track = [Config get].randomTrack;
+        if([track isEqualToString:@"sequential"])
+            track = [Config get].nextTrack;
         NSURL *nextUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:track ofType:nil]];
         
         if(self.audioPlayer != nil && ![self.audioPlayer.url isEqual:nextUrl]) {

@@ -68,6 +68,7 @@
 @property (nonatomic, readwrite, retain) NSArray        *tracks;
 @property (nonatomic, readwrite, retain) NSArray        *trackNames;
 @property (nonatomic, readonly, retain) NSString                *randomTrack;
+@property (nonatomic, readonly, retain) NSString                *nextTrack;
 @property (nonatomic, readwrite, retain) NSString       *currentTrack;
 @property (nonatomic, readonly, retain) NSString                *currentTrackName;
 

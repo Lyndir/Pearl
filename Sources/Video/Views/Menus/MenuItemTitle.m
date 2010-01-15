@@ -13,18 +13,20 @@
 
 
 
-+ (MenuItemTitle *)titleWithString:(NSString *)title {
++ (MenuItemTitle *)itemWithString:(NSString *)title {
     
     return [[[self alloc] initWithString:title] autorelease];
 }
 
 - (id)initWithString:(NSString *)title {
     
-    NSString *oldFontName = [MenuItemFont fontName];
-    int oldFontSize = [MenuItemFont fontSize];
+    NSString *oldFontName   = [MenuItemFont fontName];
+    NSUInteger oldFontSize  = [MenuItemFont fontSize];
     [MenuItemFont setFontName:[Config get].fixedFontName];
     [MenuItemFont setFontSize:[[Config get].smallFontSize intValue]];
+    
     self = ([super initFromString:title target:nil selector:nil]);
+    
     [MenuItemFont setFontName:oldFontName];
     [MenuItemFont setFontSize:oldFontSize];
 

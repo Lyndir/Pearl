@@ -25,6 +25,7 @@
 #import "ShadeLayer.h"
 #import "AbstractAppDelegate.h"
 #import "Remove.h"
+#import "MenuItemSymbolic.h"
 
 
 @interface ShadeLayer ()
@@ -58,28 +59,20 @@
     if(!(self = [super init]))
         return self;
     
-    self.pushed                  = NO;
-    self.fadeNextEntry           = YES;
-    self.backgroundOffset        = CGPointZero;
+    self.pushed                     = NO;
+    self.fadeNextEntry              = YES;
+    self.backgroundOffset           = CGPointZero;
     
-    ccColor4B shadeColor    = ccc4l([[Config get].shadeColor longValue]);
-    self.opacity            = shadeColor.a;
-    self.color              = ccc4to3(shadeColor);
+    ccColor4B shadeColor            = ccc4l([[Config get].shadeColor longValue]);
+    self.opacity                    = shadeColor.a;
+    self.color                      = ccc4to3(shadeColor);
     
-    NSString *oldFontName   = [MenuItemFont fontName];
-    NSUInteger oldFontSize  = [MenuItemFont fontSize];
-    [MenuItemFont setFontName:[Config get].symbolicFontName];
-    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    self.backButton              = [MenuItemFont itemFromString:@"   ◃   "
-                                                         target:self
-                                                       selector:@selector(_back:)];
-    [MenuItemFont setFontName:[Config get].symbolicFontName];
-    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    self.nextButton              = [MenuItemFont itemFromString:@"   ▹   "
-                                                         target:self
-                                                       selector:@selector(_next:)];
-    [MenuItemFont setFontName:oldFontName];
-    [MenuItemFont setFontSize:oldFontSize];
+    self.backButton                 = [MenuItemSymbolic itemFromString:@"   ◃   "
+                                                                target:self
+                                                              selector:@selector(_back:)];
+    self.nextButton                 = [MenuItemSymbolic itemFromString:@"   ▹   "
+                                                                target:self
+                                                              selector:@selector(_next:)];
     self.backMenu = [Menu menuWithItems:self.backButton, nil];
     self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
@@ -196,14 +189,6 @@
 
     [self stopAllActions];
 
-    if ([[AbstractAppDelegate get] isLastLayerShowing]) {
-        if ([self.backMenu parent])
-            [self removeChild:self.backMenu cleanup:YES];
-    } else {
-        if (![self.backMenu parent])
-            [self addChild:self.backMenu];
-    }
-    
     [super onEnter];
     
     self.visible = YES;

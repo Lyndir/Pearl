@@ -80,7 +80,7 @@
     [[Logger get] inf:@"==================================="];
 	
     // Start the background music.
-    [[AudioController get] playTrack:[Config get].currentTrack];
+    [self preSetup];
     
 	// Init the window.
 	self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
@@ -111,11 +111,17 @@
     [self revealHud];
     [self hideHud];
     
-    [self prepareUi];
+    [self setup];
 }
 
 
-- (void)prepareUi {
+- (void)preSetup {
+
+    [[AudioController get] playTrack:[Config get].currentTrack];
+}
+
+
+- (void)setup {
     
     [NSException raise:NSInternalInconsistencyException format:@"Override me!"]; 
 }

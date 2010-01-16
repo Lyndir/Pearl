@@ -103,6 +103,7 @@
         [self.audioPlayer setDelegate:self];
         [self.audioPlayer play];
         
+        [[Config get] setPlayingTrack:track];
         [[Config get] setCurrentTrack:self.nextTrack];
     }
 }

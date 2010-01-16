@@ -42,7 +42,8 @@
 @property (nonatomic, readwrite, retain) HUDLayer                                                 *hudLayer;
 @property (nonatomic, readonly, retain) UIWindow                                                 *window;
 
-- (void)prepareUi;
+- (void)preSetup;
+- (void)setup;
 - (void)hudMenuPressed;
 
 - (void)didUpdateConfigForKey:(SEL)configKey;

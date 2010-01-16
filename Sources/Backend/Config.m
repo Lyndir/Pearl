@@ -46,7 +46,7 @@
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
-@dynamic tracks, trackNames, currentTrack;
+@dynamic tracks, trackNames, currentTrack, playingTrack;
 
 #pragma mark Internal
 
@@ -169,23 +169,36 @@
 
 #pragma mark Audio
 
+- (NSString *)firstTrack {
+    
+    if ([self.tracks count] <= 3)
+        return @"";
+    
+    return [self.tracks objectAtIndex:0];
+}
 - (NSString *)randomTrack {
     
     if ([self.tracks count] <= 3)
         return @"";
     
-    return [self.tracks objectAtIndex:random() % ([self.tracks count] - 3)];
+    NSUInteger realTracks = ([self.tracks count] - 3);
+    return [self.tracks objectAtIndex:random() % realTracks];
 }
 - (NSString *)nextTrack {
     
     if ([self.tracks count] <= 3)
         return @"";
     
-    NSUInteger currentTrackIndex = [[self tracks] indexOfObject:self.currentTrack];
+    id playingTrack = self.playingTrack;
+    if(!playingTrack)
+        playingTrack = @"";
+    
+    NSUInteger currentTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (currentTrackIndex == NSNotFound)
         currentTrackIndex = -1;
 
-    return [self.tracks objectAtIndex:(currentTrackIndex + 1) % ([self.tracks count] - 3)];
+    NSUInteger realTracks = ([self.tracks count] - 3);
+    return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
 - (NSNumber *)music {
 
@@ -194,7 +207,7 @@
 - (void)setMusic:(NSNumber *)aMusic {
     
     if ([aMusic boolValue] && ![self.music boolValue])
-        [[AudioController get] playTrack:@"sequential"];
+        [[AudioController get] playTrack:@"random"];
     if (![aMusic boolValue] && [self.music boolValue])
         [[AudioController get] playTrack:nil];
 }
@@ -215,6 +228,18 @@
     
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:currentTrack];
     return [[self trackNames] objectAtIndex:currentTrackIndex];
+}
+-(NSString *) playingTrackName {
+    
+    id playingTrack = self.playingTrack;
+    if(!playingTrack)
+        playingTrack = @"";
+    
+    NSUInteger playingTrackIndex = [[self tracks] indexOfObject:playingTrack];
+    if (playingTrackIndex == NSNotFound || ![[[self tracks] objectAtIndex:playingTrackIndex] length])
+        return nil;
+    
+    return [[self trackNames] objectAtIndex:playingTrackIndex];
 }
 
 

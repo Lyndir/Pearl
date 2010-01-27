@@ -39,7 +39,7 @@
 - (void)startNextTrack;
 - (void)playEffectNamed:(NSString *)bundleName;
 
-+ (SystemSoundID)loadEffectWithName:(NSString *)bundleRef;
++ (const SystemSoundID)loadEffectWithName:(NSString *)bundleRef;
 + (void)vibrate;
 + (void)playEffect:(SystemSoundID)soundFileObject;
 + (void)disposeEffect:(SystemSoundID)soundFileObject;

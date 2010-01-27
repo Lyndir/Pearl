@@ -87,7 +87,7 @@
                                       l(@"menu.config.song.random"),
                                       l(@"menu.config.song.off"),
                                       nil],                                                         cTrackNames,
-                                     @"random",                                                     cCurrentTrack,
+                                     @"sequential",                                                 cCurrentTrack,
 
                                      nil]];
     

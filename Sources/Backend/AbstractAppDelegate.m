@@ -117,7 +117,12 @@
 
 - (void)preSetup {
 
-    [[AudioController get] playTrack:[Config get].currentTrack];
+    if ([[Config get].currentTrack isEqualToString:@"sequential"]) {
+        // Restart sequentially from the start.
+        [Config get].playingTrack = nil;
+        [[AudioController get] playTrack:@"sequential"];
+    } else
+        [[AudioController get] playTrack:[Config get].currentTrack];
 }
 
 

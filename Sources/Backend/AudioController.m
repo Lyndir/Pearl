@@ -146,7 +146,7 @@
 }
 
 
-+(SystemSoundID) loadEffectWithName:(NSString *)bundleRef {
++(const SystemSoundID) loadEffectWithName:(NSString *)bundleRef {
     
     // Get the URL to the sound file to play
     CFBundleRef mainBundle = CFBundleGetMainBundle();

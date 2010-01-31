@@ -142,7 +142,8 @@
 
 +(void) playEffect:(SystemSoundID)soundFileObject {
     
-    AudioServicesPlaySystemSound(soundFileObject);
+    if([[Config get].soundFx boolValue])
+        AudioServicesPlaySystemSound(soundFileObject);
 }
 
 

@@ -22,7 +22,7 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-
+#import "GLUtils.h"
 
 
 CGPoint CGPointFromSize(const CGSize size) {

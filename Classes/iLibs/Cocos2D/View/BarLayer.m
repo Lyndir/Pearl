@@ -23,6 +23,8 @@
 //
 
 #import "BarLayer.h"
+#import "Config.h"
+#import "GLUtils.h"
 #import "Remove.h"
 
 

@@ -8,6 +8,7 @@
 
 #import "DeviceUtils.h"
 
+
 BOOL IsIPod() {
 
 #if TARGET_IPHONE_SIMULATOR

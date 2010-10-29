@@ -22,6 +22,9 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "cocos2d.h"
+
+
 typedef enum ScrollContentDirection {
     ScrollContentDirectionLeftToRight = 2 << 0,
     ScrollContentDirectionRightToLeft = 2 << 1,

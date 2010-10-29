@@ -8,6 +8,7 @@
 
 #import "StringUtils.h"
 
+
 NSString* RPad(const NSString* string, const NSUInteger l) {
     
     NSMutableString *newString = [string mutableCopy];

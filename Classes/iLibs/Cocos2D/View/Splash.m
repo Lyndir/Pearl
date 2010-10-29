@@ -23,7 +23,8 @@
 //
 
 #import "Splash.h"
-#import "AbstractAppDelegate.h"
+#import "Config.h"
+#import "AbstractCocos2DAppDelegate.h"
 #import "BarSprite.h"
 
 
@@ -97,7 +98,7 @@
         self.switching = YES;
 
         Scene *uiScene = [Scene new];
-        [uiScene addChild:[AbstractAppDelegate get].uiLayer];
+        [uiScene addChild:[AbstractCocos2DAppDelegate get].uiLayer];
         
         // Build a transition scene from the splash scene to the game scene.
         TransitionScene *transitionScene = [[SplashTransition alloc] initWithGameScene:uiScene];

@@ -23,8 +23,10 @@
 //
 
 #import "ConfigMenuLayer.h"
+#import "Config.h"
 #import "MenuItemTitle.h"
 #import "NSString_SEL.h"
+#import "StringUtils.h"
 
 
 @interface ConfigMenuLayer ()

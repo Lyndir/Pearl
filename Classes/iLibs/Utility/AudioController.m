@@ -23,6 +23,8 @@
 //
 
 #import "AudioController.h"
+#import "Logger.h"
+#import "Config.h"
 
 @interface AudioController ()
 

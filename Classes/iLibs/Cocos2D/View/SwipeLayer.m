@@ -23,6 +23,7 @@
 //
 
 #import "SwipeLayer.h"
+#import "Config.h"
 
 #define gSwipeMinHorizontal 50
 #define gSwipeMaxVertical 100

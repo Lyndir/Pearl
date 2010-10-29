@@ -24,6 +24,8 @@
 
 #import "UILayer.h"
 #import "Remove.h"
+#import "Config.h"
+
 #define kFilteringFactor            0.4f
 #define kAccelerometerFrequency     50 //Hz
 

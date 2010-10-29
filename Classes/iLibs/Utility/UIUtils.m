@@ -7,12 +7,27 @@
 //
 
 #import "UIUtils.h"
+#import "Logger.h"
+
+
+@interface UIUtils ()
+
++ (void)keyboardWillHide:(NSNotification *)n;
++ (void)keyboardWillShow:(NSNotification *)n;
+
+@end
 
 
 @implementation UIUtils
 
-+ (CGRect)autoSizeContent:(UIScrollView *)scrollView {
+static UIScrollView *keyboardScrollView;
+static CGPoint      keyboardScrollOriginalOffset;
+static CGRect       keyboardScrollOriginalFrame;
 
++ (void)autoSizeContent:(UIScrollView *)scrollView {
+
+    // === Step 1: Calculate the UIScrollView's contentSize.
+    
     // Remove last two subviews; they belong to the scrollView's scroller, I believe.
     // FIXME: This is kind of clumsy and will break when subviews are added programmatically.
     NSMutableArray *subviews = [scrollView.subviews mutableCopy];
@@ -32,8 +47,58 @@
     // Apply rect to scrollView's content definition.
     scrollView.contentOffset = CGPointZero;
     scrollView.contentSize = paddedRect.size;
+
+    // === Step 2: Manage the scroll view on keyboard notifications.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:scrollView.window];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:scrollView.window];
+    keyboardScrollView = scrollView;
+}
+
++ (CGRect)frameInWindow:(UIView *)view {
     
-    return contentRect;
+    return [view.window convertRect:view.bounds fromView:view];
+}
+
++ (void)keyboardWillHide:(NSNotification *)n {
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3f];
+
+    keyboardScrollView.contentOffset    = keyboardScrollOriginalOffset;
+    keyboardScrollView.frame            = keyboardScrollOriginalFrame;
+    
+    [UIView commitAnimations];
+}
+
++ (void)keyboardWillShow:(NSNotification *)n {
+    
+    NSDictionary* userInfo = [n userInfo];
+    CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect scrollRect   = [self frameInWindow:keyboardScrollView];
+    CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
+    
+    keyboardScrollOriginalOffset            = keyboardScrollView.contentOffset;
+    keyboardScrollOriginalFrame             = keyboardScrollView.frame;
+    CGPoint keyboardScrollNewOffset         = keyboardScrollOriginalOffset;
+    keyboardScrollNewOffset.y               += keyboardRect.size.height / 2;
+    CGRect keyboardScrollNewFrame           = keyboardScrollView.frame;
+    keyboardScrollNewFrame.size.height      -= hiddenRect.size.height;
+
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3f];
+
+    keyboardScrollView.contentOffset    = keyboardScrollNewOffset;
+    keyboardScrollView.frame            = keyboardScrollNewFrame;
+    
+    [UIView commitAnimations];
 }
 
 @end

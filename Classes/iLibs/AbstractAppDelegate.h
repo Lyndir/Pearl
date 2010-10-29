@@ -15,22 +15,32 @@
  */
 
 //
-//  MenuItemTitle.h
+//  AbstractAppDelegate.h
 //  iLibs
 //
-//  Created by Maarten Billemont on 08/09/09.
-//  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
+//  Created by Maarten Billemont on 18/10/08.
+//  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "cocos2d.h"
+#import <UIKit/UIKit.h>
 
 
-@interface MenuItemTitle : MenuItemFont {
+@interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
 
+    UIWindow                                                 *_window;
 }
 
-+ (MenuItemTitle *)itemWithString:(NSString *)title;
+@property (nonatomic, readwrite, retain) UIWindow                                                 *window;
 
-- (id)initWithString:(NSString *)title;
+- (void)preSetup;
+- (void)setup;
+
+- (void)didUpdateConfigForKey:(SEL)configKey;
+- (void)cleanup;
+- (void)shutdown:(id)caller;
+
++(AbstractAppDelegate *) get;
+
 
 @end
+

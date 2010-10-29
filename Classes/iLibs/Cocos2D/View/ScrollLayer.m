@@ -23,6 +23,7 @@
 //
 
 #import "ScrollLayer.h"
+#import "GLUtils.h"
 
 #define kDefaultScrollPerSecond     0.01f
 

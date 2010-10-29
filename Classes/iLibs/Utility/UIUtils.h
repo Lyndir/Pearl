@@ -6,7 +6,7 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 
 @interface UIUtils : NSObject {
@@ -16,9 +16,12 @@
 /**
  * Automatically determines and sets the content size of the given scroll view.
  * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
- *
- * @return The calculated CGRect that frames the scroll view's content.
  */
-+ (CGRect)autoSizeContent:(UIScrollView *)scrollView;
++ (void)autoSizeContent:(UIScrollView *)scrollView;
+
+/**
+ * Create a rectangle that describes the given view's frame in the coordinates of the top-level view that contains it.
+ */
++ (CGRect)frameInWindow:(UIView *)view;
 
 @end

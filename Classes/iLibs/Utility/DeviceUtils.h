@@ -6,9 +6,12 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
+
 /** YES when invoked on an iPod touch device. */
-BOOL IsIPod();
+BOOL IsIPod(void);
 /** YES when invoked on an iPhone device. */
-BOOL IsIPhone();
+BOOL IsIPhone(void);
 /** YES when invoked on the iPhone simulator. */
-BOOL IsSimulator();
+BOOL IsSimulator(void);

@@ -23,6 +23,7 @@
 //
 
 #import "FancyLayer.h"
+#import "GLUtils.h"
 
 
 @interface FancyLayer ()

@@ -23,9 +23,11 @@
 //
 
 #import "ShadeLayer.h"
-#import "AbstractAppDelegate.h"
+#import "Config.h"
+#import "AbstractCocos2DAppDelegate.h"
 #import "Remove.h"
 #import "MenuItemSymbolic.h"
+#import "GLUtils.h"
 
 
 @interface ShadeLayer ()
@@ -179,7 +181,7 @@
 - (void)back {
     
     [[AudioController get] clickEffect];
-    [[AbstractAppDelegate get] popLayer];
+    [[AbstractCocos2DAppDelegate get] popLayer];
 }
 
 

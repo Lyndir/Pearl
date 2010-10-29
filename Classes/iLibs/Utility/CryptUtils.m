@@ -6,10 +6,11 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "CryptUtils.h"
+
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonHMAC.h>
-#import "CryptUtils.h"
 
 #define kCipherAlgorithm    kCCAlgorithmAES128
 #define kCipherKeySize      kCCKeySizeAES128

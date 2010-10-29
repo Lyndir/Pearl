@@ -22,6 +22,8 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 #define cFirstRun           NSStringFromSelector(@selector(firstRun))
 
 #define cFontSize           NSStringFromSelector(@selector(fontSize))

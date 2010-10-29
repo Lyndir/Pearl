@@ -23,6 +23,7 @@
 //
 
 #import "MenuItemSpacer.h"
+#import "Config.h"
 
 
 @interface MenuItemSpacer ()

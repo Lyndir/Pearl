@@ -13,17 +13,3 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
-/**
- * Global Dependencies.
- */
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <UIKit/UIKit.h>
-    #import "cocos2d.h"
-    #import "StringUtils.h"
-    #import "DeviceUtils.h"
-    #import "Logger.h"
-    #import "GLUtils.h"
-    #import "Config.h"
-#endif

@@ -23,7 +23,8 @@
 //
 
 #import "HUDLayer.h"
-#import "AbstractAppDelegate.h"
+#import "AudioController.h"
+#import "AbstractCocos2DAppDelegate.h"
 
 @interface BarLayer ()
 
@@ -146,7 +147,7 @@
 -(void) menuButton: (id) caller {
     
     [[AudioController get] clickEffect];
-    [[AbstractAppDelegate get] hudMenuPressed];
+    [[AbstractCocos2DAppDelegate get] hudMenuPressed];
 }
 
 

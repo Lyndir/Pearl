@@ -22,9 +22,12 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "Config.h"
 #import "AbstractAppDelegate.h"
 #import "Resettable.h"
 #import "NSString_SEL.h"
+#import "StringUtils.h"
+#import "AudioController.h"
 
 
 @interface Config ()

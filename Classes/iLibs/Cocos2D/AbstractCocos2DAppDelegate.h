@@ -22,15 +22,14 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
+#import "AbstractAppDelegate.h"
 #import "AudioController.h"
 #import "UILayer.h"
 #import "HUDLayer.h"
 #import "ShadeLayer.h"
 
 
-@interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
-
-    UIWindow                                                 *_window;
+@interface AbstractCocos2DAppDelegate : AbstractAppDelegate {
 
     UILayer                                                  *_uiLayer;
     HUDLayer                                                 *_hudLayer;
@@ -40,13 +39,8 @@
 
 @property (nonatomic, readonly, retain) UILayer                     *uiLayer;
 @property (nonatomic, readwrite, retain) HUDLayer                                                 *hudLayer;
-@property (nonatomic, readonly, retain) UIWindow                                                 *window;
 
-- (void)preSetup;
-- (void)setup;
 - (void)hudMenuPressed;
-
-- (void)didUpdateConfigForKey:(SEL)configKey;
 - (void)pushLayer:(ShadeLayer *)layer;
 - (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden;
 - (void)popAllLayers;
@@ -60,7 +54,7 @@
 - (void)revealHud;
 - (void)hideHud;
 
-+(AbstractAppDelegate *) get;
++(AbstractCocos2DAppDelegate *) get;
 
 
 @end

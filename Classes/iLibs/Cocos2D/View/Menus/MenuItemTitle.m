@@ -7,6 +7,7 @@
 //
 
 #import "MenuItemTitle.h"
+#import "Config.h"
 
 
 @implementation MenuItemTitle

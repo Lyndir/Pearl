@@ -23,6 +23,7 @@
 //
 
 #import "DebugLayer.h"
+#import "GLUtils.h"
 
 
 @implementation DebugLayer

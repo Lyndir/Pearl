@@ -23,6 +23,7 @@
 //
 
 #import "FlickLayer.h"
+#import "Config.h"
 
 
 @interface FlickLayer ()

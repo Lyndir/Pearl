@@ -7,6 +7,7 @@
 //
 
 #import "MenuItemSymbolic.h"
+#import "Config.h"
 
 
 @implementation MenuItemSymbolic

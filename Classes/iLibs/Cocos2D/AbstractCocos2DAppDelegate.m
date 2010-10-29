@@ -22,7 +22,8 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "AbstractAppDelegate.h"
+#import "AbstractCocos2DAppDelegate.h"
+#import "Config.h"
 #import "Splash.h"
 #import "Resettable.h"
 #import "DebugLayer.h"
@@ -35,9 +36,7 @@
 @end
 
 
-@interface AbstractAppDelegate ()
-
-@property (nonatomic, readwrite, retain) UIWindow                                                 *window;
+@interface AbstractCocos2DAppDelegate ()
 
 @property (nonatomic, readwrite, retain) UILayer                                                  *uiLayer;
 
@@ -46,46 +45,21 @@
 @end
 
 
-@implementation AbstractAppDelegate
+@implementation AbstractCocos2DAppDelegate
 
-@synthesize window = _window;
 @synthesize uiLayer = _uiLayer;
 @synthesize hudLayer = _hudLayer;
 @synthesize menuLayers = _menuLayers;
 
 
+- (void)preSetup {
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
-    
-    // Log application details.
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *name = [info objectForKey:@"CFBundleName"];
-    NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
-    NSString *build = [info objectForKey:@"CFBundleVersion"];
-    NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
-    NSString *copyright = [info objectForKey:@"NSHumanReadableCopyright"];
-    
-    if (!name)
-        name = displayName;
-    if (displayName && ![displayName isEqualToString:name])
-        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
-    if (!version)
-        version = build;
-    if (build && ![build isEqualToString:version])
-        version = [NSString stringWithFormat:@"%@ (%@)", version, build];
-    
-    [[Logger get] inf:@"%@ v%@", name, version];
-    if (copyright)
-        [[Logger get] inf:@"%@", copyright];
-    [[Logger get] inf:@"==================================="];
-	
-    // Start the background music.
-    [self preSetup];
+    [super preSetup];
     
 	// Init the window.
 	self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
 	[self.window setUserInteractionEnabled:YES];
-
+    
 	// Director and OpenGL Setup.
     //[Director useFastDirector];
 #if TARGET_IPHONE_SIMULATOR
@@ -103,40 +77,19 @@
     [MenuItemFont setFontSize:[[Config get].fontSize intValue]];
     [MenuItemFont setFontName:[Config get].fontName];
     self.menuLayers = [NSMutableArray arrayWithCapacity:3];
-
+    
     // Build the game scene.
     self.uiLayer = [UILayer node];
     [self.uiLayer addChild:[DebugLayer get] z:99];
     
     [self revealHud];
     [self hideHud];
-    
-    [self setup];
 }
-
-
-- (void)preSetup {
-
-    if ([[Config get].currentTrack isEqualToString:@"sequential"]) {
-        // Restart sequentially from the start.
-        [Config get].playingTrack = nil;
-        [[AudioController get] playTrack:@"sequential"];
-    } else
-        [[AudioController get] playTrack:[Config get].currentTrack];
-}
-
-
-- (void)setup {
-    
-    [NSException raise:NSInternalInconsistencyException format:@"Override me!"]; 
-}
-
 
 - (void)hudMenuPressed {
     
     [NSException raise:NSInternalInconsistencyException format:@"Override me!"]; 
 }
-
 
 -(void) revealHud {
     
@@ -153,12 +106,10 @@
     [self.uiLayer addChild:self.hudLayer];
 }
 
-
 - (void)hideHud {
     
     [self.hudLayer dismiss];
 }
-
 
 - (HUDLayer *)hudLayer {
     
@@ -168,11 +119,9 @@
     return _hudLayer;
 }
 
-
 - (void)didUpdateConfigForKey:(SEL)configKey {
 
 }
-
 
 - (void)popLayer {
 
@@ -198,7 +147,6 @@
     
 }
 
-
 -(void) popAllLayers {
     
     if(![self.menuLayers count])
@@ -216,7 +164,6 @@
     
     [self pushLayer:layer hidden:NO];
 }
-
 
 - (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden {
     
@@ -251,26 +198,14 @@
     [[Director sharedDirector] pause];
 }
 
-
 -(void) applicationDidBecomeActive:(UIApplication *)application {
 
     [[Director sharedDirector] resume];
 }
 
-
--(void) applicationDidReceiveMemoryWarning:(UIApplication *)application {
+-(void) cleanup {
     
 	[[TextureMgr sharedTextureMgr] removeAllTextures];
-    
-    [self cleanup];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    
-    [Config get].firstRun = [NSNumber numberWithBool:NO];
-}
-
--(void) cleanup {
     
     if(self.hudLayer && ![self.hudLayer parent]) {
         [self.hudLayer stopAllActions];
@@ -286,7 +221,6 @@
     self.uiLayer = nil;
     self.menuLayers = nil;
     self.hudLayer = nil;
-    self.window = nil;
     
     [super dealloc];
 }

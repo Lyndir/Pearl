@@ -6,6 +6,7 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 /**
  * An exception that indicates decryption was attempted with an invalid key.

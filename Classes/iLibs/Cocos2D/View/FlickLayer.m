@@ -33,8 +33,8 @@
     
 @property (readwrite, retain) ScrollLayer          *content;
 
-@property (readwrite, retain) MenuItem             *right;
-@property (readwrite, retain) MenuItem             *left;
+@property (readwrite, retain) CCMenuItem             *right;
+@property (readwrite, retain) CCMenuItem             *left;
 
 @end
 
@@ -44,13 +44,13 @@
 @synthesize content = _content;
 @synthesize right = _right, left = _left;
 
-+ (FlickLayer *)flickSprites:(Sprite *)firstSprite, ... {
++ (FlickLayer *)flickSprites:(CCSprite *)firstSprite, ... {
     
     va_list list;
     va_start(list, firstSprite);
     
     NSMutableArray *sprites = [[NSMutableArray alloc] initWithCapacity:3];
-    for (Sprite *sprite = firstSprite; sprite; sprite = va_arg(list, Sprite*)) {
+    for (CCSprite *sprite = firstSprite; sprite; sprite = va_arg(list, CCSprite*)) {
         [sprites addObject:sprite];
     }
     va_end(list);
@@ -65,13 +65,13 @@
 }
 
 
-- (id)initWithSprites:(Sprite*)firstSprite, ... {
+- (id)initWithSprites:(CCSprite*)firstSprite, ... {
     
     va_list list;
     va_start(list, firstSprite);
     
     NSMutableArray *sprites = [[NSMutableArray alloc] initWithCapacity:3];
-    for (Sprite *sprite = firstSprite; sprite; sprite = va_arg(list, Sprite*)) {
+    for (CCSprite *sprite = firstSprite; sprite; sprite = va_arg(list, CCSprite*)) {
         [sprites addObject:sprite];
     }
     va_end(list);
@@ -88,26 +88,26 @@
     self.content.delegate        = self;
     [self addChild:self.content];
     
-    NSString *oldFontName   = [MenuItemFont fontName];
-    NSUInteger oldFontSize  = [MenuItemFont fontSize];
-    [MenuItemFont setFontName:[Config get].symbolicFontName];
-    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
-    self.right                   = [MenuItemFont itemFromString:@" ▹ "
+    NSString *oldFontName   = [CCMenuItemFont fontName];
+    NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
+    [CCMenuItemFont setFontName:[Config get].symbolicFontName];
+    [CCMenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    self.right                   = [CCMenuItemFont itemFromString:@" ▹ "
                                                          target:self selector:@selector(right:)];
-    self.left                    = [MenuItemFont itemFromString:@" ◃ "
+    self.left                    = [CCMenuItemFont itemFromString:@" ◃ "
                                                          target:self selector:@selector(left:)];
-    [MenuItemFont setFontName:oldFontName];
-    [MenuItemFont setFontSize:oldFontSize];
+    [CCMenuItemFont setFontName:oldFontName];
+    [CCMenuItemFont setFontSize:oldFontSize];
     
-    [self addChild:[Menu menuWithItems:self.right, nil]];
-    [self addChild:[Menu menuWithItems:self.left, nil]];
+    [self addChild:[CCMenu menuWithItems:self.right, nil]];
+    [self addChild:[CCMenu menuWithItems:self.left, nil]];
     self.right.position          = ccp(self.contentSize.width / 2, 0);
     self.right.anchorPoint       = ccp(1, 0.5f);
     self.left.position           = ccp(-self.contentSize.width / 2, 0);
     self.left.anchorPoint        = ccp(0, 0.5f);
     
     CGFloat x = 0;
-    for (Sprite *sprite in sprites) {
+    for (CCSprite *sprite in sprites) {
         [self.content addChild:sprite];
         
         sprite.position             = ccp(x + self.contentSize.width / 2, self.contentSize.height / 2);

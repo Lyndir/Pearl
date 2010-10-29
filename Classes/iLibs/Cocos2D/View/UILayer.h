@@ -25,12 +25,12 @@
 #import "cocos2d.h"
 
 
-@interface UILayer : ColorLayer {
+@interface UILayer : CCColorLayer {
 
-    Label                                    *_messageLabel;
+    CCLabelTTF                                    *_messageLabel;
     NSMutableArray                           *_messageQueue, *_callbackQueue;
 
-    RotateTo                                 *_rotateAction;
+    CCRotateTo                                 *_rotateAction;
     UIAccelerationValue                      _accelX, _accelY, _accelZ;
 }
 

@@ -30,18 +30,18 @@
 
     BOOL                                                     _pushed;
     BOOL                                                     _fadeNextEntry;
-    MenuItem                                                 *_backButton, *_nextButton;
-    Menu                                                     *_backMenu, *_nextMenu;
+    CCMenuItem                                                 *_backButton, *_nextButton;
+    CCMenu                                                     *_backMenu, *_nextMenu;
     NSInvocation                                             *_backInvocation, *_nextInvocation;
 
-    CocosNode                                                *_background;
+    CCNode                                                *_background;
     CGPoint                                                  _backgroundOffset;
 }
 
-@property (readwrite, retain) MenuItem                              *backButton;
-@property (readwrite, retain) MenuItem                              *nextButton;
+@property (readwrite, retain) CCMenuItem                              *backButton;
+@property (readwrite, retain) CCMenuItem                              *nextButton;
 @property (readwrite) BOOL                                          fadeNextEntry;
-@property (readwrite, retain) CocosNode                             *background;
+@property (readwrite, retain) CCNode                             *background;
 @property (readwrite, assign) CGPoint                               backgroundOffset;
 
 - (void)setBackButtonTarget:(id)target selector:(SEL)selector;

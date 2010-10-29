@@ -34,6 +34,14 @@ typedef struct Vertex {
 } Vertex;
 
 //! helper macro that converts a ccColor4B into a ccColor3B by dropping the alpha value.
+static inline ccColor4B
+ccc3to4(const ccColor3B color)
+{
+	ccColor4B c = { color.r, color.g, color.b, UCHAR_MAX };
+	return c;
+}
+
+//! helper macro that converts a ccColor4B into a ccColor3B by dropping the alpha value.
 static inline ccColor3B
 ccc4to3(const ccColor4B color)
 {
@@ -87,7 +95,7 @@ CGPoint CGPointFromSize(const CGSize size);
 CGSize CGSizeFromPoint(const CGPoint point);
 CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size);
 
-void IndicateInSpaceOf(CGPoint point, CocosNode *node);
+void IndicateInSpaceOf(const CGPoint point, const CCNode* node);
 void DrawIndicators();
 
 void DrawPointsAt(const CGPoint* points, const NSUInteger count, const ccColor4B color);
@@ -101,4 +109,4 @@ void DrawBoxFrom(const CGPoint from, const CGPoint to, const ccColor4B fromColor
 void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color, const CGFloat width);
 
 /** Apply glScissor for the given coordinates in the given node's space. */
-void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to);
+void Scissor(const CCNode* inNode, const CGPoint from, const CGPoint to);

@@ -35,11 +35,11 @@
 -(void) resetMessage:(NSString *)msg;
 - (void)popMessageQueue:(ccTime)dt;
 
-@property (readwrite, retain) Label                                    *messageLabel;
+@property (readwrite, retain) CCLabelTTF                                    *messageLabel;
 @property (readwrite, retain) NSMutableArray                           *messageQueue;
 @property (readwrite, retain) NSMutableArray                           *callbackQueue;
 
-@property (readwrite, retain) RotateTo                                 *rotateAction;
+@property (readwrite, retain) CCRotateTo                                 *rotateAction;
 @property (readwrite, assign) UIAccelerationValue                      accelX;
 @property (readwrite, assign) UIAccelerationValue                      accelY;
 @property (readwrite, assign) UIAccelerationValue                      accelZ;
@@ -67,7 +67,7 @@
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
     //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
 
-    isAccelerometerEnabled = YES;
+    self.isAccelerometerEnabled = YES;
 
     return self;
 }
@@ -78,9 +78,9 @@
     [super setRotation:aRotation];
     
     NSUInteger barSide = (int)self.rotation / 90;
-    if([Director sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft)
+    if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft)
         ++barSide;
-    else if([Director sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
+    else if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
         --barSide;
     
     switch (barSide % 4) {
@@ -120,7 +120,7 @@
     if(self.rotateAction)
         [self stopAction:self.rotateAction];
     
-    [self runAction:self.rotateAction = [RotateTo actionWithDuration:0.2f angle:aRotation]];
+    [self runAction:self.rotateAction = [CCRotateTo actionWithDuration:0.2f angle:aRotation]];
 }
 
 
@@ -169,9 +169,9 @@
     [self.callbackQueue removeLastObject];
     
     [self resetMessage:msg];
-    [self.messageLabel runAction:[Sequence actions:
-                             [MoveBy actionWithDuration:1 position:ccp(0, -([[Config get].fontSize intValue] * 2))],
-                             [FadeTo actionWithDuration:2 opacity:0x00],
+    [self.messageLabel runAction:[CCSequence actions:
+                             [CCMoveBy actionWithDuration:1 position:ccp(0, -([[Config get].fontSize intValue] * 2))],
+                             [CCFadeTo actionWithDuration:2 opacity:0x00],
                              nil]];
     
     if(callback != (id)[NSNull null])
@@ -188,15 +188,15 @@
         // Detach existing label & create a new message label for the next message.
         if(self.messageLabel) {
             [self.messageLabel stopAllActions];
-            [self.messageLabel runAction:[Sequence actions:
-                                     [MoveTo actionWithDuration:1
+            [self.messageLabel runAction:[CCSequence actions:
+                                     [CCMoveTo actionWithDuration:1
                                                        position:ccp(-[self.messageLabel contentSize].width / 2, [self.messageLabel position].y)],
-                                     [FadeOut actionWithDuration:1],
+                                     [CCFadeOut actionWithDuration:1],
                                      [Remove action],
                                      nil]];
         }
         
-        self.messageLabel = [Label labelWithString:msg
+        self.messageLabel = [CCLabelTTF labelWithString:msg
                                           fontName:[Config get].fixedFontName
                                           fontSize:[[Config get].fontSize intValue]];
         [self addChild: self.messageLabel z:1];
@@ -204,7 +204,7 @@
     else
         [self.messageLabel setString:msg];
     
-    CGSize winSize = [[Director sharedDirector] winSize];
+    CGSize winSize = [[CCDirector sharedDirector] winSize];
     [self.messageLabel setPosition:ccp([self.messageLabel contentSize].width / 2 + [[Config get].fontSize intValue],
                                   winSize.height + [[Config get].fontSize intValue])];
     [self.messageLabel setOpacity:0xff];

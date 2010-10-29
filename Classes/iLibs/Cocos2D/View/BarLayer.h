@@ -25,11 +25,11 @@
 #import "cocos2d.h"
 
 
-@interface BarLayer : Sprite {
+@interface BarLayer : CCSprite {
 
-    MenuItemFont         *_menuButton;
-    Menu                 *_menuMenu;
-    Label                *_messageLabel;
+    CCMenuItemFont         *_menuButton;
+    CCMenu                 *_menuMenu;
+    CCLabelTTF                *_messageLabel;
 
     long                 _color, _renderColor;
     CGPoint               _showPosition;

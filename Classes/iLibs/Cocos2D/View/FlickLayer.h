@@ -25,17 +25,17 @@
 #import "ScrollLayer.h"
 
 
-@interface FlickLayer : Layer<ScrollLayerDelegate> {
+@interface FlickLayer : CCLayer<ScrollLayerDelegate> {
 
     ScrollLayer          *_content;
 
-    MenuItem             *_right, *_left;
+    CCMenuItem             *_right, *_left;
 }
 
-+ (id)flickSprites:(Sprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
++ (id)flickSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
 + (id)flickSpritesFromArray:(NSArray *)sprites;
 
-- (id)initWithSprites:(Sprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
 - (id)initWithSpritesFromArray:(NSArray *)sprites;
 
 @end

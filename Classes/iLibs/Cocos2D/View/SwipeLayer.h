@@ -25,11 +25,11 @@
 #import "cocos2d.h"
 
 
-@interface SwipeLayer : Layer {
+@interface SwipeLayer : CCLayer {
 
     NSInvocation     *_invocation;
 
-    IntervalAction   *_swipeAction;
+    CCActionInterval   *_swipeAction;
     CGPoint           _swipeFrom;
     CGPoint           _swipeTo;
     CGPoint           _swipeStart;

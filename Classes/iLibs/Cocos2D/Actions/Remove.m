@@ -27,14 +27,10 @@
 
 @implementation Remove
 
-
-
-
-- (void)startWithTarget:(CocosNode *)aTarget {
+- (void)startWithTarget:(CCNode *)aTarget {
     
     [super startWithTarget:aTarget];
-	[[target parent] removeChild:target cleanup:NO];
+	[self.target removeFromParentAndCleanup:NO];
 }
-
 
 @end

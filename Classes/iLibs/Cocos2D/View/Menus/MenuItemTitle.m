@@ -21,15 +21,15 @@
 
 - (id)initWithString:(NSString *)title {
     
-    NSString *oldFontName   = [MenuItemFont fontName];
-    NSUInteger oldFontSize  = [MenuItemFont fontSize];
-    [MenuItemFont setFontName:[Config get].fixedFontName];
-    [MenuItemFont setFontSize:[[Config get].smallFontSize intValue]];
+    NSString *oldFontName   = [CCMenuItemFont fontName];
+    NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
+    [CCMenuItemFont setFontName:[Config get].fixedFontName];
+    [CCMenuItemFont setFontSize:[[Config get].smallFontSize intValue]];
     
     self = ([super initFromString:title target:nil selector:nil]);
     
-    [MenuItemFont setFontName:oldFontName];
-    [MenuItemFont setFontSize:oldFontSize];
+    [CCMenuItemFont setFontName:oldFontName];
+    [CCMenuItemFont setFontSize:oldFontSize];
 
     if (!self)
         return nil;

@@ -31,9 +31,9 @@
 
 - (void)updateBodyFrame:(ccTime)dt;
 
-@property (readwrite, retain) Texture2D            *head;
-@property (readwrite, assign) Texture2D            **body;
-@property (readwrite, retain) Texture2D            *tail;
+@property (readwrite, retain) CCTexture2D            *head;
+@property (readwrite, assign) CCTexture2D            **body;
+@property (readwrite, retain) CCTexture2D            *tail;
 
 @property (readwrite, assign) CGFloat              age;
 @property (readwrite, assign) NSUInteger           bodyFrame;
@@ -71,21 +71,21 @@
     self.animatedTargetting      = anAnimatedTargetting;
 
     if (bundleHeadReference)
-        self.head = [[TextureMgr sharedTextureMgr] addImage:bundleHeadReference];
+        self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
     if (bundleBodyReference) {
         self.bodyFrames = bodyFrameCount;
-        self.body = malloc(sizeof(Texture2D *) * self.bodyFrames);
+        self.body = malloc(sizeof(CCTexture2D *) * self.bodyFrames);
         if (self.bodyFrames > 1) {
             for (NSUInteger f = 0; f < self.bodyFrames; ++f)
-                self.body[f] = [[[TextureMgr sharedTextureMgr] addImage:[NSString stringWithFormat:bundleBodyReference, f]] retain];
+                self.body[f] = [[[CCTextureCache sharedTextureCache] addImage:[NSString stringWithFormat:bundleBodyReference, f]] retain];
         } else
-            self.body[0] = [[[TextureMgr sharedTextureMgr] addImage:bundleBodyReference] retain];
+            self.body[0] = [[[CCTextureCache sharedTextureCache] addImage:bundleBodyReference] retain];
         
         self.bodyFrame = 0;
         self.textureSize = CGSizeMake(self.body[self.bodyFrame].pixelsWide, self.body[self.bodyFrame].pixelsHigh);
     }
     if (bundleTailReference)
-        self.tail = [[TextureMgr sharedTextureMgr] addImage:bundleTailReference];
+        self.tail = [[CCTextureCache sharedTextureCache] addImage:bundleTailReference];
     
     [self schedule:@selector(updateBodyFrame:) interval:0.02f];
     if (self.animatedTargetting)

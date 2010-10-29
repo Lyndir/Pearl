@@ -28,13 +28,13 @@
 #import "AudioController.h"
 
 
-@interface ClickMenu : Menu
+@interface ClickMenu : CCMenu
 
 @end
 
 @interface ClickMenu (Private)
 
--(MenuItem *) itemForTouch: (UITouch *) touch;
+-(CCMenuItem *) itemForTouch: (UITouch *) touch;
 
 @end
 
@@ -58,7 +58,7 @@
 - (void)doLoad;
 - (void)doLayout;
 
-@property (readwrite, retain) Menu                                                     *menu;
+@property (readwrite, retain) CCMenu                                                     *menu;
 
 @property (readwrite, assign) BOOL                                                     layoutDirty;
 
@@ -76,7 +76,7 @@
 
 
 
-+ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo items:(MenuItem *)menuItem, ... {
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo items:(CCMenuItem *)menuItem, ... {
     
     if (!menuItem)
         [NSException raise:NSInvalidArgumentException
@@ -84,11 +84,11 @@
     
     va_list list;
     va_start(list, menuItem);
-    MenuItem *item;
+    CCMenuItem *item;
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:5];
     [menuItems addObject:menuItem];
     
-    while ((item = va_arg(list, MenuItem*)))
+    while ((item = va_arg(list, CCMenuItem*)))
         [menuItems addObject:item];
     va_end(list);
     
@@ -96,7 +96,7 @@
 }
 
 
-+ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
     
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems] autorelease];
 }
@@ -125,7 +125,7 @@
 }
 
 
-- (void)setLogo:(MenuItem *)aLogo {
+- (void)setLogo:(CCMenuItem *)aLogo {
 
     [_logo release];
     _logo = [aLogo retain];
@@ -184,7 +184,7 @@
         return;
     
     self.menu = [ClickMenu menuWithItems:nil];
-    self.menu.relativeAnchorPoint = YES;
+    self.menu.isRelativeAnchorPoint = YES;
     self.menu.anchorPoint = ccp(-0.5f, -0.5f);
     self.menu.position = self.offset;
     
@@ -204,7 +204,7 @@
     
     switch (self.layout) {
         case MenuLayoutVertical: {
-            for (MenuItem *item in self.items)
+            for (CCMenuItem *item in self.items)
                 [self.menu addChild:item];
 
             [self.menu alignItemsVertically];

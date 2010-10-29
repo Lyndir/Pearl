@@ -29,7 +29,7 @@
 #import "DebugLayer.h"
 #import "ShadeLayer.h"
 
-@interface Director ()
+@interface CCDirector ()
 
 -(void) startAnimation;
 
@@ -57,25 +57,21 @@
     [super preSetup];
     
 	// Init the window.
-	self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].applicationFrame] autorelease];
-	[self.window setUserInteractionEnabled:YES];
-    
-	// Director and OpenGL Setup.
-    //[Director useFastDirector];
+    UIWindow *window;
+    CC_DIRECTOR_INIT();
+    self.window = [window autorelease];
 #if TARGET_IPHONE_SIMULATOR
-    [[Director sharedDirector] setPixelFormat:kPixelFormatRGBA8888];
+    //FIXME? [[CCDirector sharedDirector] setPixelFormat:kPixelFormatRGBA8888];
 #else
-    //[[Director sharedDirector] setDisplayFPS:YES];
+    //[[CCDirector sharedDirector] setDisplayFPS:YES];
 #endif
-	[[Director sharedDirector] setDeviceOrientation:CCDeviceOrientationLandscapeLeft];
-    [[Director sharedDirector] attachInView:self.window];
     
     // Random seed with timestamp.
     srandom(time(nil));
     
-    // Menu items font.
-    [MenuItemFont setFontSize:[[Config get].fontSize intValue]];
-    [MenuItemFont setFontName:[Config get].fontName];
+    // CCMenu items font.
+    [CCMenuItemFont setFontSize:[[Config get].fontSize intValue]];
+    [CCMenuItemFont setFontName:[Config get].fontName];
     self.menuLayers = [NSMutableArray arrayWithCapacity:3];
     
     // Build the game scene.
@@ -169,11 +165,11 @@
     
     if(layer.parent) {
         if (![self.menuLayers containsObject:layer])
-            // Layer is showing but shouldn't have been; probably being dismissed.
+            // CCLayer is showing but shouldn't have been; probably being dismissed.
             [self.uiLayer removeChild:layer cleanup:YES];
         
         else {
-            // Layer is already showing.
+            // CCLayer is already showing.
             if ([layer conformsToProtocol:@protocol(Resettable)])
                 [(ShadeLayer<Resettable> *) layer reset];
         
@@ -189,23 +185,23 @@
 
 - (void)shutdown:(id)caller {
     
-    [[Director sharedDirector] end];
-    [[Director sharedDirector] release];
+    [[CCDirector sharedDirector] end];
+    [[CCDirector sharedDirector] release];
 }
 
 -(void) applicationWillResignActive:(UIApplication *)application {
     
-    [[Director sharedDirector] pause];
+    [[CCDirector sharedDirector] pause];
 }
 
 -(void) applicationDidBecomeActive:(UIApplication *)application {
 
-    [[Director sharedDirector] resume];
+    [[CCDirector sharedDirector] resume];
 }
 
 -(void) cleanup {
     
-	[[TextureMgr sharedTextureMgr] removeAllTextures];
+	[[CCTextureCache sharedTextureCache] removeAllTextures];
     
     if(self.hudLayer && ![self.hudLayer parent]) {
         [self.hudLayer stopAllActions];

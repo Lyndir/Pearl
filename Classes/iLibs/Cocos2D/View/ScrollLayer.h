@@ -39,7 +39,7 @@ typedef enum ScrollContentDirection {
 @end
 
 
-@interface ScrollLayer : Layer {
+@interface ScrollLayer : CCLayer {
 
     @private
     CGPoint                                      _dragFromPoint;
@@ -66,7 +66,7 @@ typedef enum ScrollContentDirection {
 @property (readwrite, retain) id<NSObject, ScrollLayerDelegate> delegate;
 
 + (ScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
-+ (ScrollLayer *)scrollNode:(CocosNode *)node direction:(ScrollContentDirection)direction;
++ (ScrollLayer *)scrollNode:(CCNode *)node direction:(ScrollContentDirection)direction;
 - (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
 
 - (void)scrollBy:(CGPoint)scrollOffset;

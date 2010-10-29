@@ -32,13 +32,13 @@
 @optional
 - (NSString *)labelForSetting:(SEL)setting;
 
-/** Return an array of MenuItem*'s to add to the toggle for the given setting. */
+/** Return an array of CCMenuItem*'s to add to the toggle for the given setting. */
 @optional
 - (NSMutableArray *)toggleItemsForSetting:(SEL)setting;
 
 /** Return a node that conveys and allows toggling the given setting. */
 @optional
-- (MenuItem *)itemForSetting:(SEL)setting;
+- (CCMenuItem *)itemForSetting:(SEL)setting;
 
 @end
 
@@ -51,13 +51,13 @@
 
 @property (readwrite, retain) id<NSObject, ConfigMenuDelegate> configDelegate;
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                              settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;
 
 @end

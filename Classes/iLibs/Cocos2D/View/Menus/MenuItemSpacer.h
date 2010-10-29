@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface MenuItemSpacer : MenuItem {
+@interface MenuItemSpacer : CCMenuItem {
 
     CGFloat  _height;
 }

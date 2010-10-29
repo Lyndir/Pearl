@@ -25,10 +25,10 @@
 #import "cocos2d.h"
 
 
-@interface BarSprite : Layer {
+@interface BarSprite : CCLayer {
 
 @private
-    Texture2D            *_head, **_body, *_tail;
+    CCTexture2D            *_head, **_body, *_tail;
 
     CGFloat              _age;
     NSUInteger           _bodyFrame, _bodyFrames;

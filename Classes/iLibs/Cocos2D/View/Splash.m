@@ -28,13 +28,13 @@
 #import "BarSprite.h"
 
 
-@interface SplashTransition : ZoomFlipYTransition
+@interface SplashTransition : CCTransitionZoomFlipY
 
 @end
 
 @implementation SplashTransition
 
-- (id)initWithGameScene:(Scene *)uiScene {
+- (id)initWithGameScene:(CCScene *)uiScene {
 
     if (!(self = [super initWithDuration:[[Config get].transitionDuration floatValue]
                                    scene:uiScene
@@ -97,16 +97,16 @@
             return;
         self.switching = YES;
 
-        Scene *uiScene = [Scene new];
+        CCScene *uiScene = [CCScene new];
         [uiScene addChild:[AbstractCocos2DAppDelegate get].uiLayer];
         
         // Build a transition scene from the splash scene to the game scene.
-        TransitionScene *transitionScene = [[SplashTransition alloc] initWithGameScene:uiScene];
+        CCTransitionScene *transitionScene = [[SplashTransition alloc] initWithGameScene:uiScene];
         
         [uiScene release];
         
         // Start the scene and bring up the menu.
-        [[Director sharedDirector] replaceScene:transitionScene];
+        [[CCDirector sharedDirector] replaceScene:transitionScene];
         [transitionScene release];
     }
 }

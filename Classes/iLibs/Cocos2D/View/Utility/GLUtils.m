@@ -46,15 +46,15 @@ CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size) {
 #define INDICATORS 300
 static CGPoint *indicatorPoints     = nil;
 static ccColor4B *indicatorColors   = nil;
-static CocosNode* *indicatorSpaces  = nil;
+static CCNode* *indicatorSpaces  = nil;
 static NSUInteger indicatorPosition = INDICATORS;
 
-void IndicateInSpaceOf(CGPoint point, CocosNode *node) {
+void IndicateInSpaceOf(const CGPoint point, const CCNode *node) {
     
     if (indicatorPoints == nil) {
         indicatorPoints = calloc(INDICATORS, sizeof(CGPoint));
         indicatorColors = calloc(INDICATORS, sizeof(ccColor4B));
-        indicatorSpaces = calloc(INDICATORS, sizeof(CocosNode*));
+        indicatorSpaces = calloc(INDICATORS, sizeof(CCNode*));
     }
     
     ++indicatorPosition;
@@ -244,10 +244,10 @@ void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color,
         glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Scissor(const CocosNode *inNode, const CGPoint from, const CGPoint to) {
+void Scissor(const CCNode *inNode, const CGPoint from, const CGPoint to) {
     
-    CGPoint scissorFrom = [inNode convertToWindowSpace:from];
-    CGPoint scissorTo = [inNode convertToWindowSpace:to];
+    CGPoint scissorFrom = [inNode convertToWorldSpace:from];
+    CGPoint scissorTo = [inNode convertToWorldSpace:to];
     
     glScissor(MIN(scissorFrom.x, scissorTo.x), MIN(scissorFrom.y, scissorTo.y),
               ABS(scissorTo.x - scissorFrom.x), ABS(scissorTo.y - scissorFrom.y));

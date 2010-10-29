@@ -28,7 +28,7 @@
 
 @interface BarLayer ()
 
-@property (readwrite, retain) Menu                 *menuMenu;
+@property (readwrite, retain) CCMenu                 *menuMenu;
 
 @end
 
@@ -36,8 +36,8 @@
 
 - (void) menuButton:(id) caller;
 
-@property (readwrite, retain) Sprite               *scoreSprite;
-@property (readwrite, retain) LabelAtlas           *scoreCount;
+@property (readwrite, retain) CCSprite               *scoreSprite;
+@property (readwrite, retain) CCLabelAtlas           *scoreCount;
 @property (readwrite, retain) BarLayer             *messageBar;
 
 @end
@@ -59,9 +59,9 @@
     self.messageBar          = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     
     // Score.
-    self.scoreSprite = [Sprite spriteWithFile:@"score.png"];
-    self.scoreCount = [LabelAtlas labelAtlasWithString:@""
-                                           charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
+    self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
+    self.scoreCount = [CCLabelAtlas labelWithString:@""
+                                        charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
     [self.scoreSprite setPosition:ccp(self.contentSize.width / 2, self.contentSize.height / 2)];
     [self.scoreCount setPosition:ccp(90, 0)];
     [self addChild:self.scoreSprite];
@@ -88,9 +88,9 @@
     else
         scoreColor = ccc3(0xFF, 0x99, 0x99);
     
-    [self.scoreCount runAction:[Sequence actions:
-                           [TintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
-                           [TintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
+    [self.scoreCount runAction:[CCSequence actions:
+                           [CCTintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
+                           [CCTintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
                            nil]];
 }
 
@@ -107,9 +107,9 @@
     [self.messageBar message:msg duration:0 isImportant:important];
     
     if(_duration)
-        [self runAction:[Sequence actions:
-                         [DelayTime actionWithDuration:_duration],
-                         [CallFunc actionWithTarget:self selector:@selector(dismissMessage)],
+        [self runAction:[CCSequence actions:
+                         [CCDelayTime actionWithDuration:_duration],
+                         [CCCallFunc actionWithTarget:self selector:@selector(dismissMessage)],
                          nil]];
 }
 

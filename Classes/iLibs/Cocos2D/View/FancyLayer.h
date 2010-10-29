@@ -39,7 +39,7 @@ margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
     return margin;
 }
 
-@interface FancyLayer : Layer <CocosNodeRGBA> {
+@interface FancyLayer : CCLayer <CCRGBAProtocol> {
 
     CGSize                                   _contentSize;
     Margin                                   _outerPadding;

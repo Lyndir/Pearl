@@ -25,11 +25,11 @@
 #import "cocos2d.h"
 
 
-@interface ActivitySprite : AtlasSpriteManager {
+@interface ActivitySprite : CCSpriteBatchNode/*FIXME?*/ {
 
-    AtlasSprite                             *_sprite;
+    CCSprite                             *_sprite;
 }
 
-@property (readonly, retain) AtlasSprite    *sprite;
+@property (readonly, retain) CCSprite    *sprite;
 
 @end

@@ -34,10 +34,10 @@ typedef enum MenuLayout {
 
 @protocol MenuDelegate
 
-/** Occurs after the Menu layer was (re)constructed. */
+/** Occurs after the CCMenu layer was (re)constructed. */
 @optional
 - (void)didLoad:(MenuLayer *)menuLayer;
-/** Occurs after the Menu layer has been layed out according to the default layout
+/** Occurs after the CCMenu layer has been layed out according to the default layout
  *
  * It happens before -didEnter, and only if necessary.
  */
@@ -54,8 +54,8 @@ typedef enum MenuLayout {
 
 @private
     NSArray                                                  *_items;
-    Menu                                                     *_menu;
-    MenuItem                                                 *_logo;
+    CCMenu                                                     *_menu;
+    CCMenuItem                                                 *_logo;
     CGPoint                                                  _offset;
 
     MenuLayout                                               _layout;
@@ -64,19 +64,19 @@ typedef enum MenuLayout {
     id<NSObject, MenuDelegate>                               _delegate;
 }
 
-@property (readonly, retain) Menu                                   *menu;
+@property (readonly, retain) CCMenu                                   *menu;
 @property (readwrite) MenuLayout                            layout;
 @property (readwrite, copy) NSArray                         *items;
-@property (readwrite, retain) MenuItem                      *logo;
+@property (readwrite, retain) CCMenuItem                      *logo;
 @property (readwrite, assign) CGPoint                       offset;
 @property (readwrite, retain) id<NSObject, MenuDelegate>    delegate;
 
-+ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
-                          items:(MenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
-+ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                          items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
++ (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                  itemsFromArray:(NSArray *)menuItems;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
         itemsFromArray:(NSArray *)menuItems;
 
 @end

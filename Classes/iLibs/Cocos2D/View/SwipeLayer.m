@@ -33,7 +33,7 @@
 
 @property (readwrite, retain) NSInvocation     *invocation;
 
-@property (readwrite, retain) IntervalAction   *swipeAction;
+@property (readwrite, retain) CCActionInterval   *swipeAction;
 @property (readwrite, assign) CGPoint           swipeFrom;
 @property (readwrite, assign) CGPoint           swipeTo;
 @property (readwrite, assign) CGPoint           swipeStart;
@@ -65,7 +65,7 @@
     if(!(self = [super init]))
         return self;
     
-    CGSize winSize = [[Director sharedDirector] winSize];
+    CGSize winSize = [[CCDirector sharedDirector] winSize];
 
     self.swiped          = NO;
     self.swipeStart      = ccp(-1, -1);
@@ -73,7 +73,7 @@
     self.swipeTo         = ccp(winSize.width, winSize.height);
     [self setTarget:t selector:s];
 
-    isTouchEnabled  = YES;
+    self.isTouchEnabled  = YES;
     
     return self;
 }
@@ -95,14 +95,16 @@
 }
 
 
--(BOOL) ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void) ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if([[event allTouches] count] != 1)
-        return [self ccTouchesCancelled:touches withEvent:event];
-    
+    if([[event allTouches] count] != 1) {
+        [self ccTouchesCancelled:touches withEvent:event];
+        return;
+    }
+
     if(self.position.x != 0 || self.position.y != 0)
         // Not in swipe ready position.
-        return kEventIgnored;
+        return;
     
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:[touch view]];
@@ -111,23 +113,25 @@
     if(swipePoint.x < self.swipeFrom.x || swipePoint.y < self.swipeFrom.y
         || swipePoint.x > self.swipeTo.x || swipePoint.y > self.swipeTo.y)
         // Lays outside swipeFrom - swipeTo box
-        return kEventIgnored;
+        return;
     
     self.swipeStart  = swipePoint;
     self.swiped      = NO;
     
-    return kEventHandled;
+    return;
 }
 
 
--(BOOL) ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void) ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if([[event allTouches] count] != 1)
-        return [self ccTouchesCancelled:touches withEvent:event];
-    
+    if([[event allTouches] count] != 1) {
+        [self ccTouchesCancelled:touches withEvent:event];
+        return;
+    }
+
     if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
         // Swipe hasn't yet begun.
-        return kEventIgnored;
+        return;
     
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:[touch view]];
@@ -143,40 +147,40 @@
             swipeActionDuration -= self.swipeAction.elapsed;
         [self stopAction:self.swipeAction];
     }
-    [self runAction:self.swipeAction = [MoveTo actionWithDuration:swipeActionDuration
+    [self runAction:self.swipeAction = [CCMoveTo actionWithDuration:swipeActionDuration
                                                          position:ccp(swipePoint.x - self.swipeStart.x, 0)]];
     
-    return kEventHandled;
+    return;
 }
 
 
--(BOOL) ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void) ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     
     if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
-        return kEventIgnored;
+        return;
     
     if(self.swipeAction) {
         [self stopAction:self.swipeAction];
         self.swipeAction = nil;
     }
     
-    [self runAction:[MoveTo actionWithDuration:0.1f
+    [self runAction:[CCMoveTo actionWithDuration:0.1f
                                       position:CGPointZero]];
     self.swipeStart = ccp(-1, -1);
     
-    return kEventHandled;
+    return;
 }
 
 
--(BOOL) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     
     if(self.swipeStart.x == -1 && self.swipeStart.y == -1)
-        return kEventIgnored;
+        return;
     
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:[touch view]];
     
-    CGSize winSize = [[Director sharedDirector] winSize];
+    CGSize winSize = [[CCDirector sharedDirector] winSize];
     CGPoint swipePoint = ccp(point.y, point.x);
     CGFloat swipeDist = swipePoint.x - self.swipeStart.x;
     self.swipeForward = swipeDist < 0;
@@ -186,16 +190,16 @@
         [self stopAction:self.swipeAction];
     
     if(self.swiped)
-        [self runAction:self.swipeAction = [Sequence actionOne:[MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+        [self runAction:self.swipeAction = [CCSequence actionOne:[CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
                                                                                  position:swipeTarget]
-                                                           two:[CallFunc actionWithTarget:self selector:@selector(swipeDone:)]]];
+                                                           two:[CCCallFunc actionWithTarget:self selector:@selector(swipeDone:)]]];
     else
-        [self runAction:self.swipeAction = [MoveTo actionWithDuration:0.1f
+        [self runAction:self.swipeAction = [CCMoveTo actionWithDuration:0.1f
                                                              position:CGPointZero]];
             
     self.swipeStart = ccp(-1, -1);
     
-    return kEventHandled;
+    return;
 }
 
 

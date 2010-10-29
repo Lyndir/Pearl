@@ -27,7 +27,7 @@
 
 @interface ActivitySprite ()
 
-@property (readwrite, retain) AtlasSprite   *sprite;
+@property (readwrite, retain) CCSprite   *sprite;
 
 @end
 
@@ -40,14 +40,14 @@
     if (!(self = [super initWithFile:@"wheel.png" capacity:31]))
         return nil;
 
-    AtlasAnimation *spinAnimation = [AtlasAnimation animationWithName:@"spin" delay:0.03f];
+    CCTexture2D *spinTexture = [[CCTextureCache sharedTextureCache] addImage:@"spin"];
+    CCAnimation *spinAnimation = [CCAnimation animationWithFrames:nil delay:0.03f];
     for (NSUInteger f = 0; f < 31; ++f)
-        [spinAnimation addFrameWithRect:CGRectMake(f * 32, 0, 32, 32)];
+        [spinAnimation addFrameWithTexture:spinTexture rect:CGRectMake(f * 32, 0, 32, 32)];
     
-    self.sprite = [AtlasSprite spriteWithRect:((AtlasSpriteFrame *) [[spinAnimation frames] lastObject]).rect
-                           spriteManager:self];
+    self.sprite = [CCSprite spriteWithBatchNode:self rect:((CCSpriteFrame *) [[spinAnimation frames] lastObject]).rect];
     [self addChild:self.sprite];
-    [self.sprite runAction:[RepeatForever actionWithAction:[Animate actionWithAnimation:spinAnimation]]];
+    [self.sprite runAction:[CCRepeatForever actionWithAction:[CCAnimate actionWithAnimation:spinAnimation]]];
     
     return self;
 }

@@ -30,9 +30,9 @@
 
 @interface BarLayer ()
 
-@property (readwrite, retain) MenuItemFont         *menuButton;
-@property (readwrite, retain) Menu                 *menuMenu;
-@property (readwrite, retain) Label                *messageLabel;
+@property (readwrite, retain) CCMenuItemFont         *menuButton;
+@property (readwrite, retain) CCMenu                 *menuMenu;
+@property (readwrite, retain) CCLabelTTF                *messageLabel;
 
 @property (readwrite, assign) long                 color;
 @property (readwrite, assign) long                 renderColor;
@@ -83,9 +83,9 @@
         // No string means no button.
         return;
         
-    self.menuButton          = [MenuItemImage itemFromNormalImage:aFile selectedImage:aFile
+    self.menuButton          = [CCMenuItemImage itemFromNormalImage:aFile selectedImage:aFile
                                                            target:target selector:selector];
-    self.menuMenu            = [Menu menuWithItems:self.menuButton, nil];
+    self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
     self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2, 16);
 
     
@@ -106,7 +106,7 @@
         [self removeChild:self.messageLabel cleanup:NO];
     
     self.position = self.hidePosition;
-    [self runAction:[MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+    [self runAction:[CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
                                position:self.showPosition]];
 }
 
@@ -123,7 +123,7 @@
         [self removeChild:self.messageLabel cleanup:YES];
     
     CGFloat fontSize = [[Config get].smallFontSize intValue];
-    self.messageLabel = [Label labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
+    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
                                       fontName:[Config get].fixedFontName fontSize:fontSize];
 
     if(important) {
@@ -138,9 +138,9 @@
     [self addChild:self.messageLabel];
     
     if(_duration)
-        [self.messageLabel runAction:[Sequence actions:
-                                 [DelayTime actionWithDuration:_duration],
-                                 [CallFunc actionWithTarget:self selector:@selector(dismissMessage)],
+        [self.messageLabel runAction:[CCSequence actions:
+                                 [CCDelayTime actionWithDuration:_duration],
+                                 [CCCallFunc actionWithTarget:self selector:@selector(dismissMessage)],
                                  nil]];
 }
 
@@ -165,8 +165,8 @@
     [self stopAllActions];
     
     self.position = self.showPosition;
-    [self runAction:[Sequence actions:
-              [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+    [self runAction:[CCSequence actions:
+              [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
                                 position:self.hidePosition],
               [Remove action],
               nil]];

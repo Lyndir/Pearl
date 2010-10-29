@@ -67,7 +67,7 @@
 }
 
 
-+ (ScrollLayer *)scrollNode:(CocosNode *)node direction:(ScrollContentDirection)direction {
++ (ScrollLayer *)scrollNode:(CCNode *)node direction:(ScrollContentDirection)direction {
 
     ScrollLayer *scrollLayer = [self scrollWithContentSize:node.contentSize direction:direction];
     [scrollLayer addChild:node];
@@ -95,7 +95,7 @@
 
 -(void) registerWithTouchDispatcher {
     
-	[[TouchDispatcher sharedDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+	[[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
 }
 
 
@@ -264,7 +264,7 @@
 
 - (void)visit {
 
-    if (!visible)
+    if (!self.visible)
         return;
     
     glEnable(GL_SCISSOR_TEST);

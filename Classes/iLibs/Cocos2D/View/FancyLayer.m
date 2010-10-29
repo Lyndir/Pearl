@@ -81,14 +81,14 @@
     
     int barHeight       = 0;
     if(![[UIApplication sharedApplication] isStatusBarHidden]) {
-        if([Director sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft
-           || [Director sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
+        if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft
+           || [CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
             barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.width;
         else
             barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
     }
     
-    CGSize winSize      = [[Director sharedDirector] winSize];
+    CGSize winSize      = [[CCDirector sharedDirector] winSize];
     self.contentSize         = CGSizeMake(winSize.width, winSize.height - barHeight);
     int inner           = self.contentSize.height * self.innerRatio;
     

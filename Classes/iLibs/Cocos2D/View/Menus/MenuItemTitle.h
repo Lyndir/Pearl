@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface MenuItemTitle : MenuItemFont {
+@interface MenuItemTitle : CCMenuItemFont {
 
 }
 

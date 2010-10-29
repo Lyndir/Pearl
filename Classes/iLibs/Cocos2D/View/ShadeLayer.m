@@ -32,12 +32,12 @@
 
 @interface ShadeLayer ()
 
-- (void)_back:(CocosNode *)sender;
-- (void)_next:(CocosNode *)sender;
+- (void)_back:(CCNode *)sender;
+- (void)_next:(CCNode *)sender;
 
 @property (readwrite, assign) BOOL                                                     pushed;
-@property (readwrite, retain) Menu                                                     *backMenu;
-@property (readwrite, retain) Menu                                                     *nextMenu;
+@property (readwrite, retain) CCMenu                                                     *backMenu;
+@property (readwrite, retain) CCMenu                                                     *nextMenu;
 @property (readwrite, retain) NSInvocation                                             *backInvocation;
 @property (readwrite, retain) NSInvocation                                             *nextInvocation;
 
@@ -75,12 +75,12 @@
     self.nextButton                 = [MenuItemSymbolic itemFromString:@"   ▹   "
                                                                 target:self
                                                               selector:@selector(_next:)];
-    self.backMenu = [Menu menuWithItems:self.backButton, nil];
+    self.backMenu = [CCMenu menuWithItems:self.backButton, nil];
     self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
     [self.backMenu alignItemsHorizontally];
     
-    self.nextMenu = [Menu menuWithItems:self.nextButton, nil];
+    self.nextMenu = [CCMenu menuWithItems:self.nextButton, nil];
     self.nextMenu.position = ccp(self.contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
     [self.nextMenu alignItemsHorizontally];
@@ -94,7 +94,7 @@
 }
 
 
-- (void)setBackButton:(MenuItem *)aBackButton {
+- (void)setBackButton:(CCMenuItem *)aBackButton {
     
     if (self.backButton)
         [self.backMenu removeChild:self.backButton cleanup:YES];
@@ -106,14 +106,6 @@
     
     [self.backMenu addChild:self.backButton];
     [self.backMenu alignItemsHorizontally];
-    
-    if (!self.backButton.invocation) {
-        self.backButton.invocation = [NSInvocation invocationWithMethodSignature:
-                                      [[self class] instanceMethodSignatureForSelector:@selector(_back:)]];
-        [self.backButton.invocation setTarget:self];
-        [self.backButton.invocation setSelector:@selector(_back:)];
-        [self.backButton.invocation setArgument:&_backButton atIndex:2];
-    }
 }
 
 
@@ -130,7 +122,7 @@
 }
 
 
-- (void)setNextButton:(MenuItem *)aNextButton {
+- (void)setNextButton:(CCMenuItem *)aNextButton {
     
     if (self.nextButton)
         [self.nextMenu removeChild:self.nextButton cleanup:YES];
@@ -142,14 +134,6 @@
 
     [self.nextMenu addChild:self.nextButton];
     [self.nextMenu alignItemsHorizontally];
-    
-    if (!self.nextButton.invocation) {
-        self.nextButton.invocation = [NSInvocation invocationWithMethodSignature:
-                                      [[self class] instanceMethodSignatureForSelector:@selector(_next:)]];
-        [self.nextButton.invocation setTarget:self];
-        [self.nextButton.invocation setSelector:@selector(_next:)];
-        [self.nextButton.invocation setArgument:&_nextButton atIndex:2];
-    }
 }
 
 
@@ -166,13 +150,13 @@
 }
 
 
-- (void)_back:(CocosNode *)sender {
+- (void)_back:(CCNode *)sender {
     
     [self.backInvocation invoke];
 }
 
 
-- (void)_next:(CocosNode *)sender {
+- (void)_next:(CCNode *)sender {
     
     [self.nextInvocation invoke];
 }
@@ -194,10 +178,10 @@
     [super onEnter];
     
     self.visible = YES;
-    [self runAction:[Sequence actions:
-                     [EaseSineOut actionWithAction:
-                      [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue] position:CGPointZero]],
-                     [CallFunc actionWithTarget:self selector:@selector(ready)],
+    [self runAction:[CCSequence actions:
+                     [CCEaseSineOut actionWithAction:
+                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue] position:CGPointZero]],
+                     [CCCallFunc actionWithTarget:self selector:@selector(ready)],
                      nil]];
 }
 
@@ -214,11 +198,11 @@
     
     self.pushed = isPushed;
     
-    [self runAction:[Sequence actions:
-                     [EaseSineIn actionWithAction:
-                      [MoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+    [self runAction:[CCSequence actions:
+                     [CCEaseSineIn actionWithAction:
+                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
                                         position:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)]],
-                     [CallFunc actionWithTarget:self selector:@selector(gone)],
+                     [CCCallFunc actionWithTarget:self selector:@selector(gone)],
                      [Remove action],
                      nil]];
 }
@@ -230,7 +214,7 @@
 }
 
 
-- (void)setBackground:(CocosNode *)aBackground {
+- (void)setBackground:(CCNode *)aBackground {
     
     [self removeChild:self.background cleanup:YES];
     
@@ -242,7 +226,7 @@
     [self addChild:self.background z:-1];
     
     // Automatically set correct position of texture nodes.
-    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[Sprite class]])
+    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[CCSprite class]])
         self.backgroundOffset = ccp(self.background.contentSize.width / 2, self.background.contentSize.height / 2);
 }
 
@@ -252,8 +236,8 @@
     super.position      = newPosition;
     
     self.background.position = ccp(self.backgroundOffset.x - newPosition.x, self.backgroundOffset.y - newPosition.y);
-    if ([self.background conformsToProtocol:@protocol(CocosNodeRGBA)] && self.fadeNextEntry)
-        ((id<CocosNodeRGBA>)self.background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
+    if ([self.background conformsToProtocol:@protocol(CCRGBAProtocol)] && self.fadeNextEntry)
+        ((id<CCRGBAProtocol>)self.background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
         self.fadeNextEntry   = YES;

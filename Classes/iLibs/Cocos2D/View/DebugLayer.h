@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface DebugLayer : Layer {
+@interface DebugLayer : CCLayer {
 
 }
 

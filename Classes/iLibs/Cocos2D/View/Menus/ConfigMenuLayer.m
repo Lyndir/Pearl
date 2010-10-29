@@ -44,7 +44,7 @@
 
 
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                              settings:(SEL)setting, ... {
 
     if (!setting)
@@ -65,14 +65,14 @@
 }
 
 
-+ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
++ (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings {
 
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings] autorelease];
 }
 
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(MenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings {
 
     self.configDelegate = aDelegate;
@@ -85,13 +85,13 @@
         SEL settingSel = NSSelectorFromString(setting);
         
         // Build the setting's toggle button.
-        MenuItemToggle *menuItem = [MenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
+        CCMenuItemToggle *menuItem = [CCMenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
         if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(toggleItemsForSetting:)])
             menuItem.subItems = [self.configDelegate toggleItemsForSetting:settingSel];
         if (![menuItem.subItems count])
             menuItem.subItems = [NSMutableArray arrayWithObjects:
-                                 [MenuItemFont itemFromString:l(@"menu.config.off")],
-                                 [MenuItemFont itemFromString:l(@"menu.config.on")],
+                                 [CCMenuItemFont itemFromString:l(@"menu.config.off")],
+                                 [CCMenuItemFont itemFromString:l(@"menu.config.on")],
                                  nil];
 
         // Force update.
@@ -120,7 +120,7 @@
     
     for (NSValue *itemValue in [self.itemConfigs allKeys]) {
         NSString *selector = [self.itemConfigs objectForKey:itemValue];
-        MenuItemToggle *item = [itemValue pointerValue];
+        CCMenuItemToggle *item = [itemValue pointerValue];
 
         id t = [Config get];
         SEL s = NSSelectorFromString(selector);
@@ -142,7 +142,7 @@
 }
 
 
-- (void)tapped:(MenuItemToggle *)toggle {
+- (void)tapped:(CCMenuItemToggle *)toggle {
     
     id t = [Config get];
     SEL s = NSSelectorFromString([[self.itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);

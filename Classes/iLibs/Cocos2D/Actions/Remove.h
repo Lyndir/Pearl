@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface Remove : InstantAction {
+@interface Remove : CCActionInstant {
 
 }
 

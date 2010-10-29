@@ -33,18 +33,18 @@
 
 - (id)initFromString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
     
-    NSString *oldFontName   = [MenuItemFont fontName];
-    NSUInteger oldFontSize  = [MenuItemFont fontSize];
-    [MenuItemFont setFontName:[Config get].symbolicFontName];
-    [MenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    NSString *oldFontName   = [CCMenuItemFont fontName];
+    NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
+    [CCMenuItemFont setFontName:[Config get].symbolicFontName];
+    [CCMenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
 
     @try {
         self = ([super initFromString:symbol target:aTarget selector:aSelector]);
     }
     
     @finally {
-        [MenuItemFont setFontName:oldFontName];
-        [MenuItemFont setFontSize:oldFontSize];
+        [CCMenuItemFont setFontName:oldFontName];
+        [CCMenuItemFont setFontSize:oldFontSize];
     }
 
     return self;

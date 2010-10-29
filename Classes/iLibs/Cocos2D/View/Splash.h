@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface Splash : Sprite {
+@interface Splash : CCSprite {
 
     BOOL  _switching;
 }

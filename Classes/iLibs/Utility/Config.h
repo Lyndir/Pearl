@@ -48,12 +48,13 @@
 
 @interface Config : NSObject {
 
-    NSUserDefaults                                       *_defaults;
+    NSUserDefaults                                      *_defaults;
 
-    NSDictionary                                         *_resetTriggers;
+    NSMutableDictionary                                 *_resetTriggers;
 }
 
-@property (readonly, retain) NSUserDefaults                                       *defaults;
+@property (readonly, retain) NSUserDefaults             *defaults;
+@property (readonly, retain) NSMutableDictionary        *resetTriggers;
 
 @property (nonatomic, readwrite, retain) NSNumber       *firstRun;
 
@@ -81,6 +82,8 @@
 @property (nonatomic, readwrite, retain) NSNumber       *voice;
 @property (nonatomic, readwrite, retain) NSNumber       *vibration;
 @property (nonatomic, readwrite, retain) NSNumber       *visualFx;
+
+-(NSDate *) today;
 
 +(Config *)                                             get;
 

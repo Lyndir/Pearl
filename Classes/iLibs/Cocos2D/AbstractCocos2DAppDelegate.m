@@ -38,9 +38,10 @@
 
 @interface AbstractCocos2DAppDelegate ()
 
-@property (nonatomic, readwrite, retain) UILayer                                                  *uiLayer;
+@property (nonatomic, readwrite, retain) UILayer            *uiLayer;
+@property (nonatomic, readwrite, retain) HUDLayer           *hudLayer;
 
-@property (readwrite, retain) NSMutableArray                                           *menuLayers;
+@property (readwrite, retain) NSMutableArray                *menuLayers;
 
 @end
 
@@ -110,7 +111,7 @@
 - (HUDLayer *)hudLayer {
     
     if(!_hudLayer)
-        self.hudLayer = [HUDLayer node];
+        _hudLayer = [[HUDLayer alloc] init];
     
     return _hudLayer;
 }

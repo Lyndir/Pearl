@@ -37,10 +37,10 @@
 
 - (id)init {
     
-    if (!(self = [super initWithFile:@"wheel.png" capacity:31]))
+    if (!(self = [super init]))
         return nil;
 
-    CCTexture2D *spinTexture = [[CCTextureCache sharedTextureCache] addImage:@"spin"];
+    CCTexture2D *spinTexture = [[CCTextureCache sharedTextureCache] addImage:@"wheel.png"];
     CCAnimation *spinAnimation = [CCAnimation animationWithFrames:nil delay:0.03f];
     for (NSUInteger f = 0; f < 31; ++f)
         [spinAnimation addFrameWithTexture:spinTexture rect:CGRectMake(f * 32, 0, 32, 32)];

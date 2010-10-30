@@ -37,8 +37,8 @@
     NSMutableArray                                           *_menuLayers;
 }
 
-@property (nonatomic, readonly, retain) UILayer                     *uiLayer;
-@property (nonatomic, readwrite, retain) HUDLayer                                                 *hudLayer;
+@property (nonatomic, readonly, retain) UILayer             *uiLayer;
+@property (nonatomic, readonly, retain) HUDLayer            *hudLayer;
 
 - (void)hudMenuPressed;
 - (void)pushLayer:(ShadeLayer *)layer;

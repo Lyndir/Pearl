@@ -59,13 +59,16 @@
 
 -(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition {
     
-    if(!(self = [super initWithFile:@"bar.png"]))
+    if(!(self = [super init]))
         return self;
-
-    self.color           = aColor;
-    self.renderColor     = aColor;
-    self.showPosition    = ccpAdd(aShowPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
-    self.dismissed       = YES;
+    
+    self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"bar.png"];
+    self.textureRect        = CGRectFromPointAndSize(CGPointZero, self.texture.contentSize);
+    
+    self.color              = aColor;
+    self.renderColor        = aColor;
+    self.showPosition       = ccpAdd(aShowPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
+    self.dismissed          = YES;
 
     return self;
 }

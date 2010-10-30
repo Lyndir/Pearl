@@ -32,9 +32,9 @@
 
 @interface Config ()
 
-@property (readwrite, retain) NSUserDefaults                                       *defaults;
+@property (readwrite, retain) NSUserDefaults                                        *defaults;
 
-@property (readwrite, retain) NSDictionary                                         *resetTriggers;
+@property (readwrite, retain) NSMutableDictionary                                   *resetTriggers;
 
 @end
 
@@ -87,6 +87,7 @@
                                       @"",
                                       nil],                                                         cTracks,
                                      [NSArray arrayWithObjects:
+                                      l(@"menu.config.song.sequential"),
                                       l(@"menu.config.song.random"),
                                       l(@"menu.config.song.off"),
                                       nil],                                                         cTrackNames,
@@ -94,7 +95,7 @@
 
                                      nil]];
     
-    self.resetTriggers = [NSDictionary dictionary];
+    self.resetTriggers = [NSMutableDictionary dictionary];
     
     return self;
 }
@@ -139,7 +140,7 @@
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     
-    if ([NSStringFromSelector(aSelector) hasPrefix:@"set"])
+    if ([NSStringFromSelector(aSelector) isSetter])
         return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
     
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];

@@ -93,47 +93,47 @@
     int inner           = self.contentSize.height * self.innerRatio;
     
     /*
-           pos.x + pad                                pos.x + width - pad - inner
-           |                                             |
-           v                                             v
-           2+10--------------------------------------9         <- pos.y + pad
+       pos.x + pad                                pos.x + width - pad - inner
+       |                                             |
+       v                                             v
+           1+9---------------------------------------8         <- pos.y + pad
           /                                           \
          /                                             \
         /                                               \
-       3                                                 8     <- pos.y + pad + inner
+       2                                                 7     <- pos.y + pad + inner
        |                                                 |
-       |                        1                        |
+       |                        0                        |
        |                                                 |
-       4                                                 7     <- pos.y + height - pad - inner
+       3                                                 6     <- pos.y + height - pad - inner
         \                                               /
          \                                             /
           \                                           /
-           5-----------------------------------------6         <- pos.y + height - pad
+           4-----------------------------------------5         <- pos.y + height - pad
            ^                                             ^
            |                                             |
            pos.x + pad + inner                           pos.x + width - pad
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = self.contentSize.width / 2;                            // 1
+    vertices[0]     = self.contentSize.width / 2;                            // 0
     vertices[1]     = self.contentSize.height / 2;
-    vertices[2]     = self.outerPadding.left + inner;                        // 2
+    vertices[2]     = self.outerPadding.left + inner;                        // 1
     vertices[3]     = self.outerPadding.bottom;
-    vertices[4]     = self.outerPadding.left;                                // 3
+    vertices[4]     = self.outerPadding.left;                                // 2
     vertices[5]     = self.outerPadding.bottom + inner;
-    vertices[6]     = self.outerPadding.left;                                // 4
+    vertices[6]     = self.outerPadding.left;                                // 3
     vertices[7]     = self.contentSize.height - self.outerPadding.top - inner;
-    vertices[8]     = self.outerPadding.left + inner;                        // 5
+    vertices[8]     = self.outerPadding.left + inner;                        // 4
     vertices[9]     = self.contentSize.height - self.outerPadding.top;
-    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 6
+    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 5
     vertices[11]    = self.contentSize.height - self.outerPadding.top;
-    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 7
+    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 6
     vertices[13]    = self.contentSize.height - self.outerPadding.top - inner;
-    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 8
+    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 7
     vertices[15]    = self.outerPadding.bottom + inner;
-    vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 9
+    vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 8
     vertices[17]    = self.outerPadding.bottom;
-    vertices[18]    = self.outerPadding.left + inner;                        // 10
+    vertices[18]    = self.outerPadding.left + inner;                        // 9
     vertices[19]    = self.outerPadding.bottom;
 
     ccColor4B *colors = malloc(sizeof(ccColor4B) * 10);
@@ -210,12 +210,16 @@
 
 -(void) draw {
     
+	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glEnableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+
     // Tell OpenGL about our data.
-	glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
 	glVertexPointer(2, GL_FLOAT, 0, 0);
 
-	glEnableClientState(GL_COLOR_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
 	
@@ -227,8 +231,10 @@
     glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
     
     // Reset data source.
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+	//glDisableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
 }
 
 

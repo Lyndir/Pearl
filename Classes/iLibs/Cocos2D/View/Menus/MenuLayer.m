@@ -102,6 +102,22 @@
 }
 
 
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ... {
+    
+    va_list list;
+    va_start(list, menuItem);
+    CCMenuItem *item;
+    NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:5];
+    [menuItems addObject:menuItem];
+    
+    while ((item = va_arg(list, CCMenuItem*)))
+        [menuItems addObject:item];
+    va_end(list);
+    
+    return self = [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+}
+
+
 - (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
     
     if(!(self = [super init]))

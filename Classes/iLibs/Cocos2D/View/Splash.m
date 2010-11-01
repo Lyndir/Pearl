@@ -44,7 +44,6 @@
     return self;
 }
 
-
 @end
 
 
@@ -88,7 +87,7 @@
     [super onEnter];
     
     [self switchScene];
-    //[self performSelector:@selector(switchScene) withObject:nil afterDelay:2];
+    //[self performSelector:@selector(switchScene) withObject:nil afterDelay:20];
 }
 
 

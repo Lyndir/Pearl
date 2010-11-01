@@ -58,14 +58,24 @@
     [super preSetup];
     
 	// Init the window.
-    UIWindow *window;
-    CC_DIRECTOR_INIT();
-    self.window = [window autorelease];
+	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
+		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
 #if TARGET_IPHONE_SIMULATOR
-    //FIXME? [[CCDirector sharedDirector] setPixelFormat:kPixelFormatRGBA8888];
+    NSString *pixelFormat = kEAGLColorFormatRGBA8;
+	[CCDirector sharedDirector].displayFPS          = NO;
 #else
-    //[[CCDirector sharedDirector] setDisplayFPS:YES];
+    NSString *pixelFormat = kEAGLColorFormatRGB565;
 #endif
+#if DEBUG
+    [CCDirector sharedDirector].displayFPS          = YES;
+#endif
+    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
+	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:[[UIScreen mainScreen] applicationFrame]
+                                                                  pixelFormat:pixelFormat];
+
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	[self.window addSubview:[[CCDirector sharedDirector] openGLView]];
+	[self.window makeKeyAndVisible];
     
     // Random seed with timestamp.
     srandom(time(nil));

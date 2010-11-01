@@ -76,7 +76,7 @@ typedef enum MenuLayout {
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                  itemsFromArray:(NSArray *)menuItems;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-        itemsFromArray:(NSArray *)menuItems;
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ...;
+- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems;
 
 @end

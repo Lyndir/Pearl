@@ -41,3 +41,14 @@ NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
     
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }
+
+NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style) {
+    
+    NSNumberFormatter *formatter = [NSNumberFormatter new];
+    formatter.numberStyle = style;
+    NSMutableArray *numbers = [NSMutableArray arrayWithCapacity:(NSUInteger)((max - min) / step)];
+    for (double n = min; n <= max; n += step)
+        [numbers addObject:[formatter stringFromNumber:[NSNumber numberWithDouble:n]]];
+    
+    return numbers;
+}

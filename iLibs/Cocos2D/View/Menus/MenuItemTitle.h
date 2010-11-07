@@ -29,8 +29,8 @@
 
 }
 
-+ (MenuItemTitle *)itemWithString:(NSString *)title;
++ (MenuItemTitle *)itemFromString:(NSString *)title;
 
-- (id)initWithString:(NSString *)title;
+- (id)initFromString:(NSString *)title;
 
 @end

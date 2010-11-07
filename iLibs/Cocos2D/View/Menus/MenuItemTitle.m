@@ -14,12 +14,12 @@
 
 
 
-+ (MenuItemTitle *)itemWithString:(NSString *)title {
++ (MenuItemTitle *)itemFromString:(NSString *)title {
     
-    return [[[self alloc] initWithString:title] autorelease];
+    return [[[self alloc] initFromString:title] autorelease];
 }
 
-- (id)initWithString:(NSString *)title {
+- (id)initFromString:(NSString *)title {
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];

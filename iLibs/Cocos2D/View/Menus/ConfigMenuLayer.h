@@ -28,17 +28,23 @@
 
 @protocol ConfigMenuDelegate
 
-/** Return a string that will be the text label in the UI for the given setting. */
 @optional
+/** Return a string that will be the text label in the UI for the given setting. */
 - (NSString *)labelForSetting:(SEL)setting;
 
 /** Return an array of CCMenuItem*'s to add to the toggle for the given setting. */
-@optional
-- (NSMutableArray *)toggleItemsForSetting:(SEL)setting;
+- (NSArray *)toggleItemsForSetting:(SEL)setting;
 
 /** Return a node that conveys and allows toggling the given setting. */
-@optional
 - (CCMenuItem *)itemForSetting:(SEL)setting;
+
+/** Return the index of the item to select for the setting when its value is the given value.
+ * @return NSUIntegerMax to use the default implementation for determining the index.
+ */
+- (NSUInteger)indexForSetting:(SEL)setting value:(id)value;
+
+/** Return the value to assign to the setting after toggling to the given index */
+- (id)valueForSetting:(SEL)setting index:(NSUInteger)index;
 
 @end
 
@@ -56,6 +62,9 @@
 
 + (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings;
+
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+              settings:(SEL)setting, ...;
 
 - (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;

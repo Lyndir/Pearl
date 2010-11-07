@@ -200,6 +200,8 @@ void DrawLines(const CGPoint* points, const ccColor4B* longColors, const NSUInte
     // Define colors and pass to GL.
     if(longColors != nil)
         glColorPointer(4, GL_UNSIGNED_BYTE, 0, longColors);
+    else
+        glDisableClientState(GL_COLOR_ARRAY);
     
     // Draw.
     if(width && width != 1)
@@ -214,6 +216,7 @@ void DrawLines(const CGPoint* points, const ccColor4B* longColors, const NSUInte
     //if(!cWasEnabled && longColors)
     //    glDisableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 }
 

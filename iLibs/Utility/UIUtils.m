@@ -171,6 +171,11 @@ static CGRect       keyboardScrollOriginalFrame;
 
 + (id)copyOf:(id)view {
     
+    return [self copyOf:view addTo:[view superview]];
+}
+
++ (id)copyOf:(id)view addTo:(UIView *)superView {
+    
     id copy = [[[view class] alloc] initWithFrame:[view frame]];
     
     NSMutableArray *properties = [NSMutableArray array];
@@ -251,9 +256,9 @@ static CGRect       keyboardScrollOriginalFrame;
     [copy setValuesForKeysWithDictionary:[view dictionaryWithValuesForKeys:properties]];
     
     // Add copy to view's hierarchy and copy on recursively.
-    [[view superview] addSubview:copy];
+    [superView addSubview:copy];
     for (UIView *subView in [view subviews])
-        [copy addSubview:[[self copyOf:subView] autorelease]];
+        [[self copyOf:subView addTo:copy] release];
     
     return copy;
 }

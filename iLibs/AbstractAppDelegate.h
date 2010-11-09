@@ -27,10 +27,10 @@
 
 @interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
 
-    UIWindow                                                 *_window;
+    UIWindow                                                    *_window;
 }
 
-@property (nonatomic, readwrite, retain) UIWindow                                                 *window;
+@property (nonatomic, readwrite, retain) IBOutlet UIWindow      *window;
 
 - (void)preSetup;
 - (void)setup;

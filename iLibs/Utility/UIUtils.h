@@ -50,9 +50,17 @@
 + (UIView *)findFirstResonderIn:(UIView *)view;
 
 /**
- * Create a copy of the given view.  Currently supports copying properties of: UIView.
+ * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField.
+ * The copy is added as a child of the given view's superview.
  * @return An owned reference to a new view that has all supported properties of the given view copied.
  */
 + (id)copyOf:(UIView *)view;
+
+/**
+ * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField.
+ * @param superView The view to add the copy to after creation.  If nil, the copy is not added to any view.
+ * @return An owned reference to a new view that has all supported properties of the given view copied.
+ */
++ (id)copyOf:(id)view addTo:(UIView *)superView;
 
 @end

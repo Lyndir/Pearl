@@ -71,6 +71,25 @@
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings] autorelease];
 }
 
+- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                             settings:(SEL)setting, ... {
+    
+    if (!setting)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"No menu items passed."];
+    
+    va_list list;
+    va_start(list, setting);
+    SEL item;
+    NSMutableArray *settings = [[NSMutableArray alloc] initWithCapacity:5];
+    [settings addObject:NSStringFromSelector(setting)];
+    
+    while ((item = va_arg(list, SEL)))
+        [settings addObject:NSStringFromSelector(item)];
+    va_end(list);
+    
+    return [self initWithDelegate:aDelegate logo:aLogo settingsFromArray:[settings autorelease]];
+}
 
 - (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings {
@@ -86,8 +105,16 @@
         
         // Build the setting's toggle button.
         CCMenuItemToggle *menuItem = [CCMenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
-        if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(toggleItemsForSetting:)])
-            menuItem.subItems = [self.configDelegate toggleItemsForSetting:settingSel];
+        if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(toggleItemsForSetting:)]) {
+            NSArray *settingItems = [self.configDelegate toggleItemsForSetting:settingSel];
+            NSMutableArray *subItems = [NSMutableArray arrayWithCapacity:[settingItems count]];
+            for (id settingItem in settingItems)
+                if ([settingItem isKindOfClass:[CCMenuItem class]])
+                    [subItems addObject:settingItem];
+                else
+                    [subItems addObject:[CCMenuItemFont itemFromString:[settingItem description]]];
+            menuItem.subItems = subItems;
+        }
         if (![menuItem.subItems count])
             menuItem.subItems = [NSMutableArray arrayWithObjects:
                                  [CCMenuItemFont itemFromString:l(@"menu.config.off")],
@@ -106,7 +133,7 @@
 
         // Add the setting to the menu.
         [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
-        [menuItems addObject:[MenuItemTitle itemWithString:label]];
+        [menuItems addObject:[MenuItemTitle itemFromString:label]];
         [menuItems addObject:menuItem];
     }
     
@@ -131,13 +158,25 @@
             [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
         
         // Build an invocation for the signature & invoke it.
-        NSNumber *ret;
+        id ret;
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
         [invocation setSelector:s];
         [invocation invokeWithTarget:t];
         [invocation getReturnValue:&ret];
         
-        item.selectedIndex = [ret unsignedIntValue];
+        NSUInteger index = NSUIntegerMax;
+        if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(indexForSetting:value:)])
+            index = [self.configDelegate indexForSetting:s value:ret];
+        if (index == NSUIntegerMax) {
+            if ([ret respondsToSelector:@selector(unsignedIntValue)])
+                index = [ret unsignedIntValue];
+            else {
+                wrn(@"Couldn't obtain config menu item index for setting: %s, value: %@", s, ret);
+                index = 0;
+            }
+        }
+
+        item.selectedIndex = index;
     }
 }
 
@@ -145,18 +184,24 @@
 - (void)tapped:(CCMenuItemToggle *)toggle {
     
     id t = [Config get];
-    SEL s = NSSelectorFromString([[self.itemConfigs objectForKey:[NSValue valueWithPointer:toggle]] getterToSetter]);
-    void* toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
+    SEL s = NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:toggle]]);
+    SEL setterS = NSSelectorFromString([NSStringFromSelector(s) getterToSetter]);
+    id toggledValue = nil;
+    if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(valueForSetting:index:)])
+        toggledValue = [self.configDelegate valueForSetting:s index:[toggle selectedIndex]];
+    if (!toggledValue)
+        toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
+    dbg(@"Setting %s to %@", s, toggledValue);
     
     // Search t's class hierarchy for the selector.
-    NSMethodSignature *sig = [t methodSignatureForSelector:s];
+    NSMethodSignature *sig = [t methodSignatureForSelector:setterS];
     if (!sig)
         [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
     
     // Build an invocation for the signature & invoke it.
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
     [invocation setTarget:t];
-    [invocation setSelector:s];
+    [invocation setSelector:setterS];
     [invocation setArgument:&toggledValue atIndex:2];
     [invocation invoke];
 }

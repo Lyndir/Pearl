@@ -18,3 +18,5 @@ NSString* RPad(const NSString* string, NSUInteger l);
 NSString* LPad(const NSString* string, NSUInteger l);
 /** Generate a string where the ordinal suffix of the given number is appended to the given prefix. */
 NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix);
+
+NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);

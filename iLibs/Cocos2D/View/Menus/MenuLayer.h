@@ -34,17 +34,15 @@ typedef enum MenuLayout {
 
 @protocol MenuDelegate
 
-/** Occurs after the CCMenu layer was (re)constructed. */
 @optional
+/** Occurs after the CCMenu layer was (re)constructed. */
 - (void)didLoad:(MenuLayer *)menuLayer;
 /** Occurs after the CCMenu layer has been layed out according to the default layout
  *
  * It happens before -didEnter, and only if necessary.
  */
-@optional
 - (void)didLayout:(MenuLayer *)menuLayer;
 /** Occurs after the MenuLayer has entered the view hierarchy. */
-@optional
 - (void)didEnter:(MenuLayer *)menuLayer;
 
 @end

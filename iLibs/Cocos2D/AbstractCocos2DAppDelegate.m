@@ -64,7 +64,7 @@
     NSString *pixelFormat = kEAGLColorFormatRGBA8;
 	[CCDirector sharedDirector].displayFPS          = NO;
 #else
-    NSString *pixelFormat = kEAGLColorFormatRGB565;
+    NSString *pixelFormat = kEAGLColorFormatRGBA8;
 #endif
 #if DEBUG
     [CCDirector sharedDirector].displayFPS          = YES;

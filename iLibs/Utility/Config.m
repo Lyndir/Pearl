@@ -161,7 +161,7 @@
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
-            [(id<Resettable>) [[AbstractAppDelegate get] valueForKey:resetTriggerKey] reset];
+            [(id<Resettable>) [[AbstractAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
     
     else {

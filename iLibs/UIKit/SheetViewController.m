@@ -118,7 +118,7 @@
 
 - (SheetViewController *)showSheet {
     
-    [sheetView showInView:[AbstractAppDelegate get].window];
+    [sheetView showInView:[UIApplication sharedApplication].keyWindow];
     
     return self;
 }

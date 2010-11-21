@@ -32,6 +32,12 @@
     return self;
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if (object == self.superview && [keyPath isEqualToString:@"bounds"])
+        self.frame = (CGRect){CGPointZero, self.superview.bounds.size};
+}
+
 - (void)drawRect:(CGRect)rect {
     
     CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);

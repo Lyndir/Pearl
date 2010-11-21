@@ -28,6 +28,8 @@
 #import "Resettable.h"
 #import "DebugLayer.h"
 #import "ShadeLayer.h"
+#import "UIUtils.h"
+#import "RootViewController.h"
 
 @interface CCDirector ()
 
@@ -60,21 +62,15 @@
 	// Init the window.
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
-#if TARGET_IPHONE_SIMULATOR
-    NSString *pixelFormat = kEAGLColorFormatRGBA8;
-	[CCDirector sharedDirector].displayFPS          = NO;
-#else
-    NSString *pixelFormat = kEAGLColorFormatRGBA8;
-#endif
 #if DEBUG
     [CCDirector sharedDirector].displayFPS          = YES;
 #endif
+	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
+                                                                  pixelFormat:kEAGLColorFormatRGBA8];
     [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
-	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:[[UIScreen mainScreen] applicationFrame]
-                                                                  pixelFormat:pixelFormat];
 
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-	[self.window addSubview:[[CCDirector sharedDirector] openGLView]];
+    self.window.rootViewController.view.hidden = YES;
+    [self.window addSubview:[CCDirector sharedDirector].openGLView];
 	[self.window makeKeyAndVisible];
     
     // Random seed with timestamp.

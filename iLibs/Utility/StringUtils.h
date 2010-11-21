@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define l(key) \
-    [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil]
-
+#define l(key, ...) \
+    [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil] , ##__VA_ARGS__, nil]
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 NSString* RPad(const NSString* string, NSUInteger l);

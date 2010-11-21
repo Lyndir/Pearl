@@ -28,9 +28,14 @@
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(NSArray *)ignoredSubviews;
 
 /**
- * Add a box view to the given view's parent that tracks the given view's bounds.
+ * Add a red box view to the given view's parent that tracks the given view's bounds.
  */
 + (void)showBoundingBoxForView:(UIView *)view;
+
+/**
+ * Add a box view to the given view's parent with the given color that tracks the given view's bounds.
+ */
++ (void)showBoundingBoxForView:(UIView *)view color:(UIColor *)color;
 
 /**
  * Create a rectangle that describes the given view's frame in the coordinates of the top-level view that contains it.

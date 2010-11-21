@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface ActivitySprite : CCSpriteBatchNode/*FIXME?*/ {
+@interface ActivitySprite : CCSpriteBatchNode {
 
     CCSprite                             *_sprite;
 }

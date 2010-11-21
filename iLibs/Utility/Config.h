@@ -52,6 +52,8 @@
     NSUserDefaults                                      *_defaults;
 
     NSMutableDictionary                                 *_resetTriggers;
+
+    NSUInteger                                          *_gameRandomSeeds;
 }
 
 @property (readonly, retain) NSUserDefaults             *defaults;
@@ -86,6 +88,21 @@
 @property (nonatomic, readwrite, retain) NSNumber       *visualFx;
 
 -(NSDate *) today;
+
+- (void)setGameRandomSeed:(NSUInteger)aSeed;
+
+/**
+ * Return a default game random.  This is a special type of random value which is unaffected by external calls to srandom() or random().
+ * If you use the game random to keep two remote games in sync, don't use it for anything that's tightly time-dependant,
+ * otherwise race conditions WILL desync your games.
+ * Split time-dependant code up into linearly constant scopes and use gameRandom: for them.
+ */
+- (NSUInteger)gameRandom;
+
+/**
+ * Return a game random from within the given scope.
+ */
+- (NSUInteger)gameRandom:(NSUInteger)scope;
 
 +(Config *)                                             get;
 

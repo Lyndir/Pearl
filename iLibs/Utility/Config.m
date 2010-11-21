@@ -29,6 +29,8 @@
 #import "StringUtils.h"
 #import "AudioController.h"
 
+#define cMaxGameScope 1024
+
 
 @interface Config ()
 
@@ -44,7 +46,6 @@
 @synthesize defaults = _defaults;
 @synthesize resetTriggers = _resetTriggers;
 
-
 @dynamic firstRun, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
@@ -58,8 +59,10 @@
     if(!(self = [super init]))
         return self;
 
-    self.defaults = [NSUserDefaults standardUserDefaults];
+    _gameRandomSeeds = 0;
+    [self setGameRandomSeed:arc4random()];
 
+    self.defaults = [NSUserDefaults standardUserDefaults];
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithBool:YES],                                 cFirstRun,
                                      
@@ -186,7 +189,7 @@
         return @"";
     
     NSUInteger realTracks = ([self.tracks count] - 3);
-    return [self.tracks objectAtIndex:random() % realTracks];
+    return [self.tracks objectAtIndex:arc4random() % realTracks];
 }
 - (NSString *)nextTrack {
     
@@ -248,6 +251,32 @@
 
 
 #pragma mark Game Configuration
+
+- (void)setGameRandomSeed:(NSUInteger)aSeed {
+    
+    @synchronized(self) {
+        srandom(aSeed);
+        free(_gameRandomSeeds);
+        _gameRandomSeeds = malloc(sizeof(NSUInteger) * cMaxGameScope);
+        for (NSUInteger s = 0; s < cMaxGameScope; ++s)
+            _gameRandomSeeds[s] = random();
+    }
+}
+
+- (NSUInteger)gameRandom {
+    
+    return [self gameRandom:cMaxGameScope - 1];
+}
+
+- (NSUInteger)gameRandom:(NSUInteger)scope {
+    
+    NSAssert2(scope < cMaxGameScope, @"Scope (%d) must be < %d", scope, cMaxGameScope);
+    
+    @synchronized(self) {
+        srandom(_gameRandomSeeds[scope]++);
+        return random();
+    }
+}
 
 -(NSDate *) today {
     

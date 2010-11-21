@@ -28,12 +28,11 @@
 #import "AudioController.h"
 #import "Resettable.h"
 #import "AlertViewController.h"
+#import "RootViewController.h"
 
 
 @implementation AbstractAppDelegate
-
 @synthesize window = _window;
-
 
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
@@ -76,6 +75,11 @@
         [[AudioController get] playTrack:@"sequential"];
     } else
         [[AudioController get] playTrack:[Config get].currentTrack];
+
+    if (!self.window) {
+        self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]] autorelease];
+        self.window.rootViewController = [[RootViewController new] autorelease];
+    }
 }
 
 

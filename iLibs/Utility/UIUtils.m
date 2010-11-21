@@ -66,9 +66,16 @@ static CGRect       keyboardScrollOriginalFrame;
 }
 
 + (void)showBoundingBoxForView:(UIView *)view {
+
+    [self showBoundingBoxForView:view color:[UIColor redColor]];
+}
+
++ (void)showBoundingBoxForView:(UIView *)view color:(UIColor *)color {
     
     dbg(@"Showing bounding box for view: %@", view);
-    [view addSubview:[BoxView boxWithFrame:(CGRect){CGPointZero, view.bounds.size} color:[UIColor redColor]]];
+    BoxView *box = [BoxView boxWithFrame:(CGRect){CGPointZero, view.bounds.size} color:color];
+    [view addSubview:box];
+    [view addObserver:box forKeyPath:@"bounds" options:0 context:nil];
 }
 
 + (CGRect)frameInWindow:(UIView *)view {

@@ -57,4 +57,12 @@ typedef enum {
 - (void)addRowWithName:(NSString *)aName style:(ArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
           withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext;
 
+/**
+ * Fully customize the table cell for the given row.  This method is invoked for each row you added.
+ *
+ * If you do anything to a cell here, make sure to undo it for each invocation of this method that does not need it done to the cell.
+ * That's because internally, cell objects are reused and any changes you make to it will carry over to the next row.
+ */
+- (void)customizeCell:(UITableViewCell *)cell forRow:(NSDictionary *)row withContext:(id)context;
+
 @end

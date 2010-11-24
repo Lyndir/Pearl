@@ -234,6 +234,13 @@ static CGRect       keyboardScrollOriginalFrame;
         [properties addObject:@"highlighted"];
         [properties addObject:@"contentVerticalAlignment"];
         [properties addObject:@"contentHorizontalAlignment"];
+        
+        // Copy actions.
+        for (id target in [view allTargets])
+            if (target != [NSNull null])
+                for (NSUInteger c = 0; c < 32; ++c)
+                    for (NSString *action in [view actionsForTarget:target forControlEvent:1 << c])
+                        [copy addTarget:target action:NSSelectorFromString(action) forControlEvents:1 << c];
     }
     
     // UITextField
@@ -257,6 +264,18 @@ static CGRect       keyboardScrollOriginalFrame;
         [properties addObject:@"rightViewMode"];
         [view setInputView:[[self copyOf:[view inputView]] autorelease]];
         [view setInputAccessoryView:[[self copyOf:[view inputAccessoryView]] autorelease]];
+    }
+
+    // UIButton
+    if ([view isKindOfClass:[UIButton class]]) {
+        [properties addObject:@"contentEdgeInsets"];
+        [properties addObject:@"titleEdgeInsets"];
+        [properties addObject:@"reversesTitleShadowWhenHighlighted"];
+        [properties addObject:@"imageEdgeInsets"];
+        [properties addObject:@"adjustsImageWhenHighlighted"];
+        [properties addObject:@"adjustsImageWhenDisabled"];
+        [properties addObject:@"showsTouchWhenHighlighted"];
+        // TODO: Copy all properties from titleLabel, imageView.
     }
     
     // Copy properties.

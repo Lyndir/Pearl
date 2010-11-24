@@ -32,13 +32,42 @@
  */
 - (void)abortRequest:(id)request;
 
+
+/** Invoke a WS request using HTTP-GET.
+ *
+ * @param parameters
+ *        The parameters to send to the server using JSON.
+ * @param target
+ *        The object to invoke the callback onto after the response has been received.
+ * @param callback
+ *        The callback to invoke on the target object after the server's response has been received.  The callback may take one parameter
+ *        which will be set to the body data of the server's response or nil if the request or reading the response failed.
+ */
+- (id)getRequestFromDictionary:(NSDictionary *)parameters
+                    withTarget:(id)target callback:(SEL)callback;
+
+/** Invoke a WS request using HTTP-POST.
+ *
+ * @param parameters
+ *        The parameters to send to the server using JSON.
+ * @param target
+ *        The object to invoke the callback onto after the response has been received.
+ * @param callback
+ *        The callback to invoke on the target object after the server's response has been received.  The callback may take one parameter
+ *        which will be set to the body data of the server's response or nil if the request or reading the response failed.
+ */
+- (id)postRequestFromDictionary:(NSDictionary *)parameters
+                     withTarget:(id)target callback:(SEL)callback;
+    
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.
  *
- * @return  A dictionary reflecting the JSON data structure or nil if the response isn't valid.
+ * @param requires
+ *        A list of keys that are required to be present in the result object. Note: This obviously only works if the result is an object!
+ * @return  An object reflecting the JSON data structure contained within the response's result or nil if the response isn't valid.
  */
-- (NSDictionary *)validateAndParseResponse:(NSData *)responseData allowBackOnError:(BOOL)backOnError
-                                  requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+                      requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Override this method to provide the URL of the server's JSON webservice endpoint.

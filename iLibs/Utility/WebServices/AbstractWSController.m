@@ -15,18 +15,14 @@
 #import "Logger.h"
 #import "StringUtils.h"
 
-#define RESULT_KEY_CODE                 @"result.code"
-#define RESULT_KEY_DESC_USER            @"result.desc.user"
-#define RESULT_KEY_DESC_TECHNICAL       @"result.desc.technical"
-#define RESULT_KEY_DESC_ARGUMENT        @"result.desc.argument."
-#define RESULT_KEY_CLIENT_OUTDATED      @"result.client.outdated"
+#define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
-@interface AbstractWSController ()
-
-- (id)invokeRequestFromDictionary:(NSDictionary *)postData
-                       withTarget:(id)target callback:(SEL)callback;
-
-@end
+#define RESULT_KEY_CODE                 @"code"
+#define RESULT_KEY_DESC_USER            @"userDescription"
+#define RESULT_KEY_DESC_TECHNICAL       @"technicalDescription"
+#define RESULT_KEY_DESC_ARGUMENT        @"userDescriptionArguments"
+#define RESULT_KEY_CLIENT_OUTDATED      @"outdated"
+#define RESULT_KEY_RESULT               @"result"
 
 
 @implementation AbstractWSController
@@ -50,7 +46,7 @@
     
     static AbstractWSController *wsInstance;
     if(!wsInstance)
-        wsInstance = [AbstractWSController new];
+        wsInstance = [self new];
     
     return wsInstance;
 }
@@ -79,17 +75,51 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"You must override this method." userInfo:nil];
 }
 
-- (id)invokeRequestFromDictionary:(NSDictionary *)postData
-                       withTarget:(id)target callback:(SEL)callback {
+- (id)getRequestFromDictionary:(NSDictionary *)parameters
+                    withTarget:(id)target callback:(SEL)callback {
+
+    [[Logger get] inf:@"Making WS request with parameters:\n%@", parameters];
+
+    NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
+    BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
+    ASIFormDataRequest *dummyRequest = [[ASIFormDataRequest new] autorelease];
     
-    [[Logger get] inf:@"Making WS request with data:\n%@", postData];
+    for (NSString *key in [parameters allKeys]) {
+        [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
+         [dummyRequest encodeURL:key], [dummyRequest encodeURL:[[parameters objectForKey:key] description]]];
+        hasQuery = YES;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSError *error = nil;
+        NSURLResponse *response = nil;
+        NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
+                                                     returningResponse:&response error:&error];
+        
+        if ([dummyRequest isCancelled])
+            return;
+
+        if (error)
+            [[Logger get] err:@"WS request failed: %@", error];
+
+        [target performSelectorOnMainThread:callback withObject:responseData waitUntilDone:NO];
+    });
+
+    return dummyRequest;
+}
+
+- (id)postRequestFromDictionary:(NSDictionary *)parameters
+                     withTarget:(id)target callback:(SEL)callback {
+    
+    [[Logger get] inf:@"Making WS request with parameters:\n%@", parameters];
     
     // Build the request.
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
     [request setPostFormat:ASIURLEncodedPostFormat];
     [request setDelegate:self];
-    for (NSString *key in [postData allKeys])
-        [request setPostValue:[[postData objectForKey:key] description] forKey:key];
+    for (NSString *key in [parameters allKeys])
+        [request setPostValue:[[parameters objectForKey:key] description] forKey:key];
     
     // Build the callback invocation.
     NSMethodSignature *sig = [[target class] instanceMethodSignatureForSelector:callback];
@@ -107,29 +137,37 @@
 }
 
 
-- (NSDictionary *)validateAndParseResponse:(NSData *)responseData allowBackOnError:(BOOL)backOnError
-                                  requires:(NSString *)key, ... {
+- (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+                      requires:(NSString *)key, ... {
     
     if (responseData == nil) {
-        [AlertViewController showConnectionErrorWithBackButton:backOnError];
+        if (popupOnError)
+            [AlertViewController showConnectionErrorWithBackButton:backOnError];
         return nil;
     }
+    
+    // Trim off non-executable-JSON prefix.
+    if ([[[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
+                               encoding:NSUTF8StringEncoding] isEqualToString:JSON_NON_EXECUTABLE_PREFIX])
+        responseData = [responseData subdataWithRange:
+                        NSMakeRange([JSON_NON_EXECUTABLE_PREFIX length], [responseData length] - [JSON_NON_EXECUTABLE_PREFIX length])];
     
     // Parse the JSON response data.
     id jsonError = nil;
     NSDictionary *responseDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
     if (jsonError != nil) {
         [[Logger get] err:@"Error: JSON parsing failed: %@", jsonError];
-        [AlertViewController showConnectionErrorWithBackButton:backOnError];
+        if (popupOnError)
+            [AlertViewController showConnectionErrorWithBackButton:backOnError];
         return nil;
     }
-    [[Logger get] dbg:@"Response: %@", responseDictionary];
     
     // Check whether the request was successful.
     NSNumber *resultCode = [responseDictionary objectForKey:RESULT_KEY_CODE];
     if (resultCode == nil || resultCode == (id)[NSNull null]) {
-        [AlertViewController showError:l(@"error.response.invalid")
-                            backButton:NO];
+        if (popupOnError)
+            [AlertViewController showError:l(@"error.response.invalid")
+                                backButton:NO];
         return nil;
     }
     
@@ -170,29 +208,35 @@
                        && errorArgument != [NSNull null])
                     [errorArguments addObject:errorArgument];
                 
-                [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
-                                    backButton:backOnError];
+                if (popupOnError)
+                    [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
+                                        backButton:backOnError];
             } else
-                [AlertViewController showConnectionErrorWithBackButton:backOnError];
+                if (popupOnError)
+                    [AlertViewController showConnectionErrorWithBackButton:backOnError];
         }
         
         return nil;
     }
     
-    // Validate whether all required keys are set.
+    // Get the result.
+    id result = [responseDictionary objectForKey:RESULT_KEY_RESULT];
+    
+    // Validate whether all required keys are set.  This assumes the result is a dictionary.
     va_list args;
     va_start(args, key);
     for(NSString *nextKey = key; nextKey; nextKey = va_arg(args, NSString*)) {
-        id value = [responseDictionary objectForKey:nextKey];
+        id value = [result isKindOfClass:[NSDictionary class]]? [result objectForKey:nextKey]: nil;
         if (value == nil || value == [NSNull null]) {
-            [AlertViewController showError:l(@"error.response.invalid")
-                                backButton:NO];
+            if (popupOnError)
+                [AlertViewController showError:l(@"error.response.invalid")
+                                    backButton:backOnError];
             return nil;
         }
     }
     va_end(args);
     
-    return responseDictionary;
+    return result;
 }
 
 
@@ -226,7 +270,8 @@
     [[Logger get] err:@"WS request failed: %@", [request error]];
     
     id nilResponseData = nil;
-    [invocation setArgument:&nilResponseData atIndex:2];
+    if ([[invocation methodSignature] numberOfArguments] > 2)
+        [invocation setArgument:&nilResponseData atIndex:2];
     [invocation invoke];
     
     [request release];
@@ -244,10 +289,9 @@
         // Already handled.
         return;
     
-    [[Logger get] dbg:@"finished with data:\n%@", [request responseString]];
-    
     NSData *responseData = [request responseData];
-    [invocation setArgument:&responseData atIndex:2];
+    if ([[invocation methodSignature] numberOfArguments] > 2)
+        [invocation setArgument:&responseData atIndex:2];
     [invocation invoke];
     
     [request release];

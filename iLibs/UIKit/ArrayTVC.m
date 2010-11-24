@@ -88,6 +88,9 @@
                             nil]];
 }
 
+- (void)customizeCell:(UITableViewCell *)cell forRow:(NSDictionary *)row withContext:(id)context {
+    
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
@@ -143,6 +146,8 @@
             break;
         }
     }
+    
+    [self customizeCell:cell forRow:row withContext:[row objectForKey:iLibsATVCRowContext]];
     
     return cell;
 }

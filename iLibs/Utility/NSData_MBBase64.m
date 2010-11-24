@@ -14,8 +14,8 @@ static const char MBBase64_encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgh
 
 + (id)dataWithBase64EncodedString:(NSString *)string;
 {
-	if (string == nil)
-		[NSException raise:NSInvalidArgumentException format:@"string argument must not be nil"];
+	if (string == nil || string == (id)[NSNull null])
+		return nil;
 	if ([string length] == 0)
 		return [NSData data];
 	

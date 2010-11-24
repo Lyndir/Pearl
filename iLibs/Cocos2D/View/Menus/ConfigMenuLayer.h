@@ -51,11 +51,11 @@
 
 @interface ConfigMenuLayer : MenuLayer {
 
-    NSDictionary                         *_itemConfigs;
-    id<NSObject, ConfigMenuDelegate>     _configDelegate;
+    NSDictionary                                                            *_itemConfigs;
+    id<NSObject, ConfigMenuDelegate>                                        _configDelegate;
 }
 
-@property (readwrite, retain) id<NSObject, ConfigMenuDelegate> configDelegate;
+@property (nonatomic, readwrite, retain) id<NSObject, ConfigMenuDelegate>   configDelegate;
 
 + (ConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                              settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;

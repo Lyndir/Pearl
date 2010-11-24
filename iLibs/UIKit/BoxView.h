@@ -14,10 +14,10 @@
  */
 @interface BoxView : UIView {
 
-    UIColor         *_color;
+    UIColor                             *_color;
 }
 
-@property (nonatomic, retain) UIColor *color;
+@property (nonatomic, retain) UIColor   *color;
 
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
 

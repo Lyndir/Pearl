@@ -18,8 +18,8 @@
 
 @interface ValidatingTextField : UITextField {
 
-    BOOL (^_isValid)(void);
-    UIView *_validView, *_invalidView;
+    BOOL                            (^_isValid)(void);
+    UIView                          *_validView, *_invalidView;
     id<ValidatingTextFieldDelegate> _validationDelegate;
 }
 

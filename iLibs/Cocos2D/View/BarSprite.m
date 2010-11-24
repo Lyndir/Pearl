@@ -55,7 +55,6 @@
 @synthesize bodyFrame = _bodyFrame, bodyFrames = _bodyFrames;
 @synthesize animatedTargetting = _animatedTargetting;
 @synthesize smoothTimeElapsed = _smoothTimeElapsed;
-@synthesize target = _target;
 @synthesize current = _current;
 @synthesize currentLength = _currentLength;
 @synthesize textureSize = _textureSize;
@@ -128,6 +127,11 @@
     }
     
     self.visible = !CGPointEqualToPoint(t, CGPointZero);
+}
+
+- (CGPoint)target {
+    
+    return _target;
 }
 
 

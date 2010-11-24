@@ -11,9 +11,9 @@
 
 @interface Layout ()
 
-@property (readwrite, retain) UIScrollView     *scrollView;
-@property (readwrite, retain) UIView           *contentView;
-@property (readwrite, retain) UIView  *lastChild;
+@property (nonatomic, readwrite, retain) UIScrollView   *scrollView;
+@property (nonatomic, readwrite, retain) UIView         *contentView;
+@property (nonatomic, readwrite, retain) UIView         *lastChild;
 
 @end
 

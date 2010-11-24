@@ -32,9 +32,9 @@
 
 @interface Config ()
 
-@property (readwrite, retain) NSUserDefaults                                        *defaults;
+@property (nonatomic, readwrite, retain) NSUserDefaults         *defaults;
 
-@property (readwrite, retain) NSMutableDictionary                                   *resetTriggers;
+@property (nonatomic, readwrite, retain) NSMutableDictionary    *resetTriggers;
 
 @end
 

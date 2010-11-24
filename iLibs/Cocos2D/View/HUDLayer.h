@@ -28,14 +28,14 @@
 
 @interface HUDLayer : BarLayer {
 
-    CCSprite               *_scoreSprite;
-    CCLabelAtlas           *_scoreCount;
-    BarLayer             *_messageBar;
+    CCSprite                                            *_scoreSprite;
+    CCLabelAtlas                                        *_scoreCount;
+    BarLayer                                            *_messageBar;
 }
 
-@property (readonly, retain) CCSprite               *scoreSprite;
-@property (readonly, retain) CCLabelAtlas           *scoreCount;
-@property (readonly, retain) BarLayer             *messageBar;
+@property (nonatomic, readonly, retain) CCSprite        *scoreSprite;
+@property (nonatomic, readonly, retain) CCLabelAtlas    *scoreCount;
+@property (nonatomic, readonly, retain) BarLayer        *messageBar;
 
 -(void) updateHudWasGood:(BOOL)wasGood;
 -(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood;

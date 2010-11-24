@@ -28,7 +28,7 @@
 
 @interface BarLayer ()
 
-@property (readwrite, retain) CCMenu                 *menuMenu;
+@property (nonatomic, readwrite, retain) CCMenu                 *menuMenu;
 
 @end
 
@@ -36,9 +36,9 @@
 
 - (void) menuButton:(id) caller;
 
-@property (readwrite, retain) CCSprite               *scoreSprite;
-@property (readwrite, retain) CCLabelAtlas           *scoreCount;
-@property (readwrite, retain) BarLayer             *messageBar;
+@property (nonatomic, readwrite, retain) CCSprite               *scoreSprite;
+@property (nonatomic, readwrite, retain) CCLabelAtlas           *scoreCount;
+@property (nonatomic, readwrite, retain) BarLayer               *messageBar;
 
 @end
 

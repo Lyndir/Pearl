@@ -42,28 +42,28 @@ typedef enum ScrollContentDirection {
 @interface ScrollLayer : CCLayer {
 
     @private
-    CGPoint                                      _dragFromPoint;
-    CGPoint                                      _dragFromPosition;
+    CGPoint                                                                 _dragFromPoint;
+    CGPoint                                                                 _dragFromPosition;
 
-    CGFloat                                      _scrollPerSecond;
-    CGPoint                                      _scrollRatio;
-    CGPoint                                      _scrollStep;
-    ScrollContentDirection                       _scrollContentDirection;
-    CGSize                                       _scrollContentSize;
+    CGFloat                                                                 _scrollPerSecond;
+    CGPoint                                                                 _scrollRatio;
+    CGPoint                                                                 _scrollStep;
+    ScrollContentDirection                                                  _scrollContentDirection;
+    CGSize                                                                  _scrollContentSize;
 
-    CGPoint                                      _origin;
-    CGPoint                                      _scroll;
+    CGPoint                                                                 _origin;
+    CGPoint                                                                 _scroll;
 
-    BOOL                                         _isTouching;
-    id<NSObject, ScrollLayerDelegate>            _delegate;
+    BOOL                                                                    _isTouching;
+    id<NSObject, ScrollLayerDelegate>                                       _delegate;
 }
 
-@property (readwrite) CGFloat                   scrollPerSecond;
-@property (readwrite) CGPoint                   scrollRatio;
-@property (readwrite) CGPoint                   scrollStep;
-@property (readwrite) ScrollContentDirection    scrollContentDirection;
-@property (readwrite) CGSize                    scrollContentSize;
-@property (readwrite, retain) id<NSObject, ScrollLayerDelegate> delegate;
+@property (nonatomic, readwrite) CGFloat                                    scrollPerSecond;
+@property (nonatomic, readwrite) CGPoint                                    scrollRatio;
+@property (nonatomic, readwrite) CGPoint                                    scrollStep;
+@property (nonatomic, readwrite) ScrollContentDirection                     scrollContentDirection;
+@property (nonatomic, readwrite) CGSize                                     scrollContentSize;
+@property (nonatomic, readwrite, retain) id<NSObject, ScrollLayerDelegate>  delegate;
 
 + (ScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
 + (ScrollLayer *)scrollNode:(CCNode *)node direction:(ScrollContentDirection)direction;

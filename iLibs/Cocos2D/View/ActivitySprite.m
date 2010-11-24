@@ -27,7 +27,7 @@
 
 @interface ActivitySprite ()
 
-@property (readwrite, retain) CCSprite   *sprite;
+@property (nonatomic, readwrite, retain) CCSprite   *sprite;
 
 @end
 

@@ -58,9 +58,9 @@
 - (void)doLoad;
 - (void)doLayout;
 
-@property (readwrite, retain) CCMenu                                                     *menu;
+@property (nonatomic, readwrite, retain) CCMenu                                         *menu;
 
-@property (readwrite, assign) BOOL                                                     layoutDirty;
+@property (nonatomic, readwrite, assign) BOOL                                           layoutDirty;
 
 @end
 

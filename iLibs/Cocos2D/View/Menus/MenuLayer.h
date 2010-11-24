@@ -51,23 +51,23 @@ typedef enum MenuLayout {
 @interface MenuLayer : ShadeLayer <Resettable> {
 
 @private
-    NSArray                                                  *_items;
-    CCMenu                                                     *_menu;
-    CCMenuItem                                                 *_logo;
-    CGPoint                                                  _offset;
+    NSArray                                                         *_items;
+    CCMenu                                                          *_menu;
+    CCMenuItem                                                      *_logo;
+    CGPoint                                                         _offset;
 
-    MenuLayout                                               _layout;
-    BOOL                                                     _layoutDirty;
+    MenuLayout                                                      _layout;
+    BOOL                                                            _layoutDirty;
 
-    id<NSObject, MenuDelegate>                               _delegate;
+    id<NSObject, MenuDelegate>                                      _delegate;
 }
 
-@property (readonly, retain) CCMenu                                   *menu;
-@property (readwrite) MenuLayout                            layout;
-@property (readwrite, copy) NSArray                         *items;
-@property (readwrite, retain) CCMenuItem                      *logo;
-@property (readwrite, assign) CGPoint                       offset;
-@property (readwrite, retain) id<NSObject, MenuDelegate>    delegate;
+@property (nonatomic, readonly, retain) CCMenu                      *menu;
+@property (nonatomic, readwrite) MenuLayout                         layout;
+@property (nonatomic, readwrite, copy) NSArray                      *items;
+@property (nonatomic, readwrite, retain) CCMenuItem                 *logo;
+@property (nonatomic, readwrite, assign) CGPoint                    offset;
+@property (nonatomic, readwrite, retain) id<NSObject, MenuDelegate> delegate;
 
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                           items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;

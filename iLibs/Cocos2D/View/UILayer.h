@@ -27,11 +27,11 @@
 
 @interface UILayer : CCColorLayer {
 
-    CCLabelTTF                                    *_messageLabel;
-    NSMutableArray                           *_messageQueue, *_callbackQueue;
+    CCLabelTTF                                  *_messageLabel;
+    NSMutableArray                              *_messageQueue, *_callbackQueue;
 
-    CCRotateTo                                 *_rotateAction;
-    UIAccelerationValue                      _accelX, _accelY, _accelZ;
+    CCRotateTo                                  *_rotateAction;
+    UIAccelerationValue                         _accelX, _accelY, _accelZ;
 }
 
 -(void) rotateTo:(float)aRotation;

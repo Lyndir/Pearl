@@ -23,10 +23,21 @@
 @interface Layout : NSObject {
 
 @private
-    UIScrollView     *_scrollView;
-    UIView           *_contentView;
-    UIView  *_lastChild;
+    UIScrollView                                        *_scrollView;
+    UIView                                              *_contentView;
+    UIView                                              *_lastChild;
 }
+
+
+#pragma mark ###############################
+#pragma mark Properties
+
+/**
+ * The view managed by this layout.
+ *
+ * This is the view to which all views are added using the add methods.
+ */
+@property (nonatomic, readonly, retain) UIScrollView    *scrollView;
 
 
 #pragma mark ###############################
@@ -116,16 +127,5 @@
  * @param usingDefault  The value that is used to determine which components of the given view's frame should be defaulted.
  */
 - (Layout *)add:(UIView *)newView usingDefault:(CGFloat)d;
-
-
-#pragma mark ###############################
-#pragma mark Properties
-
-/**
- * The view managed by this layout.
- *
- * This is the view to which all views are added using the add methods.
- */
-@property (readonly, retain) UIScrollView *scrollView;
 
 @end

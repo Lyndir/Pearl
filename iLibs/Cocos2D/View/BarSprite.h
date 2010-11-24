@@ -28,29 +28,28 @@
 @interface BarSprite : CCLayer {
 
 @private
-    CCTexture2D            *_head, **_body, *_tail;
+    CCTexture2D                                     *_head, **_body, *_tail;
 
-    CGFloat              _age;
-    NSUInteger           _bodyFrame, _bodyFrames;
+    CGFloat                                         _age;
+    NSUInteger                                      _bodyFrame, _bodyFrames;
 
-    BOOL                 _animatedTargetting;
-    ccTime               _smoothTimeElapsed;
-    CGPoint              _target;
+    BOOL                                            _animatedTargetting;
+    ccTime                                          _smoothTimeElapsed;
+    CGPoint                                         _target;
 
-    CGPoint              _current;
-    CGFloat              _currentLength;
+    CGPoint                                         _current;
+    CGFloat                                         _currentLength;
 
-    CGSize               _textureSize;
+    CGSize                                          _textureSize;
 }
+
+@property (nonatomic, readwrite, assign) CGPoint    target;
+@property (nonatomic, readwrite, assign) CGSize     textureSize;
 
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
 - (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting;
-
-
-@property (readwrite, assign) CGPoint   target;
-@property (readwrite, assign) CGSize    textureSize;
 
 @end

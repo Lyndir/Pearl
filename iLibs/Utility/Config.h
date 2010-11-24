@@ -63,44 +63,44 @@
 
 @interface Config : NSObject {
 
-    NSUserDefaults                                      *_defaults;
+    NSUserDefaults                                          *_defaults;
 
-    NSMutableDictionary                                 *_resetTriggers;
+    NSMutableDictionary                                     *_resetTriggers;
 
-    NSUInteger                                          *_gameRandomSeeds;
-    NSUInteger                                          *_gameRandomCounters;
+    NSUInteger                                              *_gameRandomSeeds;
+    NSUInteger                                              *_gameRandomCounters;
 }
 
-@property (readonly, retain) NSUserDefaults             *defaults;
-@property (readonly, retain) NSMutableDictionary        *resetTriggers;
+@property (nonatomic, readonly, retain) NSUserDefaults      *defaults;
+@property (nonatomic, readonly, retain) NSMutableDictionary *resetTriggers;
 
-@property (nonatomic, readwrite, retain) NSNumber       *firstRun;
-@property (nonatomic, readwrite, retain) NSData         *deviceToken;
+@property (nonatomic, readwrite, retain) NSNumber           *firstRun;
+@property (nonatomic, readwrite, retain) NSData             *deviceToken;
 
-@property (nonatomic, readwrite, retain) NSNumber       *fontSize;
-@property (nonatomic, readwrite, retain) NSNumber       *largeFontSize;
-@property (nonatomic, readwrite, retain) NSNumber       *smallFontSize;
-@property (nonatomic, readwrite, retain) NSString       *fontName;
-@property (nonatomic, readwrite, retain) NSString       *fixedFontName;
-@property (nonatomic, readwrite, retain) NSString       *symbolicFontName;
+@property (nonatomic, readwrite, retain) NSNumber           *fontSize;
+@property (nonatomic, readwrite, retain) NSNumber           *largeFontSize;
+@property (nonatomic, readwrite, retain) NSNumber           *smallFontSize;
+@property (nonatomic, readwrite, retain) NSString           *fontName;
+@property (nonatomic, readwrite, retain) NSString           *fixedFontName;
+@property (nonatomic, readwrite, retain) NSString           *symbolicFontName;
 
-@property (nonatomic, readwrite, retain) NSNumber       *shadeColor;
-@property (nonatomic, readwrite, retain) NSNumber       *transitionDuration;
+@property (nonatomic, readwrite, retain) NSNumber           *shadeColor;
+@property (nonatomic, readwrite, retain) NSNumber           *transitionDuration;
 
-@property (nonatomic, readwrite, retain) NSArray        *tracks;
-@property (nonatomic, readwrite, retain) NSArray        *trackNames;
-@property (nonatomic, readonly, retain) NSString        *firstTrack;
-@property (nonatomic, readonly, retain) NSString        *randomTrack;
-@property (nonatomic, readonly, retain) NSString        *nextTrack;
-@property (nonatomic, readwrite, retain) NSString       *currentTrack;
-@property (nonatomic, readonly, retain) NSString        *currentTrackName;
-@property (nonatomic, readwrite, retain) NSString       *playingTrack;
+@property (nonatomic, readwrite, retain) NSArray            *tracks;
+@property (nonatomic, readwrite, retain) NSArray            *trackNames;
+@property (nonatomic, readonly, retain) NSString            *firstTrack;
+@property (nonatomic, readonly, retain) NSString            *randomTrack;
+@property (nonatomic, readonly, retain) NSString            *nextTrack;
+@property (nonatomic, readwrite, retain) NSString           *currentTrack;
+@property (nonatomic, readonly, retain) NSString            *currentTrackName;
+@property (nonatomic, readwrite, retain) NSString           *playingTrack;
 
-@property (nonatomic, readwrite, retain) NSNumber       *soundFx;
-@property (nonatomic, readwrite, retain) NSNumber       *music;
-@property (nonatomic, readwrite, retain) NSNumber       *voice;
-@property (nonatomic, readwrite, retain) NSNumber       *vibration;
-@property (nonatomic, readwrite, retain) NSNumber       *visualFx;
+@property (nonatomic, readwrite, retain) NSNumber           *soundFx;
+@property (nonatomic, readwrite, retain) NSNumber           *music;
+@property (nonatomic, readwrite, retain) NSNumber           *voice;
+@property (nonatomic, readwrite, retain) NSNumber           *vibration;
+@property (nonatomic, readwrite, retain) NSNumber           *visualFx;
 
 -(NSDate *) today;
 

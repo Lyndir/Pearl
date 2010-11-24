@@ -51,7 +51,7 @@ typedef enum LogLevel {
 @interface Logger : NSObject {
 
 @private
-    NSMutableArray           *_messages;
+    NSMutableArray              *_messages;
 }
 
 /** Obtain the shared Logger instance. */

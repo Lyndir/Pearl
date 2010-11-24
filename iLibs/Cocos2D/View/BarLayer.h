@@ -37,6 +37,8 @@
     BOOL                 _dismissed;
 }
 
+@property (nonatomic, readonly) BOOL dismissed;
+
 + (BarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition;
 -(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition;
 
@@ -47,7 +49,5 @@
 -(void) message:(NSString *)msg isImportant:(BOOL)important;
 -(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important;
 -(void) dismissMessage;
-
-@property (nonatomic, readonly) BOOL dismissed;
 
 @end

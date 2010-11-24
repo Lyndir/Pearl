@@ -33,14 +33,13 @@
 
 - (CGPoint)limitPoint:(CGPoint)point;
 
-@property (readwrite, assign) CGPoint                                      dragFromPoint;
-@property (readwrite, assign) CGPoint                                      dragFromPosition;
+@property (nonatomic, readwrite, assign) CGPoint                            dragFromPoint;
+@property (nonatomic, readwrite, assign) CGPoint                            dragFromPosition;
 
+@property (nonatomic, readwrite, assign) CGPoint                            origin;
+@property (nonatomic, readwrite, assign) CGPoint                            scroll;
 
-@property (readwrite, assign) CGPoint                                      origin;
-@property (readwrite, assign) CGPoint                                      scroll;
-
-@property (readwrite, assign) BOOL                                         isTouching;
+@property (nonatomic, readwrite, assign) BOOL                               isTouching;
 
 @end
 

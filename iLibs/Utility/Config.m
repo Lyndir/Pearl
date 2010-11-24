@@ -29,8 +29,6 @@
 #import "StringUtils.h"
 #import "AudioController.h"
 
-#define cMaxGameScope 1024
-
 
 @interface Config ()
 
@@ -60,6 +58,7 @@
         return self;
 
     _gameRandomSeeds = 0;
+    _gameRandomCounters = 0;
     [self setGameRandomSeed:arc4random()];
 
     self.defaults = [NSUserDefaults standardUserDefaults];
@@ -257,9 +256,13 @@
     @synchronized(self) {
         srandom(aSeed);
         free(_gameRandomSeeds);
-        _gameRandomSeeds = malloc(sizeof(NSUInteger) * cMaxGameScope);
-        for (NSUInteger s = 0; s < cMaxGameScope; ++s)
-            _gameRandomSeeds[s] = random();
+        free(_gameRandomCounters);
+        _gameRandomSeeds            = malloc(sizeof(NSUInteger) * cMaxGameScope);
+        _gameRandomCounters         = malloc(sizeof(NSUInteger) * cMaxGameScope);
+        for (NSUInteger s = 0; s < cMaxGameScope; ++s){
+            _gameRandomSeeds[s]     = random();
+            _gameRandomCounters[s]  = 0;
+        }
     }
 }
 
@@ -277,6 +280,17 @@
         return random();
     }
 }
+
+- (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line {
+
+    NSUInteger gr = [self gameRandom:scope];
+    if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
+        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line,
+         scope, ++_gameRandomCounters[scope], gr];
+    
+    return gr;
+}
+
 
 -(NSDate *) today {
     

@@ -117,7 +117,7 @@ static inline ccColor3B
 ccc3l(const long color)
 {
     GLubyte *components = (GLubyte *)&color;
-	ccColor3B c = { components[3], components[2], components[1] };
+	ccColor3B c = { components[2], components[1], components[0] };
 	return c;
 }
 

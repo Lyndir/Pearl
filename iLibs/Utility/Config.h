@@ -24,28 +24,42 @@
 
 #import <UIKit/UIKit.h>
 
-#define cFirstRun           NSStringFromSelector(@selector(firstRun))
-#define cDeviceToken        NSStringFromSelector(@selector(deviceToken))
+#define cMaxGameScope           1024
 
-#define cFontSize           NSStringFromSelector(@selector(fontSize))
-#define cLargeFontSize      NSStringFromSelector(@selector(largeFontSize))
-#define cSmallFontSize      NSStringFromSelector(@selector(smallFontSize))
-#define cFixedFontName      NSStringFromSelector(@selector(fixedFontName))
-#define cFontName           NSStringFromSelector(@selector(fontName))
-#define cSymbolicFontName   NSStringFromSelector(@selector(symbolicFontName))
+#if DEBUG
+#define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1 from:basename(__FILE__) :__LINE__]
+#else
+#define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1]
+#endif
 
-#define cShadeColor         NSStringFromSelector(@selector(shadeColor))
-#define cTransitionDuration NSStringFromSelector(@selector(transitionDuration))
+#if DEBUG
+#define gameRandomFor(scope)    [[Config get] gameRandom:scope from:basename(__FILE__) :__LINE__]
+#else
+#define gameRandomFor(scope)    [[Config get] gameRandom:scope]
+#endif
 
-#define cSoundFx            NSStringFromSelector(@selector(soundFx))
-#define cMusic              NSStringFromSelector(@selector(music))
-#define cVoice              NSStringFromSelector(@selector(voice))
-#define cVibration          NSStringFromSelector(@selector(vibration))
-#define cVisualFx           NSStringFromSelector(@selector(visualFx))
+#define cFirstRun               NSStringFromSelector(@selector(firstRun))
+#define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
 
-#define cTracks             NSStringFromSelector(@selector(tracks))
-#define cTrackNames         NSStringFromSelector(@selector(trackNames))
-#define cCurrentTrack       NSStringFromSelector(@selector(currentTrack))
+#define cFontSize               NSStringFromSelector(@selector(fontSize))
+#define cLargeFontSize          NSStringFromSelector(@selector(largeFontSize))
+#define cSmallFontSize          NSStringFromSelector(@selector(smallFontSize))
+#define cFixedFontName          NSStringFromSelector(@selector(fixedFontName))
+#define cFontName               NSStringFromSelector(@selector(fontName))
+#define cSymbolicFontName       NSStringFromSelector(@selector(symbolicFontName))
+
+#define cShadeColor             NSStringFromSelector(@selector(shadeColor))
+#define cTransitionDuration     NSStringFromSelector(@selector(transitionDuration))
+
+#define cSoundFx                NSStringFromSelector(@selector(soundFx))
+#define cMusic                  NSStringFromSelector(@selector(music))
+#define cVoice                  NSStringFromSelector(@selector(voice))
+#define cVibration              NSStringFromSelector(@selector(vibration))
+#define cVisualFx               NSStringFromSelector(@selector(visualFx))
+
+#define cTracks                 NSStringFromSelector(@selector(tracks))
+#define cTrackNames             NSStringFromSelector(@selector(trackNames))
+#define cCurrentTrack           NSStringFromSelector(@selector(currentTrack))
 
 @interface Config : NSObject {
 
@@ -54,6 +68,7 @@
     NSMutableDictionary                                 *_resetTriggers;
 
     NSUInteger                                          *_gameRandomSeeds;
+    NSUInteger                                          *_gameRandomCounters;
 }
 
 @property (readonly, retain) NSUserDefaults             *defaults;
@@ -103,6 +118,7 @@
  * Return a game random from within the given scope.
  */
 - (NSUInteger)gameRandom:(NSUInteger)scope;
+- (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
 
 +(Config *)                                             get;
 

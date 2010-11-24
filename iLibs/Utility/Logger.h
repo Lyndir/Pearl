@@ -25,10 +25,10 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define dbg(format, ...)    [[Logger get] dbg:@"%30s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define inf(format, ...)    [[Logger get] inf:@"%30s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define wrn(format, ...)    [[Logger get] wrn:@"%30s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define err(format, ...)    [[Logger get] err:@"%30s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define dbg(format, ...)    [[Logger get] dbg:@"%20s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define inf(format, ...)    [[Logger get] inf:@"%20s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define wrn(format, ...)    [[Logger get] wrn:@"%20s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define err(format, ...)    [[Logger get] err:@"%20s:%-5d\t" format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 
 /** Levels that determine the importance of logging events. */
 typedef enum LogLevel {

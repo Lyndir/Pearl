@@ -87,7 +87,7 @@ typedef struct Vertex {
     ccColor4B c;
 } Vertex;
 
-//! helper macro that converts a ccColor4B into a ccColor3B by dropping the alpha value.
+//! helper function that converts a ccColor4B into a ccColor3B by dropping the alpha value.
 static inline ccColor4B
 ccc3to4(const ccColor3B color)
 {
@@ -95,7 +95,7 @@ ccc3to4(const ccColor3B color)
 	return c;
 }
 
-//! helper macro that converts a ccColor4B into a ccColor3B by dropping the alpha value.
+//! helper function that converts a ccColor4B into a ccColor3B by dropping the alpha value.
 static inline ccColor3B
 ccc4to3(const ccColor4B color)
 {
@@ -103,7 +103,7 @@ ccc4to3(const ccColor4B color)
 	return c;
 }
 
-//! helper macro that creates an ccColor4B type from a long
+//! helper function that creates an ccColor4B type from a long
 static inline ccColor4B
 ccc4l(const long color)
 {
@@ -112,7 +112,7 @@ ccc4l(const long color)
 	return c;
 }
 
-//! helper macro that creates an ccColor3B type from a long
+//! helper function that creates an ccColor3B type from a long
 static inline ccColor3B
 ccc3l(const long color)
 {
@@ -121,12 +121,20 @@ ccc3l(const long color)
 	return c;
 }
 
-//! helper macro that creates an ccColor4F type
+//! helper function that creates an ccColor4F type
 static inline ccColor4F
 ccc4f(const float r, const float g, const float b, const float a)
 {
 	ccColor4F c = { r, g, b, a };
 	return c;
+}
+
+//! helper function that creates an ccColor4F type
+static inline ccColor4F
+ccc4fl(const long color)
+{
+    GLubyte *components = (GLubyte *)&color;
+	return ccc4f(components[3], components[2], components[1], components[0]);
 }
 
 //! Comparisons

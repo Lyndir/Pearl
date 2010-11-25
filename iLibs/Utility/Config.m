@@ -23,6 +23,7 @@
 //
 
 #import "Config.h"
+#import "Logger.h"
 #import "AbstractAppDelegate.h"
 #import "Resettable.h"
 #import "NSString_SEL.h"

@@ -21,6 +21,12 @@
 #define NSNullToNil(__object)                                                           \
             (__object == (id)[NSNull null]? nil: __object)
 
+#define throw(__format, ...)                                                            \
+            @throw [NSException                                                         \
+                    exceptionWithName:NSInternalInconsistencyException                  \
+                    reason:[NSString stringWithFormat:__format , ##__VA_ARGS__]         \
+                    userInfo:nil]
+
 @interface ObjectUtils : NSObject {
 
 }

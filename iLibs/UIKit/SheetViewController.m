@@ -27,13 +27,13 @@
 
 - (id)initWithTitle:(NSString *)aTitle {
     
-    return self = [self initWithTitle:aTitle backString:nil acceptString:nil callback:nil :nil];
+    return [self initWithTitle:aTitle backString:nil acceptString:nil callback:nil :nil];
 }
 
 
 - (id)initWithTitle:(NSString *)aTitle backString:(NSString *)backString {
     
-    return self = [self initWithTitle:aTitle backString:backString acceptString:nil callback:nil :nil];
+    return [self initWithTitle:aTitle backString:backString acceptString:nil callback:nil :nil];
 }
 
 
@@ -76,9 +76,13 @@
 + (SheetViewController *)showMessage:(NSString *)message
          backString:(NSString *)backString acceptString:(NSString *)acceptString {
     
-    return [[[[SheetViewController alloc] initWithTitle:message
-                                             backString:backString acceptString:acceptString
-                                               callback:nil :nil] showSheet] autorelease];
+    SheetViewController *sheet = [[SheetViewController alloc] initWithTitle:message
+                                                                 backString:backString acceptString:acceptString
+                                                                   callback:nil :nil];
+    [sheet showSheet];
+    [sheet autorelease];
+    
+    return sheet;
 }
 
 

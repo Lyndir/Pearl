@@ -34,7 +34,7 @@ static AlertViewController *currentAlert = nil;
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)msg backString:(NSString *)backString {
 
-    return self = [self initWithTitle:title message:msg backString:backString acceptString:nil callback:nil :nil];
+    return [self initWithTitle:title message:msg backString:backString acceptString:nil callback:nil :nil];
 }
 
 
@@ -93,9 +93,11 @@ static AlertViewController *currentAlert = nil;
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title
          backString:(NSString *)backString acceptString:(NSString *)acceptString {
     
-    [[[[AlertViewController alloc] initWithTitle:title message:message
-                                      backString:backString acceptString:acceptString
-                                        callback:nil :nil] showAlert] release];
+    AlertViewController *alert = [[AlertViewController alloc] initWithTitle:title message:message
+                                                                 backString:backString acceptString:acceptString
+                                                                   callback:nil :nil];
+    [alert showAlert];
+    [alert release];
 }
 
 

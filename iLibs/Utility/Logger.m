@@ -110,7 +110,7 @@ static NSDateFormatter *logDateFormatter = nil;
 
 @implementation Logger
 
-@synthesize messages = _messages;
+@synthesize messages = _messages, autoprintLevel = _autoprintLevel;
 
 - (id)init {
     
@@ -118,6 +118,7 @@ static NSDateFormatter *logDateFormatter = nil;
         return nil;
     
     self.messages = [NSMutableArray arrayWithCapacity:20];
+    self.autoprintLevel = LogLevelInfo;
     
     return self;
 }
@@ -160,10 +161,19 @@ static NSDateFormatter *logDateFormatter = nil;
     
     va_end(argList);
 
-    NSLog(@"%@", message);
+    if (aLevel >= self.autoprintLevel)
+        NSLog(@"%@", message);
     [self.messages addObject:message];
     
     return self;
+}
+
+
+- (void)printAllWithLevel:(LogLevel)level {
+    
+    for (LogMessage *message in self.messages)
+        if (message.level >= level)
+            NSLog(@"%@", message);
 }
 
 

@@ -51,8 +51,11 @@ typedef enum LogLevel {
 @interface Logger : NSObject {
 
 @private
-    NSMutableArray              *_messages;
+    NSMutableArray                      *_messages;
+    LogLevel                            _autoprintLevel;
 }
+
+@property (nonatomic, assign) LogLevel  autoprintLevel;
 
 /** Obtain the shared Logger instance. */
 + (Logger *)get;
@@ -66,6 +69,8 @@ typedef enum LogLevel {
  *              Subsequent nil-terminated arguments are arguments to the format string.
  */
 - (Logger *)logWithLevel:(LogLevel)aLevel andMessage:(NSString *)format, ...;
+/** Print all log messages of the given level or above to the console. */
+- (void)printAllWithLevel:(LogLevel)level;
 /** Log a new DEBUG-level event. */
 - (Logger *)dbg:(NSString *)format, ...;
 /** Log a new INFO-level event. */

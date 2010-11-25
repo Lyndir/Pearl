@@ -295,7 +295,8 @@
         else if (self.scrollContentDirection & ScrollContentDirectionRightToLeft) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f));
             scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f + 0.05f));
-        }
+        } else
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Unsupported scrollContentDirection" userInfo:nil];
         scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(0, 2));
         scrollPointTo       = ccpAdd(scrollPointTo, ccp(0, 2));
 
@@ -313,7 +314,8 @@
         else if (self.scrollContentDirection & ScrollContentDirectionBottomToTop) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f));
             scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f + 0.05f));
-        }
+        } else
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Unsupported scrollContentDirection" userInfo:nil];
         scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(-2, 0));
         scrollPointTo       = ccpAdd(scrollPointTo, ccp(-2, 0));
 

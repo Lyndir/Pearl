@@ -114,7 +114,7 @@
         [menuItems addObject:item];
     va_end(list);
     
-    return self = [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+    return [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
 }
 
 

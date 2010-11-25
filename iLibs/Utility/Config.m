@@ -155,9 +155,10 @@
     if ([selector isSetter]) {
         selector = [selector setterToGetter];
         
-        id value;
+        id value = nil;
         [anInvocation getArgument:&value atIndex:2];
         
+        dbg(@"Config Set %@ = %@", selector, value);
         [self.defaults setObject:value forKey:selector];
         
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
@@ -168,6 +169,7 @@
     
     else {
         id value = [self.defaults objectForKey:selector];
+        //dbg(@"Config Get %@ = %@", selector, value);
         [anInvocation setReturnValue:&value];
     }
 }

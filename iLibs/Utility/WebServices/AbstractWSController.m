@@ -147,8 +147,9 @@
     }
     
     // Trim off non-executable-JSON prefix.
-    if ([[[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
-                               encoding:NSUTF8StringEncoding] isEqualToString:JSON_NON_EXECUTABLE_PREFIX])
+    if ([JSON_NON_EXECUTABLE_PREFIX isEqualToString:
+         [[[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
+                                encoding:NSUTF8StringEncoding] autorelease]])
         responseData = [responseData subdataWithRange:
                         NSMakeRange([JSON_NON_EXECUTABLE_PREFIX length], [responseData length] - [JSON_NON_EXECUTABLE_PREFIX length])];
     
@@ -156,7 +157,7 @@
     id jsonError = nil;
     NSDictionary *responseDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
     if (jsonError != nil) {
-        [[Logger get] err:@"Error: JSON parsing failed: %@", jsonError];
+        [[Logger get] err:@"Error: JSON parsing failed: %@\n%@", jsonError, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]];
         if (popupOnError)
             [AlertViewController showConnectionErrorWithBackButton:backOnError];
         return nil;
@@ -200,7 +201,7 @@
 
             NSString *errorMessage = [responseDictionary objectForKey:RESULT_KEY_DESC_USER];
             if ((id)errorMessage != [NSNull null] && errorMessage.length) {
-                id errorArgument;
+                id errorArgument = nil;
                 NSUInteger a = 0;
                 NSMutableArray *errorArguments = [[NSMutableArray alloc] initWithCapacity:1];
                 while ((errorArgument = [responseDictionary objectForKey:[NSString stringWithFormat:@"%@%d",
@@ -211,6 +212,7 @@
                 if (popupOnError)
                     [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
                                         backButton:backOnError];
+                [errorArguments release];
             } else
                 if (popupOnError)
                     [AlertViewController showConnectionErrorWithBackButton:backOnError];

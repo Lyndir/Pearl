@@ -6,6 +6,7 @@
 //
 
 #import "ArrayTVC.h"
+#import "ObjectUtils.h"
 
 #define iLibsATVCCellID         @"ilibs.ArrayTVC.cell"
 #define iLibsATVCRowName        @"ilibs.ArrayTVC.name"
@@ -46,7 +47,8 @@
             NSMutableArray *sectionRows = [[section allValues] lastObject];
             
             for (NSDictionary *row in sectionRows)
-                if ([[row objectForKey:iLibsATVCRowName] isEqualToString:aName]) {
+                if ((aName == nil && [row objectForKey:iLibsATVCRowName] == [NSNull null]) ||
+                    [[row objectForKey:iLibsATVCRowName] isEqualToString:aName]) {
                     [sectionRows removeObject:row];
                     return;
                 }
@@ -60,7 +62,7 @@
             NSMutableArray *sectionRows = [[section allValues] lastObject];
             
             for (NSDictionary *row in sectionRows)
-                if ([row objectForKey:iLibsATVCRowContext] == aContext) {
+                if (NSNullToNil([row objectForKey:iLibsATVCRowContext]) == aContext) {
                     [sectionRows removeObject:row];
                     return;
                 }
@@ -80,11 +82,11 @@
         [_sections addObject:[NSDictionary dictionaryWithObject:sectionRows = [NSMutableArray array] forKey:aSection]];
     
     [sectionRows addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                            aName,                                      iLibsATVCRowName,
+                            NilToNSNull(aName),                         iLibsATVCRowName,
                             [NSNumber numberWithUnsignedInt:aStyle],    iLibsATVCRowStyle,
                             [NSNumber numberWithBool:isToggled],        iLibsATVCRowToggled,
-                            aDelegate,                                  iLibsATVCRowDelegate,
-                            aContext,                                   iLibsATVCRowContext,
+                            NilToNSNull(aDelegate),                     iLibsATVCRowDelegate,
+                            NilToNSNull(aContext),                      iLibsATVCRowContext,
                             nil]];
 }
 
@@ -116,11 +118,11 @@
     NSArray *sectionRows = [[[_sections objectAtIndex:indexPath.section] allValues] lastObject];
     NSDictionary *row = [sectionRows objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [row objectForKey:iLibsATVCRowName];
+    cell.textLabel.text = NSNullToNil([row objectForKey:iLibsATVCRowName]);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
-    switch ([[row objectForKey:iLibsATVCRowStyle] unsignedIntValue]) {
+    switch ([NSNullToNil([row objectForKey:iLibsATVCRowStyle]) unsignedIntValue]) {
         case ArrayTVCRowStylePlain:
             break;
         case ArrayTVCRowStyleLink: {
@@ -147,7 +149,7 @@
         }
     }
     
-    [self customizeCell:cell forRow:row withContext:[row objectForKey:iLibsATVCRowContext]];
+    [self customizeCell:cell forRow:row withContext:NSNullToNil([row objectForKey:iLibsATVCRowContext])];
     
     return cell;
 }
@@ -159,12 +161,12 @@
     NSMutableDictionary *row = [sectionRows objectAtIndex:indexPath.row];
     
     BOOL newToggled = ![[row objectForKey:iLibsATVCRowToggled] boolValue];
-    if ([[row objectForKey:iLibsATVCRowDelegate] shouldActivateRowNamed:[row objectForKey:iLibsATVCRowName]
-                                                              inSection:sectionName
-                                                            withContext:[row objectForKey:iLibsATVCRowContext]
-                                                               toggleTo:newToggled]) {
+    if ([NSNullToNil([row objectForKey:iLibsATVCRowDelegate]) shouldActivateRowNamed:NSNullToNil([row objectForKey:iLibsATVCRowName])
+                                                                           inSection:sectionName
+                                                                         withContext:NSNullToNil([row objectForKey:iLibsATVCRowContext])
+                                                                            toggleTo:newToggled]) {
         [row setObject:[NSNumber numberWithBool:newToggled] forKey:iLibsATVCRowToggled];
-        switch ([[row objectForKey:iLibsATVCRowStyle] unsignedIntValue]) {
+        switch ([NSNullToNil([row objectForKey:iLibsATVCRowStyle]) unsignedIntValue]) {
             case ArrayTVCRowStyleToggle: {
                 [(UISwitch *)[[self.tableView cellForRowAtIndexPath:indexPath] accessoryView] setOn:newToggled animated:YES];
                 [self.tableView deselectRowAtIndexPath:indexPath animated:YES];

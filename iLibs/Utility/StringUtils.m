@@ -49,6 +49,7 @@ NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSMutableArray *numbers = [NSMutableArray arrayWithCapacity:(NSUInteger)((max - min) / step)];
     for (double n = min; n <= max; n += step)
         [numbers addObject:[formatter stringFromNumber:[NSNumber numberWithDouble:n]]];
+    [formatter release];
     
     return numbers;
 }

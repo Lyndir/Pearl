@@ -35,11 +35,11 @@
 - (void)_back:(CCNode *)sender;
 - (void)_next:(CCNode *)sender;
 
-@property (readwrite, assign) BOOL                                                     pushed;
-@property (readwrite, retain) CCMenu                                                     *backMenu;
-@property (readwrite, retain) CCMenu                                                     *nextMenu;
-@property (readwrite, retain) NSInvocation                                             *backInvocation;
-@property (readwrite, retain) NSInvocation                                             *nextInvocation;
+@property (nonatomic, readwrite, assign) BOOL                                           pushed;
+@property (readwrite, retain) CCMenu                                                    *backMenu;
+@property (readwrite, retain) CCMenu                                                    *nextMenu;
+@property (readwrite, retain) NSInvocation                                              *backInvocation;
+@property (readwrite, retain) NSInvocation                                              *nextInvocation;
 
 @end
 
@@ -178,13 +178,8 @@
     [super onEnter];
     
     self.visible = YES;
-    [self runAction:[CCSequence actions:
-                     [CCEaseSineOut actionWithAction:
-                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue] position:CGPointZero]],
-                     [CCCallFunc actionWithTarget:self selector:@selector(ready)],
-                     nil]];
+    [self enterAction];
 }
-
 
 -(void) ready {
     
@@ -197,11 +192,27 @@
     [self stopAllActions];
     
     self.pushed = isPushed;
+    [self dismissAction];
+}
+
+
+- (void)enterAction {
     
     [self runAction:[CCSequence actions:
-                     [CCEaseSineIn actionWithAction:
+                     [CCEaseSineOut actionWithAction:
                       [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                                        position:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)]],
+                                          position:CGPointZero]],
+                     [CCCallFunc actionWithTarget:self selector:@selector(ready)],
+                     nil]];
+}
+
+
+- (void)dismissAction {
+    
+    [self runAction:[CCSequence actions:
+                     [CCEaseSineOut actionWithAction:
+                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                                          position:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)]],
                      [CCCallFunc actionWithTarget:self selector:@selector(gone)],
                      [Remove action],
                      nil]];

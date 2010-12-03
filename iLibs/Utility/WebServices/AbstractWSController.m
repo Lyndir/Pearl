@@ -294,6 +294,8 @@
     NSData *responseData = [request responseData];
     if ([[invocation methodSignature] numberOfArguments] > 2)
         [invocation setArgument:&responseData atIndex:2];
+    if ([[invocation methodSignature] numberOfArguments] > 3)
+        [invocation setArgument:&request atIndex:3];
     [invocation invoke];
     
     [request release];

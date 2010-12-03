@@ -77,7 +77,7 @@
                                      l(@"font.family.symbolic"),                                    cSymbolicFontName,
                                      
                                      [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
-                                     [NSNumber numberWithFloat:      0.5f],                         cTransitionDuration,
+                                     [NSNumber numberWithFloat:      0.4f],                         cTransitionDuration,
                                 
                                      [NSNumber numberWithBool:       YES],                          cSoundFx,
                                      [NSNumber numberWithBool:       NO],                           cVoice,

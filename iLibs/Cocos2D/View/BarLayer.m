@@ -63,8 +63,10 @@
         return self;
     
     self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"bar.png"];
-    self.textureRect        = CGRectFromPointAndSize(CGPointZero, self.texture.contentSize);
-    
+    self.textureRect        = CGRectFromPointAndSize(CGPointZero, CGSizeMake([CCDirector sharedDirector].winSize.width, self.texture.contentSize.height));
+    ccTexParams texParams = { GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_CLAMP_TO_EDGE };
+	[self.texture setTexParameters: &texParams];
+
     self.color              = aColor;
     self.renderColor        = aColor;
     self.showPosition       = ccpAdd(aShowPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));

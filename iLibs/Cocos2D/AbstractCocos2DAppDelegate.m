@@ -62,6 +62,10 @@
 	// Init the window.
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
+    if ([[CCDirector sharedDirector] enableRetinaDisplay:YES])
+        inf(@"Retina enabled.");
+    else
+        inf(@"Retina not enabled.");
 #if DEBUG
     [CCDirector sharedDirector].displayFPS          = YES;
 #endif

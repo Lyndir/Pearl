@@ -38,6 +38,7 @@
     CGPoint                                                 _backgroundOffset;
 }
 
+@property (nonatomic, readonly, assign) BOOL                pushed;
 @property (nonatomic, readwrite, retain) CCMenuItem         *backButton;
 @property (nonatomic, readwrite, retain) CCMenuItem         *nextButton;
 @property (nonatomic, readwrite) BOOL                       fadeNextEntry;
@@ -51,5 +52,8 @@
 
 - (void)ready;
 - (void)gone;
+
+- (void)enterAction;
+- (void)dismissAction;
 
 @end

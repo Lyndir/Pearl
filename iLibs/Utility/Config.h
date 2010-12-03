@@ -26,14 +26,13 @@
 
 #define cMaxGameScope           1024
 
-#if DEBUG && 0
+#if DEBUG
 #define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1 from:basename(__FILE__) :__LINE__]
 #else
 #define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1]
 #endif
 
-#if DEBUG && 0
-
+#if DEBUG
 #define gameRandomFor(scope)    [[Config get] gameRandom:scope from:basename(__FILE__) :__LINE__]
 #else
 #define gameRandomFor(scope)    [[Config get] gameRandom:scope]

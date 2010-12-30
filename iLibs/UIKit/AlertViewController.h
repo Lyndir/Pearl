@@ -76,15 +76,22 @@
 + (void)showNotice:(NSString *)message backButton:(BOOL)backButton;
 
 /**
- * Create an alert view controller which shows a given error message using a give dialog title.
+ * Create an alert view controller which shows a given message using a give dialog title.
  */
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title;
 
 /**
- * Create an alert view controller which shows a given error message using a give dialog title and allows you to hide the back button.
+ * Create an alert view controller which shows a given message with two buttons.
  */
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton;
 
+/**
+ * Create an alert view controller which shows a given message with two buttons and a callback for the second.
+ */
++ (void)showMessage:(NSString *)message withTitle:(NSString *)title
+         backString:(NSString *)backString acceptString:(NSString *)acceptString
+           callback:(id)target :(SEL)selector;
+    
 /**
  * Create an alert view controller which shows a given error message using a give dialog title
  * and allows you to specify the text to use on the back and accept buttons.

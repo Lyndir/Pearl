@@ -92,10 +92,17 @@ static AlertViewController *currentAlert = nil;
 
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title
          backString:(NSString *)backString acceptString:(NSString *)acceptString {
+
+    [self showMessage:message withTitle:title backString:backString acceptString:acceptString callback:nil :nil];
+}
+
++ (void)showMessage:(NSString *)message withTitle:(NSString *)title
+         backString:(NSString *)backString acceptString:(NSString *)acceptString
+           callback:(id)target :(SEL)selector {
     
     AlertViewController *alert = [[AlertViewController alloc] initWithTitle:title message:message
                                                                  backString:backString acceptString:acceptString
-                                                                   callback:nil :nil];
+                                                                   callback:target :selector];
     [alert showAlert];
     [alert release];
 }

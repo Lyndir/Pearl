@@ -63,7 +63,7 @@
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
 #if DEBUG
-    [CCDirector sharedDirector].displayFPS          = YES;
+    //[CCDirector sharedDirector].displayFPS          = YES;
 #endif
 	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];

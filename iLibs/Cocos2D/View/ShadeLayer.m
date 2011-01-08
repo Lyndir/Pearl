@@ -68,13 +68,9 @@
     ccColor4B shadeColor            = ccc4l([[Config get].shadeColor longValue]);
     self.opacity                    = shadeColor.a;
     self.color                      = ccc4to3(shadeColor);
-    
-    self.backButton                 = [MenuItemSymbolic itemFromString:@"   ◃   "
-                                                                target:self
-                                                              selector:@selector(_back:)];
-    self.nextButton                 = [MenuItemSymbolic itemFromString:@"   ▹   "
-                                                                target:self
-                                                              selector:@selector(_next:)];
+
+    [self setBackButton:nil];
+    [self setNextButton:nil];
     self.backMenu = [CCMenu menuWithItems:self.backButton, nil];
     self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
@@ -84,6 +80,7 @@
     self.nextMenu.position = ccp(self.contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
                             [[Config get].fontSize unsignedIntValue] * 1.5f);
     [self.nextMenu alignItemsHorizontally];
+
     [self addChild:self.backMenu z:9];
     [self addChild:self.nextMenu z:9];
 
@@ -101,8 +98,11 @@
     
     [_backButton release];
     _backButton = [aBackButton retain];
-    if (!self.backButton)
-        return;
+    if (!self.backButton) {
+        self.backButton = [MenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)];
+        self.backMenu.visible = self.backInvocation != nil;
+    } else
+        self.backMenu.visible = YES;
     
     [self.backMenu addChild:self.backButton];
     [self.backMenu alignItemsHorizontally];
@@ -129,9 +129,12 @@
 
     [_nextButton release];
     _nextButton = [aNextButton retain];
-    if (!self.nextButton)
-        return;
-
+    if (!self.nextButton) {
+        self.nextButton = [MenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)];
+        self.nextMenu.visible = self.backInvocation != nil;
+    } else
+        self.nextMenu.visible = YES;
+    
     [self.nextMenu addChild:self.nextButton];
     [self.nextMenu alignItemsHorizontally];
 }

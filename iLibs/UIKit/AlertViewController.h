@@ -71,9 +71,19 @@
 + (void)showError:(NSString *)message backButton:(BOOL)backButton;
 
 /**
+ * Create an alert view controller which shows a given error message.
+ */
++ (void)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
+
+/**
  * Create an alert view controller which shows a given notice message.
  */
-+ (void)showNotice:(NSString *)message backButton:(BOOL)backButton;
++ (void)showNotice:(NSString *)message;
+
+/**
+ * Create an alert view controller which shows a given notice message.
+ */
++ (void)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
 
 /**
  * Create an alert view controller which shows a given message using a give dialog title.
@@ -83,7 +93,7 @@
 /**
  * Create an alert view controller which shows a given message with two buttons.
  */
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton;
++ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
 
 /**
  * Create an alert view controller which shows a given message with two buttons and a callback for the second.

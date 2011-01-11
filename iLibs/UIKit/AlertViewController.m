@@ -66,27 +66,38 @@ static AlertViewController *currentAlert = nil;
 
 + (void)showError:(NSString *)message backButton:(BOOL)backButton {
     
-    [AlertViewController showMessage:message withTitle:l(@"global.error") backButton:backButton];
+    [self showError:message backButton:backButton abortButton:YES];
+}
+
++ (void)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
+    
+    [AlertViewController showMessage:message withTitle:l(@"global.error") backButton:backButton abortButton:abortButton];
 }
 
 
-+ (void)showNotice:(NSString *)message backButton:(BOOL)backButton {
++ (void)showNotice:(NSString *)message {
     
-    [AlertViewController showMessage:message withTitle:l(@"global.notice") backButton:backButton];
+    [self showNotice:message backButton:YES abortButton:NO];
+}
+
+
++ (void)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
+    
+    [AlertViewController showMessage:message withTitle:l(@"global.notice") backButton:backButton abortButton:abortButton];
 }
 
 
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title {
 
-    [self showMessage:message withTitle:title backButton:YES];
+    [self showMessage:message withTitle:title backButton:YES abortButton:NO];
 }
 
 
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton {
++ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
     [self showMessage:message withTitle:title
            backString:backButton? l(@"global.button.back"): nil
-         acceptString:backButton? l(@"global.button.abort"): l(@"global.button.retry")];
+         acceptString:abortButton? (backButton? l(@"global.button.abort"): l(@"global.button.retry")): nil];
 }
 
 

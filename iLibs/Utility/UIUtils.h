@@ -25,7 +25,15 @@
  *
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
  */
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(NSArray *)ignoredSubviews;
++ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
+
+/**
+ * Automatically determines and sets the content size of the given scroll view.
+ * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
+ *
+ * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ */
++ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
 
 /**
  * Add a red box view to the given view's parent that tracks the given view's bounds.

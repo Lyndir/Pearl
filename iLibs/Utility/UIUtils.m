@@ -10,6 +10,7 @@
 #import "Logger.h"
 #import "AbstractAppDelegate.h"
 #import "BoxView.h"
+#import "ObjectUtils.h"
 
 
 @interface UIUtils ()
@@ -31,23 +32,35 @@ static CGRect       keyboardScrollOriginalFrame;
     [self autoSizeContent:scrollView ignoreSubviews:nil];
 }
 
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(NSArray *)ignoredSubviews {
++ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... {
+
+    NSMutableArray *ignoredSubviewsArray = [NSMutableArray array];
+    ListInto(ignoredSubviewsArray, ignoredSubviews);
+
+    [self autoSizeContent:scrollView ignoreSubviewsArray:ignoredSubviewsArray];
+}
+
++ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
 
     // === Step 1: Calculate the UIScrollView's contentSize.
     // Determine content frame.
     CGRect contentRect = CGRectNull;
     for (UIView *subview in scrollView.subviews)
-        if (subview.alpha && ![ignoredSubviews containsObject:subview]) {
+        if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview]) {
             if (CGRectIsNull(contentRect))
                 contentRect = subview.frame;
             else
                 contentRect = CGRectUnion(contentRect, subview.frame);
         }
+    if (CGRectEqualToRect(contentRect, CGRectNull))
+        // No subviews inside the scroll area.
+        contentRect = CGRectZero;
     
-    // Add right/bottom padding by adding left/top offset to the size.
+    // Add right/bottom padding by adding left/top offset to the size (but no more than 20px).
+    CGSize originPadding = CGSizeMake(fmaxf(0, contentRect.origin.x), fmaxf(0, contentRect.origin.y));
     CGRect paddedRect = (CGRect){CGPointZero,
-        CGSizeMake(contentRect.size.width   + fmaxf(0, contentRect.origin.x) * 2,
-                   contentRect.size.height  + fmaxf(0, contentRect.origin.y) * 2)};
+        CGSizeMake(contentRect.size.width   + originPadding.width + fminf(originPadding.width, 20),
+                   contentRect.size.height  + originPadding.height + fminf(originPadding.height, 20))};
     
     // Apply rect to scrollView's content definition.
     scrollView.contentOffset = CGPointZero;

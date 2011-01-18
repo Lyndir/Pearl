@@ -20,10 +20,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
+    
     [self updateWebOrientation];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    [self updateWebOrientation];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     
     [self updateWebOrientation];
 }

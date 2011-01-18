@@ -206,7 +206,7 @@
     if (currentTrackIndex == NSNotFound)
         currentTrackIndex = -1;
 
-    NSUInteger realTracks = ([self.tracks count] - 3);
+    NSUInteger realTracks = [self.tracks count] - 3;
     return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
 - (NSNumber *)music {

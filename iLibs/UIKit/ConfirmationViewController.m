@@ -77,12 +77,6 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    
-    [super didReceiveMemoryWarning];
-}
-
-
 - (void)dealloc {
     
     [button release];

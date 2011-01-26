@@ -6,4 +6,4 @@
 	url = git://github.com/pokeb/asi-http-request.git
 [submodule "External/TouchJSON"]
 	path = External/TouchJSON
-	url = git://github.com/schwa/TouchJSON.git
+	url = git://github.com/TouchCode/TouchJSON.git

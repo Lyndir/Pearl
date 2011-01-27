@@ -228,7 +228,7 @@
     va_list args;
     va_start(args, key);
     for(NSString *nextKey = key; nextKey; nextKey = va_arg(args, NSString*)) {
-        id value = [result isKindOfClass:[NSDictionary class]]? [result objectForKey:nextKey]: nil;
+        id value = [result isKindOfClass:[NSDictionary class]]? [(NSDictionary *)result objectForKey:nextKey]: nil;
         if (value == nil || value == [NSNull null]) {
             if (popupOnError)
                 [AlertViewController showError:l(@"error.response.invalid")

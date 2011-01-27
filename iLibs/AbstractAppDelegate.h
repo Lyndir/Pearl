@@ -33,7 +33,6 @@
 @property (nonatomic, readwrite, retain) IBOutlet UIWindow      *window;
 
 - (void)preSetup;
-- (void)setup;
 
 - (void)didUpdateConfigForKey:(SEL)configKey;
 - (void)cleanup;

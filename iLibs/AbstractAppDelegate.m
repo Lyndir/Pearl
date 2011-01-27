@@ -35,7 +35,7 @@
 @synthesize window = _window;
 
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Log application details.
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
@@ -62,8 +62,7 @@
     // Start the background music.
     [self preSetup];
     
-    // Start the application.
-    [self setup];
+    return NO;
 }
 
 
@@ -80,12 +79,6 @@
         self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
         self.window.rootViewController = [[RootViewController new] autorelease];
     }
-}
-
-
-- (void)setup {
-    
-    [NSException raise:NSInternalInconsistencyException format:@"Override me!"]; 
 }
 
 

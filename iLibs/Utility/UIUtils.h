@@ -63,6 +63,12 @@
 + (UIView *)findFirstResonderIn:(UIView *)view;
 
 /**
+ * Make the given views dismissable by shading the rest of the window to dark when the view becomes the first responder, and resigning the view's first responder status when the shaded area is touched.
+ */
++ (void)makeDismissable:(UIView *)views, ... NS_REQUIRES_NIL_TERMINATION;
++ (void)makeDismissableArray:(NSArray *)respondersArray;
+
+/**
  * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField.
  * The copy is added as a child of the given view's superview.
  * @return An owned reference to a new view that has all supported properties of the given view copied.

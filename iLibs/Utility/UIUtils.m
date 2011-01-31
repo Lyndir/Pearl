@@ -23,9 +23,10 @@
 
 @implementation UIUtils
 
-static UIScrollView *keyboardScrollView, *keyboardActiveScrollView;
-static CGPoint      keyboardScrollOriginalOffset;
-static CGRect       keyboardScrollOriginalFrame;
+static UIScrollView     *keyboardScrollView, *keyboardActiveScrollView;
+static CGPoint          keyboardScrollOriginalOffset;
+static CGRect           keyboardScrollOriginalFrame;
+static NSMutableSet     *dismissableResponders;
 
 + (void)autoSizeContent:(UIScrollView *)scrollView {
     
@@ -113,6 +114,22 @@ static CGRect       keyboardScrollOriginalFrame;
     }
     
     return nil;
+}
+
++ (void)makeDismissable:(UIView *)views, ... {
+    
+    NSMutableArray *viewsArray = [NSMutableArray array];
+    ListInto(viewsArray, views);
+    
+    [self makeDismissableArray:viewsArray];
+}
+
++ (void)makeDismissableArray:(NSArray *)viewsArray {
+
+    if (!dismissableResponders)
+        dismissableResponders = [NSMutableSet set];
+    
+    [dismissableResponders addObjectsFromArray:viewsArray];
 }
 
 + (void)keyboardWillShow:(NSNotification *)n {

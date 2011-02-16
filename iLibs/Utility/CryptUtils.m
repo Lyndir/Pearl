@@ -9,7 +9,6 @@
 #import "CryptUtils.h"
 
 #import <CommonCrypto/CommonDigest.h>
-#import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonHMAC.h>
 
 #define kCipherAlgorithm    kCCAlgorithmAES128
@@ -26,146 +25,98 @@
 
 @end
 
+@implementation NSString (CryptUtils)
 
-@interface CryptUtils ()
++ (NSString *)hexStringWithData:(NSData *)data {
+    
+    NSMutableString *hashString = [NSMutableString stringWithCapacity:data.length * 2];
+    for (NSUInteger i = 0; i < data.length; ++i)
+        [hashString appendFormat:@"%02hhx", ((char *)data.bytes)[i]];
+    
+    return hashString;
+}
 
-+ (NSData *)encrypt:(NSData *)plainText key:(NSData *)aSymmetricKey
-            options:(CCOptions *) options;
+- (NSData *)md5Data {
+    
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] md5];
+}
 
-+ (NSData *)decrypt:(NSData *)plainText key:(NSData *)aSymmetricKey
-            options:(CCOptions *) options;
+- (NSString *)md5 {
 
-+ (NSData *)doCipher:(NSData *)data key:(NSData *)aSymmetricKey
-             context:(CCOperation)encryptOrDecrypt options:(CCOptions *) options;
+    return [NSString hexStringWithData:[self md5Data]];
+}
 
+- (NSData *)sha1Data {
+    
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] sha1];
+}
 
+- (NSString *)sha1 {
+    
+    return [NSString hexStringWithData:[self sha1Data]];
+}
+
+- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+    
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithKey:symmetricKey usePadding:usePadding];
+}
 
 @end
 
+@implementation NSData (CryptUtils)
 
-@implementation CryptUtils
-
-
-
-
-+ (NSString *)md5:(NSString *)string {
-
-    NSData *data = [CryptUtils md5Data:string];
-    NSMutableString *md5String = [NSMutableString stringWithCapacity:data.length];
+- (NSData *)md5 {
     
-    for (NSUInteger i = 0; i < data.length; ++i)
-        [md5String appendFormat:@"%02hhx", ((char *)data.bytes)[i]];
-    
-    return md5String;
-}
-
-
-+ (NSData *)md5Data:(NSString *)string {
-    
-    const char *cString = [string UTF8String];
 	unsigned char result[CC_MD5_DIGEST_LENGTH];
-	CC_MD5(cString, strlen(cString), result);
-
-    return [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
+	CC_MD5(self.bytes, self.length, result);
+    
+    return [NSData dataWithBytes:result length:sizeof(result)];
 }
 
-
-+ (NSString *)sha1:(NSString *)string {
+- (NSData *)sha1 {
     
-    NSData *data = [CryptUtils sha1Data:string];
-    NSMutableString *sha1String = [NSMutableString stringWithCapacity:data.length];
-    
-    for (NSUInteger i = 0; i < data.length; ++i)
-        [sha1String appendFormat:@"%02hhx", ((char *)data.bytes)[i]];
-    
-    return sha1String;
-}
-
-
-+ (NSData *)sha1Data:(NSString *)string {
-    
-    const char *cString = [string UTF8String];
 	unsigned char result[CC_SHA1_DIGEST_LENGTH];
-	CC_SHA1(cString, strlen(cString), result);
+	CC_SHA1(self.bytes, self.length, result);
     
-    return [NSData dataWithBytes:result length:CC_SHA1_DIGEST_LENGTH];
+    return [NSData dataWithBytes:result length:sizeof(result)];
 }
 
-
-+ (NSData *)xor:(NSData *)data1 :(NSData *)data2 {
+- (NSData *)xor:(NSData *)otherData {
     
-    if (data1.length != data2.length)
-        [NSException raise:NSInvalidArgumentException format:@"Input data must have the same length for an XOR operation to work."];
+    if (self.length != otherData.length)
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:@"Input data must have the same length for an XOR operation to work." userInfo:nil];
     
-    NSData *result = [NSData dataWithData:data1];
-    for (NSUInteger b = 0; b < result.length; ++b)
-        ((char *)result.bytes)[b] ^= ((char *)data2.bytes)[b];
+    NSData *xorData = [self copy];
+    for (NSUInteger b = 0; b < xorData.length; ++b)
+        ((char *)xorData.bytes)[b] ^= ((char *)otherData.bytes)[b];
     
-    return result;
+    return xorData;
 }
 
-
-+ (NSData *)encryptString:(NSString *)plainText
-               withString:(NSString *)key
-               usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
     
     CCOptions options = kCCOptionECBMode;
     if (usePadding)
         options |= kCCOptionPKCS7Padding;
     
-    return [CryptUtils encrypt:[plainText dataUsingEncoding:NSUTF8StringEncoding]
-                        key:[CryptUtils sha1Data:key]
-                    options:& options];
+    return [self doCipher:kCCEncrypt withKey:symmetricKey options:&options];
 }
 
-
-+ (NSData *)encryptData:(NSData *)plainText
-                withKey:(NSData *)key
-             usePadding:(BOOL)usePadding {
+- (NSData *)decryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
     
     CCOptions options = kCCOptionECBMode;
     if (usePadding)
         options |= kCCOptionPKCS7Padding;
     
-    return [CryptUtils encrypt:plainText key:key
-                    options:& options];
+    return [self doCipher:kCCDecrypt withKey:symmetricKey options:&options];
 }
 
-+ (NSData *)decryptData:(NSData *)encryptedData
-                withKey:(NSData *)key
-             usePadding:(BOOL)usePadding {
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withKey:(NSData *)symmetricKey options:(CCOptions *)options {
     
-    CCOptions options = kCCOptionECBMode;
-    if (usePadding)
-        options |= kCCOptionPKCS7Padding;
-    
-    return [CryptUtils decrypt:encryptedData key:key
-                    options:& options];
-}
-
-
-+ (NSData *)encrypt:(NSData *)plainText key:(NSData *)aSymmetricKey
-            options:(CCOptions *) options {
-    
-    return [CryptUtils doCipher:plainText key:aSymmetricKey
-                     context:kCCEncrypt options: options];
-}
-
-
-+ (NSData *)decrypt:(NSData *)plainText key:(NSData *)aSymmetricKey
-            options:(CCOptions *) options {
-    
-    return [CryptUtils doCipher:plainText key:aSymmetricKey
-                     context:kCCDecrypt options: options];
-}
-
-
-+ (NSData *)doCipher:(NSData *)data key:(NSData *)aSymmetricKey
-             context:(CCOperation)encryptOrDecrypt options:(CCOptions *)options {
-    
-    if (aSymmetricKey.length < kCipherKeySize)
+    if (symmetricKey.length < kCipherKeySize)
         [NSException raise:NSInvalidArgumentException
-                    format:@"Key is too small for the cipher size (%d < %d)", aSymmetricKey.length, kCipherKeySize];
+                    format:@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, kCipherKeySize];
     
     // Result buffer. (FIXME)
     void *buffer = calloc(1000, sizeof(uint8_t));
@@ -173,8 +124,8 @@
     
     // Encrypt / Decrypt
     CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, kCipherAlgorithm, *options, 
-                                       aSymmetricKey.bytes, aSymmetricKey.length,
-                                       nil, data.bytes, data.length,
+                                       symmetricKey.bytes, symmetricKey.length,
+                                       nil, self.bytes, self.length,
                                        buffer, sizeof(uint8_t) * 1000, &movedBytes);
     if (ccStatus == kCCDecodeError)
         [InvalidKeyException raise];
@@ -182,8 +133,10 @@
         [NSException raise:NSInternalInconsistencyException
                     format:@"Problem during cryption; ccStatus == %d.", ccStatus];
     
-    return [NSData dataWithBytes:buffer length:movedBytes];
+    NSData *result = [NSData dataWithBytes:buffer length:movedBytes];
+    free(buffer);
+    
+    return result;
 }
-
 
 @end

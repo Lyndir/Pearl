@@ -62,8 +62,14 @@
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.
  *
+ * @param responseData
+ *        The JSON data that should be validated and parsed into an object.
+ * @param popupOnError
+ *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
+ * @param backOnError
+ *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
  * @param requires
- *        A list of keys that are required to be present in the result object. Note: This obviously only works if the result is an object!
+ *        A list of keys that are required to be present in the result object.
  * @return  An object reflecting the JSON data structure contained within the response's result or nil if the response isn't valid.
  */
 - (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError

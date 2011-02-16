@@ -17,10 +17,14 @@
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
+#define CODE_SUCCESS                    0
+
+#define REQUEST_KEY_VERSION             @"version"
+
 #define RESULT_KEY_CODE                 @"code"
 #define RESULT_KEY_DESC_USER            @"userDescription"
-#define RESULT_KEY_DESC_TECHNICAL       @"technicalDescription"
 #define RESULT_KEY_DESC_ARGUMENT        @"userDescriptionArguments"
+#define RESULT_KEY_DESC_TECHNICAL       @"technicalDescription"
 #define RESULT_KEY_CLIENT_OUTDATED      @"outdated"
 #define RESULT_KEY_RESULT               @"result"
 
@@ -86,9 +90,13 @@
     
     for (NSString *key in [parameters allKeys]) {
         [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-         [dummyRequest encodeURL:key], [dummyRequest encodeURL:[[parameters objectForKey:key] description]]];
+         [dummyRequest encodeURL:key],
+         [dummyRequest encodeURL:[[parameters objectForKey:key] description]]];
         hasQuery = YES;
     }
+    [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
+     [dummyRequest encodeURL:REQUEST_KEY_VERSION],
+     [dummyRequest encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -120,7 +128,8 @@
     [request setDelegate:self];
     for (NSString *key in [parameters allKeys])
         [request setPostValue:[[parameters objectForKey:key] description] forKey:key];
-    
+    [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
+
     // Build the callback invocation.
     NSMethodSignature *sig = [[target class] instanceMethodSignatureForSelector:callback];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -168,7 +177,7 @@
     if (resultCode == nil || resultCode == (id)[NSNull null]) {
         if (popupOnError)
             [AlertViewController showError:l(@"error.response.invalid")
-                                backButton:NO];
+                                backButton:backOnError];
         return nil;
     }
     
@@ -176,23 +185,23 @@
     NSNumber *outdatedValue = [responseDictionary objectForKey:RESULT_KEY_CLIENT_OUTDATED];
     BOOL outdated = ((id)outdatedValue != [NSNull null] && [outdatedValue boolValue]);
     if (outdated) {
-        if ([resultCode intValue] != 0)
-            // Required upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"global.error")
-                                                 message:l(@"error.response.clientOutdated.required")
-                                              backString:l(@"global.button.back")
-                                            acceptString:l(@"global.button.upgrade")
-                                                callback:self :@selector(upgrade:)] showAlert] release];
-        else
+        if ([resultCode intValue] == CODE_SUCCESS)
             // Optional upgrade.
             [[[[AlertViewController alloc] initWithTitle:l(@"global.notice")
                                                  message:l(@"error.response.clientOutdated.optional")
                                               backString:l(@"global.button.back")
                                             acceptString:l(@"global.button.upgrade")
                                                 callback:self :@selector(upgrade:)] showAlert] release];
+        else
+            // Required upgrade.
+            [[[[AlertViewController alloc] initWithTitle:l(@"global.error")
+                                                 message:l(@"error.response.clientOutdated.required")
+                                              backString:l(@"global.button.back")
+                                            acceptString:l(@"global.button.upgrade")
+                                                callback:self :@selector(upgrade:)] showAlert] release];
     }
     
-    if ([resultCode intValue] != 0) {
+    if ([resultCode intValue] != CODE_SUCCESS) {
         [[Logger get] err:@"Error: WS request failed: Code %d: %@",
          [resultCode intValue], [responseDictionary objectForKey:RESULT_KEY_DESC_TECHNICAL]];
         

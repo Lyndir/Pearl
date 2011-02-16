@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import <CommonCrypto/CommonCryptor.h>
+#import "NSData_MBBase64.h"
+
 /**
  * An exception that indicates decryption was attempted with an invalid key.
  */
@@ -17,44 +20,38 @@
 
 @end
 
+@interface NSString (CryptUtils)
 
-/**
- * Generic convenience utilities.
- *
- * This class provides a collection of utilities for performing generic tasks.  It is stateless and only contains class methods.
- */
-@interface CryptUtils : NSObject {
+/** Create a string object by formatting the given data's bytes as hexadecimal. */
++ (NSString *)hexStringWithData:(NSData *)data;
 
-}
+/** Generate an MD5 hash for the string. */
+- (NSData *)md5Data;
+/** Generate a hexadecimal encoded MD5 hash for the string. */
+- (NSString *)md5;
 
-/** Generate a hexadecimal encoded MD5 hash for the given string. */
-+ (NSString *)md5:(NSString *)string;
+/** Generate a SHA-1 hash for the string. */
+- (NSData *)sha1Data;
+/** Generate a hexadecimal encoded SHA-1 hash for the string. */
+- (NSString *)sha1;
 
-/** Generate an NSData object with the MD5 hash for the given string. */
-+ (NSData *)md5Data:(NSString *)string;
+/** Encrypt this plain-text string object with the given key. */
+- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
 
-/** Generate a hexadecimal encoded SHA1 hash for the given string. */
-+ (NSString *)sha1:(NSString *)string;
+@end
 
-/** Generate an NSData object with the SHA1 hash for the given string. */
-+ (NSData *)sha1Data:(NSString *)string;
+@interface NSData (CryptUtils)
 
-/** Generate a data set whose bytes are the XOR operation between the bytes of the two input datasets. */
-+ (NSData *)xor:(NSData *)data1 :(NSData *)data2;
+- (NSData *)md5;
+- (NSData *)sha1;
 
-/** Encrypt a string of plain text using the MD5 hash of the given encryption key string. */
-+ (NSData *)encryptString:(NSString *)plainText
-               withString:(NSString *)key
-               usePadding:(BOOL)usePadding;
+/** Generate a data set whose bytes are the XOR operation between the bytes of this data object and those of the given otherData. */
+- (NSData *)xor:(NSData *)otherData;
 
-/** Encrypt some plain text using a given key. */
-+ (NSData *)encryptData:(NSData *)plainText
-                withKey:(NSData *)key
-             usePadding:(BOOL)usePadding;
-
-/** Decrypt some encrypted text using a given key. */
-+ (NSData *)decryptData:(NSData *)encryptedData
-                withKey:(NSData *)key
-             usePadding:(BOOL)usePadding;
+/** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
+- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+/** Decrypt this encrypted-data object using the given key, yielding a plain-data object. */
+- (NSData *)decryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withKey:(NSData *)symmetricKey options:(CCOptions *)options;
 
 @end

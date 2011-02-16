@@ -42,7 +42,7 @@
 }
 
 - (NSString *)md5 {
-
+    
     return [NSString hexStringWithData:[self md5Data]];
 }
 
@@ -123,20 +123,22 @@
     size_t movedBytes;
     
     // Encrypt / Decrypt
-    CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, kCipherAlgorithm, *options, 
-                                       symmetricKey.bytes, symmetricKey.length,
-                                       nil, self.bytes, self.length,
-                                       buffer, sizeof(uint8_t) * 1000, &movedBytes);
-    if (ccStatus == kCCDecodeError)
-        [InvalidKeyException raise];
-    if (ccStatus != kCCSuccess)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Problem during cryption; ccStatus == %d.", ccStatus];
-    
-    NSData *result = [NSData dataWithBytes:buffer length:movedBytes];
-    free(buffer);
-    
-    return result;
+    @try {
+        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, kCipherAlgorithm, *options, 
+                                           symmetricKey.bytes, symmetricKey.length,
+                                           nil, self.bytes, self.length,
+                                           buffer, sizeof(uint8_t) * 1000, &movedBytes);
+        if (ccStatus == kCCDecodeError)
+            return nil;
+        if (ccStatus != kCCSuccess)
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"Problem during cryption; ccStatus == %d.", ccStatus];
+        
+        return [NSData dataWithBytes:buffer length:movedBytes];
+    }
+    @finally {
+        free(buffer);
+    }
 }
 
 @end

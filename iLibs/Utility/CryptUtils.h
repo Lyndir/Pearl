@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <CommonCrypto/CommonCryptor.h>
-#import "NSData_MBBase64.h"
+
 
 /**
  * An exception that indicates decryption was attempted with an invalid key.

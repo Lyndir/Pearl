@@ -21,9 +21,6 @@
 
 @interface NSString (CryptUtils)
 
-/** Create a string object by formatting the given data's bytes as hexadecimal. */
-+ (NSString *)hexStringWithData:(NSData *)data;
-
 /** Generate an MD5 hash for the string. */
 - (NSData *)md5Data;
 /** Generate a hexadecimal encoded MD5 hash for the string. */
@@ -44,13 +41,34 @@
 - (NSData *)md5;
 - (NSData *)sha1;
 
+/** Create a string object by formatting the bytes as hexadecimal. */
+- (NSString *)hex;
+
 /** Generate a data set whose bytes are the XOR operation between the bytes of this data object and those of the given otherData. */
 - (NSData *)xor:(NSData *)otherData;
 
 /** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
 - (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+
 /** Decrypt this encrypted-data object using the given key, yielding a plain-data object. */
 - (NSData *)decryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+
 - (NSData *)doCipher:(CCOperation)encryptOrDecrypt withKey:(NSData *)symmetricKey options:(CCOptions *)options;
+
+- (NSData *)signWithKeyFromTag:(NSString *)tag;
+
+@end
+
+@interface CryptUtils : NSObject {
+@private
+
+}
+
++ (NSString *)displayOTPWithKey:(NSData *)key factor:(NSData *)factor
+                      otpLength:(NSUInteger)otpLength otpAlpha:(BOOL)otpAlpha;
+
++ (NSData *)generateKeyPairWithTag:(NSString *)tag;
+
++ (NSData *)asn1EncodePublicKey:(NSData *)publicKey;
 
 @end

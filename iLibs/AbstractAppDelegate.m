@@ -54,10 +54,10 @@
     if (build && ![build isEqualToString:version])
         version = [NSString stringWithFormat:@"%@ (%@)", version, build];
     
-    [[Logger get] inf:@"%@ v%@", name, version];
+    inf(@"%@ v%@", name, version);
     if (copyright)
-        [[Logger get] inf:@"%@", copyright];
-    [[Logger get] inf:@"==================================="];
+        inf(@"%@", copyright);
+    inf(@"===================================");
 	
     // Start the background music.
     [self preSetup];

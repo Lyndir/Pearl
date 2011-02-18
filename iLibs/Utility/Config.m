@@ -158,8 +158,10 @@
         
         id value = nil;
         [anInvocation getArgument:&value atIndex:2];
-        
         dbg(@"Config Set %@ = %@", selector, value);
+
+        if ([value conformsToProtocol:@protocol(NSCoding)])
+            value = [NSKeyedArchiver archivedDataWithRootObject:value];
         [self.defaults setObject:value forKey:selector];
         
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
@@ -170,6 +172,9 @@
     
     else {
         id value = [self.defaults objectForKey:selector];
+        if ([value isKindOfClass:[NSData class]])
+            value = [NSKeyedUnarchiver unarchiveObjectWithData:value];
+
         //dbg(@"Config Get %@ = %@", selector, value);
         [anInvocation setReturnValue:&value];
     }
@@ -288,8 +293,7 @@
 
     NSUInteger gr = [self gameRandom:scope];
     if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
-        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line,
-         scope, ++_gameRandomCounters[scope], gr];
+        dbg(@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr);
     
     return gr;
 }

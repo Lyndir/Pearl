@@ -18,6 +18,8 @@
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
 #define CODE_SUCCESS                    0
+#define CODE_FAILURE_GENERIC            -1
+#define CODE_FAILURE_UPDATE_REQUIRED    -2
 
 #define REQUEST_KEY_VERSION             @"version"
 
@@ -70,20 +72,20 @@
 
 
 - (NSURL *)serverURL {
-
+    
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"You must override this method." userInfo:nil];
 }
 
 - (void)upgrade:(NSNumber *)button {
-
+    
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"You must override this method." userInfo:nil];
 }
 
 - (id)getRequestFromDictionary:(NSDictionary *)parameters
                     withTarget:(id)target callback:(SEL)callback {
-
-    [[Logger get] inf:@"Making WS request with parameters:\n%@", parameters];
-
+    
+    inf(@"Out:\n%@", parameters);
+    
     NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
     BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
     ASIFormDataRequest *dummyRequest = [[ASIFormDataRequest new] autorelease];
@@ -107,20 +109,22 @@
         
         if ([dummyRequest isCancelled])
             return;
-
+        
         if (error)
-            [[Logger get] err:@"WS request failed: %@", error];
-
+            err(@"Failed: %@", error);
+        else
+            inf(@"In:\n%@", [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+        
         [target performSelectorOnMainThread:callback withObject:responseData waitUntilDone:NO];
     });
-
+    
     return dummyRequest;
 }
 
 - (id)postRequestFromDictionary:(NSDictionary *)parameters
                      withTarget:(id)target callback:(SEL)callback {
     
-    [[Logger get] inf:@"Making WS request with parameters:\n%@", parameters];
+    inf(@"Out:\n%@", parameters);
     
     // Build the request.
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
@@ -129,7 +133,7 @@
     for (NSString *key in [parameters allKeys])
         [request setPostValue:[[parameters objectForKey:key] description] forKey:key];
     [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
-
+    
     // Build the callback invocation.
     NSMethodSignature *sig = [[target class] instanceMethodSignatureForSelector:callback];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -166,7 +170,8 @@
     id jsonError = nil;
     NSDictionary *responseDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
     if (jsonError != nil) {
-        [[Logger get] err:@"Error: JSON parsing failed: %@\n%@", jsonError, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]];
+        err(@"JSON: %@, for response:\n%@", jsonError,
+            [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
         if (popupOnError)
             [AlertViewController showConnectionErrorWithBackButton:backOnError];
         return nil;
@@ -185,47 +190,43 @@
     NSNumber *outdatedValue = [responseDictionary objectForKey:RESULT_KEY_CLIENT_OUTDATED];
     BOOL outdated = ((id)outdatedValue != [NSNull null] && [outdatedValue boolValue]);
     if (outdated) {
-        if ([resultCode intValue] == CODE_SUCCESS)
-            // Optional upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"global.notice")
-                                                 message:l(@"error.response.clientOutdated.optional")
-                                              backString:l(@"global.button.back")
-                                            acceptString:l(@"global.button.upgrade")
-                                                callback:self :@selector(upgrade:)] showAlert] release];
-        else
+        if ([resultCode intValue] == CODE_FAILURE_UPDATE_REQUIRED)
             // Required upgrade.
             [[[[AlertViewController alloc] initWithTitle:l(@"global.error")
                                                  message:l(@"error.response.clientOutdated.required")
                                               backString:l(@"global.button.back")
                                             acceptString:l(@"global.button.upgrade")
                                                 callback:self :@selector(upgrade:)] showAlert] release];
+        else if ([resultCode intValue] == CODE_SUCCESS)
+            // Optional upgrade.
+            [[[[AlertViewController alloc] initWithTitle:l(@"global.notice")
+                                                 message:l(@"error.response.clientOutdated.optional")
+                                              backString:l(@"global.button.back")
+                                            acceptString:l(@"global.button.upgrade")
+                                                callback:self :@selector(upgrade:)] showAlert] release];
     }
     
-    if ([resultCode intValue] != CODE_SUCCESS) {
-        [[Logger get] err:@"Error: WS request failed: Code %d: %@",
-         [resultCode intValue], [responseDictionary objectForKey:RESULT_KEY_DESC_TECHNICAL]];
+    if ([resultCode intValue] != CODE_SUCCESS && [resultCode intValue] != CODE_FAILURE_UPDATE_REQUIRED) {
+        err(@"Response Code %d:\n%@", [resultCode intValue],
+            [responseDictionary objectForKey:RESULT_KEY_DESC_TECHNICAL]);
         
-        if (!outdated) {
-            // If outdated, a message has already been shown.
-
-            NSString *errorMessage = [responseDictionary objectForKey:RESULT_KEY_DESC_USER];
-            if ((id)errorMessage != [NSNull null] && errorMessage.length) {
-                id errorArgument = nil;
-                NSUInteger a = 0;
-                NSMutableArray *errorArguments = [[NSMutableArray alloc] initWithCapacity:1];
-                while ((errorArgument = [responseDictionary objectForKey:[NSString stringWithFormat:@"%@%d",
-                                                                          RESULT_KEY_DESC_ARGUMENT, a++]])
-                       && errorArgument != [NSNull null])
-                    [errorArguments addObject:errorArgument];
-                
-                if (popupOnError)
-                    [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
-                                        backButton:backOnError];
-                [errorArguments release];
-            } else
-                if (popupOnError)
-                    [AlertViewController showConnectionErrorWithBackButton:backOnError];
-        }
+        NSString *errorMessage = [responseDictionary objectForKey:RESULT_KEY_DESC_USER];
+        if ((id)errorMessage != [NSNull null] && errorMessage.length) {
+            id errorArgument = nil;
+            NSUInteger a = 0;
+            NSMutableArray *errorArguments = [[NSMutableArray alloc] initWithCapacity:1];
+            while ((errorArgument = [responseDictionary objectForKey:[NSString stringWithFormat:@"%@%d",
+                                                                      RESULT_KEY_DESC_ARGUMENT, a++]])
+                   && errorArgument != [NSNull null])
+                [errorArguments addObject:errorArgument];
+            
+            if (popupOnError)
+                [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
+                                    backButton:backOnError];
+            [errorArguments release];
+        } else
+            if (popupOnError)
+                [AlertViewController showConnectionErrorWithBackButton:backOnError];
         
         return nil;
     }
@@ -261,7 +262,7 @@
         return;
     
     [request cancel];
-    [[Logger get] err:@"WS request aborted: %@", [request url]];
+    err(@"Aborted: %@", [request url]);
     
     [request release];
     [[invocation target] release];
@@ -278,7 +279,7 @@
         // Already handled.
         return;
     
-    [[Logger get] err:@"WS request failed: %@", [request error]];
+    err(@"Failed: %@", [request error]);
     
     id nilResponseData = nil;
     if ([[invocation methodSignature] numberOfArguments] > 2)
@@ -303,6 +304,8 @@
         return;
     
     NSData *responseData = [request responseData];
+    inf(@"In:\n%@", [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+    
     if ([[invocation methodSignature] numberOfArguments] > 2)
         [invocation setArgument:&responseData atIndex:2];
     if ([[invocation methodSignature] numberOfArguments] > 3)

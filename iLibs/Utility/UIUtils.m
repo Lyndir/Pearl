@@ -172,9 +172,12 @@ static NSMutableSet     *dismissableResponders;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^(void) {
+                         /*
                          dbg(@"showing keyboard for scrollView: %x", keyboardActiveScrollView);
                          dbg(@"    keyboardScrollNewOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
                          dbg(@"    keyboardScrollNewFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
+                          */
+                         
                          animatingScrollView.contentOffset    = keyboardScrollNewOffset;
                          animatingScrollView.frame            = keyboardScrollNewFrame;
                      } completion:nil];
@@ -194,9 +197,11 @@ static NSMutableSet     *dismissableResponders;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^(void) {
+                         /*
                          dbg(@"hiding keyboard for scrollView: %x", keyboardActiveScrollView);
                          dbg(@"    keyboardScrollOriginalOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
                          dbg(@"    keyboardScrollOriginalFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
+                          */
                          
                          animatingScrollView.contentOffset    = keyboardScrollNewOffset;
                          animatingScrollView.frame            = keyboardScrollNewFrame;

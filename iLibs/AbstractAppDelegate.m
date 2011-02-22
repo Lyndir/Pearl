@@ -29,6 +29,7 @@
 #import "Resettable.h"
 #import "AlertViewController.h"
 #import "RootViewController.h"
+#import "CryptUtils.h"
 
 
 @implementation AbstractAppDelegate
@@ -59,6 +60,9 @@
         inf(@"%@", copyright);
     inf(@"===================================");
 	
+    if ([[Config get].supportedNotifications unsignedIntegerValue])
+        [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+
     // Start the background music.
     [self preSetup];
     
@@ -100,6 +104,19 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [Config get].deviceToken = deviceToken;
+    [Config get].notificationsSupported = [NSNumber numberWithBool:YES];
+    [Config get].notificationsChecked = [NSNumber numberWithBool:YES];
+    
+    dbg(@"APN Device Token Hex: %@", [deviceToken hex]);
+}
+
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    
+    [Config get].notificationsSupported = [NSNumber numberWithBool:NO];
+    [Config get].notificationsChecked = [NSNumber numberWithBool:YES];
+    
+    wrn(@"Couldn't register with the APNs: %@", error);
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {

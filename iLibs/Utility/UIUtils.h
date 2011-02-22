@@ -36,6 +36,22 @@
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
 
 /**
+ * Calculate the bounds of the content of the given view by recursively iterating and checking the content bounds
+ * of its subviews, so long as it does not clip them.
+ *
+ * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ */
++ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
+
+/**
+ * Calculate the bounds of the content of the given view by recursively iterating and checking the content bounds
+ * of its subviews, so long as it does not clip them.
+ *
+ * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ */
++ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
+
+/**
  * Add a red box view to the given view's parent that tracks the given view's bounds.
  */
 + (void)showBoundingBoxForView:(UIView *)view;

@@ -45,7 +45,7 @@
 @synthesize defaults = _defaults;
 @synthesize resetTriggers = _resetTriggers;
 
-@dynamic firstRun, deviceToken;
+@dynamic firstRun, supportedNotifications, notificationsChecked, notificationsSupported, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
@@ -162,7 +162,7 @@
 
         if ([value conformsToProtocol:@protocol(NSCoding)])
             value = [NSKeyedArchiver archivedDataWithRootObject:value];
-        [self.defaults setObject:value forKey:selector];
+        [self.defaults setValue:value forKey:selector];
         
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
@@ -171,7 +171,7 @@
     }
     
     else {
-        id value = [self.defaults objectForKey:selector];
+        id value = [self.defaults valueForKey:selector];
         if ([value isKindOfClass:[NSData class]])
             value = [NSKeyedUnarchiver unarchiveObjectWithData:value];
 

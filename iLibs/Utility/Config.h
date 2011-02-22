@@ -40,6 +40,9 @@
 
 #define cFirstRun               NSStringFromSelector(@selector(firstRun))
 #define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
+#define cSupportedNotifications NSStringFromSelector(@selector(supportedNotifications))
+#define cNotificationsChecked   NSStringFromSelector(@selector(notificationsChecked))
+#define cNotificationsSupported NSStringFromSelector(@selector(notificationsSupported))
 
 #define cFontSize               NSStringFromSelector(@selector(fontSize))
 #define cLargeFontSize          NSStringFromSelector(@selector(largeFontSize))
@@ -75,6 +78,9 @@
 @property (nonatomic, readonly, retain) NSMutableDictionary *resetTriggers;
 
 @property (nonatomic, readwrite, retain) NSNumber           *firstRun;
+@property (nonatomic, readwrite, retain) NSNumber           *supportedNotifications;
+@property (nonatomic, readwrite, retain) NSNumber           *notificationsChecked;
+@property (nonatomic, readwrite, retain) NSNumber           *notificationsSupported;
 @property (nonatomic, readwrite, retain) NSData             *deviceToken;
 
 @property (nonatomic, readwrite, retain) NSNumber           *fontSize;

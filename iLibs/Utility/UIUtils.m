@@ -34,24 +34,27 @@ static NSMutableSet     *dismissableResponders;
 }
 
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... {
-
+    
     NSMutableArray *ignoredSubviewsArray = [NSMutableArray array];
     ListInto(ignoredSubviewsArray, ignoredSubviews);
-
+    
     [self autoSizeContent:scrollView ignoreSubviewsArray:ignoredSubviewsArray];
 }
 
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
-
+    
     // === Step 1: Calculate the UIScrollView's contentSize.
     // Determine content frame.
     CGRect contentRect = CGRectNull;
     for (UIView *subview in scrollView.subviews)
         if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview]) {
+            CGRect subviewContent = [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray];
+            subviewContent = [scrollView convertRect:subviewContent fromView:subview];
+            
             if (CGRectIsNull(contentRect))
-                contentRect = subview.frame;
+                contentRect = subviewContent;
             else
-                contentRect = CGRectUnion(contentRect, subview.frame);
+                contentRect = CGRectUnion(contentRect, subviewContent);
         }
     if (CGRectEqualToRect(contentRect, CGRectNull))
         // No subviews inside the scroll area.
@@ -66,7 +69,7 @@ static NSMutableSet     *dismissableResponders;
     // Apply rect to scrollView's content definition.
     scrollView.contentOffset = CGPointZero;
     scrollView.contentSize = paddedRect.size;
-
+    
     // === Step 2: Manage the scroll view on keyboard notifications.
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
@@ -79,8 +82,30 @@ static NSMutableSet     *dismissableResponders;
     keyboardScrollView = scrollView;
 }
 
-+ (void)showBoundingBoxForView:(UIView *)view {
++ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
+    
+    NSMutableArray *ignoredSubviewsArray = [NSMutableArray array];
+    ListInto(ignoredSubviewsArray, ignoredSubviews);
+    
+    return [self contentBoundsFor:view ignoreSubviewsArray:ignoredSubviewsArray];
+}
 
++ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
+    
+    CGRect contentRect = view.bounds;
+    if (!view.clipsToBounds)
+        for (UIView *subview in view.subviews)
+            if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
+                contentRect = CGRectUnion(contentRect,
+                                          [view convertRect:
+                                           [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray]
+                                                   fromView:subview]);
+    
+    return contentRect;
+}
+
++ (void)showBoundingBoxForView:(UIView *)view {
+    
     [self showBoundingBoxForView:view color:[UIColor redColor]];
 }
 
@@ -106,7 +131,7 @@ static NSMutableSet     *dismissableResponders;
     
     if (view.isFirstResponder)
         return view;
-
+    
     for (UIView *subView in view.subviews) {
         UIView *firstResponder = [self findFirstResonderIn:subView];
         if (firstResponder != nil)
@@ -125,7 +150,7 @@ static NSMutableSet     *dismissableResponders;
 }
 
 + (void)makeDismissableArray:(NSArray *)viewsArray {
-
+    
     if (!dismissableResponders)
         dismissableResponders = [NSMutableSet set];
     
@@ -157,7 +182,7 @@ static NSMutableSet     *dismissableResponders;
     keyboardScrollNewOffset.y               += keyboardRect.size.height / 2;
     CGRect keyboardScrollNewFrame           = keyboardActiveScrollView.frame;
     keyboardScrollNewFrame.size.height      -= hiddenRect.size.height;
-
+    
     UIView *responder = [self findFirstResonder];
     if (responder) {
         CGRect responderRect = [keyboardActiveScrollView convertRect:responder.bounds fromView:responder];
@@ -167,15 +192,15 @@ static NSMutableSet     *dismissableResponders;
         else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
             keyboardScrollNewOffset.y = responderRect.origin.y;
     }
-
+    
     UIScrollView *animatingScrollView = keyboardActiveScrollView;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^(void) {
                          /*
-                         dbg(@"showing keyboard for scrollView: %x", keyboardActiveScrollView);
-                         dbg(@"    keyboardScrollNewOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
-                         dbg(@"    keyboardScrollNewFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
+                          dbg(@"showing keyboard for scrollView: %x", keyboardActiveScrollView);
+                          dbg(@"    keyboardScrollNewOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
+                          dbg(@"    keyboardScrollNewFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
                           */
                          
                          animatingScrollView.contentOffset    = keyboardScrollNewOffset;
@@ -198,9 +223,9 @@ static NSMutableSet     *dismissableResponders;
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^(void) {
                          /*
-                         dbg(@"hiding keyboard for scrollView: %x", keyboardActiveScrollView);
-                         dbg(@"    keyboardScrollOriginalOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
-                         dbg(@"    keyboardScrollOriginalFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
+                          dbg(@"hiding keyboard for scrollView: %x", keyboardActiveScrollView);
+                          dbg(@"    keyboardScrollOriginalOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
+                          dbg(@"    keyboardScrollOriginalFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
                           */
                          
                          animatingScrollView.contentOffset    = keyboardScrollNewOffset;
@@ -261,7 +286,7 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"minimumFontSize"];
         [properties addObject:@"baselineAdjustment"];
     }
-
+    
     // UIControl
     if ([view isKindOfClass:[UIControl class]]) {
         [properties addObject:@"enabled"];
@@ -300,7 +325,7 @@ static NSMutableSet     *dismissableResponders;
         [view setInputView:[[self copyOf:[view inputView]] autorelease]];
         [view setInputAccessoryView:[[self copyOf:[view inputAccessoryView]] autorelease]];
     }
-
+    
     // UIButton
     if ([view isKindOfClass:[UIButton class]]) {
         [properties addObject:@"contentEdgeInsets"];

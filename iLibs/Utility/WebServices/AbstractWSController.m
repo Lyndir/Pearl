@@ -84,7 +84,7 @@
 - (id)getRequestFromDictionary:(NSDictionary *)parameters
                     withTarget:(id)target callback:(SEL)callback {
     
-    inf(@"Out:\n%@", parameters);
+    inf(@"Out to %@:\n%@", [self serverURL], parameters);
     
     NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
     BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
@@ -111,9 +111,9 @@
             return;
         
         if (error)
-            err(@"Failed: %@", error);
+            err(@"Failed from: %@, error: %@", urlString, error);
         else
-            inf(@"In:\n%@", [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+            inf(@"In from: %@, data:\n%@", urlString, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
         
         [target performSelectorOnMainThread:callback withObject:responseData waitUntilDone:NO];
     });
@@ -124,7 +124,7 @@
 - (id)postRequestFromDictionary:(NSDictionary *)parameters
                      withTarget:(id)target callback:(SEL)callback {
     
-    inf(@"Out:\n%@", parameters);
+    inf(@"Out to: %@, parameters:\n%@", [self serverURL], parameters);
     
     // Build the request.
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
@@ -262,7 +262,7 @@
         return;
     
     [request cancel];
-    err(@"Aborted: %@", [request url]);
+    err(@"Aborted: %@", request.url);
     
     [request release];
     [[invocation target] release];
@@ -279,7 +279,7 @@
         // Already handled.
         return;
     
-    err(@"Failed: %@", [request error]);
+    err(@"Failed from: %@, error: %@", request.url, request.error);
     
     id nilResponseData = nil;
     if ([[invocation methodSignature] numberOfArguments] > 2)
@@ -303,8 +303,8 @@
         // Already handled.
         return;
     
-    NSData *responseData = [request responseData];
-    inf(@"In:\n%@", [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+    NSData *responseData = request.responseData;
+    inf(@"In from %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
     
     if ([[invocation methodSignature] numberOfArguments] > 2)
         [invocation setArgument:&responseData atIndex:2];

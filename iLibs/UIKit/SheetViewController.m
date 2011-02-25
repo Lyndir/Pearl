@@ -68,8 +68,8 @@
 + (SheetViewController *)showMessage:(NSString *)message backButton:(BOOL)backButton {
     
     return [self showMessage:message
-                  backString:backButton? l(@"global.button.back"): nil
-                acceptString:l(@"global.button.abort")];
+                  backString:backButton? l(@"common.button.back"): nil
+                acceptString:l(@"common.button.abort")];
 }
 
 

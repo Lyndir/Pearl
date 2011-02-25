@@ -71,7 +71,7 @@ static AlertViewController *currentAlert = nil;
 
 + (void)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
-    [AlertViewController showMessage:message withTitle:l(@"global.error") backButton:backButton abortButton:abortButton];
+    [AlertViewController showMessage:message withTitle:l(@"common.title.error") backButton:backButton abortButton:abortButton];
 }
 
 
@@ -83,7 +83,7 @@ static AlertViewController *currentAlert = nil;
 
 + (void)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
-    [AlertViewController showMessage:message withTitle:l(@"global.notice") backButton:backButton abortButton:abortButton];
+    [AlertViewController showMessage:message withTitle:l(@"common.title.notice") backButton:backButton abortButton:abortButton];
 }
 
 
@@ -96,8 +96,8 @@ static AlertViewController *currentAlert = nil;
 + (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
     [self showMessage:message withTitle:title
-           backString:backButton? l(@"global.button.back"): nil
-         acceptString:abortButton? (backButton? l(@"global.button.abort"): l(@"global.button.retry")): nil];
+           backString:backButton? l(@"common.button.back"): nil
+         acceptString:abortButton? (backButton? l(@"common.button.abort"): l(@"common.button.retry")): nil];
 }
 
 

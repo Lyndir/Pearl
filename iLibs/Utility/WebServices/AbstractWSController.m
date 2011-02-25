@@ -192,17 +192,17 @@
     if (outdated) {
         if ([resultCode intValue] == CODE_FAILURE_UPDATE_REQUIRED)
             // Required upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"global.error")
-                                                 message:l(@"error.response.clientOutdated.required")
-                                              backString:l(@"global.button.back")
-                                            acceptString:l(@"global.button.upgrade")
+            [[[[AlertViewController alloc] initWithTitle:l(@"common.title.error")
+                                                 message:l(@"error.response.outdated.required")
+                                              backString:l(@"common.button.back")
+                                            acceptString:l(@"common.button.upgrade")
                                                 callback:self :@selector(upgrade:)] showAlert] release];
         else if ([resultCode intValue] == CODE_SUCCESS)
             // Optional upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"global.notice")
-                                                 message:l(@"error.response.clientOutdated.optional")
-                                              backString:l(@"global.button.back")
-                                            acceptString:l(@"global.button.upgrade")
+            [[[[AlertViewController alloc] initWithTitle:l(@"common.title.notice")
+                                                 message:l(@"error.response.outdated.optional")
+                                              backString:l(@"common.button.back")
+                                            acceptString:l(@"common.button.upgrade")
                                                 callback:self :@selector(upgrade:)] showAlert] release];
     }
     

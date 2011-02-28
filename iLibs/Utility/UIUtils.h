@@ -85,7 +85,7 @@
 + (void)makeDismissableArray:(NSArray *)respondersArray;
 
 /**
- * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField.
+ * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField, UIButton, UIImageView.
  * The copy is added as a child of the given view's superview.
  * @return An owned reference to a new view that has all supported properties of the given view copied.
  */

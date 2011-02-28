@@ -338,6 +338,18 @@ static NSMutableSet     *dismissableResponders;
         // TODO: Copy all properties from titleLabel, imageView.
     }
     
+    // UIImageView
+    if ([view isKindOfClass:[UIImageView class]]) {
+        [properties addObject:@"image"];
+        [properties addObject:@"highlightedImage"];
+        [properties addObject:@"userInteractionEnabled"];
+        [properties addObject:@"highlighted"];
+        [properties addObject:@"animationImages"];
+        [properties addObject:@"highlightedAnimationImages"];
+        [properties addObject:@"animationDuration"];
+        [properties addObject:@"animationRepeatCount"];
+    }
+    
     // Copy properties.
     [copy setValuesForKeysWithDictionary:[view dictionaryWithValuesForKeys:properties]];
     

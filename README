@@ -1,0 +1,5 @@
+To get started, just add the iLibs directory in the iLibs root directory to your Xcode project and optionally delete whatever groups are irrelevant to your project.
+
+Some groups require additional dependencies, they can be found in the External directory.  To fetch them, simply run:
+
+git submodule update --init External/[dependency]

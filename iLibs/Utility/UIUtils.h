@@ -14,6 +14,12 @@
 }
 
 /**
+ * Automatically determines the size required to show all the text contents and resizes the view's frame accordingly.
+ * The view's width is never modified, only the height is adjusted to fit the contents.
+ */
++ (void)autoSize:(UILabel *)label;
+
+/**
  * Automatically determines and sets the content size of the given scroll view.
  * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
  */

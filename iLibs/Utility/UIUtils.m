@@ -28,6 +28,14 @@ static CGPoint          keyboardScrollOriginalOffset;
 static CGRect           keyboardScrollOriginalFrame;
 static NSMutableSet     *dismissableResponders;
 
++ (void)autoSize:(UILabel *)label {
+    
+    dbg(@"frame before:  %@", NSStringFromCGRect(label.frame));
+    label.frame = [label textRectForBounds:(CGRect){label.frame.origin, {label.frame.size.width, CGFLOAT_MAX}}
+                    limitedToNumberOfLines:label.numberOfLines];
+    dbg(@"frame after:   %@", NSStringFromCGRect(label.frame));
+}
+
 + (void)autoSizeContent:(UIScrollView *)scrollView {
     
     [self autoSizeContent:scrollView ignoreSubviews:nil];

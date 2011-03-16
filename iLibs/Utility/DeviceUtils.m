@@ -9,9 +9,25 @@
 #import "DeviceUtils.h"
 #import "Config.h"
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 
 @implementation DeviceUtils
 
++ (NSString *)platform {
+
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    
+    NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
+    free(machine);
+    
+    return platform;
+}
 
 + (NSString *)currentDeviceTokenAsHex {
     
@@ -32,21 +48,13 @@
 
 + (BOOL)isIPod {
 
-#if TARGET_IPHONE_SIMULATOR
-    return NO;
-#else
-    return [[[UIDevice currentDevice] model] hasPrefix:@"iPod touch"];
-#endif
+    return [[self platform] hasPrefix:@"iPod"];
 }
 
 
 + (BOOL)isIPhone {
 
-#if TARGET_IPHONE_SIMULATOR
-    return NO;
-#else
-    return [[[UIDevice currentDevice] model] hasPrefix:@"iPhone"];
-#endif
+    return [[self platform] hasPrefix:@"iPhone"];
 }
 
 

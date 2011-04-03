@@ -56,7 +56,7 @@
 
     [super setButtonImage:@"menu.png"
                  callback:self :@selector(menuButton:)];
-    self.messageBar          = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
+    self.messageBar = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     
     // Score.
     self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
@@ -142,7 +142,6 @@
     
     [self updateHudWithNewScore:0 wasGood:YES];
 }
-
 
 -(void) menuButton: (id) caller {
     

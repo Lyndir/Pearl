@@ -67,7 +67,7 @@
         return self;
     
     self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"splash.png"];
-    self.textureRect        = CGRectFromPointAndSize(CGPointZero, self.texture.contentSize);
+    self.textureRect        = CGRectFromCGPointAndCGSize(CGPointZero, self.texture.contentSize);
     self.position           = ccp([self contentSize].width / 2, [self contentSize].height / 2);
     
     BarSprite *loadingBar   = [[BarSprite alloc] initWithHead:@"aim.head.png" body:@"aim.body.%d.png" withFrames:16 tail:@"aim.tail.png" animatedTargetting:NO];

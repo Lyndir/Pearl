@@ -145,14 +145,17 @@
 
 -(void) menuButton: (id) caller {
     
-    [[AudioController get] clickEffect];
-    [[AbstractCocos2DAppDelegate get] hudMenuPressed];
+    if (self.visible) {
+        [[AudioController get] clickEffect];
+        [[AbstractCocos2DAppDelegate get] hudMenuPressed];
+    }
 }
 
 
 -(BOOL) hitsHud: (CGPoint)pos {
     
-    return  pos.x >= self.position.x         &&
+    return  self.visible                     &&
+            pos.x >= self.position.x         &&
             pos.y >= self.position.y         &&
             pos.x <= self.position.x + self.contentSize.width &&
             pos.y <= self.position.y + self.contentSize.height;

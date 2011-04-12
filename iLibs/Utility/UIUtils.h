@@ -73,6 +73,12 @@
 + (CGRect)frameInWindow:(UIView *)view;
 
 /**
+ * Create a rectangle that describes the frame of the given tab bar item in the given tab bar.
+ * @return CGRectNull if the given item is not showing in the given tab bar.
+ */
++ (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar;
+
+/**
  * Find the current first responder in the key window.
  * @return The subview of the key window that is the current first responder or nil if no view has first responder status.
  */

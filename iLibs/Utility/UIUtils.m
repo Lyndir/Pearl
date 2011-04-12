@@ -135,6 +135,16 @@ static NSMutableSet     *dismissableResponders;
     return [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
 }
 
++ (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {
+    
+    CGFloat tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
+    NSUInteger tabIndex = [tabBar.items indexOfObject:item];
+    if (tabIndex == NSNotFound)
+        return CGRectNull;
+    
+    return CGRectMake(tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height);
+}
+
 + (UIView *)findFirstResonderIn:(UIView *)view {
     
     if (view.isFirstResponder)

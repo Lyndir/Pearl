@@ -153,14 +153,15 @@
 - (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
                       requires:(NSString *)key, ... {
     
-    if (responseData == nil) {
+    if (responseData == nil || !responseData.length) {
         if (popupOnError)
             [AlertViewController showConnectionErrorWithBackButton:backOnError];
         return nil;
     }
     
     // Trim off non-executable-JSON prefix.
-    if ([JSON_NON_EXECUTABLE_PREFIX isEqualToString:
+    if (responseData.length >= [JSON_NON_EXECUTABLE_PREFIX length] &&
+        [JSON_NON_EXECUTABLE_PREFIX isEqualToString:
          [[[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
                                 encoding:NSUTF8StringEncoding] autorelease]])
         responseData = [responseData subdataWithRange:

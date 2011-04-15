@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 
 
+CGRect CGRectSetX(CGRect rect, CGFloat x);
+CGRect CGRectSetY(CGRect rect, CGFloat y);
+CGRect CGRectSetWidth(CGRect rect, CGFloat width);
+CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+
 @interface UIUtils : NSObject {
 
 }

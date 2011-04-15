@@ -13,6 +13,23 @@
 #import "ObjectUtils.h"
 
 
+CGRect CGRectSetX(CGRect rect, CGFloat x) {
+    
+    return (CGRect){{x, rect.origin.y}, {rect.size.width, rect.size.height}};
+}
+CGRect CGRectSetY(CGRect rect, CGFloat y) {
+    
+    return (CGRect){{rect.origin.x, y}, {rect.size.width, rect.size.height}};
+}
+CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
+    
+    return (CGRect){rect.origin, {width, rect.size.height}};
+}
+CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
+    
+    return (CGRect){rect.origin, {rect.size.width, height}};
+}
+
 @interface UIUtils ()
 
 + (void)keyboardWillHide:(NSNotification *)n;

@@ -101,6 +101,54 @@
     
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Will be deprecated at some point, please replace with application:openURL:sourceApplication:annotation:" userInfo:nil];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    
+    return YES;
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+
+    [[AudioController get] playTrack:nil];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+
+    [Config get].firstRun = [NSNumber numberWithBool:NO];
+}
+
+- (void)applicationSignificantTimeChange:(UIApplication *)application {
+    
+}
+
+- (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
+    
+}
+
+- (void)application:(UIApplication *)application didChangeStatusBarOrientation:(UIInterfaceOrientation)oldStatusBarOrientation {
+    
+}
+
+- (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
+    
+}
+
+- (void)application:(UIApplication *)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame {
+    
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [Config get].deviceToken = deviceToken;
@@ -119,21 +167,30 @@
     wrn(@"Couldn't register with the APNs: %@", error);
 }
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    [self cleanup];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
-    [Config get].firstRun = [NSNumber numberWithBool:NO];
 }
 
-- (void)cleanup {
+- (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_4_0) {
     
-    [[AudioController get] playTrack:nil];
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_4_0) {
+    
+}
+
+- (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application {
+    
+}
+
+- (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application {
+    
+}
+    
 - (void)dealloc {
     
     self.window = nil;

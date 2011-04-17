@@ -35,7 +35,6 @@
 - (void)preSetup;
 
 - (void)didUpdateConfigForKey:(SEL)configKey;
-- (void)cleanup;
 - (void)restart;
 - (void)shutdown:(id)caller;
 

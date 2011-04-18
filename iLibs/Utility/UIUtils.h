@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 
 
+CGRect CGRectSetX(CGRect rect, CGFloat x);
+CGRect CGRectSetY(CGRect rect, CGFloat y);
+CGRect CGRectSetWidth(CGRect rect, CGFloat width);
+CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+
 @interface UIUtils : NSObject {
 
 }
@@ -71,6 +76,12 @@
  * Create a rectangle that describes the given view's frame in the coordinates of the top-level view that contains it.
  */
 + (CGRect)frameInWindow:(UIView *)view;
+
+/**
+ * Create a rectangle that describes the frame of the given tab bar item in the given tab bar.
+ * @return CGRectNull if the given item is not showing in the given tab bar.
+ */
++ (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar;
 
 /**
  * Find the current first responder in the key window.

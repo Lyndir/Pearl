@@ -13,6 +13,23 @@
 #import "ObjectUtils.h"
 
 
+CGRect CGRectSetX(CGRect rect, CGFloat x) {
+    
+    return (CGRect){{x, rect.origin.y}, {rect.size.width, rect.size.height}};
+}
+CGRect CGRectSetY(CGRect rect, CGFloat y) {
+    
+    return (CGRect){{rect.origin.x, y}, {rect.size.width, rect.size.height}};
+}
+CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
+    
+    return (CGRect){rect.origin, {width, rect.size.height}};
+}
+CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
+    
+    return (CGRect){rect.origin, {rect.size.width, height}};
+}
+
 @interface UIUtils ()
 
 + (void)keyboardWillHide:(NSNotification *)n;
@@ -133,6 +150,16 @@ static NSMutableSet     *dismissableResponders;
 + (UIView *)findFirstResonder {
     
     return [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
+}
+
++ (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {
+    
+    CGFloat tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
+    NSUInteger tabIndex = [tabBar.items indexOfObject:item];
+    if (tabIndex == NSNotFound)
+        return CGRectNull;
+    
+    return CGRectMake(tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height);
 }
 
 + (UIView *)findFirstResonderIn:(UIView *)view {

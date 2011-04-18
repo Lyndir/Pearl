@@ -41,8 +41,6 @@
 #define cFirstRun               NSStringFromSelector(@selector(firstRun))
 #define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
 #define cSupportedNotifications NSStringFromSelector(@selector(supportedNotifications))
-#define cNotificationsChecked   NSStringFromSelector(@selector(notificationsChecked))
-#define cNotificationsSupported NSStringFromSelector(@selector(notificationsSupported))
 
 #define cFontSize               NSStringFromSelector(@selector(fontSize))
 #define cLargeFontSize          NSStringFromSelector(@selector(largeFontSize))
@@ -72,6 +70,9 @@
 
     NSUInteger                                              *_gameRandomSeeds;
     NSUInteger                                              *_gameRandomCounters;
+    
+    BOOL                                                    _notificationsChecked;
+    BOOL                                                    _notificationsSupported;
 }
 
 @property (nonatomic, readonly, retain) NSUserDefaults      *defaults;
@@ -79,8 +80,8 @@
 
 @property (nonatomic, readwrite, retain) NSNumber           *firstRun;
 @property (nonatomic, readwrite, retain) NSNumber           *supportedNotifications;
-@property (nonatomic, readwrite, retain) NSNumber           *notificationsChecked;
-@property (nonatomic, readwrite, retain) NSNumber           *notificationsSupported;
+@property (nonatomic, readwrite, assign) BOOL               notificationsChecked;
+@property (nonatomic, readwrite, assign) BOOL               notificationsSupported;
 @property (nonatomic, readwrite, retain) NSData             *deviceToken;
 
 @property (nonatomic, readwrite, retain) NSNumber           *fontSize;

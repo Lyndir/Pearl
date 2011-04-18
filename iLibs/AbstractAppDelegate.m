@@ -59,9 +59,11 @@
     if (copyright)
         inf(@"%@", copyright);
     inf(@"===================================");
-	
+
+#ifdef APNS
     if ([[Config get].supportedNotifications unsignedIntegerValue])
         [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+#endif
 
     // Start the background music.
     [self preSetup];
@@ -152,8 +154,8 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [Config get].deviceToken = deviceToken;
-    [Config get].notificationsSupported = [NSNumber numberWithBool:YES];
-    [Config get].notificationsChecked = [NSNumber numberWithBool:YES];
+    [Config get].notificationsSupported = YES;
+    [Config get].notificationsChecked = YES;
     
     dbg(@"APN Device Token Hex: %@", [deviceToken hex]);
 }
@@ -161,8 +163,8 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     
-    [Config get].notificationsSupported = [NSNumber numberWithBool:NO];
-    [Config get].notificationsChecked = [NSNumber numberWithBool:YES];
+    [Config get].notificationsSupported = NO;
+    [Config get].notificationsChecked = YES;
     
     wrn(@"Couldn't register with the APNs: %@", error);
 }

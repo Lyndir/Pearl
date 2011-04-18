@@ -44,8 +44,9 @@
 
 @synthesize defaults = _defaults;
 @synthesize resetTriggers = _resetTriggers;
+@synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
 
-@dynamic firstRun, supportedNotifications, notificationsChecked, notificationsSupported, deviceToken;
+@dynamic firstRun, supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
@@ -65,7 +66,7 @@
     self.defaults = [NSUserDefaults standardUserDefaults];
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithBool:YES],                                 cFirstRun,
-                                     
+
                                      [NSNumber numberWithInt:
                                       [l(@"font.size.normal") intValue]],                           cFontSize,
                                      [NSNumber numberWithInt:

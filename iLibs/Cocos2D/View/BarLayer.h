@@ -44,6 +44,7 @@
 
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector;
 -(CGPoint) hidePosition;
+-(void) reveal;
 -(void) dismiss;
 
 -(void) message:(NSString *)msg isImportant:(BOOL)important;

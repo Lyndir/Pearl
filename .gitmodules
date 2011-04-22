@@ -7,3 +7,6 @@
 [submodule "External/TouchJSON"]
 	path = External/TouchJSON
 	url = git://github.com/TouchCode/TouchJSON.git
+[submodule "External/jrswizzle"]
+	path = External/jrswizzle
+	url = https://github.com/rentzsch/jrswizzle.git

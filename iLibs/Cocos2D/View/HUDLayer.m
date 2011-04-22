@@ -56,7 +56,7 @@
 
     [super setButtonImage:@"menu.png"
                  callback:self :@selector(menuButton:)];
-    self.messageBar          = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
+    self.messageBar = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     
     // Score.
     self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
@@ -143,17 +143,19 @@
     [self updateHudWithNewScore:0 wasGood:YES];
 }
 
-
 -(void) menuButton: (id) caller {
     
-    [[AudioController get] clickEffect];
-    [[AbstractCocos2DAppDelegate get] hudMenuPressed];
+    if (self.visible) {
+        [[AudioController get] clickEffect];
+        [[AbstractCocos2DAppDelegate get] hudMenuPressed];
+    }
 }
 
 
 -(BOOL) hitsHud: (CGPoint)pos {
     
-    return  pos.x >= self.position.x         &&
+    return  self.visible                     &&
+            pos.x >= self.position.x         &&
             pos.y >= self.position.y         &&
             pos.x <= self.position.x + self.contentSize.width &&
             pos.y <= self.position.y + self.contentSize.height;

@@ -45,10 +45,12 @@
 - (void)pushLayer: (ShadeLayer *)layer hidden:(BOOL)hidden;
 - (void)popAllLayers;
 - (BOOL)isLastLayerShowing;
+- (BOOL)isLayerShowing:(ShadeLayer *)layer;
 - (BOOL)isAnyLayerShowing;
+- (ShadeLayer *)peekLayer;
 - (void)popLayer;
-- (void)poppedAll;
-- (void)cleanup;
+- (void)didPopLayer:(ShadeLayer *)layer anyLeft:(BOOL)anyLeft;
+- (void)didPushLayer:(ShadeLayer *)layer hidden:(BOOL)hidden;
 - (void)shutdown:(id)caller;
 
 - (void)revealHud;

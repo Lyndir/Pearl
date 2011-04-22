@@ -25,6 +25,7 @@
 #import "UILayer.h"
 #import "Remove.h"
 #import "Config.h"
+#import "CCDebug.h"
 
 #define kFilteringFactor            0.4f
 #define kAccelerometerFrequency     50 //Hz
@@ -66,10 +67,26 @@
     
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
     //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
+    
+    //[self schedule:@selector(debug:) interval:1];
 
     self.isAccelerometerEnabled = YES;
 
     return self;
+}
+
+- (void)debug:(ccTime)delta {
+    
+    id sceneCandidate = self;
+    while (![sceneCandidate isKindOfClass:[CCScene class]]) {
+        sceneCandidate = [sceneCandidate parent];
+        
+        if (!sceneCandidate)
+            // No scene in hierarchy.
+            return;
+    }
+    
+    [CCDebug printStateForScene:sceneCandidate];
 }
 
 

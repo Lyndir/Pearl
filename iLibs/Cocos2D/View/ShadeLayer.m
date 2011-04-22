@@ -99,7 +99,7 @@
     [_backButton release];
     _backButton = [aBackButton retain];
     if (!self.backButton) {
-        self.backButton = [MenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)];
+        _backButton = [[MenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)] retain];
         self.backMenu.visible = self.backInvocation != nil;
     } else
         self.backMenu.visible = YES;
@@ -130,7 +130,7 @@
     [_nextButton release];
     _nextButton = [aNextButton retain];
     if (!self.nextButton) {
-        self.nextButton = [MenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)];
+        _nextButton = [[MenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)] retain];
         self.nextMenu.visible = self.backInvocation != nil;
     } else
         self.nextMenu.visible = YES;

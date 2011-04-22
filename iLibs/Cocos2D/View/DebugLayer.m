@@ -41,6 +41,8 @@
 
 - (void)draw {
     
+    [super draw];
+
     DrawIndicators();
 }
 

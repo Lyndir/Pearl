@@ -29,6 +29,39 @@ CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
     
     return (CGRect){rect.origin, {rect.size.width, height}};
 }
+CGPoint CGPointFromCGRectTop(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y);
+}
+CGPoint CGPointFromCGRectRight(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2);
+}
+CGPoint CGPointFromCGRectBottom(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height);
+}
+CGPoint CGPointFromCGRectLeft(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height / 2);
+}
+CGPoint CGPointFromCGRectTopLeft(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x, rect.origin.y);
+}
+CGPoint CGPointFromCGRectTopRight(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y);
+}
+CGPoint CGPointFromCGRectBottomRight(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+}
+CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
+}
+
 
 @interface UIUtils ()
 
@@ -47,9 +80,10 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)autoSize:(UILabel *)label {
     
+    //[label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(label.bounds.size.width, CGFLOAT_MAX) lineBreakMode:label.lineBreakMode];
     dbg(@"frame before:  %@", NSStringFromCGRect(label.frame));
-    label.frame = [label textRectForBounds:(CGRect){label.frame.origin, {label.frame.size.width, CGFLOAT_MAX}}
-                    limitedToNumberOfLines:label.numberOfLines];
+    label.frame = CGRectSetHeight(label.frame, [label textRectForBounds:CGRectSetHeight(label.frame, CGFLOAT_MAX)
+                                                 limitedToNumberOfLines:label.numberOfLines].size.height);
     dbg(@"frame after:   %@", NSStringFromCGRect(label.frame));
 }
 

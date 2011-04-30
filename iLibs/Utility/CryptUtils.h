@@ -40,6 +40,7 @@
 
 - (NSData *)md5;
 - (NSData *)sha1;
+- (NSData *)withSalt:(NSData *)salt delimitor:(char)delimitor;
 
 /** Create a string object by formatting the bytes as hexadecimal. */
 - (NSString *)hex;

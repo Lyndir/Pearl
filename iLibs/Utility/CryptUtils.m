@@ -82,6 +82,15 @@
     return [NSData dataWithBytes:result length:sizeof(result)];
 }
 
+- (NSData *)withSalt:(NSData *)salt delimitor:(char)delimitor {
+    
+    NSMutableData *saltedData = [self mutableCopy];
+    [saltedData appendBytes:&delimitor length:1];
+    [saltedData appendData:salt];
+    
+    return [saltedData autorelease];
+}
+
 - (NSData *)xor:(NSData *)otherData {
     
     if (self.length != otherData.length)

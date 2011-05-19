@@ -62,7 +62,7 @@
     self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
     self.scoreCount = [CCLabelAtlas labelWithString:@""
                                         charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    [self.scoreSprite setPosition:ccp(self.contentSize.width / 2, self.contentSize.height / 2)];
+    self.scoreSprite.position = ccp(self.contentSize.width / 2, self.contentSize.height / 2);
     [self.scoreCount setPosition:ccp(90, 0)];
     [self addChild:self.scoreSprite];
     [self addChild:self.scoreCount];

@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface UILayer : CCColorLayer {
+@interface UILayer : CCLayerColor {
 
     CCLabelTTF                                  *_messageLabel;
     NSMutableArray                              *_messageQueue, *_callbackQueue;

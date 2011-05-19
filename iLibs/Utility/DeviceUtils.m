@@ -52,6 +52,12 @@
 }
 
 
++ (BOOL)isIPad {
+    
+    return [[self platform] hasPrefix:@"iPad"];
+}
+
+
 + (BOOL)isIPhone {
 
     return [[self platform] hasPrefix:@"iPhone"];

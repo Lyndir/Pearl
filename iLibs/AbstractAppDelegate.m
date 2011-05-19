@@ -92,6 +92,10 @@
     
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+}
+
 - (void)restart {
 
     [self.window.rootViewController.navigationController popToRootViewControllerAnimated:YES];

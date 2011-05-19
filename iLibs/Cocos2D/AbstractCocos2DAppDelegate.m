@@ -30,6 +30,7 @@
 #import "ShadeLayer.h"
 #import "UIUtils.h"
 #import "RootViewController.h"
+#import "DeviceUtils.h"
 
 @interface CCDirector ()
 
@@ -62,6 +63,8 @@
 	// Init the window.
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
+    if ([DeviceUtils isIPad])
+        [[CCDirector sharedDirector] setContentScaleFactor:2];
 #if DEBUG
     //[CCDirector sharedDirector].displayFPS          = YES;
 #endif
@@ -88,6 +91,14 @@
     [self revealHud];
     [self hideHud];
 }
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
+}
+
 
 - (void)hudMenuPressed {
     

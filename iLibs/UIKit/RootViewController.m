@@ -82,10 +82,6 @@
     return [self isInterfaceOrientationSupported:interfaceOrientation];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
-    dbg(@"moo");
-}
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     
     [[AbstractAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];

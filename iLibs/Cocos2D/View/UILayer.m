@@ -57,9 +57,13 @@
 
 
 -(id) init {
-    
+#ifdef DEBUG
 	if (!(self = [super initWithColor:ccc4(0xff, 0x00, 0x00, 0xff)]))
 		return self;
+#else
+	if (!(self = [super initWithColor:ccc4(0x00, 0x00, 0x00, 0xff)]))
+		return self;
+#endif
     
     // Build internal structures.
     self.messageQueue = [NSMutableArray arrayWithCapacity:3];
@@ -70,7 +74,7 @@
     
     //[self schedule:@selector(debug:) interval:1];
 
-    self.isAccelerometerEnabled = YES;
+    //self.isAccelerometerEnabled = YES;
 
     return self;
 }
@@ -89,7 +93,7 @@
     [CCDebug printStateForScene:sceneCandidate];
 }
 
-
+/*
 -(void) setRotation:(float)aRotation {
     
     [super setRotation:aRotation];
@@ -138,7 +142,7 @@
         [self stopAction:self.rotateAction];
     
     [self runAction:self.rotateAction = [CCRotateTo actionWithDuration:0.2f angle:aRotation]];
-}
+}*/
 
 
 -(void) message:(NSString *)msg {

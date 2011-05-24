@@ -11,6 +11,7 @@
 #import "AbstractAppDelegate.h"
 #import "BoxView.h"
 #import "ObjectUtils.h"
+#import "StringUtils.h"
 
 
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
@@ -428,6 +429,69 @@ static NSMutableSet     *dismissableResponders;
         [[self copyOf:subView addTo:copy] release];
     
     return copy;
+}
+
++ (void)loadLocalization:(UIView *)view {
+    
+    static NSArray *UIUtils_localizableProperties = nil;
+    if (UIUtils_localizableProperties == nil)
+        UIUtils_localizableProperties = [[NSArray alloc] initWithObjects:@"text", @"placeholder", nil];
+    
+    // Load localization for each of the view's supported properties.
+    for (NSString *localizableProperty in UIUtils_localizableProperties) {
+        @try {
+            id value = [view valueForKey:localizableProperty];
+            if ([value isKindOfClass:[NSString class]])
+                [view setValue:[self applyLocalization:value] forKey:localizableProperty];
+        }
+        
+        // Obj-C exceptions are lame.
+        @catch (NSException *e) {
+            if (e.name != NSUndefinedKeyException)
+                @throw e;
+        }
+    }
+    
+    // Handle certain types of view specially.
+    if ([view isKindOfClass:[UISegmentedControl class]]) {
+        UISegmentedControl *segmentView = (UISegmentedControl *)view;
+
+        // Localize titles of segments.
+        for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
+            [segmentView setTitle:[self applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
+                forSegmentAtIndex:segment];
+    }
+    
+    // Load localization for all children, too.
+    for (UIView *childView in [view subviews])
+        [self loadLocalization:childView];
+}
+
++ (NSString *)applyLocalization:(NSString *)localizableValue {
+    
+    static NSRegularExpression *UIUtils_localizableSyntax = nil;
+    if (UIUtils_localizableSyntax == nil)
+        UIUtils_localizableSyntax = [[NSRegularExpression alloc] initWithPattern:@"^\\{([^:]*)(?::(.*))?\\}$" options:0 error:nil];
+    
+    __block NSString *localizedValue = localizableValue;
+    [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length]) usingBlock:
+     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+         if (result) {
+             NSRange localizationKeyRange   = [result rangeAtIndex:1];
+             NSRange defaultValueRange      = [result rangeAtIndex:2];
+             if (NSEqualRanges(localizationKeyRange, NSMakeRange(NSNotFound , 0)))
+                 return;
+             
+             NSString *localizationKey  = [localizableValue substringWithRange:localizationKeyRange];
+             NSString *defaultValue     = nil;
+             if (!NSEqualRanges(defaultValueRange, NSMakeRange(NSNotFound , 0)))
+                 defaultValue           = [localizableValue substringWithRange:defaultValueRange];
+             
+             localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+         }
+     }];
+    
+    return localizedValue;
 }
 
 @end

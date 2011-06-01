@@ -161,7 +161,7 @@
     [Config get].notificationsSupported = YES;
     [Config get].notificationsChecked = YES;
     
-    dbg(@"APN Device Token Hex: %@", [deviceToken hex]);
+    dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
 
 

@@ -184,8 +184,8 @@
     
     [super draw];
     
-    CGPoint to = ccp(self.contentSize.width, self.contentSize.height);
-    DrawLinesTo(ccp(0, self.contentSize.height), &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0xFF), 1);
+    CGPoint to = ccp(self.contentSizeInPixels.width, self.contentSizeInPixels.height);
+    DrawLinesTo(ccp(0, to.y), &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0xFF), 1);
 }
 
 -(void) dealloc {

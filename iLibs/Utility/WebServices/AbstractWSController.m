@@ -9,7 +9,6 @@
 #import "AbstractWSController.h"
 #import "NSDictionary_JSONExtensions.h"
 #import "NSString_NSArrayFormat.h"
-#import "NSData_MBBase64.h"
 #import "AlertViewController.h"
 #import "ASIFormDataRequest.h"
 #import "Logger.h"
@@ -91,10 +90,13 @@
     ASIFormDataRequest *dummyRequest = [[ASIFormDataRequest new] autorelease];
     
     for (NSString *key in [parameters allKeys]) {
-        [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-         [dummyRequest encodeURL:key],
-         [dummyRequest encodeURL:[[parameters objectForKey:key] description]]];
-        hasQuery = YES;
+        id value = [parameters objectForKey:key];
+        if (value != [NSNull null]) {
+            [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
+             [dummyRequest encodeURL:key],
+             [dummyRequest encodeURL:[value description]]];
+            hasQuery = YES;
+        }
     }
     [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
      [dummyRequest encodeURL:REQUEST_KEY_VERSION],
@@ -130,8 +132,11 @@
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
     [request setPostFormat:ASIURLEncodedPostFormat];
     [request setDelegate:self];
-    for (NSString *key in [parameters allKeys])
-        [request setPostValue:[[parameters objectForKey:key] description] forKey:key];
+    for (NSString *key in [parameters allKeys]) {
+        id value = [parameters objectForKey:key];
+        if (value != [NSNull null])
+            [request setPostValue:[value description] forKey:key];
+    }
     [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
     
     // Build the callback invocation.

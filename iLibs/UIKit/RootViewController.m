@@ -1,4 +1,4 @@
-    //
+//
 //  RootViewController.m
 //  Gorillas
 //
@@ -7,6 +7,7 @@
 //
 
 #import "RootViewController.h"
+#import "AbstractAppDelegate.h"
 
 
 @implementation RootViewController
@@ -18,7 +19,6 @@
         return self;
     
     self.supportedIterfaceOrientations = [NSMutableArray array];
-    [self supportInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     
     return self;
 }
@@ -39,7 +39,6 @@
         return self;
     
     self.supportedIterfaceOrientations = [NSMutableArray array];
-    [self supportInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     
     return self;
 }
@@ -50,7 +49,6 @@
         return self;
     
     self.supportedIterfaceOrientations = [NSMutableArray array];
-    [self supportInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     
     return self;
 }
@@ -82,6 +80,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
     return [self isInterfaceOrientationSupported:interfaceOrientation];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    [[AbstractAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 @end

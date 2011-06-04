@@ -35,6 +35,7 @@
 - (void)preSetup;
 
 - (void)didUpdateConfigForKey:(SEL)configKey;
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
 - (void)restart;
 - (void)shutdown:(id)caller;
 

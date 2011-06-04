@@ -92,6 +92,10 @@
     
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+}
+
 - (void)restart {
 
     [self.window.rootViewController.navigationController popToRootViewControllerAnimated:YES];
@@ -158,7 +162,7 @@
     [Config get].notificationsSupported = YES;
     [Config get].notificationsChecked = YES;
     
-    dbg(@"APN Device Token Hex: %@", [deviceToken hex]);
+    dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
 
 

@@ -101,7 +101,7 @@
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section {
     
-    return [[[[_sections objectAtIndex:section] allValues] lastObject] count];
+    return [(NSArray *) [[[_sections objectAtIndex:section] allValues] lastObject] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

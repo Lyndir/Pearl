@@ -153,9 +153,9 @@ min(const int a, const int b)
     return b;
 }
 
-CGPoint CGPointFromSize(const CGSize size);
-CGSize CGSizeFromPoint(const CGPoint point);
-CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size);
+CGPoint CGPointFromCGSize(const CGSize size);
+CGSize CGSizeFromCGPoint(const CGPoint point);
+CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
 void IndicateInSpaceOf(const CGPoint point, const CCNode* node);
 void DrawIndicators();

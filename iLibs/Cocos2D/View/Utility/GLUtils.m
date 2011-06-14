@@ -59,19 +59,19 @@ int GLCheck(char *file, int line) {
     return retCode;
 }
 
-CGPoint CGPointFromSize(const CGSize size) {
+CGPoint CGPointFromCGSize(const CGSize size) {
     
     return CGPointMake(size.width, size.height);
 }
 
 
-CGSize CGSizeFromPoint(const CGPoint point) {
+CGSize CGSizeFromCGPoint(const CGPoint point) {
     
     return CGSizeMake(point.x, point.y);
 }
 
 
-CGRect CGRectFromPointAndSize(const CGPoint point, const CGSize size) {
+CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     
     return CGRectMake(point.x, point.y, size.width, size.height);
 }

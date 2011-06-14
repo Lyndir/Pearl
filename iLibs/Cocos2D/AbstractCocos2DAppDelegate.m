@@ -30,6 +30,7 @@
 #import "ShadeLayer.h"
 #import "UIUtils.h"
 #import "RootViewController.h"
+#import "DeviceUtils.h"
 
 @interface CCDirector ()
 
@@ -56,19 +57,21 @@
 
 
 - (void)preSetup {
-
+    
     [super preSetup];
     
 	// Init the window.
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
+    if ([DeviceUtils isIPad])
+        [[CCDirector sharedDirector] setContentScaleFactor:2];
 #if DEBUG
     //[CCDirector sharedDirector].displayFPS          = YES;
 #endif
 	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];
     [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
-
+    
     self.window.rootViewController.view.hidden = YES;
     [self.window addSubview:[CCDirector sharedDirector].openGLView];
 	[self.window makeKeyAndVisible];
@@ -89,6 +92,14 @@
     [self hideHud];
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
+}
+
+
 - (void)hudMenuPressed {
     
     [NSException raise:NSInternalInconsistencyException format:@"Override me!"]; 
@@ -96,17 +107,15 @@
 
 -(void) revealHud {
     
-    if(self.hudLayer) {
-        if(![self.hudLayer dismissed])
-            // Already showing and not dismissed.
-            return;
+    if(![self.hudLayer dismissed])
+        // Already showing and not dismissed.
+        return;
     
-        if([self.hudLayer parent])
-            // Already showing and being dismissed.
-            [self.uiLayer removeChild:self.hudLayer cleanup:YES];
-    }
-
-    [self.uiLayer addChild:self.hudLayer];
+    if(![self.hudLayer parent])
+        // Already showing and being dismissed.
+        [self.uiLayer addChild:self.hudLayer z:1];
+    
+    [self.hudLayer reveal];
 }
 
 - (void)hideHud {
@@ -123,17 +132,7 @@
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey {
-
-}
-
-- (void)popLayer {
-
-    [(ShadeLayer *) [self.menuLayers lastObject] dismissAsPush:NO];
-    [self.menuLayers removeLastObject];
-    if([self isAnyLayerShowing])
-        [self.uiLayer addChild:[self.menuLayers lastObject]]; // FIXME: double tap back breaks me.
-    else
-        [self poppedAll];
+    
 }
 
 - (BOOL)isLastLayerShowing {
@@ -141,25 +140,50 @@
     return [self.menuLayers count] == 1;
 }
 
+- (BOOL)isLayerShowing:(ShadeLayer *)layer {
+    
+    return layer && [self peekLayer] == layer;
+}
+
 - (BOOL)isAnyLayerShowing {
     
     return [self.menuLayers count];
 }
 
-- (void)poppedAll {
+- (ShadeLayer *)peekLayer {
     
+    return [self.menuLayers lastObject];
+}
+
+- (void)popLayer {
+    
+    ShadeLayer *layer = [self.menuLayers lastObject];
+    [layer dismissAsPush:NO];
+    [self.menuLayers removeLastObject];
+    
+    BOOL anyLeft = [self isAnyLayerShowing];
+    if(anyLeft)
+        [self.uiLayer addChild:[self.menuLayers lastObject]]; // FIXME: double tap back breaks me.
+
+    [self didPopLayer:layer anyLeft:anyLeft];
+}
+
+- (void)didPopLayer:(ShadeLayer *)layer anyLeft:(BOOL)anyLeft {
+    
+    if (!anyLeft)
+        [self revealHud];
 }
 
 -(void) popAllLayers {
     
     if(![self.menuLayers count])
         return;
-
+    
     id last = [self.menuLayers lastObject];
     [self.menuLayers makeObjectsPerformSelector:@selector(dismissAsPush:) withObject:NO];
     [self.menuLayers removeAllObjects];
     [self.menuLayers addObject:last];
-
+    
     [self popLayer];
 }
 
@@ -179,15 +203,22 @@
             // CCLayer is already showing.
             if ([layer conformsToProtocol:@protocol(Resettable)])
                 [(ShadeLayer<Resettable> *) layer reset];
-        
+            
             return;
         }
     }
-
+    
     [(ShadeLayer *) [self.menuLayers lastObject] dismissAsPush:YES];
     [self.menuLayers addObject:layer];
     [self.uiLayer addChild:layer];
     layer.visible = !hidden;
+    
+    [self hideHud];
+    [self didPushLayer:layer hidden:hidden];
+}
+
+- (void)didPushLayer:(ShadeLayer *)layer hidden:(BOOL)hidden {
+    
 }
 
 - (void)shutdown:(id)caller {
@@ -198,26 +229,57 @@
 
 -(void) applicationWillResignActive:(UIApplication *)application {
     
+    [super applicationWillResignActive:application];
+    
     [[CCDirector sharedDirector] pause];
 }
 
 -(void) applicationDidBecomeActive:(UIApplication *)application {
-
+    
+    [super applicationDidBecomeActive:application];
+    
     [[CCDirector sharedDirector] resume];
 }
 
--(void) cleanup {
-    
-	[[CCTextureCache sharedTextureCache] removeAllTextures];
-    
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+
+    [super applicationDidReceiveMemoryWarning:application];
+
     if(self.hudLayer && ![self.hudLayer parent]) {
         [self.hudLayer stopAllActions];
         self.hudLayer = nil;
     }
-
-    [[AudioController get] playTrack:nil];
+    
+	[[CCDirector sharedDirector] purgeCachedData];
 }
 
+-(void) applicationDidEnterBackground:(UIApplication*)application {
+	
+    [super applicationDidEnterBackground:application];
+    
+    [[CCDirector sharedDirector] stopAnimation];
+}
+
+-(void) applicationWillEnterForeground:(UIApplication*)application {
+
+    [super applicationWillEnterForeground:application];
+    
+	[[CCDirector sharedDirector] startAnimation];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+
+    [super applicationWillTerminate:application];
+    
+	[[CCDirector sharedDirector] end];
+}
+
+- (void)applicationSignificantTimeChange:(UIApplication *)application {
+
+    [super applicationSignificantTimeChange:application];
+    
+	[[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
+}
 
 - (void)dealloc {
     

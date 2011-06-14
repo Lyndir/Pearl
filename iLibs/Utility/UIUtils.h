@@ -9,6 +9,19 @@
 #import <UIKit/UIKit.h>
 
 
+CGRect CGRectSetX(CGRect rect, CGFloat x);
+CGRect CGRectSetY(CGRect rect, CGFloat y);
+CGRect CGRectSetWidth(CGRect rect, CGFloat width);
+CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+CGPoint CGPointFromCGRectTop(CGRect rect);
+CGPoint CGPointFromCGRectRight(CGRect rect);
+CGPoint CGPointFromCGRectBottom(CGRect rect);
+CGPoint CGPointFromCGRectLeft(CGRect rect);
+CGPoint CGPointFromCGRectTopLeft(CGRect rect);
+CGPoint CGPointFromCGRectTopRight(CGRect rect);
+CGPoint CGPointFromCGRectBottomRight(CGRect rect);
+CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
+
 @interface UIUtils : NSObject {
 
 }
@@ -73,6 +86,12 @@
 + (CGRect)frameInWindow:(UIView *)view;
 
 /**
+ * Create a rectangle that describes the frame of the given tab bar item in the given tab bar.
+ * @return CGRectNull if the given item is not showing in the given tab bar.
+ */
++ (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar;
+
+/**
  * Find the current first responder in the key window.
  * @return The subview of the key window that is the current first responder or nil if no view has first responder status.
  */
@@ -103,5 +122,27 @@
  * @return An owned reference to a new view that has all supported properties of the given view copied.
  */
 + (id)copyOf:(id)view addTo:(UIView *)superView;
+
+/**
+ * Expands localized text in the given view and all its subviews.
+ *
+ * Properties localizable by this method are: text, placeholder.
+ * Additionally, the following views are handled specially:
+ *  - UISegmentedControl: Segment titles are localized.
+ *
+ * See applyLocalization for the rules of localization expansion.
+ */
++ (void)loadLocalization:(UIView *)rootView;
+
+/**
+ * Apply localization expansion on the given value.
+ *
+ * Localization expansion happens for values with the syntax: {localization-key[:Default Value]}
+ * The localization key is used to look up a localized value.  The optional Default Value is expanded if no localized value could be found
+ * for the key.
+ *
+ * Values that do not abide by this syntax are returned untouched.
+ */
++ (NSString *)applyLocalization:(NSString *)localizableValue;
 
 @end

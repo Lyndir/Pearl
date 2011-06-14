@@ -25,7 +25,7 @@
 #import "cocos2d.h"
 
 
-@interface UILayer : CCColorLayer {
+@interface UILayer : CCLayerColor {
 
     CCLabelTTF                                  *_messageLabel;
     NSMutableArray                              *_messageQueue, *_callbackQueue;
@@ -34,7 +34,7 @@
     UIAccelerationValue                         _accelX, _accelY, _accelZ;
 }
 
--(void) rotateTo:(float)aRotation;
+//-(void) rotateTo:(float)aRotation;
 
 -(void) message:(NSString *)msg;
 -(void) message:(NSString *)msg callback:(id)target :(SEL)selector;

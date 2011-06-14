@@ -137,6 +137,8 @@
 
 - (void) draw
 {
+    [super draw];
+
 	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
     //glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -146,7 +148,8 @@
     //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
     //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
 
-    GLfloat s = (self.currentLength * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
+    CGFloat lengthPx = self.currentLength * CC_CONTENT_SCALE_FACTOR();
+    GLfloat s = (lengthPx * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
     GLfloat coordinates[3][8] = {
         /* head */ {
             0.0f,   1.0f,
@@ -168,20 +171,20 @@
     
     GLfloat vertices[3][12] = {
         /* head */ {
-            -self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
-             self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
-            -self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f,
-             self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + lengthPx,  -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f + lengthPx,  -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + lengthPx,   self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f + lengthPx,   self.textureSize.height / 2.0f, 0.0f,
         /* body */ }, {
-             self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
-            -self.textureSize.width / 2.0f + self.currentLength,  -self.textureSize.height / 2.0f, 0.0f,
-             self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
-            -self.textureSize.width / 2.0f + self.currentLength,   self.textureSize.height / 2.0f, 0.0f
+             self.textureSize.width / 2.0f,             -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + lengthPx,  -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,              self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f + lengthPx,   self.textureSize.height / 2.0f, 0.0f
         /* tail */ }, {
-            -self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
-             self.textureSize.width / 2.0f,                  -self.textureSize.height / 2.0f, 0.0f,
-            -self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
-             self.textureSize.width / 2.0f,                   self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f,             -self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,             -self.textureSize.height / 2.0f, 0.0f,
+            -self.textureSize.width / 2.0f,              self.textureSize.height / 2.0f, 0.0f,
+             self.textureSize.width / 2.0f,              self.textureSize.height / 2.0f, 0.0f,
         }
     };
 

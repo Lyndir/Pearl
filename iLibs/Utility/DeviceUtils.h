@@ -13,6 +13,9 @@
     
 }
 
+/** Generates a string that very specifically identifies the exact platform.  This is a more detailed version of UIDevice-model. */
++ (NSString *)platform;
+
 /** Generate a string of hexadecimal characters that represents given deviceToken (APNs registration device trust token) */
 + (NSString *)deviceTokenAsHex:(NSData *)deviceToken;
 
@@ -21,6 +24,8 @@
 
 /** YES when invoked on an iPod touch device. */
 + (BOOL)isIPod;
+/** YES when invoked on an iPad device. */
++ (BOOL)isIPad;
 /** YES when invoked on an iPhone device. */
 + (BOOL)isIPhone;
 /** YES when invoked on the iPhone simulator. */

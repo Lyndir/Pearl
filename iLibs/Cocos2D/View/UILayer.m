@@ -25,6 +25,7 @@
 #import "UILayer.h"
 #import "Remove.h"
 #import "Config.h"
+#import "CCDebug.h"
 
 #define kFilteringFactor            0.4f
 #define kAccelerometerFrequency     50 //Hz
@@ -56,9 +57,13 @@
 
 
 -(id) init {
-    
+#ifdef DEBUG
 	if (!(self = [super initWithColor:ccc4(0xff, 0x00, 0x00, 0xff)]))
 		return self;
+#else
+	if (!(self = [super initWithColor:ccc4(0x00, 0x00, 0x00, 0xff)]))
+		return self;
+#endif
     
     // Build internal structures.
     self.messageQueue = [NSMutableArray arrayWithCapacity:3];
@@ -66,13 +71,29 @@
     
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
     //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
+    
+    //[self schedule:@selector(debug:) interval:1];
 
-    self.isAccelerometerEnabled = YES;
+    //self.isAccelerometerEnabled = YES;
 
     return self;
 }
 
+- (void)debug:(ccTime)delta {
+    
+    id sceneCandidate = self;
+    while (![sceneCandidate isKindOfClass:[CCScene class]]) {
+        sceneCandidate = [sceneCandidate parent];
+        
+        if (!sceneCandidate)
+            // No scene in hierarchy.
+            return;
+    }
+    
+    [CCDebug printStateForScene:sceneCandidate];
+}
 
+/*
 -(void) setRotation:(float)aRotation {
     
     [super setRotation:aRotation];
@@ -121,7 +142,7 @@
         [self stopAction:self.rotateAction];
     
     [self runAction:self.rotateAction = [CCRotateTo actionWithDuration:0.2f angle:aRotation]];
-}
+}*/
 
 
 -(void) message:(NSString *)msg {

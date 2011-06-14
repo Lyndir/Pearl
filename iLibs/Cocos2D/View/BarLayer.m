@@ -63,21 +63,23 @@
         return self;
     
     self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"bar.png"];
-    self.textureRect        = CGRectFromPointAndSize(CGPointZero, CGSizeMake([CCDirector sharedDirector].winSize.width, self.texture.contentSize.height));
+    self.textureRect        = CGRectFromCGPointAndCGSize(CGPointZero,
+                                                         CGSizeMake([CCDirector sharedDirector].winSize.width,
+                                                                    self.texture.contentSize.height));
     ccTexParams texParams = { GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_CLAMP_TO_EDGE };
 	[self.texture setTexParameters: &texParams];
-
+    
     self.color              = aColor;
     self.renderColor        = aColor;
     self.showPosition       = ccpAdd(aShowPosition, ccp(self.contentSize.width / 2, self.contentSize.height / 2));
     self.dismissed          = YES;
-
+    
     return self;
 }
 
 
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
-
+    
     if(self.menuMenu) {
         [self removeChild:self.menuMenu cleanup:NO];
         self.menuMenu    = nil;
@@ -87,40 +89,21 @@
     if(!aFile)
         // No string means no button.
         return;
-        
+    
     self.menuButton          = [CCMenuItemImage itemFromNormalImage:aFile selectedImage:aFile
-                                                           target:target selector:selector];
+                                                             target:target selector:selector];
     self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
     self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2, 16);
-
+    
     
     [self.menuMenu alignItemsHorizontally];
     [self addChild:self.menuMenu];
 }
 
-
--(void) onEnter {
-    
-    self.dismissed = NO;
-    
-    [super onEnter];
-    
-    [self stopAllActions];
-    
-    if([self.messageLabel parent])
-        [self removeChild:self.messageLabel cleanup:NO];
-    
-    self.position = self.hidePosition;
-    [self runAction:[CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                               position:self.showPosition]];
-}
-
-
 -(void) message:(NSString *)msg isImportant:(BOOL)important {
     
     [self message:msg duration:0 isImportant:important];
 }
-
 
 -(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important {
     
@@ -129,8 +112,8 @@
     
     CGFloat fontSize = [[Config get].smallFontSize intValue];
     self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
-                                      fontName:[Config get].fixedFontName fontSize:fontSize];
-
+                                           fontName:[Config get].fixedFontName fontSize:fontSize];
+    
     if(important) {
         self.renderColor = 0x993333FF;
         [self.messageLabel setColor:ccc3(0xCC, 0x33, 0x33)];
@@ -144,11 +127,24 @@
     
     if(_duration)
         [self.messageLabel runAction:[CCSequence actions:
-                                 [CCDelayTime actionWithDuration:_duration],
-                                 [CCCallFunc actionWithTarget:self selector:@selector(dismissMessage)],
-                                 nil]];
+                                      [CCDelayTime actionWithDuration:_duration],
+                                      [CCCallFunc actionWithTarget:self selector:@selector(dismissMessage)],
+                                      nil]];
 }
 
+-(void) reveal {
+    
+    self.dismissed = NO;
+    
+    [self stopAllActions];
+    
+    if([self.messageLabel parent])
+        [self.messageLabel removeFromParentAndCleanup:NO];
+    
+    self.position = self.hidePosition;
+    [self runAction:[CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                                        position:self.showPosition]];
+}
 
 -(void) dismissMessage {
     
@@ -171,10 +167,10 @@
     
     self.position = self.showPosition;
     [self runAction:[CCSequence actions:
-              [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
-                                position:self.hidePosition],
-              [Remove action],
-              nil]];
+                     [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                                         position:self.hidePosition],
+                     //[Remove action],
+                     nil]];
 }
 
 
@@ -185,11 +181,11 @@
 
 
 -(void) draw {
-
+    
     [super draw];
     
-    CGPoint to = ccp(self.contentSize.width, self.contentSize.height);
-    DrawLinesTo(ccp(0, self.contentSize.height), &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0xFF), 1);
+    CGPoint to = ccp(self.contentSizeInPixels.width, self.contentSizeInPixels.height);
+    DrawLinesTo(ccp(0, to.y), &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0xFF), 1);
 }
 
 -(void) dealloc {

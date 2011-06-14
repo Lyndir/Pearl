@@ -41,7 +41,7 @@ margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
 @interface FancyLayer : CCLayer <CCRGBAProtocol> {
 
-    CGSize                                   _contentSize;
+    CGSize                                   _contentSizeInPixels;
     Margin                                   _outerPadding;
     Margin                                   _padding;
     float                                    _innerRatio;
@@ -51,7 +51,7 @@ margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
     GLuint                                   _colorBuffer;
 }
 
-@property (nonatomic, readonly) CGSize      contentSize;
+@property (nonatomic, readonly) CGSize      contentSizeInPixels;
 @property (nonatomic, readwrite) ccColor4B  colorGradient;
 @property (nonatomic, readwrite) Margin     outerPadding;
 @property (nonatomic, readwrite) Margin     padding;

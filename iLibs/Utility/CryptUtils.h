@@ -10,52 +10,56 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 
-/**
- * An exception that indicates decryption was attempted with an invalid key.
- */
-@interface InvalidKeyException : NSException
-
-+ (void)raise;
-
-@end
-
 @interface NSString (CryptUtils)
 
 /** Generate an MD5 hash for the string. */
-- (NSData *)md5Data;
-/** Generate a hexadecimal encoded MD5 hash for the string. */
-- (NSString *)md5;
-
+- (NSData *)hashWithMD5;
 /** Generate a SHA-1 hash for the string. */
-- (NSData *)sha1Data;
-/** Generate a hexadecimal encoded SHA-1 hash for the string. */
-- (NSString *)sha1;
+- (NSData *)hashWithSHA1;
+
+/** Decode a hex-encoded string into bytes. */
+- (NSData *)decodeHex;
+/** Decode a base64-encoded string into bytes. */
+- (NSData *)decodeBase64;
 
 /** Encrypt this plain-text string object with the given key. */
-- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
 
 @end
 
 @interface NSData (CryptUtils)
 
-- (NSData *)md5;
-- (NSData *)sha1;
+- (NSData *)hashWithMD5;
+- (NSData *)hashWithSHA1;
+- (NSData *)saltWith:(NSData *)salt delimitor:(char)delimitor;
 
 /** Create a string object by formatting the bytes as hexadecimal. */
-- (NSString *)hex;
+- (NSString *)encodeHex;
+/** Create a string object by formatting the bytes as base64. */
+- (NSString *)encodeBase64;
 
 /** Generate a data set whose bytes are the XOR operation between the bytes of this data object and those of the given otherData. */
-- (NSData *)xor:(NSData *)otherData;
+- (NSData *)xorWith:(NSData *)otherData;
 
 /** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
-- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
 
 /** Decrypt this encrypted-data object using the given key, yielding a plain-data object. */
-- (NSData *)decryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
 
-- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withKey:(NSData *)symmetricKey options:(CCOptions *)options;
+/** Apply a symmetric crypto operation on the data using the given key and options.
+ * @return A plain or encrypted object, depending on the operation applied. */
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options;
 
-- (NSData *)signWithKeyFromTag:(NSString *)tag;
+/** Create a signature for this object using the assymetric key in the given tag.
+ *
+ * The method checks the amount of bytes in the object to guess at what it is.
+ * If the object looks like a known hash (MD5, SHA1), a signature is created using appropriate ASN.1 padding and PKCS1 padding.
+ * Otherwise, the object is PKCS1 padded and signed.  This assumes the object is a DER-encoded ASN.1 DigestInfo.
+ */
+- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag;
+/** Create a signature for this object using the given padding strategy and the assymetric key in the given tag. */
+- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding;
 
 @end
 

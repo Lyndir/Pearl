@@ -49,6 +49,7 @@
 @synthesize pushed = _pushed;
 @synthesize fadeNextEntry = _fadeNextEntry;
 @synthesize backButton = _backButton, nextButton = _nextButton;
+@synthesize defaultBackButton = _defaultBackButton, defaultNextButton = _defaultNextButton;
 @synthesize backMenu = _backMenu, nextMenu = _nextMenu;
 @synthesize backInvocation = _backInvocation, nextInvocation = _nextInvocation;
 @synthesize background = _background;
@@ -69,16 +70,19 @@
     self.opacity                    = shadeColor.a;
     self.color                      = ccc4to3(shadeColor);
 
+    self.defaultBackButton = [MenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)];
+    self.defaultNextButton = [MenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)];
+
     [self setBackButton:nil];
     [self setNextButton:nil];
     self.backMenu = [CCMenu menuWithItems:self.backButton, nil];
     self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
-                            [[Config get].fontSize unsignedIntValue] * 1.5f);
+                                 [[Config get].fontSize unsignedIntValue]);
     [self.backMenu alignItemsHorizontally];
     
     self.nextMenu = [CCMenu menuWithItems:self.nextButton, nil];
     self.nextMenu.position = ccp(self.contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
-                            [[Config get].fontSize unsignedIntValue] * 1.5f);
+                                 [[Config get].fontSize unsignedIntValue]);
     [self.nextMenu alignItemsHorizontally];
 
     [self addChild:self.backMenu z:9];
@@ -99,7 +103,7 @@
     [_backButton release];
     _backButton = [aBackButton retain];
     if (!self.backButton) {
-        self.backButton = [MenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)];
+        _backButton = self.defaultBackButton;
         self.backMenu.visible = self.backInvocation != nil;
     } else
         self.backMenu.visible = YES;
@@ -118,6 +122,9 @@
     } else
         self.backInvocation = nil;
     
+    if (self.backButton == self.defaultBackButton)
+        self.backMenu.visible = self.backInvocation != nil;
+    
     self.backMenu.visible = self.backInvocation != nil;
 }
 
@@ -130,8 +137,8 @@
     [_nextButton release];
     _nextButton = [aNextButton retain];
     if (!self.nextButton) {
-        self.nextButton = [MenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)];
-        self.nextMenu.visible = self.backInvocation != nil;
+        _nextButton = self.defaultNextButton;
+        self.nextMenu.visible = self.nextInvocation != nil;
     } else
         self.nextMenu.visible = YES;
     
@@ -148,6 +155,9 @@
         [self.nextInvocation setSelector:selector];
     } else
         self.nextInvocation = nil;
+    
+    if (self.nextButton == self.defaultNextButton)
+        self.nextMenu.visible = self.nextInvocation != nil;
     
     self.nextMenu.visible = self.nextInvocation != nil;
 }
@@ -240,8 +250,9 @@
     [self addChild:self.background z:-1];
     
     // Automatically set correct position of texture nodes.
-    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[CCSprite class]])
-        self.backgroundOffset = ccp(self.background.contentSize.width / 2, self.background.contentSize.height / 2);
+    //if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[CCSprite class]])
+    //    self.backgroundOffset = ccp(self.background.contentSize.width * self.background.scale / 2,
+    //                                self.background.contentSize.height * self.background.scale / 2);
 }
 
 
@@ -251,7 +262,7 @@
     
     self.background.position = ccp(self.backgroundOffset.x - newPosition.x, self.backgroundOffset.y - newPosition.y);
     if ([self.background conformsToProtocol:@protocol(CCRGBAProtocol)] && self.fadeNextEntry)
-        ((id<CCRGBAProtocol>)self.background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
+        [((id<CCRGBAProtocol>)self.background) setOpacity:0xff * (1 - fabs(newPosition.x) / self.contentSize.width)];
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
         self.fadeNextEntry   = YES;

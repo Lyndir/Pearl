@@ -28,7 +28,7 @@
 
 @interface FancyLayer ()
 
-@property (nonatomic, readwrite, assign) CGSize                                   contentSize;
+@property (nonatomic, readwrite, assign) CGSize                        contentSizeInPixels;
 @property (readwrite, assign) ccColor4B                                backColor;
 
 @property (readwrite, assign) GLuint                                   vertexBuffer;
@@ -39,7 +39,7 @@
 
 @implementation FancyLayer
 
-@synthesize contentSize = _contentSize;
+@synthesize contentSizeInPixels = _contentSizeInPixels;
 @synthesize outerPadding = _outerPadding;
 @synthesize padding = _padding;
 @synthesize innerRatio = _innerRatio;
@@ -55,7 +55,7 @@
         return self;
     
     self.outerPadding    = margin(5.0f, 5.0f, 5.0f, 5.0f);
-    self.padding         = margin(50.0f, 50.0f, 50.0f, 50.0f);
+    self.padding         = margin(30.0f, 30.0f, 50.0f, 30.0f);
     self.backColor       = ccc4(0x00, 0x00, 0x00, 0xdd);
     self.colorGradient   = ccc4(0x00, 0x00, 0x00, 0xdd);
     self.innerRatio      = 1.0f / 50.0f;
@@ -88,9 +88,9 @@
             barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
     }
     
-    CGSize winSize      = [[CCDirector sharedDirector] winSize];
-    self.contentSize         = CGSizeMake(winSize.width, winSize.height - barHeight);
-    int inner           = self.contentSize.height * self.innerRatio;
+    CGSize winSizeInPixels      = [[CCDirector sharedDirector] winSizeInPixels];
+    self.contentSizeInPixels = CGSizeMake(winSizeInPixels.width, winSizeInPixels.height - barHeight);
+    int inner           = self.contentSizeInPixels.height * self.innerRatio;
     
     /*
        pos.x + pad                                pos.x + width - pad - inner
@@ -115,21 +115,21 @@
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = self.contentSize.width / 2;                            // 0
-    vertices[1]     = self.contentSize.height / 2;
+    vertices[0]     = self.contentSizeInPixels.width / 2;                            // 0
+    vertices[1]     = self.contentSizeInPixels.height / 2;
     vertices[2]     = self.outerPadding.left + inner;                        // 1
     vertices[3]     = self.outerPadding.bottom;
     vertices[4]     = self.outerPadding.left;                                // 2
     vertices[5]     = self.outerPadding.bottom + inner;
     vertices[6]     = self.outerPadding.left;                                // 3
-    vertices[7]     = self.contentSize.height - self.outerPadding.top - inner;
+    vertices[7]     = self.contentSizeInPixels.height - self.outerPadding.top - inner;
     vertices[8]     = self.outerPadding.left + inner;                        // 4
-    vertices[9]     = self.contentSize.height - self.outerPadding.top;
-    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 5
-    vertices[11]    = self.contentSize.height - self.outerPadding.top;
-    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 6
-    vertices[13]    = self.contentSize.height - self.outerPadding.top - inner;
-    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 7
+    vertices[9]     = self.contentSizeInPixels.height - self.outerPadding.top;
+    vertices[10]    = self.contentSizeInPixels.width - self.outerPadding.right - inner;   // 5
+    vertices[11]    = self.contentSizeInPixels.height - self.outerPadding.top;
+    vertices[12]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 6
+    vertices[13]    = self.contentSizeInPixels.height - self.outerPadding.top - inner;
+    vertices[14]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 7
     vertices[15]    = self.outerPadding.bottom + inner;
     vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 8
     vertices[17]    = self.outerPadding.bottom;
@@ -210,6 +210,8 @@
 
 -(void) draw {
     
+    [super draw];
+
 	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 	//glEnableClientState(GL_VERTEX_ARRAY);
 	//glEnableClientState(GL_COLOR_ARRAY);

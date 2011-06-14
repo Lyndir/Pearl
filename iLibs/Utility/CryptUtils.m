@@ -5,6 +5,7 @@
 //  Created by Maarten Billemont on 05/11/09.
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
+//  See http://www.cocoadev.com/index.pl?BaseSixtyFour
 
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -16,48 +17,109 @@
 #define kCipherKeySize      kCCKeySizeAES128
 #define kCipherBlockSize    8
 
+static const char CryptUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-@implementation InvalidKeyException
-
-+ (void)raise {
-    
-    [self raise:[self description] format:@"Could not decrypt the ciphertext with the given key."];
-}
-
-@end
 
 @implementation NSString (CryptUtils)
 
-- (NSData *)md5Data {
+- (NSData *)hashWithMD5 {
     
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] md5];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] hashWithMD5];
 }
 
-- (NSString *)md5 {
+- (NSData *)hashWithSHA1 {
     
-    return [[self md5Data] hex];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] hashWithSHA1];
 }
 
-- (NSData *)sha1Data {
+- (NSData *)decodeHex {
     
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] sha1];
+    NSMutableData *data = [NSMutableData dataWithLength:self.length / 2];
+    for (NSUInteger i = 0; i < self.length; i += 2) {
+        NSString    *hex = [self substringWithRange:NSMakeRange(i, 2)];
+        NSScanner   *scanner = [NSScanner scannerWithString:hex];
+        NSUInteger  intValue;
+        
+        [scanner scanHexInt:&intValue];
+        [data appendBytes:&intValue length:1];
+    }
+    
+    return data;
 }
 
-- (NSString *)sha1 {
+- (NSData *)decodeBase64 {
     
-    return [[self sha1Data] hex];
+	if (![self length])
+		return [NSData data];
+	
+	static char *decodingTable = NULL;
+	if (decodingTable == NULL) {
+		decodingTable = malloc(256);
+		if (decodingTable == NULL)
+			return nil;
+		
+        memset(decodingTable, CHAR_MAX, 256);
+		for (NSUInteger i = 0; i < 64; i++)
+			decodingTable[(short)CryptUtils_Base64EncodingTable[i]] = i;
+	}
+	
+	const char *characters = [self cStringUsingEncoding:NSASCIIStringEncoding];
+	if (characters == NULL)
+        //  Not an ASCII string!
+		return nil;
+    
+	char *bytes = malloc((([self length] + 3) / 4) * 3);
+	if (bytes == NULL)
+		return nil;
+    
+	NSUInteger length = 0, i = 0;
+	while (YES)	{
+		char buffer[4];
+		short bufferLength;
+		for (bufferLength = 0; bufferLength < 4; i++) {
+			if (characters[i] == '\0')
+				break;
+			if (isspace(characters[i]) || characters[i] == '=')
+				continue;
+            
+			buffer[bufferLength] = decodingTable[(short)characters[i]];
+			if (buffer[bufferLength++] == CHAR_MAX) {
+                // Illegal character!
+				free(bytes);
+				return nil;
+			}
+		}
+		
+		if (bufferLength == 0)
+			break;
+		if (bufferLength == 1) {
+            //  At least two characters are needed to produce one byte!
+			free(bytes);
+			return nil;
+		}
+		
+		//  Decode the characters in the buffer to bytes.
+		bytes[length++] = (buffer[0] << 2) | (buffer[1] >> 4);
+		if (bufferLength > 2)
+			bytes[length++] = (buffer[1] << 4) | (buffer[2] >> 2);
+		if (bufferLength > 3)
+			bytes[length++] = (buffer[2] << 6) | buffer[3];
+	}
+	
+	realloc(bytes, length);
+	return [NSData dataWithBytesNoCopy:bytes length:length];
 }
 
-- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
     
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithKey:symmetricKey usePadding:usePadding];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithSymmetricKey:symmetricKey usePadding:usePadding];
 }
 
 @end
 
 @implementation NSData (CryptUtils)
 
-- (NSString *)hex {
+- (NSString *)encodeHex {
     
     NSMutableString *hex = [NSMutableString stringWithCapacity:self.length * 2];
     for (NSUInteger i = 0; i < self.length; ++i)
@@ -66,7 +128,37 @@
     return hex;
 }
 
-- (NSData *)md5 {
+- (NSString *)encodeBase64 {
+    
+	if ([self length] == 0)
+		return @"";
+    
+    char *characters = malloc((([self length] + 2) / 3) * 4);
+	if (characters == NULL)
+		return nil;
+	
+    NSUInteger length = 0, i = 0;
+	while (i < [self length]) {
+		char buffer[3] = {0,0,0};
+		short bufferLength = 0;
+		while (bufferLength < 3 && i < [self length])
+			buffer[bufferLength++] = ((char *)[self bytes])[i++];
+		
+		//  Encode the bytes in the buffer to four characters, including padding "=" characters if necessary.
+		characters[length++] = CryptUtils_Base64EncodingTable[(buffer[0] & 0xFC) >> 2];
+		characters[length++] = CryptUtils_Base64EncodingTable[((buffer[0] & 0x03) << 4) | ((buffer[1] & 0xF0) >> 4)];
+		if (bufferLength > 1)
+			characters[length++] = CryptUtils_Base64EncodingTable[((buffer[1] & 0x0F) << 2) | ((buffer[2] & 0xC0) >> 6)];
+		else characters[length++] = '=';
+		if (bufferLength > 2)
+			characters[length++] = CryptUtils_Base64EncodingTable[buffer[2] & 0x3F];
+		else characters[length++] = '=';	
+	}
+	
+	return [[[NSString alloc] initWithBytesNoCopy:characters length:length encoding:NSASCIIStringEncoding freeWhenDone:YES] autorelease];
+}
+
+- (NSData *)hashWithMD5 {
     
 	unsigned char result[CC_MD5_DIGEST_LENGTH];
 	CC_MD5(self.bytes, self.length, result);
@@ -74,7 +166,7 @@
     return [NSData dataWithBytes:result length:sizeof(result)];
 }
 
-- (NSData *)sha1 {
+- (NSData *)hashWithSHA1 {
     
 	unsigned char result[CC_SHA1_DIGEST_LENGTH];
 	CC_SHA1(self.bytes, self.length, result);
@@ -82,11 +174,21 @@
     return [NSData dataWithBytes:result length:sizeof(result)];
 }
 
-- (NSData *)xor:(NSData *)otherData {
+- (NSData *)saltWith:(NSData *)salt delimitor:(char)delimitor {
     
-    if (self.length != otherData.length)
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:@"Input data must have the same length for an XOR operation to work." userInfo:nil];
+    NSMutableData *saltedData = [self mutableCopy];
+    [saltedData appendBytes:&delimitor length:1];
+    [saltedData appendData:salt];
+    
+    return [saltedData autorelease];
+}
+
+- (NSData *)xorWith:(NSData *)otherData {
+    
+    if (self.length != otherData.length) {
+        err(@"Input data must have the same length for an XOR operation to work.");
+        return nil;
+    }
     
     NSData *xorData = [self copy];
     for (NSUInteger b = 0; b < xorData.length; ++b)
@@ -95,29 +197,30 @@
     return xorData;
 }
 
-- (NSData *)encryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
     
     CCOptions options = kCCOptionECBMode;
     if (usePadding)
         options |= kCCOptionPKCS7Padding;
     
-    return [self doCipher:kCCEncrypt withKey:symmetricKey options:&options];
+    return [self doCipher:kCCEncrypt withSymmetricKey:symmetricKey options:&options];
 }
 
-- (NSData *)decryptWithKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
     
     CCOptions options = kCCOptionECBMode;
     if (usePadding)
         options |= kCCOptionPKCS7Padding;
     
-    return [self doCipher:kCCDecrypt withKey:symmetricKey options:&options];
+    return [self doCipher:kCCDecrypt withSymmetricKey:symmetricKey options:&options];
 }
 
-- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withKey:(NSData *)symmetricKey options:(CCOptions *)options {
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options {
     
-    if (symmetricKey.length < kCipherKeySize)
-        [NSException raise:NSInvalidArgumentException
-                    format:@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, kCipherKeySize];
+    if (symmetricKey.length < kCipherKeySize) {
+        err(@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, kCipherKeySize);
+        return nil;
+    }
     
     // Result buffer. (FIXME)
     void *buffer = calloc(1000, sizeof(uint8_t));
@@ -129,11 +232,10 @@
                                            symmetricKey.bytes, symmetricKey.length,
                                            nil, self.bytes, self.length,
                                            buffer, sizeof(uint8_t) * 1000, &movedBytes);
-        if (ccStatus == kCCDecodeError)
+        if (ccStatus != kCCSuccess) {
+            err(@"Problem during cryption; ccStatus == %d.", ccStatus);
             return nil;
-        if (ccStatus != kCCSuccess)
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"Problem during cryption; ccStatus == %d.", ccStatus];
+        }
         
         return [NSData dataWithBytes:buffer length:movedBytes];
     }
@@ -142,7 +244,19 @@
     }
 }
 
-- (NSData *)signWithKeyFromTag:(NSString *)tag {
+- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag {
+    
+    switch ([self length]) {
+        case 16:
+            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1MD5];
+        case 20:
+            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1SHA1];
+        default:
+            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1];
+    }
+}
+
+- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding {
     
     NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
                                    (id)kSecClassKey,                (id)kSecClass,
@@ -154,9 +268,10 @@
     
     SecKeyRef privateKey = nil;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
-    if (status != errSecSuccess || privateKey == nil)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Problem during key lookup; status == %d.", status];
+    if (status != errSecSuccess || privateKey == nil) {
+        err(@"Problem during key lookup; status == %d.", status);
+        return nil;
+    }
     
     
     // Malloc a buffer to hold signature.
@@ -164,15 +279,14 @@
     uint8_t *signedHashBytes    = calloc( signedHashBytesSize, sizeof(uint8_t) );
     
     // Sign the SHA1 hash.
-    dbg(@"signing data: %@, <%@>, len: %d",
-        self, [[[NSString alloc] initWithBytes:self.bytes length:self.length encoding:NSUTF8StringEncoding] autorelease], self.length);
-    status = SecKeyRawSign(privateKey, kSecPaddingPKCS1SHA1,
+    status = SecKeyRawSign(privateKey, padding,
                            self.bytes, self.length,
                            signedHashBytes, &signedHashBytesSize);
     CFRelease(privateKey);
-    if (status != errSecSuccess)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Problem during data signing; status == %d.", status];
+    if (status != errSecSuccess) {
+        err(@"Problem during data signing; status == %d.", status);
+        return nil;
+    }
     
     // Build up signed SHA1 blob.
     NSData *signedData = [NSData dataWithBytes:signedHashBytes length:signedHashBytesSize];
@@ -228,9 +342,10 @@
                                    nil];
     
     OSStatus status = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, nil, nil);
-    if (status != errSecSuccess)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Problem during key generation; status == %d.", status];
+    if (status != errSecSuccess) {
+        err(@"Problem during key generation; status == %d.", status);
+        return nil;
+    }
     
     NSData *publicKeyData = nil;
     NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -244,9 +359,10 @@
     // Get the key bits.
     status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *)&publicKeyData);
     
-    if (status != errSecSuccess)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Problem during public key export; status == %d.", status];
+    if (status != errSecSuccess) {
+        err(@"Problem during public key export; status == %d.", status);
+        return nil;
+    }
     
     NSData *asn1PublicKey = [self asn1EncodePublicKey:publicKeyData];
     [publicKeyData release];

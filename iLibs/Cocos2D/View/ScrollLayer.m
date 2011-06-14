@@ -221,7 +221,7 @@
 - (CGRect)visibleRect {
     
     CGPoint visibleOrigin = ccpNeg(self.position);
-    return CGRectFromPointAndSize(visibleOrigin, self.contentSize);
+    return CGRectFromCGPointAndCGSize(visibleOrigin, self.contentSize);
 }
 
 
@@ -267,7 +267,7 @@
         return;
     
     glEnable(GL_SCISSOR_TEST);
-    Scissor(self.parent, CGPointZero, CGPointFromSize(self.contentSize));
+    Scissor(self.parent, CGPointZero, CGPointFromCGSize(self.contentSize));
     
     [super visit];
 
@@ -277,6 +277,8 @@
 
 - (void)draw {
     
+    [super draw];
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     CGPoint scrollBound     = ccp(fmaxf(self.scrollContentSize.width  - self.contentSize.width,  0),

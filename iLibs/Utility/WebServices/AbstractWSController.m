@@ -11,8 +11,10 @@
 #import "NSString_NSArrayFormat.h"
 #import "AlertViewController.h"
 #import "ASIFormDataRequest.h"
+#import "ASIHttpRequest.h"
 #import "Logger.h"
 #import "StringUtils.h"
+#import "CJSONSerializer.h"
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
@@ -36,17 +38,6 @@
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-- (id)init {
-    
-    if(!(self = [super init]))
-        return self;
-    
-    responseCallbackStore = [[NSMutableDictionary alloc] initWithCapacity:2];
-    
-    return self;
-}
-
-
 + (AbstractWSController *)get {
     
     static AbstractWSController *wsInstance;
@@ -54,15 +45,6 @@
         wsInstance = [self new];
     
     return wsInstance;
-}
-
-
-- (void)dealloc {
-    
-    [responseCallbackStore release];
-    responseCallbackStore = nil;
-    
-    [super dealloc];
 }
 
 
@@ -80,78 +62,118 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"You must override this method." userInfo:nil];
 }
 
-- (id)getRequestFromDictionary:(NSDictionary *)parameters
-                    withTarget:(id)target callback:(SEL)callback {
+- (id)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
+                 completion:(void (^)(NSData *responseData))completion {
     
-    inf(@"Out to %@:\n%@", [self serverURL], parameters);
+    inf(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
     
-    NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
-    BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
-    ASIFormDataRequest *dummyRequest = [[ASIFormDataRequest new] autorelease];
-    
-    for (NSString *key in [parameters allKeys]) {
-        id value = [parameters objectForKey:key];
-        if (value != [NSNull null]) {
+    switch (method) {
+        case WSRequestMethodGET_REST: {
+            NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
+            BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
+            ASIFormDataRequest *request = [[ASIFormDataRequest new] autorelease];
+            
+            for (NSString *key in [parameters allKeys]) {
+                id value = [parameters objectForKey:key];
+                if (value != [NSNull null]) {
+                    [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
+                     [request encodeURL:key],
+                     [request encodeURL:[value description]]];
+                    hasQuery = YES;
+                }
+            }
             [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-             [dummyRequest encodeURL:key],
-             [dummyRequest encodeURL:[value description]]];
-            hasQuery = YES;
+             [request encodeURL:REQUEST_KEY_VERSION],
+             [request encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                NSError *error = nil;
+                NSURLResponse *response = nil;
+                NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
+                                                             returningResponse:&response error:&error];
+                
+                if ([request isCancelled])
+                    return;
+                
+                if (error)
+                    err(@"Failed from: %@, error: %@", urlString, error);
+                else
+                    inf(@"In from: %@, data:\n%@", urlString, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(responseData);
+                });
+            });
+            
+            return request;
+        }
+            
+        case WSRequestMethodPOST_REST: {
+            // Build the request.
+            ASIFormDataRequest *request = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
+            [request setPostFormat:ASIURLEncodedPostFormat];
+            [request setDelegate:self];
+            for (NSString *key in [parameters allKeys]) {
+                id value = [parameters objectForKey:key];
+                if (value != [NSNull null])
+                    [request setPostValue:[value description] forKey:key];
+            }
+            [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                [request startSynchronous];
+                if ([request isCancelled])
+                    return;
+                
+                NSData *responseData = request.responseData;
+                if (request.error)
+                    err(@"Failed from: %@, error: %@", request.url, request.error);
+                else
+                    dbg(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(responseData);
+                });
+            });
+            
+            return request;
+        }
+            
+        case WSRequestMethodPOST_JSON: {
+            // Build the request.
+            ASIHTTPRequest *request = [[[ASIHTTPRequest alloc] initWithURL:[self serverURL]] autorelease];
+            NSError *jsonError = nil;
+            [request setPostBody:[[[[CJSONSerializer serializer] serializeDictionary:parameters error:&jsonError] mutableCopy] autorelease]];
+            if (jsonError != nil) {
+                err(@"JSON: %@, for request:\n%@", jsonError, request.url);
+                return nil;
+            }
+
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                [request startSynchronous];
+                if ([request isCancelled])
+                    return;
+                
+                NSData *responseData = request.responseData;
+                if (request.error)
+                    err(@"Failed from: %@, error: %@", request.url, request.error);
+                else
+                    dbg(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(responseData);
+                });
+            });
+            
+            return request;
         }
     }
-    [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-     [dummyRequest encodeURL:REQUEST_KEY_VERSION],
-     [dummyRequest encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSError *error = nil;
-        NSURLResponse *response = nil;
-        NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
-                                                     returningResponse:&response error:&error];
-        
-        if ([dummyRequest isCancelled])
-            return;
-        
-        if (error)
-            err(@"Failed from: %@, error: %@", urlString, error);
-        else
-            inf(@"In from: %@, data:\n%@", urlString, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
-        
-        [target performSelectorOnMainThread:callback withObject:responseData waitUntilDone:NO];
-    });
-    
-    return dummyRequest;
-}
-
-- (id)postRequestFromDictionary:(NSDictionary *)parameters
-                     withTarget:(id)target callback:(SEL)callback {
-    
-    inf(@"Out to: %@, parameters:\n%@", [self serverURL], parameters);
-    
-    // Build the request.
-    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
-    [request setPostFormat:ASIURLEncodedPostFormat];
-    [request setDelegate:self];
-    for (NSString *key in [parameters allKeys]) {
-        id value = [parameters objectForKey:key];
-        if (value != [NSNull null])
-            [request setPostValue:[value description] forKey:key];
-    }
-    [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
-    
-    // Build the callback invocation.
-    NSMethodSignature *sig = [[target class] instanceMethodSignatureForSelector:callback];
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
-    [invocation setTarget:[target retain]];
-    [invocation setSelector:callback];
-    
-    // Remember the callback invocation using the request pointer as key.
-    NSValue *requestKey = [NSValue valueWithPointer:request];
-    [responseCallbackStore setObject:invocation forKey:requestKey];
-    
-    [request startAsynchronous];
-    
-    return request;
+    err(@"Request method not supported: %d", method);
+    return nil;
 }
 
 
@@ -256,72 +278,5 @@
     
     return result;
 }
-
-
-- (void)abortRequest:(ASIHTTPRequest *)request {
-    
-    NSValue *requestKey = [NSValue valueWithPointer:request];
-    NSInvocation *invocation = [[responseCallbackStore objectForKey:requestKey] retain];
-    [responseCallbackStore removeObjectForKey:requestKey];
-    if (!invocation)
-        // Already handled.
-        return;
-    
-    [request cancel];
-    err(@"Aborted: %@", request.url);
-    
-    [request release];
-    [[invocation target] release];
-    [invocation release];
-}
-
-
-- (void)requestFailed:(ASIHTTPRequest *)request {
-    
-    NSValue *requestKey = [NSValue valueWithPointer:request];
-    NSInvocation *invocation = [[responseCallbackStore objectForKey:requestKey] retain];
-    [responseCallbackStore removeObjectForKey:requestKey];
-    if (!invocation)
-        // Already handled.
-        return;
-    
-    err(@"Failed from: %@, error: %@", request.url, request.error);
-    
-    id nilResponseData = nil;
-    if ([[invocation methodSignature] numberOfArguments] > 2)
-        [invocation setArgument:&nilResponseData atIndex:2];
-    if ([[invocation methodSignature] numberOfArguments] > 3)
-        [invocation setArgument:&request atIndex:3];
-    [invocation invoke];
-    
-    [request release];
-    [[invocation target] release];
-    [invocation release];
-}
-
-
-- (void)requestFinished:(ASIHTTPRequest *)request {
-    
-    NSValue *requestKey = [NSValue valueWithPointer:request];
-    NSInvocation *invocation = [[responseCallbackStore objectForKey:requestKey] retain];
-    [responseCallbackStore removeObjectForKey:requestKey];
-    if (!invocation)
-        // Already handled.
-        return;
-    
-    NSData *responseData = request.responseData;
-    inf(@"In from %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
-    
-    if ([[invocation methodSignature] numberOfArguments] > 2)
-        [invocation setArgument:&responseData atIndex:2];
-    if ([[invocation methodSignature] numberOfArguments] > 3)
-        [invocation setArgument:&request atIndex:3];
-    [invocation invoke];
-    
-    [request release];
-    [[invocation target] release];
-    [invocation release];
-}
-
 
 @end

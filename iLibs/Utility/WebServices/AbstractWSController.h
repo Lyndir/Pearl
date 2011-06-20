@@ -44,7 +44,26 @@ typedef enum {
  */
 - (id)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
                  completion:(void (^)(NSData *responseData))completion;
-    
+
+
+/** Invoke a WS request, serializing the given object according to the given method.
+ *
+ * @param object
+ *        The object to serialize and send to the server.
+ * @param method
+ *        The method to use for encoding and submitting the request to the server.
+ * @param popupOnError
+ *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
+ * @param backOnError
+ *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
+ * @param completion
+ *        The block of code to execute on completion of the operation. The block takes one parameter: the object deserialized from a
+ *        successful server response or nil if the request or reading of the response failed.
+ * @return The object responsible for handling this request while it's in progress.
+ */
+- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+             completion:(void (^)(id response))completion;
+
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.
  *
@@ -71,5 +90,10 @@ typedef enum {
  * @param button The index of the button that was used to dismiss the alert (base 1).
  */
 - (void)upgrade:(NSNumber *)button;
+
+/**
+ * Override this method to make the operations synchronous.  Defaults to NO.
+ */
+- (BOOL)isSynchronous;
 
 @end

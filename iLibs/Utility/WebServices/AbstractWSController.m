@@ -15,6 +15,7 @@
 #import "Logger.h"
 #import "StringUtils.h"
 #import "CJSONSerializer.h"
+#import "NSObject_Export.h"
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
@@ -62,118 +63,130 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"You must override this method." userInfo:nil];
 }
 
-- (id)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
-                 completion:(void (^)(NSData *responseData))completion {
+- (BOOL)isSynchronous {
+    
+    return NO;
+}
+
+- (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
+                               completion:(void (^)(NSData *responseData))completion {
     
     inf(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
+    ASIHTTPRequest *request;
+    NSData *(^loadRequest)(void);
     
     switch (method) {
         case WSRequestMethodGET_REST: {
+            ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
+            request = formRequest;
+            
             NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
             BOOL hasQuery = [urlString rangeOfString:@"?"].location != NSNotFound;
-            ASIFormDataRequest *request = [[ASIFormDataRequest new] autorelease];
             
             for (NSString *key in [parameters allKeys]) {
                 id value = [parameters objectForKey:key];
                 if (value != [NSNull null]) {
                     [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-                     [request encodeURL:key],
-                     [request encodeURL:[value description]]];
+                     [formRequest encodeURL:key],
+                     [formRequest encodeURL:[value description]]];
                     hasQuery = YES;
                 }
             }
             [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
-             [request encodeURL:REQUEST_KEY_VERSION],
-             [request encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
+             [formRequest encodeURL:REQUEST_KEY_VERSION],
+             [formRequest encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
+            loadRequest = ^{
                 NSError *error = nil;
                 NSURLResponse *response = nil;
                 NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
                                                              returningResponse:&response error:&error];
+                request.error = error;
                 
-                if ([request isCancelled])
-                    return;
-                
-                if (error)
-                    err(@"Failed from: %@, error: %@", urlString, error);
-                else
-                    inf(@"In from: %@, data:\n%@", urlString, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(responseData);
-                });
-            });
-            
-            return request;
+                return responseData;
+            };
+            break;
         }
             
         case WSRequestMethodPOST_REST: {
             // Build the request.
-            ASIFormDataRequest *request = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
-            [request setPostFormat:ASIURLEncodedPostFormat];
-            [request setDelegate:self];
+            ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
+            request = formRequest;
+            
+            [formRequest setPostFormat:ASIURLEncodedPostFormat];
+            [formRequest setDelegate:self];
             for (NSString *key in [parameters allKeys]) {
                 id value = [parameters objectForKey:key];
                 if (value != [NSNull null])
-                    [request setPostValue:[value description] forKey:key];
+                    [formRequest setPostValue:[value description] forKey:key];
             }
-            [request setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
+            [formRequest setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
+            loadRequest = ^{
                 [request startSynchronous];
-                if ([request isCancelled])
-                    return;
                 
-                NSData *responseData = request.responseData;
-                if (request.error)
-                    err(@"Failed from: %@, error: %@", request.url, request.error);
-                else
-                    dbg(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(responseData);
-                });
-            });
-            
-            return request;
+                return request.responseData;
+            };
+            break;
         }
             
         case WSRequestMethodPOST_JSON: {
             // Build the request.
-            ASIHTTPRequest *request = [[[ASIHTTPRequest alloc] initWithURL:[self serverURL]] autorelease];
+            request = [[[ASIHTTPRequest alloc] initWithURL:[self serverURL]] autorelease];
+            
             NSError *jsonError = nil;
             [request setPostBody:[[[[CJSONSerializer serializer] serializeDictionary:parameters error:&jsonError] mutableCopy] autorelease]];
             if (jsonError != nil) {
                 err(@"JSON: %@, for request:\n%@", jsonError, request.url);
                 return nil;
             }
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
-                [request startSynchronous];
-                if ([request isCancelled])
-                    return;
-                
-                NSData *responseData = request.responseData;
-                if (request.error)
-                    err(@"Failed from: %@, error: %@", request.url, request.error);
-                else
-                    dbg(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(responseData);
-                });
-            });
             
-            return request;
+            loadRequest = ^{
+                [request startSynchronous];
+                
+                return request.responseData;
+            };
+            break;
         }
     }
     
-    err(@"Request method not supported: %d", method);
-    return nil;
+    dispatch_block_t handleRequest = ^{
+        NSData *responseData = loadRequest();
+        if ([request isCancelled]) {
+            inf(@"Cancelled: %@", request.url);
+            completion(nil);
+        }
+        
+        if (request.error)
+            err(@"Failed from: %@, error: %@", request.url, request.error);
+        else
+            inf(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+        
+        if ([self isSynchronous])
+            completion(responseData);
+        else
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(responseData);
+            });
+    };
+    
+    if (request) {
+        if ([self isSynchronous])
+            handleRequest();
+        else
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), handleRequest);
+    } else
+        err(@"Request method not supported: %d", method);
+    
+    return request;
+}
+
+- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+             completion:(void (^)(id response))completion {
+    
+    return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
+        completion([self validateAndParseResponse:responseData popupOnError:popupOnError allowBackOnError:backOnError requires:nil]);
+    }];
 }
 
 

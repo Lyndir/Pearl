@@ -76,8 +76,8 @@
     do { dbg(@"glTranslatef(%s, %s, %s)", #x, #y, #z); glTranslatef(x, y, z); GLCheck(__FILE__, __LINE__);                       } while (0)
 #define glVertexPointer(x, y, z, p) \
     do { dbg(@"glVertexPointer(%s, %s, %s, %s)", #x, #y, #z, #p); glVertexPointer(x, y, z, p); GLCheck(__FILE__, __LINE__);      } while (0)
-int GLCheck(char *file, int line);
 */
+int GLCheck(char *file, int line);
 
 /**
  * GL types
@@ -158,7 +158,7 @@ CGSize CGSizeFromCGPoint(const CGPoint point);
 CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
 void IndicateInSpaceOf(const CGPoint point, const CCNode* node);
-void DrawIndicators();
+void DrawIndicators(void);
 
 void DrawPointsAt(const CGPoint* points, const NSUInteger count, const ccColor4B color);
 void DrawPoints(const CGPoint* points, const ccColor4B* colors, const NSUInteger n);

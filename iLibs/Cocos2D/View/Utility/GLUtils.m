@@ -94,7 +94,7 @@ void IndicateInSpaceOf(const CGPoint point, const CCNode *node) {
     ++indicatorPosition;
     indicatorPoints[indicatorPosition % INDICATORS] = point;
     [indicatorSpaces[indicatorPosition % INDICATORS] release];
-    indicatorSpaces[indicatorPosition % INDICATORS] = [node retain];
+    indicatorSpaces[indicatorPosition % INDICATORS] = (CCNode *) [node retain];
     for (NSUInteger i = 0; i <= indicatorPosition; ++i)
         if (i < indicatorPosition - INDICATORS)
             indicatorColors[i % INDICATORS] = ccc4(0x00, 0x00, 0x00, 0xff);

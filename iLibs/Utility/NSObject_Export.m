@@ -35,7 +35,7 @@
                     break;
                 }
             if (!codable) {
-                NSMutableArray *codableObject = [NSMutableArray arrayWithCapacity:[object count]];
+                NSMutableArray *codableObject = [NSMutableArray arrayWithCapacity:[(NSArray *)object count]];
                 for (NSObject *child in object)
                     [codableObject addObject:[self exportToCodable:child]];
                 object = codableObject;
@@ -49,7 +49,7 @@
                     break;
                 }
             if (!codable) {
-                NSMutableSet *codableObject = [NSMutableSet setWithCapacity:[object count]];
+                NSMutableSet *codableObject = [NSMutableSet setWithCapacity:[(NSSet *)object count]];
                 for (NSObject *child in object)
                     [codableObject addObject:[self exportToCodable:child]];
                 object = codableObject;
@@ -64,7 +64,7 @@
                     break;
                 }
             if (!codable) {
-                NSMutableDictionary *codableObject = [NSMutableDictionary dictionaryWithCapacity:[object count]];
+                NSMutableDictionary *codableObject = [NSMutableDictionary dictionaryWithCapacity:[(NSDictionary *)object count]];
                 for (NSObject *key in object)
                     [codableObject setObject:[self exportToCodable:[(NSDictionary *)object objectForKey:key]]
                                       forKey:[self exportToCodable:key]];

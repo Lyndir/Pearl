@@ -123,4 +123,26 @@ CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
  */
 + (id)copyOf:(id)view addTo:(UIView *)superView;
 
+/**
+ * Expands localized text in the given view and all its subviews.
+ *
+ * Properties localizable by this method are: text, placeholder.
+ * Additionally, the following views are handled specially:
+ *  - UISegmentedControl: Segment titles are localized.
+ *
+ * See applyLocalization for the rules of localization expansion.
+ */
++ (void)loadLocalization:(UIView *)rootView;
+
+/**
+ * Apply localization expansion on the given value.
+ *
+ * Localization expansion happens for values with the syntax: {localization-key[:Default Value]}
+ * The localization key is used to look up a localized value.  The optional Default Value is expanded if no localized value could be found
+ * for the key.
+ *
+ * Values that do not abide by this syntax are returned untouched.
+ */
++ (NSString *)applyLocalization:(NSString *)localizableValue;
+
 @end

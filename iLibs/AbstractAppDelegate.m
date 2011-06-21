@@ -155,13 +155,14 @@
     
 }
 
+#ifdef APNS
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [Config get].deviceToken = deviceToken;
     [Config get].notificationsSupported = YES;
     [Config get].notificationsChecked = YES;
     
-    dbg(@"APN Device Token Hex: %@", [deviceToken hex]);
+    dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
 
 
@@ -176,6 +177,7 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
 }
+#endif
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     

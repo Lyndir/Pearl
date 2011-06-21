@@ -262,7 +262,7 @@
     
     self.background.position = ccp(self.backgroundOffset.x - newPosition.x, self.backgroundOffset.y - newPosition.y);
     if ([self.background conformsToProtocol:@protocol(CCRGBAProtocol)] && self.fadeNextEntry)
-        ((id<CCRGBAProtocol>)self.background).opacity  = 0xff * (1 - fabs(newPosition.x) / self.contentSize.width);
+        [((id<CCRGBAProtocol>)self.background) setOpacity:0xff * (1 - fabs(newPosition.x) / self.contentSize.width)];
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
         self.fadeNextEntry   = YES;

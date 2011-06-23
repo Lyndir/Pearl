@@ -3,7 +3,7 @@
 cd "${BASH_SOURCE%/*}/.."
 shopt -s extglob
 
-# First use this script in any child modules that may provide it, to update that child correctly.
+# First use this script in any child modules that may provide it, to update that child correctly (in case it has specific update logic).
 find !(Scripts)/ -name "${BASH_SOURCE##*/}" -exec {} \;
 
 # Then, update any other children using a standard git-submodule rebase update.

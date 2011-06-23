@@ -16,6 +16,6 @@ Some modules require additional dependencies: they can be found in the External 
 
 To update them when you update Pearl from git, run:
 
-    git submodule update --recursive --merge
+    ./Scripts/updateDependencies
 
 Don't forget to also add the external library's sources to your project.  You probably want to put each under a separate static library target.  Some libraries have a bit of a different directory layout, make sure to only add the library's sources that you need.

@@ -1,5 +1,21 @@
-To get started, just add the iLibs directory in the iLibs root directory to your Xcode project and optionally delete whatever groups are irrelevant to your project.
+h1. Getting Started
 
-Some groups require additional dependencies, they can be found in the External directory.  To fetch them, simply run:
+To get started, simply add the directories with the Pearl modules that you need to your project.  You probably want to make a Pearl static library target for these.
 
-git submodule update --init External/[dependency]
+Then, import the module headers in your project target's prefix.  Eg.
+
+    #import "Pearl.h"
+    #import "Pearl-WS.h"
+
+
+h1. Dependencies
+
+Some modules require additional dependencies: they can be found in the External directory.  To fetch them, simply run:
+
+    git submodule update --init --recursive External/[dependency]
+
+To update them when you update Pearl from git, run:
+
+    ./Scripts/updateDependencies
+
+Don't forget to also add the external library's sources to your project.  You probably want to put each under a separate static library target.  Some libraries have a bit of a different directory layout, make sure to only add the library's sources that you need.

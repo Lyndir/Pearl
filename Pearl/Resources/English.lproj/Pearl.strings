@@ -1,0 +1,28 @@
+/* Data and Units */
+"time.day.suffix"                           = "th";
+"time.day.suffix.one"                       = "st";
+"time.day.suffix.two"                       = "nd";
+"time.day.suffix.three"                     = "rd";
+
+/* Strings that are the same everywhere. */
+"common.title.notice"                       = "Notice";
+"common.title.error"                        = "Error";
+"common.button.okay"                        = "Okay";
+"common.button.next"                        = "Next";
+"common.button.done"                        = "Done";
+"common.button.back"                        = "Back";
+"common.button.retry"                       = "Retry";
+"common.button.abort"                       = "Abort";
+"common.button.upgrade"                     = "Upgrade";
+"common.button.yes"                         = "Yes";
+"common.button.no"                          = "No";
+"common.button.no.kind"                     = "Rather Not";
+"common.button.save"                        = "Save";
+"common.button.sure"                        = "Sure!";
+"common.button.thanks"                      = "Thanks";
+
+/* Strings that describe error conditions. */
+"error.connection"                          = "Could not connect to the server.";
+"error.response.invalid"                    = "Incompatible server response.";
+"error.response.outdated.required"          = "A new version is available.\nPlease upgrade before proceding.";
+"error.response.outdated.optional"          = "A new version is available.";

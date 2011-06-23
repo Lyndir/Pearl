@@ -7,3 +7,9 @@
 [submodule "External/TouchJSON"]
 	path = External/TouchJSON
 	url = git://github.com/TouchCode/TouchJSON.git
+[submodule "External/jrswizzle"]
+	path = External/jrswizzle
+	url = git://github.com/jonmarimba/jrswizzle.git
+[submodule "External/iOSPorts"]
+	path = External/iOSPorts
+	url = git://github.com/bindle/iOSPorts.git

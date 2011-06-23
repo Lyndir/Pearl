@@ -110,7 +110,7 @@
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
     [[AlertViewController currentAlert] dismissAlert];
-#ifdef
+#endif
 }
 
 - (void)shutdown:(id)caller {

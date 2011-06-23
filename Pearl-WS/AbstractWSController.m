@@ -235,8 +235,8 @@
     }
     
     // Check whether the client is up-to-date enough.
-    NSNumber *outdatedValue = [responseDictionary objectForKey:RESULT_KEY_CLIENT_OUTDATED];
 #ifdef PEARL_UIKIT
+    NSNumber *outdatedValue = [responseDictionary objectForKey:RESULT_KEY_CLIENT_OUTDATED];
     BOOL outdated = ((id)outdatedValue != [NSNull null] && [outdatedValue boolValue]);
     if (outdated) {
         if ([resultCode intValue] == CODE_FAILURE_UPDATE_REQUIRED)

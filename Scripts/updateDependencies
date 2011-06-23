@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script should be in the 'Scripts' directory under the git repository's root.
+cd "${BASH_SOURCE%/*}/.."
+shopt -s extglob
+
+# First use this script in any child modules that may provide it, to update that child correctly.
+find !(Scripts)/ -name "${BASH_SOURCE##*/}" -exec {} \;
+
+# Then, update any other children using a standard git-submodule rebase update.
+# git submodule sync -- A bug causes this to init ALL external dependencies.
+git submodule update --recursive --rebase

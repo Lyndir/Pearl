@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+cd "${BASH_SOURCE%/*}/.."
+for module in Pearl*/; do
+    module=${module%/}
+    printf "$module.."
+
+    printf ' %d headers.\n' "$(
+        cd "$module"; headers=0
+        {
+            define=${module^^} define=${define//-/_}
+            printf '#define %s\n' "${define}"
+            while read f; do
+                (( headers++ ))
+                printf '#import "%s"\n' "${f##*/}"
+            done < <(find . -name '*.h')
+        } > "$module".h
+        echo "$headers")"
+done

@@ -45,8 +45,8 @@
 -(BOOL) ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
 
     BOOL itemTouched = [super ccTouchBegan:touch withEvent:event];
-    if (itemTouched && [self itemForTouch:touch].isEnabled)
 #ifdef PEARL_MEDIA
+    if (itemTouched && [self itemForTouch:touch].isEnabled)
         [[AudioController get] clickEffect];
 #endif
     

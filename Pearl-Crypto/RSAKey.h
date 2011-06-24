@@ -27,16 +27,16 @@
 @property (readwrite, assign) BOOL  isPublicKey;
 
 - (id)initPublic:(BOOL)isPublicKey;
-- (id)initWithModulus:(NSString *)modulus exponent:(NSString *)exponent isPublic:(BOOL)isPublicKey;
+- (id)initWithHexModulus:(NSString *)modulus exponent:(NSString *)exponent isPublic:(BOOL)isPublicKey;
+- (id)initWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent isPublic:(BOOL)isPublicKey;
 - (id)initWithDictionary:(NSDictionary *)dictionary isPublic:(BOOL)isPublicKey;
+
 - (int)maxSize;
 - (NSString *)modulus;
 - (NSString *)exponent;
 - (NSDictionary *)dictionaryRepresentation;
-- (NSDictionary *)publicKeyDictionaryRepresentation;
-- (NSData *)encryptWithPublicKey:(NSData *) data;
-- (NSData *)encryptWithPrivateKey:(NSData *) data;
-- (NSData *)decryptWithPublicKey:(NSData *) data;
-- (NSData *)decryptWithPrivateKey:(NSData *) data;
+
+- (NSData *)encrypt:(NSData *) data;
+- (NSData *)decrypt:(NSData *) data;
 
 @end

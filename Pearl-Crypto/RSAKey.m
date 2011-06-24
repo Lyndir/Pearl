@@ -49,22 +49,28 @@
     return self;
 }
 
-- (id)initWithModulus:(NSString *)modulus exponent:(NSString *)exponent isPublic:(BOOL)isPublicKey {
+- (id)initWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent isPublic:(BOOL)isPublicKey {
     
     if (!(self = [super init]))
         return nil;
     
     self.isPublicKey = isPublicKey;
     _key = RSA_new();
-    if (modulus)
-        BN_hex2bn(&(rsaKey->n), [modulus cStringUsingEncoding:NSUTF8StringEncoding]);
-    if (exponent)
-        BN_hex2bn(&(rsaKey->e), [exponent cStringUsingEncoding:NSUTF8StringEncoding]);
+    if (hexModulus)
+        BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
+    if (hexExponent) {
+        if (self.isPublicKey)
+            BN_hex2bn(&(rsaKey->e), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
+        else {
+            BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
+            BN_hex2bn(&(rsaKey->d), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
+        }
+    }
     
     return self;
 }
 
-- (id)initWithModulusData:(NSData *)modulus exponentData:(NSData *)exponent isPublic:(BOOL)isPublicKey {
+- (id)initWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent isPublic:(BOOL)isPublicKey {
     
     if (!(self = [super init]))
         return nil;
@@ -73,8 +79,12 @@
     _key = RSA_new();
     if (modulus)
         rsaKey->n = BN_bin2bn([modulus bytes], [modulus length], NULL);
-    if (exponent)
-        rsaKey->e = BN_bin2bn([exponent bytes], [exponent length], NULL);
+    if (exponent) {
+        if (self.isPublicKey)
+            rsaKey->e = BN_bin2bn([exponent bytes], [exponent length], NULL);
+        else
+            rsaKey->d = BN_bin2bn([exponent bytes], [exponent length], NULL);
+    }
     
     return self;
 }
@@ -157,10 +167,14 @@
 
 - (NSDictionary *)dictionaryRepresentation {
     
-    NSMutableDictionary *representation = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           [[NSString stringWithCString:BN_bn2hex(rsaKey->n) encoding:NSUTF8StringEncoding] decodeHex], @"n",
-                                           [[NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding] decodeHex], @"e",
-                                           nil];
+    NSMutableDictionary *representation = [NSMutableDictionary dictionaryWithCapacity:5];
+
+    if (rsaKey->n)
+        [representation setObject:[[NSString stringWithCString:BN_bn2hex(rsaKey->n) encoding:NSUTF8StringEncoding] decodeHex]
+                           forKey:@"n"];
+    if (rsaKey->e)
+        [representation setObject:[[NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding] decodeHex]
+                           forKey:@"n"];
     if (rsaKey->d)
         [representation setObject:[[NSString stringWithCString:BN_bn2hex(rsaKey->d) encoding:NSUTF8StringEncoding] decodeHex]
                            forKey:@"d"];
@@ -174,12 +188,9 @@
     return representation;
 }
 
-- (NSDictionary *)publicKeyDictionaryRepresentation {
+- (NSString *)description {
     
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            [[NSString stringWithCString:BN_bn2hex(rsaKey->n) encoding:NSUTF8StringEncoding] decodeHex], @"n",
-            [[NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding] decodeHex], @"e",
-            nil];
+    return [[self dictionaryRepresentation] description];
 }
 
 - (NSData *)encodeDER {
@@ -200,40 +211,41 @@
 	return [NSData dataWithBytesNoCopy:buffer length:length];
 }
 
-- (NSData *)encryptWithPublicKey:(NSData *)data {
+- (NSData *)encrypt:(NSData *)data {
     
-    int maxSize = RSA_size(rsaKey);
-    unsigned char *output = (unsigned char *) malloc(maxSize * sizeof(char));
-    int bytes = RSA_public_encrypt([data length], [data bytes], output, rsaKey, RSA_PKCS1_PADDING);
+    NSUInteger length;
+    NSUInteger maxSize = RSA_size(rsaKey);
+    unsigned char *buffer = (unsigned char *) malloc(maxSize * sizeof(char));
     
-	return (bytes > 0) ? [NSData dataWithBytesNoCopy:output length:bytes] : nil;
+    if (self.isPublicKey)
+        length = RSA_public_encrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+    else
+        length = RSA_private_encrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+    
+    if (length > 0)
+        return [NSData dataWithBytesNoCopy:buffer length:length];
+    
+    ERR_print_errors_fp(stderr);
+    return nil;
 }
 
-- (NSData *)encryptWithPrivateKey:(NSData *)data {
+- (NSData *)decrypt:(NSData *)data {
     
-    int maxSize = RSA_size(rsaKey);
-    unsigned char *output = (unsigned char *) malloc(maxSize * sizeof(char));
-    int bytes = RSA_private_encrypt([data length], [data bytes], output, rsaKey, RSA_PKCS1_PADDING);
+    int length;
+    NSUInteger maxSize = RSA_size(rsaKey);
+    unsigned char *buffer = (unsigned char *) malloc(maxSize * sizeof(char));
     
-    return (bytes > 0) ? [NSData dataWithBytesNoCopy:output length:bytes] : nil;
-}
-
-- (NSData *)decryptWithPublicKey:(NSData *)data {
+    RSA *typedKey = rsaKey;
+    if (self.isPublicKey)
+        length = RSA_public_decrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+    else
+        length = RSA_private_decrypt([data length], [data bytes], buffer, typedKey, RSA_PKCS1_PADDING);
     
-    int maxSize = RSA_size(rsaKey);
-    unsigned char *output = (unsigned char *) malloc(maxSize * sizeof(char));
-    int bytes = RSA_public_decrypt([data length], [data bytes], output, rsaKey, RSA_PKCS1_PADDING);
+    if (length > 0)
+        return [NSData dataWithBytesNoCopy:buffer length:length];
     
-    return (bytes > 0) ? [NSData dataWithBytesNoCopy:output length:bytes] : nil;
-}
-
-- (NSData *)decryptWithPrivateKey:(NSData *)data {
-    
-    int maxSize = RSA_size(rsaKey);
-    unsigned char *output = (unsigned char *) malloc(maxSize * sizeof(char));
-    int bytes = RSA_private_decrypt([data length], [data bytes], output, rsaKey, RSA_PKCS1_PADDING);
-    
-	return (bytes > 0) ? [NSData dataWithBytesNoCopy:output length:bytes] : nil;
+    ERR_print_errors_fp(stderr);
+    return nil;
 }
 
 @end

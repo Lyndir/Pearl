@@ -18,6 +18,16 @@
 
 #import <Foundation/Foundation.h>
 
+
+typedef enum {
+    PearlDigestMD5,
+    PearlDigestSHA1,
+    PearlDigestSHA256,
+    PearlDigestSHA384,
+    PearlDigestSHA512,
+    PearlDigestRIPEMD160,
+} PearlDigest;
+
 @interface RSAKey : NSObject
 {
     void                            *_key;
@@ -26,14 +36,24 @@
 
 @property (readwrite, assign) BOOL  isPublicKey;
 
-- (id)initPublic:(BOOL)isPublicKey;
-- (id)initWithHexModulus:(NSString *)modulus exponent:(NSString *)exponent isPublic:(BOOL)isPublicKey;
-- (id)initWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent isPublic:(BOOL)isPublicKey;
-- (id)initWithDictionary:(NSDictionary *)dictionary isPublic:(BOOL)isPublicKey;
+- (id)init;
+- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent;
+- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent;
+- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent
+                            primeP:(NSString *)hexPrimeP primeQ:(NSString *)hexPrimeQ;
+- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent
+                               primeP:(NSData *)primeP primeQ:(NSData *)primeQ;
+- (id)initPublicKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent;
+- (id)initPublicKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent;
+- (id)initWithDictionary:(NSDictionary *)dictionary;
+
+- (RSAKey *)toPublicKey;
 
 - (int)maxSize;
+- (BOOL)isValid;
 - (NSString *)modulus;
 - (NSString *)exponent;
+- (NSString *)publicExponent;
 - (NSDictionary *)dictionaryRepresentation;
 
 - (NSData *)encrypt:(NSData *) data;

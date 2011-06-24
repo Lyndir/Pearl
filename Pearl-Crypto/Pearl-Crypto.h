@@ -1,3 +1,3 @@
 #define PEARL_CRYPTO
-#import "Pearl-Crypto.h"
+#import "Pearl.h"
 #import "RSAKey.h"

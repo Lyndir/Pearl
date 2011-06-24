@@ -1,4 +1,5 @@
 #define PEARL_UIKIT
+#import "Pearl.h"
 #import "AlertViewController.h"
 #import "ArrayTVC.h"
 #import "BoxView.h"
@@ -6,7 +7,6 @@
 #import "GradientView.h"
 #import "Layout.h"
 #import "LayoutView.h"
-#import "Pearl-UIKit.h"
 #import "RootViewController.h"
 #import "SheetViewController.h"
 #import "UIColor-Expanded.h"

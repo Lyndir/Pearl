@@ -1,4 +1,5 @@
 #define PEARL
+#import "Pearl.h"
 #import "AbstractAppDelegate.h"
 #import "Config.h"
 #import "CryptUtils.h"
@@ -8,7 +9,6 @@
 #import "NSString_NSArrayFormat.h"
 #import "NSString_SEL.h"
 #import "ObjectUtils.h"
-#import "Pearl.h"
 #import "Resettable.h"
 #import "StringUtils.h"
 #import "WebUtils.h"

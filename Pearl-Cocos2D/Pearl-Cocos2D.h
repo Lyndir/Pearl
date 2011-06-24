@@ -1,8 +1,9 @@
 #define PEARL_COCOS2D
+#import "Pearl.h"
 #import "AbstractCocos2DAppDelegate.h"
 #import "Remove.h"
 #import "CCDebug.h"
-#import "Pearl-Cocos2D.h"
+#import "Pearl-Cocos2D-Dependencies.h"
 #import "ActivitySprite.h"
 #import "BarLayer.h"
 #import "BarSprite.h"

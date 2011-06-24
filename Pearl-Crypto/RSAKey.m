@@ -17,7 +17,7 @@
  */
 
 #import "RSAKey.h"
-#import "CryptUtils.h"
+#import "Pearl-Crypto.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,61 +29,219 @@
 #define rsaKeyIn ((RSA **)&_key)
 
 
-@interface RSAKey ()
-
-+ (NSString *)toHexString:(id)object;
-
-@end
-
 @implementation RSAKey
 @synthesize isPublicKey = _isPublicKey;
 
-- (id)initPublic:(BOOL)isPublicKey {
+static NSString *toHexString(id object) {
     
-    if (!(self = [super init]))
+    if (NSNullToNil(object) == nil)
         return nil;
     
-    self.isPublicKey = isPublicKey;
-    _key = RSA_generate_key(1024, RSA_F4, NULL, NULL);
+    if ([object isKindOfClass:[NSData class]])
+        return [object encodeHex];
     
-    return self;
+    if ([object isKindOfClass:[NSString class]])
+        return object;
+    
+    err(@"Cannot convert to hex: %@", object);
+    return nil;
 }
 
-- (id)initWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent isPublic:(BOOL)isPublicKey {
+static NSUInteger typeOfDigest(PearlDigest digest) {
+
+    switch (digest) {
+        case PearlDigestMD5:
+            return NID_md5;
+        case PearlDigestSHA1:
+            return NID_sha1;
+        case PearlDigestSHA256:
+            return NID_sha256;
+        case PearlDigestSHA384:
+            return NID_sha384;
+        case PearlDigestSHA512:
+            return NID_sha512;
+        case PearlDigestRIPEMD160:
+            return NID_ripemd160;
+    }
+    
+    err(@"Unsupported digest: %d", digest);
+    return 0;
+}
+
+- (id)init {
     
     if (!(self = [super init]))
         return nil;
     
-    self.isPublicKey = isPublicKey;
-    _key = RSA_new();
-    if (hexModulus)
-        BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
-    if (hexExponent) {
-        if (self.isPublicKey)
-            BN_hex2bn(&(rsaKey->e), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
-        else {
-            BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
-            BN_hex2bn(&(rsaKey->d), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
-        }
+    self.isPublicKey = NO;
+    
+    _key = RSA_generate_key(1024, RSA_F4, NULL, NULL);
+    
+    if (!rsaKey) {
+        [self release];
+        return nil;
     }
     
     return self;
 }
 
-- (id)initWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent isPublic:(BOOL)isPublicKey {
+- (void)dealloc {
+    
+    if (rsaKey)
+        RSA_free(rsaKey);
+
+    [super dealloc];
+}
+
+- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent {
     
     if (!(self = [super init]))
         return nil;
     
-    self.isPublicKey = isPublicKey;
+    self.isPublicKey = NO;
+    
     _key = RSA_new();
-    if (modulus)
-        rsaKey->n = BN_bin2bn([modulus bytes], [modulus length], NULL);
-    if (exponent) {
-        if (self.isPublicKey)
-            rsaKey->e = BN_bin2bn([exponent bytes], [exponent length], NULL);
-        else
-            rsaKey->d = BN_bin2bn([exponent bytes], [exponent length], NULL);
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+
+    BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->d), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+
+    return self;
+}
+
+- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    self.isPublicKey = NO;
+    
+    _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+    
+    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
+    BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
+    rsaKey->d = BN_bin2bn(exponent.bytes, exponent.length, NULL);
+
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+    
+    return self;
+}
+
+- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent
+                            primeP:(NSString *)hexPrimeP primeQ:(NSString *)hexPrimeQ {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    self.isPublicKey = NO;
+    
+    _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+
+    BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->d), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->p), [hexPrimeP cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->q), [hexPrimeQ cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+    
+    return self;
+}
+
+- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent
+                               primeP:(NSData *)primeP primeQ:(NSData *)primeQ {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    self.isPublicKey = NO;
+    
+    _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+
+    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
+    BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
+    rsaKey->d = BN_bin2bn(exponent.bytes, exponent.length, NULL);
+    rsaKey->p = BN_bin2bn(primeP.bytes, primeP.length, NULL);
+    rsaKey->q = BN_bin2bn(primeQ.bytes, primeQ.length, NULL);
+    
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+
+    return self;
+}
+
+- (id)initPublicKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    self.isPublicKey = YES;
+    
+    _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+    
+    BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
+    BN_hex2bn(&(rsaKey->e), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
+    
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+
+    return self;
+}
+
+- (id)initPublicKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    self.isPublicKey = YES;
+    
+    _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+
+    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
+    rsaKey->e = BN_bin2bn(exponent.bytes, exponent.length, NULL);
+    
+    if (![self isValid]) {
+        [self release];
+        return nil;
     }
     
     return self;
@@ -95,16 +253,15 @@
         return nil;
     
     if ((self.isPublicKey = isPublicKey)) {
-        const unsigned char *buffer;
-        buffer = (const unsigned char *) derEncodedKey.bytes;
-        _key = d2i_RSAPublicKey(NULL, &buffer, derEncodedKey.length);
+        const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
+        _key = d2i_RSAPublicKey(NULL, &derEncodedBytes, derEncodedKey.length);
     } else {
         BIO *b = BIO_new(BIO_s_mem());
         BIO_write(b, derEncodedKey.bytes, derEncodedKey.length);
         _key = PEM_read_bio_RSAPrivateKey(b, rsaKeyIn, NULL, NULL);
     }
     
-    if (!rsaKey) {
+    if (!rsaKey || ![self isValid]) {
         [self release];
         return nil;
     }
@@ -112,47 +269,66 @@
 	return self;
 }
 
-- (id)initWithDictionary:(NSDictionary *) dictionary isPublic:(BOOL)isPublicKey {
+- (id)initWithDictionary:(NSDictionary *)dictionary {
     
     if (!(self = [super init]))
         return nil;
     
-    self.isPublicKey = isPublicKey;
     _key = RSA_new();
+    if (!rsaKey) {
+        [self release];
+        return nil;
+    }
+
     NSString *n, *e, *d, *p, *q;
-    if ((n = [RSAKey toHexString:[dictionary objectForKey:@"n"]]))
+    if ((n = toHexString([dictionary objectForKey:@"n"])))
         BN_hex2bn(&(rsaKey->n), [n cStringUsingEncoding:NSUTF8StringEncoding]);
-    if ((e = [RSAKey toHexString:[dictionary objectForKey:@"e"]]))
+    if ((e = toHexString([dictionary objectForKey:@"e"])))
         BN_hex2bn(&(rsaKey->e), [e cStringUsingEncoding:NSUTF8StringEncoding]);
-    if ((d = [RSAKey toHexString:[dictionary objectForKey:@"d"]]))
+    if ((d = toHexString([dictionary objectForKey:@"d"])))
         BN_hex2bn(&(rsaKey->d), [d cStringUsingEncoding:NSUTF8StringEncoding]);
-    if ((p = [RSAKey toHexString:[dictionary objectForKey:@"p"]]))
+    if ((p = toHexString([dictionary objectForKey:@"p"])))
         BN_hex2bn(&(rsaKey->p), [p cStringUsingEncoding:NSUTF8StringEncoding]);
-    if ((q = [RSAKey toHexString:[dictionary objectForKey:@"q"]]))
+    if ((q = toHexString([dictionary objectForKey:@"q"])))
         BN_hex2bn(&(rsaKey->q), [q cStringUsingEncoding:NSUTF8StringEncoding]);
-    
+    self.isPublicKey = (d == nil);
+
+    if (![self isValid]) {
+        [self release];
+        return nil;
+    }
+
     return self;
 }
 
-+ (NSString *)toHexString:(id)object {
+- (RSAKey *)toPublicKey {
     
-    if ([object isKindOfClass:[NSData class]])
-        return [object encodeHex];
+    if (self.isPublicKey)
+        return self;
     
-    if ([object isKindOfClass:[NSString class]])
-        return object;
-    
-    return nil;
+    return [[[RSAKey alloc] initPublicKeyWithHexModulus:[self modulus] exponent:[self publicExponent]] autorelease];
 }
 
-- (int) maxSize {
+- (int)maxSize {
     
     return RSA_size(rsaKey);
 }
 
-- (int) check {
+- (BOOL)isValid {
     
-	return RSA_check_key(rsaKey);
+    if (self.isPublicKey || !rsaKey->p)
+        // Cannot use check_key on public keys or private keys without known p & q.
+        return [[self modulus] length] && [[self exponent] length];
+    
+	int check = RSA_check_key(rsaKey);
+    
+    if (check == 0)
+        return NO;
+    if (check > 0)
+        return YES;
+    
+    ERR_print_errors_fp(stderr);
+    return NO;
 }
 
 - (NSString *)modulus {
@@ -161,6 +337,15 @@
 }
 
 - (NSString *)exponent {
+    
+    if (self.isPublicKey)
+        return [NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding];
+    else
+        return [NSString stringWithCString:BN_bn2hex(rsaKey->d) encoding:NSUTF8StringEncoding];
+
+}
+
+- (NSString *)publicExponent {
     
     return [NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding];
 }
@@ -174,7 +359,7 @@
                            forKey:@"n"];
     if (rsaKey->e)
         [representation setObject:[[NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding] decodeHex]
-                           forKey:@"n"];
+                           forKey:@"e"];
     if (rsaKey->d)
         [representation setObject:[[NSString stringWithCString:BN_bn2hex(rsaKey->d) encoding:NSUTF8StringEncoding] decodeHex]
                            forKey:@"d"];
@@ -214,13 +399,12 @@
 - (NSData *)encrypt:(NSData *)data {
     
     NSUInteger length;
-    NSUInteger maxSize = RSA_size(rsaKey);
-    unsigned char *buffer = (unsigned char *) malloc(maxSize * sizeof(char));
+    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
     
     if (self.isPublicKey)
-        length = RSA_public_encrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = RSA_public_encrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     else
-        length = RSA_private_encrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = RSA_private_encrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
         return [NSData dataWithBytesNoCopy:buffer length:length];
@@ -232,20 +416,44 @@
 - (NSData *)decrypt:(NSData *)data {
     
     int length;
-    NSUInteger maxSize = RSA_size(rsaKey);
-    unsigned char *buffer = (unsigned char *) malloc(maxSize * sizeof(char));
+    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
     
-    RSA *typedKey = rsaKey;
     if (self.isPublicKey)
-        length = RSA_public_decrypt([data length], [data bytes], buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = RSA_public_decrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     else
-        length = RSA_private_decrypt([data length], [data bytes], buffer, typedKey, RSA_PKCS1_PADDING);
+        length = RSA_private_decrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
         return [NSData dataWithBytesNoCopy:buffer length:length];
     
     ERR_print_errors_fp(stderr);
     return nil;
+}
+
+- (NSData *)sign:(NSData *)message hashWith:(PearlDigest)digest {
+    
+    NSUInteger length;
+    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
+    
+    if (!RSA_sign(typeOfDigest(digest), message.bytes, message.length, buffer, &length, rsaKey)) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    return [NSData dataWithBytesNoCopy:buffer length:length];
+}
+
+- (NSData *)signRaw:(NSData *)asn1OctetString {
+    
+    NSUInteger length;
+    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
+    
+    if (!RSA_sign_ASN1_OCTET_STRING(0, asn1OctetString.bytes, asn1OctetString.length, buffer, &length, rsaKey)) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    return [NSData dataWithBytesNoCopy:buffer length:length];
 }
 
 @end

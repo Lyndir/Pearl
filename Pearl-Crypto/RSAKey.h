@@ -18,15 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "CodeUtils.h"
 
-typedef enum {
-    PearlDigestMD5,
-    PearlDigestSHA1,
-    PearlDigestSHA256,
-    PearlDigestSHA384,
-    PearlDigestSHA512,
-    PearlDigestRIPEMD160,
-} PearlDigest;
 
 @interface RSAKey : NSObject
 {
@@ -45,9 +38,15 @@ typedef enum {
                                primeP:(NSData *)primeP primeQ:(NSData *)primeQ;
 - (id)initPublicKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent;
 - (id)initPublicKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent;
+- (id)initWithDEREncodedPKCS1:(NSData *)derEncodedKey isPublic:(BOOL)isPublicKey;
+- (id)initWithDEREncodedPKCS12:(NSData *)derEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey;
+- (id)initWithPEMEncodedPKCS12:(NSData *)pemEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey;
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
-- (RSAKey *)toPublicKey;
+- (RSAKey *)publicKey;
+- (NSData *)derExportPKCS1;
+- (NSData *)derExportPKCS12WithName:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase;
+- (NSData *)pemExport:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase;
 
 - (int)maxSize;
 - (BOOL)isValid;
@@ -58,5 +57,7 @@ typedef enum {
 
 - (NSData *)encrypt:(NSData *) data;
 - (NSData *)decrypt:(NSData *) data;
+- (NSData *)sign:(NSData *)message hashWith:(PearlDigest)digest;
+- (NSData *)signRaw:(NSData *)asn1OctetString;
 
 @end

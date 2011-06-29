@@ -1,4 +1,7 @@
-#define PEARL_UIKIT
+#ifndef PEARL_UIKIT
+#error PEARL_UIKIT used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL_UIKIT) in your Pearl prefix file.
+#endif
+
 #import "Pearl.h"
 #import "AlertViewController.h"
 #import "ArrayTVC.h"

@@ -1,4 +1,7 @@
-#define PEARL
+#ifndef PEARL
+#error PEARL used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL) in your Pearl prefix file.
+#endif
+
 #import "Pearl.h"
 #import "AbstractAppDelegate.h"
 #import "CodeUtils.h"

@@ -10,8 +10,16 @@ for module in "$main"*/; do
         cd "$module"; headers=0
         {
             define=${module^^} define=${define//-/_}
-            printf '#define %s\n' "${define}"
+
+            # Check wether the user has enabled the module from the Pearl prefix file (allowing all other modules to see its availability).
+            printf '#ifndef %s\n' "$define"
+            printf '#error %s used but not enabled.  If you want to use this library, first enable it with PEARL_USE(%s) in your Pearl prefix file.\n' "$define" "$define"
+            printf '#endif\n\n'
+
+            # All modules depend on Pearl.h
             printf '#import "%s.h"\n' "$main"
+
+            # Enumerate the module's headers.
             while read f; do
                 (( headers++ ))
                 printf '#import "%s"\n' "${f##*/}"

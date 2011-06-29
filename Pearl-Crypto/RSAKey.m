@@ -30,8 +30,21 @@
 #define rsaKeyIn ((RSA **)&_key)
 
 
+@interface RSAKey ()
+
+- (BOOL)isValid;
+
+@end
+
 @implementation RSAKey
 @synthesize isPublicKey = _isPublicKey;
+
++ (void)initialize {
+    
+    CRYPTO_malloc_init();
+    ERR_load_crypto_strings();
+    OpenSSL_add_all_algorithms();
+}
 
 static NSString *toHexString(id object) {
     
@@ -47,30 +60,34 @@ static NSString *toHexString(id object) {
     err(@"Cannot convert to hex: %@", object);
     return nil;
 }
-static int pem_password_callback(char *buf, int bufsiz, int verify, char *passphrase) {
+static int pem_password_callback(char *buf, int bufsiz, int verify, char *keyPhrase) {
     
-    int length = strlen(passphrase);
+    int length = strlen(keyPhrase);
     if (length > bufsiz)
         length = bufsiz;
     
-    memcpy(buf, passphrase, length);
+    memcpy(buf, keyPhrase, length);
     return length; 
 }
 
 
-static NSUInteger typeOfDigest(PearlDigest digest) {
+static const EVP_MD *EVP_md(PearlDigest digest) {
     
     switch (digest) {
+        case PearlDigestNone:
+            return NULL;
         case PearlDigestMD5:
-            return NID_md5;
+            return EVP_md5();
         case PearlDigestSHA1:
-            return NID_sha1;
+            return EVP_sha1();
+        case PearlDigestSHA224:
+            return EVP_sha224();
         case PearlDigestSHA256:
-            return NID_sha256;
+            return EVP_sha256();
         case PearlDigestSHA384:
-            return NID_sha384;
+            return EVP_sha384();
         case PearlDigestSHA512:
-            return NID_sha512;
+            return EVP_sha512();
     }
     
     err(@"Unsupported digest: %d", digest);
@@ -87,6 +104,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     _key = RSA_generate_key(1024, RSA_F4, NULL, NULL);
     
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -102,7 +120,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     [super dealloc];
 }
 
-- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent {
+- (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent {
     
     if (!(self = [super init]))
         return nil;
@@ -111,6 +129,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -127,7 +146,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent {
+- (id)initWithBinaryModulus:(NSData *)modulus privateExponent:(NSData *)exponent {
     
     if (!(self = [super init]))
         return nil;
@@ -136,6 +155,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -152,7 +172,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent
+- (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent
                             primeP:(NSString *)hexPrimeP primeQ:(NSString *)hexPrimeQ {
     
     if (!(self = [super init]))
@@ -162,6 +182,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -180,7 +201,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent
+- (id)initWithBinaryModulus:(NSData *)modulus privateExponent:(NSData *)exponent
                                primeP:(NSData *)primeP primeQ:(NSData *)primeQ {
     
     if (!(self = [super init]))
@@ -190,6 +211,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -208,7 +230,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initPublicKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent {
+- (id)initWithHexModulus:(NSString *)hexModulus publicExponent:(NSString *)hexExponent {
     
     if (!(self = [super init]))
         return nil;
@@ -217,6 +239,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -232,7 +255,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initPublicKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent {
+- (id)initWithBinaryModulus:(NSData *)modulus publicExponent:(NSData *)exponent {
     
     if (!(self = [super init]))
         return nil;
@@ -241,6 +264,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -256,18 +280,19 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return self;
 }
 
-- (id)initWithDEREncodedPKCS1:(NSData *)derEncodedKey isPublic:(BOOL)isPublicKey {
+- (id)initWithDEREncodedASN1:(NSData *)derEncodedKey isPublic:(BOOL)isPublicKey {
     
     if (!(self = [super init]))
         return nil;
     
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
     if ((self.isPublicKey = isPublicKey))
-        _key = d2i_RSAPublicKey(NULL, &derEncodedBytes, derEncodedKey.length);
+        _key = d2i_RSA_PUBKEY(NULL, &derEncodedBytes, derEncodedKey.length);
     else
         _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, derEncodedKey.length);
     
     if (!rsaKey || ![self isValid]) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -275,22 +300,31 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
 	return self;
 }
 
-- (id)initWithDEREncodedPKCS12:(NSData *)derEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey {
+- (id)initWithDEREncodedPKCS12:(NSData *)derEncodedKey keyPhrase:(NSString *)keyPhrase isPublic:(BOOL)isPublicKey {
     
     if (!(self = [super init]))
         return nil;
-
+    
     self.isPublicKey = isPublicKey;
     
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
     PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, derEncodedKey.length);
-
+    if (!pkcs12) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
     X509 *cert;
-    EVP_PKEY *pkey;
-    PKCS12_parse(pkcs12, [passphrase cStringUsingEncoding:NSUTF8StringEncoding], &pkey, &cert, NULL);
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    if (!PKCS12_parse(pkcs12, [keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], &pkey, &cert, NULL)) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
     _key = pkey->pkey.rsa;
     
     if (!rsaKey || ![self isValid]) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -298,21 +332,23 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
 	return self;
 }
 
-- (id)initWithPEMEncodedPKCS12:(NSData *)pemEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey {
+- (id)initWithPEMEncodedPKCS12:(NSData *)pemEncodedKey keyPhrase:(NSString *)keyPhrase isPublic:(BOOL)isPublicKey {
     
     if (!(self = [super init]))
         return nil;
     
-    BIO *b = BIO_new(BIO_s_mem());
-    BIO_write(b, pemEncodedKey.bytes, pemEncodedKey.length);
+    BIO *bio = BIO_new(BIO_s_mem());
+    BIO_write(bio, pemEncodedKey.bytes, pemEncodedKey.length);
     if ((self.isPublicKey = isPublicKey))
-        _key = PEM_read_bio_RSAPublicKey(b, rsaKeyIn, (pem_password_cb *)pem_password_callback,
-                                         (void *)[passphrase cStringUsingEncoding:NSUTF8StringEncoding]);
+        _key = PEM_read_bio_RSAPublicKey(bio, rsaKeyIn, (pem_password_cb *)pem_password_callback,
+                                         (void *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding]);
     else
-        _key = PEM_read_bio_RSAPrivateKey(b, rsaKeyIn, (pem_password_cb *)pem_password_callback,
-                                          (void *)[passphrase cStringUsingEncoding:NSUTF8StringEncoding]);
+        _key = PEM_read_bio_RSAPrivateKey(bio, rsaKeyIn, (pem_password_cb *)pem_password_callback,
+                                          (void *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding]);
+    BIO_free(bio);
     
     if (!rsaKey || ![self isValid]) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -327,6 +363,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        ERR_print_errors_fp(stderr);
         [self release];
         return nil;
     }
@@ -357,7 +394,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     if (self.isPublicKey)
         return self;
     
-    return [[[RSAKey alloc] initPublicKeyWithHexModulus:[self modulus] exponent:[self publicExponent]] autorelease];
+    return [[[RSAKey alloc] initWithHexModulus:[self modulus] publicExponent:[self publicExponent]] autorelease];
 }
 
 - (int)maxSize {
@@ -369,7 +406,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     
     if (self.isPublicKey || !rsaKey->p)
         // Cannot use check_key on public keys or private keys without known p & q.
-        return [[self modulus] length] && [[self exponent] length];
+        return [[self modulus] length] && [[self privateExponent] length];
     
 	int check = RSA_check_key(rsaKey);
     
@@ -387,7 +424,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return [NSString stringWithCString:BN_bn2hex(rsaKey->n) encoding:NSUTF8StringEncoding];
 }
 
-- (NSString *)exponent {
+- (NSString *)privateExponent {
     
     if (self.isPublicKey)
         return [NSString stringWithCString:BN_bn2hex(rsaKey->e) encoding:NSUTF8StringEncoding];
@@ -424,74 +461,91 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
     return representation;
 }
 
+- (BOOL)isEqual:(id)object {
+    
+    return [object isKindOfClass:[self class]] && [[self description] isEqual:[object description]];
+}
+
 - (NSString *)description {
     
     return [[self dictionaryRepresentation] description];
 }
 
-- (NSData *)derExportPKCS1 {
+- (NSData *)derExportASN1 {
     
     NSUInteger length;
-	unsigned char *buffer;
+	unsigned char *bufferOut, *bufferIn;
     
     if (self.isPublicKey) {
-        length = i2d_RSAPublicKey(rsaKey, NULL);
-        buffer = (unsigned char *) malloc(length);
-        i2d_RSAPublicKey(rsaKey, &buffer);
+        length = i2d_RSA_PUBKEY(rsaKey, NULL);
+        bufferIn = bufferOut = (unsigned char *) malloc(length);
+        i2d_RSA_PUBKEY(rsaKey, &bufferIn);
     } else {
         length = i2d_RSAPrivateKey(rsaKey, NULL);
-        buffer = (unsigned char *) malloc(length);
-        i2d_RSAPrivateKey(rsaKey, &buffer);
+        bufferIn = bufferOut = (unsigned char *) malloc(length);
+        i2d_RSAPrivateKey(rsaKey, &bufferIn);
     }
     
-	return [NSData dataWithBytesNoCopy:buffer length:length];
+	return [NSData dataWithBytes:bufferOut length:length];
 }
 
-- (NSData *)derExportPKCS12WithName:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase {
+- (NSData *)derExportPKCS12WithName:(NSString *)friendlyName encryptWithKeyPhrase:(NSString *)keyPhrase {
     
     // Convert to PKCS12
     EVP_PKEY *pkey = EVP_PKEY_new();
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     
     PKCS12 *pkcs12;
-    if (passphrase)
-        pkcs12 = PKCS12_create((char *)[passphrase cStringUsingEncoding:NSUTF8StringEncoding],
+    if (keyPhrase)
+        pkcs12 = PKCS12_create((char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding],
                                friendlyName? (char *)[friendlyName cStringUsingEncoding:NSUTF8StringEncoding]: NULL,
-                               pkey, NULL, NULL, 0, 0, 0, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER);
+                               pkey, NULL, NULL, 0, 0, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER, 0);
     else
         pkcs12 = PKCS12_create(NULL,
                                friendlyName? (char *)[friendlyName cStringUsingEncoding:NSUTF8StringEncoding]: NULL,
-                               pkey, NULL, NULL, -1, -1, 0, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER);
+                               pkey, NULL, NULL, -1, -1, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER, 0);
+    if (!pkcs12) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
     
     // Export to DER
     NSUInteger length = i2d_PKCS12(pkcs12, NULL);
-	unsigned char *buffer = malloc(length);
-    i2d_PKCS12(pkcs12, &buffer);
+	unsigned char *bufferOut, *bufferIn;
+    bufferOut = bufferIn = malloc(length);
+    if (!i2d_PKCS12(pkcs12, &bufferIn)) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
     
-	return [NSData dataWithBytesNoCopy:buffer length:length];
+	return [NSData dataWithBytes:bufferOut length:length];
 }
 
-- (NSData *)pemExport:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase {
-
+- (NSData *)pemExport:(NSString *)friendlyName encryptWithKeyPhrase:(NSString *)keyPhrase {
+    
     // Write to BIO
     BIO *bio = BIO_new(BIO_s_mem());
-    if (passphrase) {
+    if (keyPhrase) {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, EVP_des_ede3_cbc(),
-                                         (unsigned char *)[passphrase cStringUsingEncoding:NSUTF8StringEncoding], [passphrase length],
-                                         NULL, NULL))
+                                         (unsigned char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], [keyPhrase length],
+                                         NULL, NULL)) {
+            ERR_print_errors_fp(stderr);
             return nil;
+        }
     } else {
-        if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, NULL, NULL, 0, NULL, NULL))
+        if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, NULL, NULL, 0, NULL, NULL)) {
+            ERR_print_errors_fp(stderr);
             return nil;
+        }
     }
     
     // Read into buffer
     NSUInteger length = BIO_ctrl_pending(bio);
 	unsigned char *buffer = malloc(length);
-    if (!BIO_read(bio, buffer, length))
-        return nil;
+    BIO_read(bio, buffer, length);
+    BIO_free(bio);
     
-	return [NSData dataWithBytesNoCopy:buffer length:length];
+	return [NSData dataWithBytes:buffer length:length];
 }
 
 - (NSData *)encrypt:(NSData *)data {
@@ -505,7 +559,7 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
         length = RSA_private_encrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
-        return [NSData dataWithBytesNoCopy:buffer length:length];
+        return [NSData dataWithBytes:buffer length:length];
     
     ERR_print_errors_fp(stderr);
     return nil;
@@ -522,38 +576,135 @@ static NSUInteger typeOfDigest(PearlDigest digest) {
         length = RSA_private_decrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
-        return [NSData dataWithBytesNoCopy:buffer length:length];
+        return [NSData dataWithBytes:buffer length:length];
     
     ERR_print_errors_fp(stderr);
     return nil;
 }
 
-- (NSData *)sign:(NSData *)message hashWith:(PearlDigest)digest {
+- (NSData *)signData:(NSData *)data hashWith:(PearlDigest)digest {
     
-    NSData *hash = [message hashWith:digest];
-    
-    NSUInteger length;
-    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
-    
-    if (!RSA_sign(typeOfDigest(digest), hash.bytes, hash.length, buffer, &length, rsaKey)) {
+    /* Initialize Context */
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pkey, rsaKey); 
+    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (!ctx) {
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
-    return [NSData dataWithBytesNoCopy:buffer length:length];
+    if (EVP_PKEY_sign_init(ctx) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    /* Perform Operation */
+    NSData *hash = [data hashWith:digest];
+    size_t length;
+    if (EVP_PKEY_sign(ctx, NULL, &length, hash.bytes, hash.length) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    unsigned char *buffer = OPENSSL_malloc(length);
+    if (!buffer)
+        return nil;
+    
+    if (EVP_PKEY_sign(ctx, buffer, &length, hash.bytes, hash.length) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    return [NSData dataWithBytes:buffer length:length];
 }
 
-- (NSData *)signRaw:(NSData *)asn1OctetString {
+- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlDigest)digest {
     
-    NSUInteger length;
-    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
+    /* Initialize Context */
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pkey, rsaKey); 
+    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (!ctx) {
+        ERR_print_errors_fp(stderr);
+        return NO;
+    }
     
-    if (!RSA_sign_ASN1_OCTET_STRING(0, asn1OctetString.bytes, asn1OctetString.length, buffer, &length, rsaKey)) {
+    if (EVP_PKEY_sign_init(ctx) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return NO;
+    }
+    
+    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return NO;
+    }
+    
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return NO;
+    }
+    
+    /* Perform Operation */
+    NSData *hash = [data hashWith:digest];
+    if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, hash.bytes, hash.length))
+        return YES;
+    
+    ERR_print_errors_fp(stderr);
+    return NO;
+}
+
+- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlDigest)digest {
+    
+    /* Initialize Context */
+    EVP_PKEY *pkey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pkey, rsaKey); 
+    EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (!ctx) {
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
-    return [NSData dataWithBytesNoCopy:buffer length:length];
+    if (EVP_PKEY_sign_init(ctx) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    /* Perform Operation */
+    size_t length;
+    if (EVP_PKEY_verify_recover(ctx, NULL, &length, signature.bytes, signature.length) <= 0) {
+        ERR_print_errors_fp(stderr);
+        return nil;
+    }
+    
+    unsigned char *buffer = OPENSSL_malloc(length);
+    if (!buffer)
+        return nil;
+    
+    if (EVP_PKEY_verify_recover(ctx, buffer, &length, signature.bytes, signature.length))
+        return [NSData dataWithBytes:buffer length:length];
+    
+    ERR_print_errors_fp(stderr);
+    return NO;
 }
 
 @end

@@ -30,34 +30,85 @@
 @property (readwrite, assign) BOOL  isPublicKey;
 
 - (id)init;
-- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent;
-- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent;
-- (id)initPrivateKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent
+- (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent;
+- (id)initWithBinaryModulus:(NSData *)modulus privateExponent:(NSData *)exponent;
+- (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent
                             primeP:(NSString *)hexPrimeP primeQ:(NSString *)hexPrimeQ;
-- (id)initPrivateKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent
+- (id)initWithBinaryModulus:(NSData *)modulus privateExponent:(NSData *)exponent
                                primeP:(NSData *)primeP primeQ:(NSData *)primeQ;
-- (id)initPublicKeyWithHexModulus:(NSString *)hexModulus exponent:(NSString *)hexExponent;
-- (id)initPublicKeyWithBinaryModulus:(NSData *)modulus exponent:(NSData *)exponent;
-- (id)initWithDEREncodedPKCS1:(NSData *)derEncodedKey isPublic:(BOOL)isPublicKey;
-- (id)initWithDEREncodedPKCS12:(NSData *)derEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey;
-- (id)initWithPEMEncodedPKCS12:(NSData *)pemEncodedKey passphrase:(NSString *)passphrase isPublic:(BOOL)isPublicKey;
+- (id)initWithHexModulus:(NSString *)hexModulus publicExponent:(NSString *)hexExponent;
+- (id)initWithBinaryModulus:(NSData *)modulus publicExponent:(NSData *)exponent;
+- (id)initWithDEREncodedASN1:(NSData *)derEncodedKey isPublic:(BOOL)isPublicKey;
+- (id)initWithDEREncodedPKCS12:(NSData *)derEncodedKey keyPhrase:(NSString *)keyPhrase isPublic:(BOOL)isPublicKey;
+- (id)initWithPEMEncodedPKCS12:(NSData *)pemEncodedKey keyPhrase:(NSString *)keyPhrase isPublic:(BOOL)isPublicKey;
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
+/**
+ * Convert this key to its public equivalent, discarting any private factors.
+ */
 - (RSAKey *)publicKey;
-- (NSData *)derExportPKCS1;
-- (NSData *)derExportPKCS12WithName:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase;
-- (NSData *)pemExport:(NSString *)friendlyName encryptedWithPassphrase:(NSString *)passphrase;
+/**
+ * Export this key to a DER-encoded ASN1 structure.
+ */
+- (NSData *)derExportASN1;
+/**
+ * Export this key to a DER-encoded PKCS#12 format, optionally encrypting it with a key phrase.
+ */
+- (NSData *)derExportPKCS12WithName:(NSString *)friendlyName encryptWithKeyPhrase:(NSString *)keyPhrase;
+/**
+ * Export this key to a PEM-encoded format, optionally encrypting it with a key phrase.
+ */
+- (NSData *)pemExport:(NSString *)friendlyName encryptWithKeyPhrase:(NSString *)keyPhrase;
 
-- (int)maxSize;
-- (BOOL)isValid;
+/**
+ * @return The modulus of the RSA key.  This is the same for matching public and private key.
+ */
 - (NSString *)modulus;
-- (NSString *)exponent;
+/**
+ * @return The private exponent of the RSA key.
+ */
+- (NSString *)privateExponent;
+/**
+ * @return The public exponent of the RSA key.
+ */
 - (NSString *)publicExponent;
+/**
+ * @return A dictionary that provides all the known factors of the RSA key.
+ */
 - (NSDictionary *)dictionaryRepresentation;
 
-- (NSData *)encrypt:(NSData *) data;
-- (NSData *)decrypt:(NSData *) data;
-- (NSData *)sign:(NSData *)message hashWith:(PearlDigest)digest;
-- (NSData *)signRaw:(NSData *)asn1OctetString;
+/**
+ * Encrypt the given plain-text with this key.  PKCS1 padding will be used.
+ */
+- (NSData *)encrypt:(NSData *)data;
+/**
+ * Decrypt the given encrypted data with this key.  The data must have been encrypted with PKCS1 padding.
+ */
+- (NSData *)decrypt:(NSData *)data;
+/**
+ * Sign the given data with this private key.
+ * 
+ * PKCS1 padding will be used.
+ * If a digest other than PearlDigestNone is given, the data will be hashed by the digest algorithm and wrapped in a DigestInfo structure
+ * before RSA signing is applied to it.  If PearlDigestNone is given, the data must be a DER-encoded DigestInfo structure.
+ */
+- (NSData *)signData:(NSData *)data hashWith:(PearlDigest)digest;
+/**
+ * Verify that the given signature is the result of signing the given data with the private key equivalent of this public key.
+ * 
+ * The signature must have been created with PKCS1 padding.
+ * If a digest other than PearlDigestNone is given, the data will be hashed by the digest algorithm and wrapped in a DigestInfo structure
+ * before RSA signing is applied to it.  If PearlDigestNone is given, the data must be a DER-encoded DigestInfo structure.
+ */
+- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlDigest)digest;
+/**
+ * Verify that the given signature is the result of signing certain data with the private key equivalent of this public key.
+ * The digest of the signed data will be recovered if the signature is valid.
+ * 
+ * The signature must have been created with PKCS1 padding.
+ * If a digest other than PearlDigestNone is given, the data must have been hashed by the given digest algorithm before it was signed.
+ * If PearlDigestNone is given, the DigestInfo structure will be recovered.
+ */
+- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlDigest)digest;
 
 @end

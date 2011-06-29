@@ -1,4 +1,7 @@
-#define PEARL_COCOS2D
+#ifndef PEARL_COCOS2D
+#error PEARL_COCOS2D used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL_COCOS2D) in your Pearl prefix file.
+#endif
+
 #import "Pearl.h"
 #import "AbstractCocos2DAppDelegate.h"
 #import "Remove.h"

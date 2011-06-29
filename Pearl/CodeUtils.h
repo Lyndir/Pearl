@@ -10,8 +10,10 @@
 
 
 typedef enum {
+    PearlDigestNone,
     PearlDigestMD5,
     PearlDigestSHA1,
+    PearlDigestSHA224,
     PearlDigestSHA256,
     PearlDigestSHA384,
     PearlDigestSHA512,

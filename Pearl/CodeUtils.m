@@ -146,6 +146,8 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
 - (NSData *)hashWith:(PearlDigest)digest {
     
     switch (digest) {
+        case PearlDigestNone:
+            return self;
         case PearlDigestMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
             CC_MD5(self.bytes, self.length, result);
@@ -155,6 +157,12 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
         case PearlDigestSHA1: {
             unsigned char result[CC_SHA1_DIGEST_LENGTH];
             CC_SHA1(self.bytes, self.length, result);
+            
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlDigestSHA224: {
+            unsigned char result[CC_SHA224_DIGEST_LENGTH];
+            CC_SHA224(self.bytes, self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }

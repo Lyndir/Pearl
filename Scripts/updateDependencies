@@ -3,9 +3,19 @@
 cd "${BASH_SOURCE%/*}/.."
 shopt -s extglob
 
-# First use this script in any child modules that may provide it, to update that child correctly (in case it has specific update logic).
+
+# Custom migration.
+## Nothing yet.
+
+
+# Update our modules
+git submodule sync
+git submodule update
+
+
+# Our modules may define a custom update script, if so, run it.
 find !(Scripts)/ -name "${BASH_SOURCE##*/}" -exec {} \;
 
-# Then, update any other children using a standard git-submodule rebase update.
-# git submodule sync -- A bug causes this to init ALL external dependencies.
+
+# Finally, for our modules that haven't got a custom update script, update them recursively.
 git submodule update --recursive --rebase

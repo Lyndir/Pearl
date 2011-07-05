@@ -9,7 +9,7 @@ shopt -s extglob
 
 
 # Update our modules
-git submodule sync
+# git submodule sync -- A bug causes this to init ALL external dependencies.
 git submodule update
 
 

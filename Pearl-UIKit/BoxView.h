@@ -19,6 +19,7 @@
 
 @property (nonatomic, retain) UIColor   *color;
 
++ (id)boxed:(id)view;
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
 
 - (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor;

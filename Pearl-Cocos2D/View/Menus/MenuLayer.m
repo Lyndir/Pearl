@@ -77,6 +77,7 @@
 @synthesize layout = _layout;
 @synthesize layoutDirty = _layoutDirty;
 @synthesize delegate = _delegate;
+@synthesize itemCounts = _itemCounts;
 
 
 
@@ -262,6 +263,29 @@
                     i           += 2;
                 }
             }
+
+            [self.menu alignItemsInColumns:
+             rows[0], rows[1], rows[2], rows[3], rows[4],
+             rows[5], rows[6], rows[7], rows[8], rows[9], nil];
+            break;
+        }
+            
+        case MenuLayoutCustomColumns: {
+            NSNumber *cols[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
+            for (NSUInteger c = 0; c < self.itemCounts.count; ++c)
+                cols[c] = [self.itemCounts objectAtIndex:c];
+
+            for (CCNode *item in self.items)
+                [self.menu addChild:item];
+            [self.menu alignItemsInColumns:
+             cols[0], cols[1], cols[2], cols[3], cols[4],
+             cols[5], cols[6], cols[7], cols[8], cols[9], nil];
+            break;
+        }
+        case MenuLayoutCustomRows: {
+            NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
+            for (NSUInteger r = 0; r < self.itemCounts.count; ++r)
+                rows[r] = [self.itemCounts objectAtIndex:r];
 
             [self.menu alignItemsInColumns:
              rows[0], rows[1], rows[2], rows[3], rows[4],

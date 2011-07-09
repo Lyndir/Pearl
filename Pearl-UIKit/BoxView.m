@@ -14,6 +14,12 @@
 @implementation BoxView
 @synthesize color = _color;
 
++ (id)boxed:(id)view {
+    
+    [UIUtils showBoundingBoxForView:view];
+    return view;
+}
+
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
     
     return [[[self alloc] initWithFrame:aFrame color:aColor] autorelease];

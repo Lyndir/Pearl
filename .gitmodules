@@ -1,6 +1,6 @@
-[submodule "External/Cocos2D"]
-	path = External/Cocos2D
-	url = git://github.com/lhunath/Cocos2D-iPhone.git
+[submodule "External/cocos2d-iphone"]
+	path = External/cocos2d-iphone
+	url = git://github.com/lhunath/cocos2d-iphone.git
 [submodule "External/ASIHttpRequest"]
 	path = External/ASIHttpRequest
 	url = git://github.com/pokeb/asi-http-request.git

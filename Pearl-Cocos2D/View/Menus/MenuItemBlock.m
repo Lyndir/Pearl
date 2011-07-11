@@ -20,13 +20,21 @@
 }
 
 - (id)initWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
-
+    
     if (!(self = [super initWithTarget:target selector:selector]))
         return nil;
-
+    
     self.contentSize = CGSizeMake(size, size);
     
     return self;
+}
+
+- (void)draw {
+    
+    if (!self.isEnabled) {
+        CGPoint to = CGPointFromCGSize(self.contentSizeInPixels);
+        DrawLinesTo(CGPointZero, &to, 1, ccc3to4(ccWHITE), 5);
+    }
 }
 
 @end

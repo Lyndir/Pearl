@@ -53,7 +53,7 @@
 
 - (void)draw {
 
-    DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color, 1.0f);
+    DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), self.color, 1.0f);
 }
 
 @end

@@ -53,7 +53,7 @@
 
 - (void)draw {
 
-    DrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color, self.color);
+    DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color, 1.0f);
 }
 
 @end

@@ -7,6 +7,7 @@
 #import "Remove.h"
 #import "CCDebug.h"
 #import "Pearl-Cocos2D-Dependencies.h"
+#import "PearlCocos2DStrings.h"
 #import "ActivitySprite.h"
 #import "BarLayer.h"
 #import "BarSprite.h"

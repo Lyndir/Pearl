@@ -12,6 +12,8 @@
 #import "NSString_NSArrayFormat.h"
 #import "NSString_SEL.h"
 #import "ObjectUtils.h"
+#import "PearlStrings.h"
 #import "Resettable.h"
+#import "Strings.h"
 #import "StringUtils.h"
 #import "WebUtils.h"

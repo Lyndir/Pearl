@@ -28,6 +28,7 @@
 #import "Resettable.h"
 #import "NSString_SEL.h"
 #import "StringUtils.h"
+#import "PearlStrings.h"
 #ifdef PEARL_MEDIA
 #import "AudioController.h"
 #endif
@@ -70,47 +71,47 @@
                                      [NSNumber numberWithBool:YES],                                 cFirstRun,
 
                                      [NSNumber numberWithInt:
-                                      [l(@"font.size.normal") intValue]],                           cFontSize,
+                                      [[PearlStrings get].fontSizeNormal intValue]],                cFontSize,
                                      [NSNumber numberWithInt:
-                                      [l(@"font.size.large") intValue]],                            cLargeFontSize,
+                                      [[PearlStrings get].fontSizeLarge intValue]],                 cLargeFontSize,
                                      [NSNumber numberWithInt:
-                                      [l(@"font.size.small") intValue]],                            cSmallFontSize,
-                                     l(@"font.family.default"),                                     cFontName,
-                                     l(@"font.family.fixed"),                                       cFixedFontName,
-                                     l(@"font.family.symbolic"),                                    cSymbolicFontName,
-                                     
+                                      [[PearlStrings get].fontSizeSmall intValue]],                 cSmallFontSize,
+                                     [PearlStrings get].fontFamilyDefault,                          cFontName,
+                                     [PearlStrings get].fontFamilyFixed,                            cFixedFontName,
+                                     [PearlStrings get].fontFamilySymbolic,                         cSymbolicFontName,
+
                                      [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
                                      [NSNumber numberWithFloat:      0.4f],                         cTransitionDuration,
-                                
+
                                      [NSNumber numberWithBool:       YES],                          cSoundFx,
                                      [NSNumber numberWithBool:       NO],                           cVoice,
                                      [NSNumber numberWithBool:       YES],                          cVibration,
                                      [NSNumber numberWithBool:       YES],                          cVisualFx,
-                                
+
                                      [NSArray arrayWithObjects:
                                       @"sequential",
                                       @"random",
                                       @"",
                                       nil],                                                         cTracks,
                                      [NSArray arrayWithObjects:
-                                      l(@"menu.config.song.sequential"),
-                                      l(@"menu.config.song.random"),
-                                      l(@"menu.config.song.off"),
+                                      [PearlStrings get].songSequential,
+                                      [PearlStrings get].songRandom,
+                                      [PearlStrings get].songOff,
                                       nil],                                                         cTrackNames,
                                      @"sequential",                                                 cCurrentTrack,
 
                                      nil]];
-    
+
     self.resetTriggers = [NSMutableDictionary dictionary];
-    
+
     return self;
 }
 
 
 -(void) dealloc {
-    
+
     self.defaults = nil;
-    
+
     self.firstRun = nil;
     self.fontSize = nil;
     self.largeFontSize = nil;
@@ -135,30 +136,30 @@
 
 
 +(Config *) get {
-    
-    static Config *configInstance;
+
+    static Config *configInstance = nil;
     if(!configInstance)
         configInstance = [self new];
-    
+
     return configInstance;
 }
 
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    
+
     if ([NSStringFromSelector(aSelector) isSetter])
         return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
-    
+
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];
 }
 
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    
+
     NSString *selector = NSStringFromSelector(anInvocation.selector);
     if ([selector isSetter]) {
         selector = [selector setterToGetter];
-        
+
         id value = nil;
         [anInvocation getArgument:&value atIndex:2];
         dbg(@"Config Set %@ = %@", selector, value);
@@ -166,13 +167,13 @@
         if ([value conformsToProtocol:@protocol(NSCoding)])
             value = [NSKeyedArchiver archivedDataWithRootObject:value];
         [self.defaults setValue:value forKey:selector];
-        
+
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<Resettable>) [[AbstractAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
-    
+
     else {
         id value = [self.defaults valueForKey:selector];
         if ([value isKindOfClass:[NSData class]])
@@ -187,29 +188,29 @@
 #pragma mark Audio
 
 - (NSString *)firstTrack {
-    
+
     if ([self.tracks count] <= 3)
         return @"";
-    
+
     return [self.tracks objectAtIndex:0];
 }
 - (NSString *)randomTrack {
-    
+
     if ([self.tracks count] <= 3)
         return @"";
-    
+
     NSUInteger realTracks = ([self.tracks count] - 3);
     return [self.tracks objectAtIndex:arc4random() % realTracks];
 }
 - (NSString *)nextTrack {
-    
+
     if ([self.tracks count] <= 3)
         return @"";
-    
+
     id playingTrack = self.playingTrack;
     if(!playingTrack)
         playingTrack = @"";
-    
+
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (currentTrackIndex == NSNotFound)
         currentTrackIndex = -1;
@@ -222,7 +223,7 @@
     return [NSNumber numberWithBool:[self.currentTrack length]];
 }
 - (void)setMusic:(NSNumber *)aMusic {
-    
+
 #ifdef PEARL_MEDIA
     if ([aMusic boolValue] && ![self.music boolValue])
         [[AudioController get] playTrack:@"random"];
@@ -231,33 +232,33 @@
 #endif
 }
 - (void)setCurrentTrack: (NSString *)currentTrack {
-    
+
     if(currentTrack == nil)
         currentTrack = @"";
-    
+
     [self.defaults setObject:currentTrack forKey:cCurrentTrack];
-    
+
     [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack)];
 }
 -(NSString *) currentTrackName {
-    
+
     id currentTrack = self.currentTrack;
     if(!currentTrack)
         currentTrack = @"";
-    
+
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:currentTrack];
     return [[self trackNames] objectAtIndex:currentTrackIndex];
 }
 -(NSString *) playingTrackName {
-    
+
     id playingTrack = self.playingTrack;
     if(!playingTrack)
         playingTrack = @"";
-    
+
     NSUInteger playingTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (playingTrackIndex == NSNotFound || ![[[self tracks] objectAtIndex:playingTrackIndex] length])
         return nil;
-    
+
     return [[self trackNames] objectAtIndex:playingTrackIndex];
 }
 
@@ -265,7 +266,7 @@
 #pragma mark Game Configuration
 
 - (void)setGameRandomSeed:(NSUInteger)aSeed {
-    
+
     @synchronized(self) {
         srandom(aSeed);
         free(_gameRandomSeeds);
@@ -273,21 +274,21 @@
         _gameRandomSeeds            = malloc(sizeof(NSUInteger) * cMaxGameScope);
         _gameRandomCounters         = malloc(sizeof(NSUInteger) * cMaxGameScope);
         for (NSUInteger s = 0; s < cMaxGameScope; ++s){
-            _gameRandomSeeds[s]     = random();
+            _gameRandomSeeds[s]     = (NSUInteger) random();
             _gameRandomCounters[s]  = 0;
         }
     }
 }
 
 - (NSUInteger)gameRandom {
-    
+
     return [self gameRandom:cMaxGameScope - 1];
 }
 
 - (NSUInteger)gameRandom:(NSUInteger)scope {
-    
+
     NSAssert2(scope < cMaxGameScope, @"Scope (%d) must be < %d", scope, cMaxGameScope);
-    
+
     @synchronized(self) {
         srandom(_gameRandomSeeds[scope]++);
         return random();
@@ -299,13 +300,13 @@
     NSUInteger gr = [self gameRandom:scope];
     if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
         dbg(@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr);
-    
+
     return gr;
 }
 
 
 -(NSDate *) today {
-    
+
     long now = (long) [[NSDate date] timeIntervalSince1970];
     return [NSDate dateWithTimeIntervalSince1970:(now / (3600 * 24)) * (3600 * 24)];
 }

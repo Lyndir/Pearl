@@ -28,6 +28,8 @@
 typedef enum MenuLayout {
     MenuLayoutVertical,
     MenuLayoutColumns,
+    MenuLayoutCustomColumns,
+    MenuLayoutCustomRows,
 } MenuLayout;
 
 @class MenuLayer;
@@ -60,6 +62,8 @@ typedef enum MenuLayout {
     BOOL                                                            _layoutDirty;
 
     id<NSObject, MenuDelegate>                                      _delegate;
+
+    NSArray                                                         *itemCounts;
 }
 
 @property (nonatomic, readonly, retain) CCMenu                      *menu;
@@ -68,6 +72,7 @@ typedef enum MenuLayout {
 @property (nonatomic, readwrite, retain) CCMenuItem                 *logo;
 @property (nonatomic, readwrite, assign) CGPoint                    offset;
 @property (nonatomic, readwrite, retain) id<NSObject, MenuDelegate> delegate;
+@property (nonatomic, readwrite, retain) NSArray                    *itemCounts;
 
 + (MenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                           items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;

@@ -9,10 +9,17 @@
 #import "BoxView.h"
 #import "UIColor-Expanded.h"
 #import "Layout.h"
+#import "UIUtils.h"
 
 
 @implementation BoxView
 @synthesize color = _color;
+
++ (id)boxed:(id)view {
+    
+    [UIUtils showBoundingBoxForView:view];
+    return view;
+}
 
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
     

@@ -146,7 +146,7 @@
 }
 
 -(void) menuButton: (id) caller {
-    
+
     if (self.visible) {
 #ifdef PEARL_MEDIA
         [[AudioController get] clickEffect];

@@ -461,6 +461,18 @@ static NSMutableSet     *dismissableResponders;
             [segmentView setTitle:[self applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
                 forSegmentAtIndex:segment];
     }
+    if ([view isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)view;
+        
+        // Localize titles of segments.
+        UIControlState states[] = { UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication };
+        for (NSUInteger s = 0; s < 5; ++s) {
+            UIControlState state = states[s];
+            NSString *title = [button titleForState:state];
+            if (title)
+                [button setTitle:[self applyLocalization:title] forState:state];
+        }
+    }
     
     // Load localization for all children, too.
     for (UIView *childView in [view subviews])

@@ -18,6 +18,8 @@
 
 #ifdef WITH_OPENSSL
 #import "RSAKey.h"
+#import "ObjectUtils.h"
+#import "Logger.h"
 
 #include <stdio.h>
 #include <stdlib.h>

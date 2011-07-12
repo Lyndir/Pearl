@@ -16,8 +16,8 @@
  limitations under the License.
  */
 
+#ifdef WITH_OPENSSL
 #import "RSAKey.h"
-#import "Pearl-Crypto.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -708,3 +708,4 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 }
 
 @end
+#endif

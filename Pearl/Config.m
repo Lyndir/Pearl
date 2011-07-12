@@ -28,6 +28,7 @@
 #import "Resettable.h"
 #import "NSString_SEL.h"
 #import "StringUtils.h"
+#import "PearlStrings.h"
 #ifdef PEARL_MEDIA
 #import "AudioController.h"
 #endif

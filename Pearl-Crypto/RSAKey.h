@@ -16,6 +16,7 @@
  limitations under the License.
  */
 
+#ifdef WITH_OPENSSL
 #import <Foundation/Foundation.h>
 
 #import "CodeUtils.h"
@@ -112,3 +113,4 @@
 - (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlDigest)digest;
 
 @end
+#endif

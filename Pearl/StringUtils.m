@@ -7,6 +7,7 @@
 //
 
 #import "StringUtils.h"
+#import "PearlStrings.h"
 
 
 NSString* RPad(const NSString* string, const NSUInteger l) {

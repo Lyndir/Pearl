@@ -136,6 +136,7 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
  * Properties localizable by this method are: text, placeholder.
  * Additionally, the following views are handled specially:
  *  - UISegmentedControl: Segment titles are localized.
+ *  - UIButton: Control state titles are localized.
  *
  * See applyLocalization for the rules of localization expansion.
  */

@@ -13,6 +13,8 @@ CGRect CGRectSetX(CGRect rect, CGFloat x);
 CGRect CGRectSetY(CGRect rect, CGFloat y);
 CGRect CGRectSetWidth(CGRect rect, CGFloat width);
 CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+
+CGPoint CGPointFromCGRectCenter(CGRect rect);
 CGPoint CGPointFromCGRectTop(CGRect rect);
 CGPoint CGPointFromCGRectRight(CGRect rect);
 CGPoint CGPointFromCGRectBottom(CGRect rect);
@@ -21,6 +23,11 @@ CGPoint CGPointFromCGRectTopLeft(CGRect rect);
 CGPoint CGPointFromCGRectTopRight(CGRect rect);
 CGPoint CGPointFromCGRectBottomRight(CGRect rect);
 CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
+
+CGPoint CGPointFromCGSize(const CGSize size);
+CGPoint CGPointFromCGSizeCenter(const CGSize size);
+CGSize CGSizeFromCGPoint(const CGPoint point);
+CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
 @interface UIUtils : NSObject {
 

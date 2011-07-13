@@ -30,6 +30,10 @@ CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
     
     return (CGRect){rect.origin, {rect.size.width, height}};
 }
+CGPoint CGPointFromCGRectCenter(CGRect rect) {
+    
+    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2);
+}
 CGPoint CGPointFromCGRectTop(CGRect rect) {
     
     return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y);
@@ -61,6 +65,22 @@ CGPoint CGPointFromCGRectBottomRight(CGRect rect) {
 CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
     
     return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
+}
+CGPoint CGPointFromCGSize(const CGSize size) {
+    
+    return CGPointMake(size.width, size.height);
+}
+CGPoint CGPointFromCGSizeCenter(const CGSize size) {
+    
+    return CGPointMake(size.width / 2, size.height / 2);
+}
+CGSize CGSizeFromCGPoint(const CGPoint point) {
+    
+    return CGSizeMake(point.x, point.y);
+}
+CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
+    
+    return CGRectMake(point.x, point.y, size.width, size.height);
 }
 
 

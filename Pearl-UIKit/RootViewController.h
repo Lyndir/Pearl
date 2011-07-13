@@ -19,6 +19,7 @@
 - (id)initWithView:(UIView *)aView;
 
 - (BOOL)isInterfaceOrientationSupported:(UIInterfaceOrientation)interfaceOrientation;
+- (void)supportInterfaceOrientationString:(NSString *)interfaceOrientation;
 - (void)supportInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 - (void)rejectInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 

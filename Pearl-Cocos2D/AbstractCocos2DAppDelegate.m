@@ -68,10 +68,9 @@
 #endif
 	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];
-    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
     
-    self.window.rootViewController.view.hidden = YES;
-    [self.window addSubview:[CCDirector sharedDirector].openGLView];
+    //self.window.rootViewController.view.hidden = YES;
+    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].openGLView];
 	[self.window makeKeyAndVisible];
     
     // Random seed with timestamp.
@@ -89,14 +88,6 @@
     [self revealHud];
     [self hideHud];
 }
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    
-    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
-}
-
 
 - (void)hudMenuPressed {
     

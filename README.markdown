@@ -20,11 +20,11 @@ The standard way of adding Pearl to your project is by following these steps:
 
     `#import "Pearl-Prefix.pch"`
 
-![Adding a new target](.images/1-target.png)
-![Configuring build phases](.images/2-phases.png)
-![Adding module and dependency sources](.images/3-sources.png)
-![Configuring your Pearl prefix](.images/4-prefix.png)
-![Configuring your application prefix](.images/5-application.png)
+![Adding a new target](/Lyndir/Pearl/raw/master/.images/1-target.png)
+![Configuring build phases](/Lyndir/Pearl/raw/master/.images/2-phases.png)
+![Adding module and dependency sources](/Lyndir/Pearl/raw/master/.images/3-sources.png)
+![Configuring your Pearl prefix](/Lyndir/Pearl/raw/master/.images/4-prefix.png)
+![Configuring your application prefix](/Lyndir/Pearl/raw/master/.images/5-application.png)
 
 
 Pearl Configuration

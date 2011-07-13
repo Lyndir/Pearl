@@ -2,11 +2,11 @@
 #error PEARL_COCOS2D used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL_COCOS2D) in your Pearl prefix file.
 #endif
 
+#import "Pearl-Cocos2D-Dependencies.h"
 #import "Pearl.h"
 #import "AbstractCocos2DAppDelegate.h"
 #import "Remove.h"
 #import "CCDebug.h"
-#import "Pearl-Cocos2D-Dependencies.h"
 #import "PearlCocos2DStrings.h"
 #import "ActivitySprite.h"
 #import "BarLayer.h"

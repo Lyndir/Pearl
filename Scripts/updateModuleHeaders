@@ -17,13 +17,15 @@ for module in "$main"*/; do
             printf '#endif\n\n'
 
             # All modules depend on Pearl.h
+            [[ -e "$module-Dependencies.h" ]] && \
+                printf '#import "%s.h"\n' "$module-Dependencies"
             printf '#import "%s.h"\n' "$main"
 
             # Enumerate the module's headers.
             while read f; do
                 (( headers++ ))
                 printf '#import "%s"\n' "${f##*/}"
-            done < <(find . ! -name "$module.h" -name '*.h')
+            done < <(find . ! -name "$module.h" ! -name "$module-*.h" -name '*.h')
         } > "$module".h
         echo "$headers")"
 done

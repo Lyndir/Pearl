@@ -38,9 +38,9 @@ Pearl modules can use each other when they know other Pearl modules are availabl
 
 After having defined which modules you'll be using, you need to import their module headers.  Pearl module headers are a single header file for each module that immediately imports all the headers of each file provided by that module.  Importing the module header of each Pearl module you'll be using gives you instant access to any of those Pearl modules' features.  Assuming the example above, you'd import the following:
 
-   #import "Pearl.h"
-   #import "Pearl-Media.h"
-   #import "Pearl-Cocos2D.h"
+    #import "Pearl.h"
+    #import "Pearl-Media.h"
+    #import "Pearl-Cocos2D.h"
 
 Note that Pearl module headers are set up to break the build if you try to import them without first having set up your defines correctly.  This is a protection measure to make sure you don't forget to set up your defines as specified above.
 

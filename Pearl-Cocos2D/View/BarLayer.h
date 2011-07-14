@@ -27,9 +27,9 @@
 
     CCMenuItemFont         *_menuButton;
     CCMenu                 *_menuMenu;
-    CCLabelTTF                *_messageLabel;
+    CCLabelTTF             *_messageLabel;
 
-    long                 _color, _renderColor;
+    long                  _textColor, _renderColor;
     CGPoint               _showPosition;
 
     BOOL                 _dismissed;

@@ -12,7 +12,6 @@
 #import "LayoutView.h"
 #import "RootViewController.h"
 #import "SheetViewController.h"
-#import "UIColor-Expanded.h"
 #import "UIImage_Scaling.h"
 #import "UIUtils.h"
 #import "ValidatingTextField.h"

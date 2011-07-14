@@ -7,7 +7,6 @@
 //
 
 #import "GradientView.h"
-#import "UIColor-Expanded.h"
 #import "Layout.h"
 
 

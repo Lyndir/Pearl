@@ -13,3 +13,6 @@
 [submodule "External/cocos2d-iphone"]
 	path = External/cocos2d-iphone
 	url = git://github.com/lhunath/cocos2d-iphone.git
+[submodule "External/uicolor-utilities"]
+	path = External/uicolor-utilities
+	url = git://github.com/erica/uicolor-utilities.git

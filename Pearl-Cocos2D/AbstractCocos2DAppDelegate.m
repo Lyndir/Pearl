@@ -120,10 +120,6 @@
     return _hudLayer;
 }
 
-- (void)didUpdateConfigForKey:(SEL)configKey {
-    
-}
-
 - (BOOL)isLastLayerShowing {
     
     return [self.menuLayers count] == 1;

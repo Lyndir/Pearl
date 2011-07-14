@@ -76,6 +76,8 @@
 #define glVertexPointer(x, y, z, p) \
     do { dbg(@"glVertexPointer(%s, %s, %s, %s)", #x, #y, #z, #p); glVertexPointer(x, y, z, p); GLCheck(__FILE__, __LINE__);      } while (0)
 */
+
+
 int GLCheck(char *file, int line);
 
 /**
@@ -134,6 +136,33 @@ ccc4fl(const long color)
 {
     GLubyte *components = (GLubyte *)&color;
 	return ccc4f(components[3], components[2], components[1], components[0]);
+}
+
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor3B
+ccc3lighten(const ccColor3B color, float lightRatio)
+{
+	ccColor3B c = {
+            color.r + (GLubyte) (UCHAR_MAX * lightRatio),
+            color.g + (GLubyte) (UCHAR_MAX * lightRatio),
+            color.b + (GLubyte) (UCHAR_MAX * lightRatio),
+    };
+
+	return c;
+}
+
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor4B
+ccc4lighten(const ccColor4B color, float lightRatio)
+{
+	ccColor4B c = {
+            color.r + (GLubyte) (UCHAR_MAX * lightRatio),
+            color.g + (GLubyte) (UCHAR_MAX * lightRatio),
+            color.b + (GLubyte) (UCHAR_MAX * lightRatio),
+            color.a
+    };
+
+	return c;
 }
 
 //! Comparisons

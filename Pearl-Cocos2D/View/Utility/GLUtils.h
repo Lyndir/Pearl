@@ -143,9 +143,9 @@ static inline ccColor3B
 ccc3lighten(const ccColor3B color, float lightRatio)
 {
 	ccColor3B c = {
-            color.r + (GLubyte) (UCHAR_MAX * lightRatio),
-            color.g + (GLubyte) (UCHAR_MAX * lightRatio),
-            color.b + (GLubyte) (UCHAR_MAX * lightRatio),
+            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
     };
 
 	return c;
@@ -156,12 +156,13 @@ static inline ccColor4B
 ccc4lighten(const ccColor4B color, float lightRatio)
 {
 	ccColor4B c = {
-            color.r + (GLubyte) (UCHAR_MAX * lightRatio),
-            color.g + (GLubyte) (UCHAR_MAX * lightRatio),
-            color.b + (GLubyte) (UCHAR_MAX * lightRatio),
+            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
             color.a
     };
 
+    dbg(@"ccc4lighten( {%d, %d, %d, %d}, %f ) = {%d, %d, %d, %d}", color.r, color.g, color.b, color.a, lightRatio, c.r, c.g, c.b, c.a);
 	return c;
 }
 

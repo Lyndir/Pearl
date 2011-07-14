@@ -86,16 +86,16 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     self.view.transform = CGAffineTransformIdentity;
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationLandscapeLeft:
-            self.view.transform = CGAffineTransformMakeRotation(M_PI_2);
+            self.view.transform = CGAffineTransformMakeRotation((CGFloat)M_PI_2);
             break;
         case UIInterfaceOrientationLandscapeRight:
-            self.view.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            self.view.transform = CGAffineTransformMakeRotation((CGFloat)-M_PI_2);
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
-            self.view.transform = CGAffineTransformMakeRotation(M_PI);
+            self.view.transform = CGAffineTransformMakeRotation((CGFloat)M_PI);
             break;
         default:
-            self.view.transform = CGAffineTransformMakeRotation(0.0);
+            self.view.transform = CGAffineTransformMakeRotation(0.0f);
             break;
     }
     

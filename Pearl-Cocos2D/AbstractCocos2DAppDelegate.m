@@ -151,8 +151,12 @@
     [self.menuLayers removeLastObject];
     
     BOOL anyLeft = [self isAnyLayerShowing];
-    if(anyLeft)
-        [self.uiLayer addChild:[self.menuLayers lastObject]]; // FIXME: double tap back breaks me.
+    if(anyLeft) {
+        ShadeLayer *newLayer = [self.menuLayers lastObject];
+        [newLayer stopAllActions];
+        [newLayer removeFromParentAndCleanup:YES];
+        [self.uiLayer addChild:newLayer];
+    }
 
     [self didPopLayer:layer anyLeft:anyLeft];
 }

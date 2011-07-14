@@ -37,7 +37,7 @@
 @property (nonatomic, readonly, retain) BarLayer        *messageBar;
 
 -(void) updateHudWasGood:(BOOL)wasGood;
--(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood;
+-(void) updateHudWithNewScore:(int64_t)newScore wasGood:(BOOL)wasGood;
 -(BOOL) hitsHud: (CGPoint)pos;
 
 @end

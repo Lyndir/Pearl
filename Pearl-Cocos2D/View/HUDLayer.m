@@ -73,7 +73,7 @@
 }
 
 
--(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood {
+-(void) updateHudWithNewScore:(int64_t)newScore wasGood:(BOOL)wasGood {
     
     [self.scoreCount setString:[NSString stringWithFormat:@"%04d", newScore]];
     [self updateHudWasGood:wasGood];

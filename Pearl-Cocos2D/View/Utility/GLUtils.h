@@ -162,24 +162,34 @@ ccc4lighten(const ccColor4B color, float lightRatio)
             color.a
     };
 
-    dbg(@"ccc4lighten( {%d, %d, %d, %d}, %f ) = {%d, %d, %d, %d}", color.r, color.g, color.b, color.a, lightRatio, c.r, c.g, c.b, c.a);
 	return c;
 }
 
-//! Comparisons
-static inline int
-max(const int a, const int b)
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor3B
+ccc3shade(const ccColor3B color, const ccColor3B shade, float lightRatio)
 {
-    if (a > b)
-        return a;
-    return b;
+	ccColor3B c = {
+        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
+        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
+        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+    };
+    
+	return c;
 }
-static inline int
-min(const int a, const int b)
+
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor4B
+ccc4shade(const ccColor4B color, const ccColor4B shade, float lightRatio)
 {
-    if (a < b)
-        return a;
-    return b;
+	ccColor4B c = {
+        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
+        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
+        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        color.a
+    };
+    
+	return c;
 }
 
 void IndicateInSpaceOf(const CGPoint point, const CCNode* node);

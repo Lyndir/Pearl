@@ -274,8 +274,10 @@
 - (void)dealloc {
 
     self.background = nil;
-    self.backButton = nil;
-    self.nextButton = nil;
+    [_backButton release];
+    _backButton = nil;
+    [_nextButton release];
+    _nextButton = nil;
     self.backMenu = nil;
     self.nextMenu = nil;
     self.backInvocation = nil;

@@ -96,7 +96,7 @@
 }
 
 
-- (void)didUpdateConfigForKey:(SEL)configKey {
+- (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {
     
 }
 

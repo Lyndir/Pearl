@@ -59,23 +59,6 @@ int GLCheck(char *file, int line) {
     return retCode;
 }
 
-CGPoint CGPointFromCGSize(const CGSize size) {
-    
-    return CGPointMake(size.width, size.height);
-}
-
-
-CGSize CGSizeFromCGPoint(const CGPoint point) {
-    
-    return CGSizeMake(point.x, point.y);
-}
-
-
-CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
-    
-    return CGRectMake(point.x, point.y, size.width, size.height);
-}
-
 
 #define INDICATORS 300
 static CGPoint *indicatorPoints     = nil;

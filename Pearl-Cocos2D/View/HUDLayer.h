@@ -25,7 +25,7 @@
 #import "BarLayer.h"
 
 
-@interface HUDLayer : BarLayer {
+@interface HUDLayer : BarLayer<Resettable> {
 
     CCSprite                                            *_scoreSprite;
     CCLabelAtlas                                        *_scoreCount;
@@ -36,8 +36,8 @@
 @property (nonatomic, readonly, retain) CCLabelAtlas    *scoreCount;
 @property (nonatomic, readonly, retain) BarLayer        *messageBar;
 
--(void) updateHudWasGood:(BOOL)wasGood;
--(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood;
--(BOOL) hitsHud: (CGPoint)pos;
+- (BOOL)hitsHud: (CGPoint)pos;
+- (void)highlightGood:(BOOL)wasGood;
+- (int64_t)score;
 
 @end

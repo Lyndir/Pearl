@@ -76,6 +76,8 @@
 #define glVertexPointer(x, y, z, p) \
     do { dbg(@"glVertexPointer(%s, %s, %s, %s)", #x, #y, #z, #p); glVertexPointer(x, y, z, p); GLCheck(__FILE__, __LINE__);      } while (0)
 */
+
+
 int GLCheck(char *file, int line);
 
 /**
@@ -136,25 +138,59 @@ ccc4fl(const long color)
 	return ccc4f(components[3], components[2], components[1], components[0]);
 }
 
-//! Comparisons
-static inline int
-max(const int a, const int b)
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor3B
+ccc3lighten(const ccColor3B color, float lightRatio)
 {
-    if (a > b)
-        return a;
-    return b;
-}
-static inline int
-min(const int a, const int b)
-{
-    if (a < b)
-        return a;
-    return b;
+	ccColor3B c = {
+            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+    };
+
+	return c;
 }
 
-CGPoint CGPointFromCGSize(const CGSize size);
-CGSize CGSizeFromCGPoint(const CGPoint point);
-CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor4B
+ccc4lighten(const ccColor4B color, float lightRatio)
+{
+	ccColor4B c = {
+            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
+            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+            color.a
+    };
+
+	return c;
+}
+
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor3B
+ccc3shade(const ccColor3B color, const ccColor3B shade, float lightRatio)
+{
+	ccColor3B c = {
+        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
+        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
+        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+    };
+    
+	return c;
+}
+
+//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+static inline ccColor4B
+ccc4shade(const ccColor4B color, const ccColor4B shade, float lightRatio)
+{
+	ccColor4B c = {
+        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
+        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
+        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        color.a
+    };
+    
+	return c;
+}
 
 void IndicateInSpaceOf(const CGPoint point, const CCNode* node);
 void DrawIndicators(void);

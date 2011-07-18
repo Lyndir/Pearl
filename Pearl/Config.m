@@ -157,30 +157,31 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
     NSString *selector = NSStringFromSelector(anInvocation.selector);
+
+    id currentValue = [self.defaults valueForKey:selector];
+    if ([currentValue isKindOfClass:[NSData class]])
+        currentValue = [NSKeyedUnarchiver unarchiveObjectWithData:currentValue];
+
     if ([selector isSetter]) {
         selector = [selector setterToGetter];
 
-        id value = nil;
-        [anInvocation getArgument:&value atIndex:2];
-        dbg(@"Config Set %@ = %@", selector, value);
+        id newValue = nil;
+        [anInvocation getArgument:&newValue atIndex:2];
+        dbg(@"Config Set %@ = [%@ ->] %@", selector, currentValue, newValue);
 
-        if ([value conformsToProtocol:@protocol(NSCoding)])
-            value = [NSKeyedArchiver archivedDataWithRootObject:value];
-        [self.defaults setValue:value forKey:selector];
+        if ([newValue conformsToProtocol:@protocol(NSCoding)])
+            newValue = [NSKeyedArchiver archivedDataWithRootObject:newValue];
+        [self.defaults setValue:newValue forKey:selector];
 
-        [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector)];
+        [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<Resettable>) [[AbstractAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
 
     else {
-        id value = [self.defaults valueForKey:selector];
-        if ([value isKindOfClass:[NSData class]])
-            value = [NSKeyedUnarchiver unarchiveObjectWithData:value];
-
         //dbg(@"Config Get %@ = %@", selector, value);
-        [anInvocation setReturnValue:&value];
+        [anInvocation setReturnValue:&currentValue];
     }
 }
 
@@ -236,9 +237,10 @@
     if(currentTrack == nil)
         currentTrack = @"";
 
+    NSString *oldTrack = [self.defaults objectForKey:cCurrentTrack];
     [self.defaults setObject:currentTrack forKey:cCurrentTrack];
 
-    [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack)];
+    [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack) fromValue:oldTrack];
 }
 -(NSString *) currentTrackName {
 

@@ -73,16 +73,20 @@
 }
 
 
--(void) updateHudWithNewScore:(int)newScore wasGood:(BOOL)wasGood {
+- (int64_t)score {
     
-    [self.scoreCount setString:[NSString stringWithFormat:@"%04d", newScore]];
-    [self updateHudWasGood:wasGood];
+    return 0;
 }
 
--(void) updateHudWasGood:(BOOL)wasGood {
 
-    [self.scoreCount setVisible:YES];
-    [self.scoreSprite setVisible:YES];
+- (void)reset {
+    
+    [self.scoreCount setString:[NSString stringWithFormat:@"%04d", [self score]]];
+}
+
+- (void)highlightGood:(BOOL)wasGood {
+    
+    [self reset];
     
     ccColor3B scoreColor;
     if(wasGood)
@@ -91,9 +95,9 @@
         scoreColor = ccc3(0xFF, 0x99, 0x99);
     
     [self.scoreCount runAction:[CCSequence actions:
-                           [CCTintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
-                           [CCTintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
-                           nil]];
+                                [CCTintTo actionWithDuration:0.5f red:scoreColor.r green:scoreColor.b blue:scoreColor.b],
+                                [CCTintTo actionWithDuration:0.5f red:0xFF green:0xFF blue:0xFF],
+                                nil]];
 }
 
 
@@ -142,7 +146,7 @@
     if([self.messageBar parent])
         [self removeChild:self.messageBar cleanup:YES];
     
-    [self updateHudWithNewScore:0 wasGood:YES];
+    [self reset];
 }
 
 -(void) menuButton: (id) caller {

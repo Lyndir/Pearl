@@ -459,16 +459,10 @@ static NSMutableSet     *dismissableResponders;
     
     // Load localization for each of the view's supported properties.
     for (NSString *localizableProperty in UIUtils_localizableProperties) {
-        @try {
+        if ([view respondsToSelector:NSSelectorFromString(localizableProperty)]) {
             id value = [view valueForKey:localizableProperty];
             if ([value isKindOfClass:[NSString class]])
                 [view setValue:[self applyLocalization:value] forKey:localizableProperty];
-        }
-        
-        // Obj-C exceptions are lame.
-        @catch (NSException *e) {
-            if (e.name != NSUndefinedKeyException)
-                @throw e;
         }
     }
     

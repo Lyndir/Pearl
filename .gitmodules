@@ -9,7 +9,7 @@
 	url = git://github.com/jonmarimba/jrswizzle.git
 [submodule "External/iOSPorts"]
 	path = External/iOSPorts
-	url = git://github.com/bindle/iOSPorts.git
+	url = git://github.com/lhunath/iOSPorts.git
 [submodule "External/cocos2d-iphone"]
 	path = External/cocos2d-iphone
 	url = git://github.com/lhunath/cocos2d-iphone.git

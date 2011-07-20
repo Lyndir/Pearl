@@ -31,6 +31,7 @@
 @property (readwrite, assign) BOOL  isPublicKey;
 
 - (id)init;
+- (id)initWithKeyLength:(NSUInteger)keyBitLength;
 - (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent;
 - (id)initWithBinaryModulus:(NSData *)modulus privateExponent:(NSData *)exponent;
 - (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent

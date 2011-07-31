@@ -98,12 +98,17 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 
 - (id)init {
     
+    return [self initWithKeyLength:1024];
+}
+
+- (id)initWithKeyLength:(NSUInteger)keyBitLength {
+    
     if (!(self = [super init]))
         return nil;
     
     self.isPublicKey = NO;
     
-    _key = RSA_generate_key(1024, RSA_F4, NULL, NULL);
+    _key = RSA_generate_key(keyBitLength, RSA_F4, NULL, NULL);
     
     if (!rsaKey) {
         ERR_print_errors_fp(stderr);

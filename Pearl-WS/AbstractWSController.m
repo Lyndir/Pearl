@@ -74,8 +74,8 @@
                                completion:(void (^)(NSData *responseData))completion {
     
     inf(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
-    ASIHTTPRequest *request;
-    NSData *(^loadRequest)(void);
+    ASIHTTPRequest *request = nil;
+    NSData *(^loadRequest)(void) = nil;
     
     switch (method) {
         case WSRequestMethodGET_REST: {

@@ -156,16 +156,16 @@
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42
 // Helper function for ASN.1 encoding
-static size_t derEncodeLength(unsigned char * buf, size_t length) {
+static size_t derEncodeLength(unsigned char* buf, size_t length) {
     
     // encode length in ASN.1 DER format
     if (length < 128) {
-        buf[0] = length;
+        buf[0] = (char)length;
         return 1;
     }
     
     size_t i = (length / 256) + 1;
-    buf[0] = i + 0x80;
+    buf[0] = (char)(i + 0x80);
     for (size_t j = 0 ; j < i; ++j) {
         buf[i - j] = length & 0xFF;
         length = length >> 8;

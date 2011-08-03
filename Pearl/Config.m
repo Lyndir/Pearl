@@ -221,7 +221,7 @@
 }
 - (NSNumber *)music {
 
-    return [NSNumber numberWithBool:[self.currentTrack length]];
+    return [NSNumber numberWithBool:[self.currentTrack length] > 0];
 }
 - (void)setMusic:(NSNumber *)aMusic {
 

@@ -68,4 +68,7 @@
 - (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;
 
+- (SEL)configForItem:(CCMenuItemToggle *)item;
+- (CCMenuItemToggle *)itemForConfig:(SEL)config;
+
 @end

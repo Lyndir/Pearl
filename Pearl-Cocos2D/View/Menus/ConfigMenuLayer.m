@@ -184,7 +184,7 @@
 - (void)tapped:(CCMenuItemToggle *)toggle {
 
     id t = [Config get];
-    SEL s = NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:toggle]]);
+    SEL s = [self configForItem:toggle];
     SEL setterS = NSSelectorFromString([NSStringFromSelector(s) getterToSetter]);
     id toggledValue = nil;
     if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(valueForSetting:index:)])
@@ -204,6 +204,23 @@
     [invocation setSelector:setterS];
     [invocation setArgument:&toggledValue atIndex:2];
     [invocation invoke];
+}
+
+
+- (SEL)configForItem:(CCMenuItemToggle *)item {
+    
+    return NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:item]]);
+}
+
+
+- (CCMenuItemToggle *)itemForConfig:(SEL)config {
+    
+    NSString *configString = NSStringFromSelector(config);
+    for (NSValue *itemValue in [self.itemConfigs allKeys])
+        if ([[self.itemConfigs objectForKey:itemValue] isEqualToString:configString])
+            return [itemValue pointerValue];
+    
+    return nil;
 }
 
 

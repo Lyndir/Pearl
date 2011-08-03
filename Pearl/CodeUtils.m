@@ -210,7 +210,7 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
     for (NSUInteger b = 0; b < xorData.length; ++b)
         ((char *)xorData.bytes)[b] ^= ((char *)otherData.bytes)[b];
     
-    return xorData;
+    return [xorData autorelease];
 }
 
 @end

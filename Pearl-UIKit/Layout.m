@@ -28,8 +28,8 @@
 
 - (id)init {
     
-    if(!(self = [self initWithView:[[UIScrollView alloc] init]]))
-        return self;
+    if(!(self = [self initWithView:[[[UIScrollView alloc] init] autorelease]]))
+        return nil;
 
     return self;
 }

@@ -301,7 +301,7 @@
 
     NSUInteger gr = [self gameRandom:scope];
     if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
-        dbg(@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr);
+        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr];
 
     return gr;
 }

@@ -5,6 +5,7 @@
 #import "Pearl-Cocos2D-Dependencies.h"
 #import "Pearl.h"
 #import "AbstractCocos2DAppDelegate.h"
+#import "AutoTween.h"
 #import "Remove.h"
 #import "CCDebug.h"
 #import "PearlCocos2DStrings.h"

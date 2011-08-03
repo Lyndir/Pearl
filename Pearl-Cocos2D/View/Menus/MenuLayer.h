@@ -63,7 +63,7 @@ typedef enum MenuLayout {
 
     id<NSObject, MenuDelegate>                                      _delegate;
 
-    NSArray                                                         *itemCounts;
+    NSArray                                                         *_itemCounts;
 }
 
 @property (nonatomic, readonly, retain) CCMenu                      *menu;

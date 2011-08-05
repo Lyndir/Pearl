@@ -101,11 +101,8 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)autoSize:(UILabel *)label {
     
-    //[label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(label.bounds.size.width, CGFLOAT_MAX) lineBreakMode:label.lineBreakMode];
-    dbg(@"frame before:  %@", NSStringFromCGRect(label.frame));
     label.frame = CGRectSetHeight(label.frame, [label textRectForBounds:CGRectSetHeight(label.frame, CGFLOAT_MAX)
                                                  limitedToNumberOfLines:label.numberOfLines].size.height);
-    dbg(@"frame after:   %@", NSStringFromCGRect(label.frame));
 }
 
 + (void)autoSizeContent:(UIScrollView *)scrollView {

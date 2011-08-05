@@ -40,22 +40,21 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 + (void)autoSize:(UILabel *)label;
 
 /**
- * Automatically determines and sets the content size of the given scroll view.
- * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
+ * @see -autoSizeContent:ignoreSubviewsArray:
  */
 + (void)autoSizeContent:(UIScrollView *)scrollView;
 
 /**
- * Automatically determines and sets the content size of the given scroll view.
- * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
- *
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ * @see -autoSizeContent:ignoreSubviewsArray:
  */
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Automatically determines and sets the content size of the given scroll view.
  * The scroll region is padded by using the content frame's top/left offset as padding for the bottom/right.
+ * We also listen for keyboard events.  When the keyboard appears, the latest scroll view that was passed to this method will get shrunk to fit above the keyboard and restored after the keyboard is dismissed.
+ * You should call this method in your view controllers' -viewWillAppear and -viewDidLoad (since it's not guaranteed that the former will be invoked after the VC is fully loaded) methods.
  *
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
  */

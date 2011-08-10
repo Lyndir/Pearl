@@ -283,9 +283,9 @@ static NSMutableSet     *dismissableResponders;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^{
-                         animatingScrollView.contentOffset = keyboardScrollNewOffset;
+                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
                      } completion:^(BOOL finished){
-                         animatingScrollView.frame            = keyboardScrollNewFrame;
+                         animatingScrollView.frame          = keyboardScrollNewFrame;
                      }];
 }
 
@@ -306,7 +306,7 @@ static NSMutableSet     *dismissableResponders;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^{
-                         animatingScrollView.contentOffset = keyboardScrollNewOffset;
+                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
                      } completion:nil];
     
     // Active scrollview is restoring state.  Deactivate it so it can be reactivated.

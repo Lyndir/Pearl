@@ -27,16 +27,18 @@
 
 @interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
 
-    UIWindow                                                    *_window;
+    UIWindow                                                                *_window;
+    UINavigationController                                                  *_navigationController;
 }
 
-@property (nonatomic, readwrite, retain) IBOutlet UIWindow      *window;
+@property (nonatomic, readwrite, retain) IBOutlet UIWindow                  *window;
+@property (nonatomic, readwrite, retain) IBOutlet UINavigationController    *navigationController;
 
 - (void)preSetup;
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
-- (void)restart;
+- (IBAction)restart;
 - (void)shutdown:(id)caller;
 
 +(AbstractAppDelegate *) get;

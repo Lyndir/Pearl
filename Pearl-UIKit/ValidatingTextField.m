@@ -80,7 +80,7 @@
     
     if (!self.validationDelegate && !_isValid)
         // No validators, default action is to check whether the field is non-empty.
-        valid = self.text.length;
+        valid = self.text.length > 0;
     
     self.rightView = valid? _validView: _invalidView;
 }

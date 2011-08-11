@@ -37,7 +37,7 @@
 
 
 @implementation AbstractAppDelegate
-@synthesize window = _window;
+@synthesize window = _window, navigationController = _navigationController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -93,6 +93,8 @@
         self.window.rootViewController = [[RootViewController new] autorelease];
 #endif
     }
+    if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
+        self.navigationController = (UINavigationController *) self.window.rootViewController;
 }
 
 
@@ -106,7 +108,7 @@
 
 - (void)restart {
 
-    [self.window.rootViewController.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
     [[AlertViewController currentAlert] dismissAlert];

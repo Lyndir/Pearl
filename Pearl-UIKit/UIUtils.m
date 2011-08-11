@@ -101,11 +101,8 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)autoSize:(UILabel *)label {
     
-    //[label.text sizeWithFont:label.font constrainedToSize:CGSizeMake(label.bounds.size.width, CGFLOAT_MAX) lineBreakMode:label.lineBreakMode];
-    dbg(@"frame before:  %@", NSStringFromCGRect(label.frame));
     label.frame = CGRectSetHeight(label.frame, [label textRectForBounds:CGRectSetHeight(label.frame, CGFLOAT_MAX)
                                                  limitedToNumberOfLines:label.numberOfLines].size.height);
-    dbg(@"frame after:   %@", NSStringFromCGRect(label.frame));
 }
 
 + (void)autoSizeContent:(UIScrollView *)scrollView {
@@ -282,20 +279,14 @@ static NSMutableSet     *dismissableResponders;
         else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
             keyboardScrollNewOffset.y = responderRect.origin.y;
     }
-    
     UIScrollView *animatingScrollView = keyboardActiveScrollView;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                     animations:^(void) {
-                         /*
-                          dbg(@"showing keyboard for scrollView: %x", keyboardActiveScrollView);
-                          dbg(@"    keyboardScrollNewOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
-                          dbg(@"    keyboardScrollNewFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
-                          */
-                         
-                         animatingScrollView.contentOffset    = keyboardScrollNewOffset;
-                         animatingScrollView.frame            = keyboardScrollNewFrame;
-                     } completion:nil];
+                     animations:^{
+                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
+                     } completion:^(BOOL finished){
+                         animatingScrollView.frame          = keyboardScrollNewFrame;
+                     }];
 }
 
 + (void)keyboardWillHide:(NSNotification *)n {
@@ -308,18 +299,14 @@ static NSMutableSet     *dismissableResponders;
     CGPoint keyboardScrollNewOffset         = keyboardScrollOriginalOffset;
     CGRect keyboardScrollNewFrame           = keyboardScrollOriginalFrame;
     
-    UIScrollView *animatingScrollView = keyboardActiveScrollView;
+    UIScrollView *animatingScrollView       = keyboardActiveScrollView;
+    CGPoint currentOffset = animatingScrollView.contentOffset;
+    animatingScrollView.frame               = keyboardScrollNewFrame;
+    animatingScrollView.contentOffset       = currentOffset;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                     animations:^(void) {
-                         /*
-                          dbg(@"hiding keyboard for scrollView: %x", keyboardActiveScrollView);
-                          dbg(@"    keyboardScrollOriginalOffset: %@", NSStringFromCGPoint(keyboardScrollNewOffset));
-                          dbg(@"    keyboardScrollOriginalFrame: %@", NSStringFromCGRect(keyboardScrollNewFrame));
-                          */
-                         
-                         animatingScrollView.contentOffset    = keyboardScrollNewOffset;
-                         animatingScrollView.frame            = keyboardScrollNewFrame;
+                     animations:^{
+                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
                      } completion:nil];
     
     // Active scrollview is restoring state.  Deactivate it so it can be reactivated.

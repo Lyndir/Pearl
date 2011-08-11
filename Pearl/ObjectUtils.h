@@ -15,11 +15,11 @@
                 [__array addObject:__object];                                           \
             va_end(__list);
 
-#define NilToNSNull(__object)                                                           \
-            (__object == nil? (id)[NSNull null]: __object)
+#define NilToNSNull(O)                                                                  \
+            ({ __typeof__(O) __o = O; __o == nil? (id)[NSNull null]: __o; })
 
-#define NSNullToNil(__object)                                                           \
-            (__object == (id)[NSNull null]? nil: __object)
+#define NSNullToNil(O)                                                                  \
+            ({ __typeof__(O) __o = O; __o == (id)[NSNull null]? nil: __o; })
 
 #define throw(__format, ...)                                                            \
             @throw [NSException                                                         \

@@ -52,6 +52,10 @@
 
 - (void)draw {
 
+    ccColor4B backColor = self.color;
+    backColor.a = 0x33;
+    
+    DrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), backColor, backColor);
     DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), self.color, 1.0f);
 }
 

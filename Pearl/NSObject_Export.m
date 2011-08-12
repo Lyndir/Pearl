@@ -8,6 +8,7 @@
 
 #import "NSObject_Export.h"
 #import "Logger.h"
+#import <objc/runtime.h>
 
 
 @implementation NSObject (NSObject_Export)

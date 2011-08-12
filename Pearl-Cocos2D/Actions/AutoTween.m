@@ -151,13 +151,13 @@
         tween.v         += tween.a * dt;
 
         // Current to final.
-        float sLeft     = tween.to - tween.current;         // displacement left.
-        float tLeft     = tween.duration - tween.elapsed;   // time left.
+//        float sLeft     = tween.to - tween.current;         // displacement left.
+//        float tLeft     = tween.duration - tween.elapsed;   // time left.
 
         // Adjust acceleration for arrival.
-        ccTime etaTime           = sLeft / tween.v; //2.0f * ( sLeft - tween.v ) / ( tween.v - tween.vi );
-        float  breakAcceleration = -tween.v / tLeft;        // a needed to get to v=0 after t
-        //float  accelTime         = 0.01f;                   // amount of t desired for breaking.
+//        ccTime etaTime           = sLeft / tween.v; //2.0f * ( sLeft - tween.v ) / ( tween.v - tween.vi );
+//        float  breakAcceleration = -tween.v / tLeft;        // a needed to get to v=0 after t
+//        float  accelTime         = 0.01f;                   // amount of t desired for breaking.
 
         /*if (tLeft < accelTime)
             tween.a = breakAcceleration;
@@ -166,8 +166,8 @@
 
         // Determine new value.
         float new = tween.current + tween.v * dt;
-        dbg(@"%@[+%d, %f -> %f @ %f]: dt: %f, sLeft: %f, tLeft: %f, etaTime: %f, breakAccel: %f, tween.a: %f, tween.v: %f",
-            tween.keyPath, tween.valueOffset, tween.from, tween.to, new, dt, sLeft, tLeft, etaTime, breakAcceleration, tween.a, tween.v);
+//        dbg(@"%@[+%d, %f -> %f @ %f]: dt: %f, sLeft: %f, tLeft: %f, etaTime: %f, breakAccel: %f, tween.a: %f, tween.v: %f",
+//            tween.keyPath, tween.valueOffset, tween.from, tween.to, new, dt, sLeft, tLeft, etaTime, breakAcceleration, tween.a, tween.v);
         if ((tween.current <= tween.to && new >= tween.to) || (tween.current >= tween.to && new <= tween.to)) {
             // Target is inbetween current and new, or on new, arrive and deactivate.
             new = tween.to;

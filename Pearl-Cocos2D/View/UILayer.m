@@ -57,7 +57,7 @@
 
 
 -(id) init {
-#ifdef DEBUG
+#if DEBUG
 	if (!(self = [super initWithColor:ccc4(0xff, 0x00, 0x00, 0xff)]))
 		return self;
 #else

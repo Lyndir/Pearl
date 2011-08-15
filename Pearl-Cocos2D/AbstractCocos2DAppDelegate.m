@@ -61,10 +61,12 @@
 	// Init the window.
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
-    if ([DeviceUtils isIPad])
-        [[CCDirector sharedDirector] setContentScaleFactor:2];
+    [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
+    if ([DeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        // An iPad in iPhone compatibility mode.
+        [CCDirector sharedDirector].contentScaleFactor *= 2;
 #if DEBUG
-    //[CCDirector sharedDirector].displayFPS          = YES;
+    [CCDirector sharedDirector].displayFPS          = YES;
 #endif
 	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];

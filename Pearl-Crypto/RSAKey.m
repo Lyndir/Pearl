@@ -111,6 +111,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_generate_key(keyBitLength, RSA_F4, NULL, NULL);
     
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -136,6 +137,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -162,6 +164,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -189,6 +192,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -218,6 +222,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -246,6 +251,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -271,6 +277,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -299,6 +306,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, derEncodedKey.length);
     
     if (!rsaKey || ![self isValid]) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -317,6 +325,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
     PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, derEncodedKey.length);
     if (!pkcs12) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -324,6 +333,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     X509 *cert;
     EVP_PKEY *pkey = EVP_PKEY_new();
     if (!PKCS12_parse(pkcs12, [keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], &pkey, &cert, NULL)) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -331,6 +341,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = pkey->pkey.rsa;
     
     if (!rsaKey || ![self isValid]) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -344,17 +355,20 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (!(self = [super init]))
         return nil;
     
+    EVP_PKEY *pkey;
     BIO *bio = BIO_new(BIO_s_mem());
     BIO_write(bio, pemEncodedKey.bytes, pemEncodedKey.length);
     if ((self.isPublicKey = isPublicKey))
-        _key = PEM_read_bio_RSAPublicKey(bio, rsaKeyIn, (pem_password_cb *)pem_password_callback,
+        pkey = PEM_read_bio_PUBKEY(bio, NULL, (pem_password_cb *)pem_password_callback,
                                          (void *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding]);
     else
-        _key = PEM_read_bio_RSAPrivateKey(bio, rsaKeyIn, (pem_password_cb *)pem_password_callback,
+        pkey = PEM_read_bio_PrivateKey(bio, NULL, (pem_password_cb *)pem_password_callback,
                                           (void *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding]);
     BIO_free(bio);
+    _key = pkey->pkey.rsa;
     
     if (!rsaKey || ![self isValid]) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -370,6 +384,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         [self release];
         return nil;
@@ -422,6 +437,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (check > 0)
         return YES;
     
+    err(@"OpenSSL error:");
     ERR_print_errors_fp(stderr);
     return NO;
 }
@@ -512,6 +528,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
                                friendlyName? (char *)[friendlyName cStringUsingEncoding:NSUTF8StringEncoding]: NULL,
                                pkey, NULL, NULL, -1, -1, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER, 0);
     if (!pkcs12) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -521,6 +538,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 	unsigned char *bufferOut, *bufferIn;
     bufferOut = bufferIn = malloc(length);
     if (!i2d_PKCS12(pkcs12, &bufferIn)) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -536,11 +554,13 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, EVP_des_ede3_cbc(),
                                          (unsigned char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], [keyPhrase length],
                                          NULL, NULL)) {
+            err(@"OpenSSL error:");
             ERR_print_errors_fp(stderr);
             return nil;
         }
     } else {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, NULL, NULL, 0, NULL, NULL)) {
+            err(@"OpenSSL error:");
             ERR_print_errors_fp(stderr);
             return nil;
         }
@@ -568,6 +588,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
     
+    err(@"OpenSSL error:");
     ERR_print_errors_fp(stderr);
     return nil;
 }
@@ -585,6 +606,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
     
+    err(@"OpenSSL error:");
     ERR_print_errors_fp(stderr);
     return nil;
 }
@@ -596,21 +618,25 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -619,6 +645,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     NSData *hash = [data hashWith:digest];
     size_t length;
     if (EVP_PKEY_sign(ctx, NULL, &length, hash.bytes, hash.length) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -628,6 +655,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     
     if (EVP_PKEY_sign(ctx, buffer, &length, hash.bytes, hash.length) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -642,21 +670,25 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return NO;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return NO;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return NO;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return NO;
     }
@@ -666,6 +698,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, hash.bytes, hash.length))
         return YES;
     
+    err(@"OpenSSL error:");
     ERR_print_errors_fp(stderr);
     return NO;
 }
@@ -677,21 +710,25 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -699,6 +736,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     /* Perform Operation */
     size_t length;
     if (EVP_PKEY_verify_recover(ctx, NULL, &length, signature.bytes, signature.length) <= 0) {
+        err(@"OpenSSL error:");
         ERR_print_errors_fp(stderr);
         return nil;
     }
@@ -710,6 +748,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (EVP_PKEY_verify_recover(ctx, buffer, &length, signature.bytes, signature.length))
         return [NSData dataWithBytes:buffer length:length];
     
+    err(@"OpenSSL error:");
     ERR_print_errors_fp(stderr);
     return NO;
 }

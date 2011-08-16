@@ -92,7 +92,7 @@
     }
 
     PropertyTween tween = _tweens[tw];
-    float vi = resetTween || vi != tween.vi ? 0 : tween.v;
+    float vi = resetTween ? 0 : tween.v;
     //ai = Sign(to - from) * 2000;
     float ai = 2 * ((to - from) - vi * t) / powf(t, 2);
     //ai = resetTween || ai != tween.ai ? ai : tween.a;
@@ -105,7 +105,7 @@
     /*if (!resetTween && fabsf(a - tween.a) > 2000)
         a = tween.a + Sign(a - tween.a) * 2000;*/
     
-    //dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
+    dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
 
     _tweens[tw] = (PropertyTween) {
 //        BOOL active;
@@ -147,6 +147,7 @@
             continue;
 
         // Apply dt
+        float new       = tween.current + tween.v * dt + tween.a * dt * dt / 2.0f;
         tween.elapsed   += dt;
         tween.v         += tween.a * dt;
 
@@ -165,7 +166,6 @@
             tween.a = 0;*/
 
         // Determine new value.
-        float new = tween.current + tween.v * dt;
 //        dbg(@"%@[+%d, %f -> %f @ %f]: dt: %f, sLeft: %f, tLeft: %f, etaTime: %f, breakAccel: %f, tween.a: %f, tween.v: %f",
 //            tween.keyPath, tween.valueOffset, tween.from, tween.to, new, dt, sLeft, tLeft, etaTime, breakAcceleration, tween.a, tween.v);
         if ((tween.current <= tween.to && new >= tween.to) || (tween.current >= tween.to && new <= tween.to)) {

@@ -555,7 +555,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 	return [NSData dataWithBytes:buffer length:length];
 }
 
-- (NSData *)encrypt:(NSData *)data {
+- (NSData *)encryptPlainData:(NSData *)data {
     
     NSUInteger length;
     unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
@@ -572,7 +572,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return nil;
 }
 
-- (NSData *)decrypt:(NSData *)data {
+- (NSData *)decryptCipherData:(NSData *)data {
     
     int length;
     unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));

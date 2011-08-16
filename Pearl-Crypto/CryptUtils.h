@@ -41,10 +41,7 @@
 
 @end
 
-@interface CryptUtils : NSObject {
-@private
-
-}
+@interface CryptUtils : NSObject
 
 + (NSString *)displayOTPWithKey:(NSData *)key factor:(NSData *)factor
                       otpLength:(NSUInteger)otpLength otpAlpha:(BOOL)otpAlpha;

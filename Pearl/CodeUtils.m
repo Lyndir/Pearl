@@ -214,3 +214,18 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
 }
 
 @end
+
+@implementation CodeUtils
+
++ (NSString *)randomUUID {
+
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    @try {
+        return [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid) autorelease];
+    }
+    @finally {
+        CFRelease(uuid);
+    }
+}
+
+@end

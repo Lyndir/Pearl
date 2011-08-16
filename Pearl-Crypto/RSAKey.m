@@ -16,7 +16,7 @@
  limitations under the License.
  */
 
-#ifdef WITH_OPENSSL
+#ifdef PEARL_WITH_OPENSSL
 #import "RSAKey.h"
 #import "ObjectUtils.h"
 #import "Logger.h"

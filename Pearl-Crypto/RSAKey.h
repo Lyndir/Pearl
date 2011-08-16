@@ -16,7 +16,7 @@
  limitations under the License.
  */
 
-#ifdef WITH_OPENSSL
+#ifdef PEARL_WITH_OPENSSL
 #import <Foundation/Foundation.h>
 
 #import "CodeUtils.h"

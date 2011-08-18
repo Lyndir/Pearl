@@ -59,7 +59,7 @@
     [super preSetup];
 
 	// Init the window.
-	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
+	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
     [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
     if ([DeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)

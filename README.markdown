@@ -48,6 +48,15 @@ With your `Pearl-Prefix.pch` file set up, your Pearl target should now build fin
 
     #import "Pearl-Prefix.pch"
 
+If you're writing a library that uses Pearl, it's best for your library's prefix file to also assert that the Pearl-Prefix.pch of the library's host project has correctly imported the Pearl modules necessary for the library.  I recommend you do that by putting the following in your library's prefix, instead of the one-liner above:
+
+    #import "Pearl-Prefix.pch"
+    #if !defined(PEARL) || !defined(PEARL_CRYPTO)
+        #error Pearl-Prefix.pch should define: PEARL PEARL_CRYPTO
+    #endif
+
+In this example, the library requires the Pearl and Pearl-Crypto modules.  If your library's prefix declares this, it forces the host application to have a `Pearl-Prefix.pch` that correctly defines and imports these modules.  If you don't do this and the host application's `Pearl-Prefix.pch` omits certain Pearl modules that you need, linkage errors or runtime errors may follow as Pearl won't be compiled with the correct modules.
+
 
 External Dependencies
 ---------------------

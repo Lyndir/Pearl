@@ -16,7 +16,7 @@
  limitations under the License.
  */
 
-#ifdef WITH_OPENSSL
+#ifdef PEARL_WITH_OPENSSL
 #import <Foundation/Foundation.h>
 
 #import "CodeUtils.h"
@@ -82,11 +82,11 @@
 /**
  * Encrypt the given plain-text with this key.  PKCS1 padding will be used.
  */
-- (NSData *)encrypt:(NSData *)data;
+- (NSData *)encryptPlainData:(NSData *)data;
 /**
  * Decrypt the given encrypted data with this key.  The data must have been encrypted with PKCS1 padding.
  */
-- (NSData *)decrypt:(NSData *)data;
+- (NSData *)decryptCipherData:(NSData *)data;
 /**
  * Sign the given data with this private key.
  * 

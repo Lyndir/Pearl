@@ -47,3 +47,9 @@ typedef enum {
 - (NSData *)xorWith:(NSData *)otherData;
 
 @end
+
+@interface CodeUtils : NSObject
+
++ (NSString *)randomUUID;
+
+@end

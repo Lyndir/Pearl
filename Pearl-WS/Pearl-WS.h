@@ -4,3 +4,4 @@
 
 #import "Pearl.h"
 #import "AbstractWSController.h"
+#import "PearlWSStrings.h"

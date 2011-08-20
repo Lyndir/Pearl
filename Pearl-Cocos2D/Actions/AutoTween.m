@@ -227,7 +227,7 @@
 - (void)stop {
 
     tweenCount = 0;
-    _tweens = realloc(_tweens, sizeof(PropertyTween) * tweenCount);
+    _tweens = realloc(_tweens, 0);
 
     [super stop];
 }

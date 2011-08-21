@@ -103,7 +103,6 @@
         return;
 
     if(![self.hudLayer parent])
-        // Already showing and being dismissed.
         [self.uiLayer addChild:self.hudLayer z:1];
 
     [self.hudLayer reveal];

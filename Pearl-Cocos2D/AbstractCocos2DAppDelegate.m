@@ -59,7 +59,7 @@
     [super preSetup];
 
 	// Init the window.
-	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
+	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
     [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
     if ([DeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
@@ -103,7 +103,6 @@
         return;
 
     if(![self.hudLayer parent])
-        // Already showing and being dismissed.
         [self.uiLayer addChild:self.hudLayer z:1];
 
     [self.hudLayer reveal];

@@ -228,9 +228,13 @@
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     // Draw our background.
+#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
+#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
     glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+#endif
     
     // Reset data source.
 	//glDisableClientState(GL_VERTEX_ARRAY);

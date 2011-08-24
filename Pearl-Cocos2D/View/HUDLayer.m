@@ -59,6 +59,8 @@
     [super setButtonImage:@"menu.png"
                  callback:self :@selector(menuButton:)];
     self.messageBar = [BarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
+    [self addChild:self.messageBar z:-1];
+    [self.messageBar dismiss];
     
     // Score.
     self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
@@ -104,13 +106,8 @@
 -(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important {
     // Proxy to messageBar
     
-    if([self.messageBar parent] && [self.messageBar dismissed])
-        [self removeChild:self.messageBar cleanup:YES];
-
-    if(![self.messageBar parent])
-        [self addChild:self.messageBar z:-1];
-    
     [self.messageBar message:msg duration:0 isImportant:important];
+    [self.messageBar reveal];
     
     if(_duration)
         [self runAction:[CCSequence actions:
@@ -142,9 +139,6 @@
 -(void) onEnter {
 
     [super onEnter];
-    
-    if([self.messageBar parent])
-        [self removeChild:self.messageBar cleanup:YES];
     
     [self reset];
 }

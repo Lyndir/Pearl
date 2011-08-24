@@ -105,7 +105,7 @@
     /*if (!resetTween && fabsf(a - tween.a) > 2000)
         a = tween.a + Sign(a - tween.a) * 2000;*/
     
-    dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
+//    dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
 
     _tweens[tw] = (PropertyTween) {
 //        BOOL active;
@@ -227,7 +227,7 @@
 - (void)stop {
 
     tweenCount = 0;
-    _tweens = realloc(_tweens, sizeof(PropertyTween) * tweenCount);
+    _tweens = realloc(_tweens, 0);
 
     [super stop];
 }

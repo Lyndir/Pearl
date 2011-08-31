@@ -1,6 +1,6 @@
 //
 //  LayoutView.m
-//  Lisu
+//  Pearl
 //
 //  Created by Maarten Billemont on 28/02/11.
 //  Copyright 2011 Lhunath. All rights reserved.

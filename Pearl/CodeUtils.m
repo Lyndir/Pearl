@@ -14,6 +14,28 @@
 
 static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+PearlDigest PearlDigestFromNSString(NSString *digest) {
+    
+    digest = [digest stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    if ([digest caseInsensitiveCompare:@"None"] == NSOrderedSame)
+        return PearlDigestNone;
+    if ([digest caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    if ([digest caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    if ([digest caseInsensitiveCompare:@"SHA224"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    if ([digest caseInsensitiveCompare:@"SHA256"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    if ([digest caseInsensitiveCompare:@"SHA384"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    if ([digest caseInsensitiveCompare:@"SHA512"] == NSOrderedSame)
+        return PearlDigestSHA1;
+    
+    err(@"Can't understand digest string: %@", digest);
+    return PearlDigestNone;
+}
+
 
 @implementation NSString (CodeUtils)
 

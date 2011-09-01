@@ -19,6 +19,8 @@ typedef enum {
     PearlDigestSHA512,
 } PearlDigest;
 
+PearlDigest PearlDigestFromNSString(NSString *digest);
+
 @interface NSString (CodeUtils)
 
 /** Generate a hash for the string. */

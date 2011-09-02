@@ -10,11 +10,19 @@
 
 #define PearlATVCCellID         @"Pearl.ArrayTVC.cell"
 #define PearlATVCRowName        @"Pearl.ArrayTVC.name"
+#define PearlATVCRowDetail      @"Pearl.ArrayTVC.detail"
 #define PearlATVCRowStyle       @"Pearl.ArrayTVC.style"
 #define PearlATVCRowToggled     @"Pearl.ArrayTVC.toggled"
 #define PearlATVCRowDelegate    @"Pearl.ArrayTVC.delegate"
 #define PearlATVCRowContext     @"Pearl.ArrayTVC.context"
+#define PearlATVCCellStyle      @"Pearl.ArrayTVC.cellstyle"
 
+@interface ArrayTVC() 
+
+- (NSString *)toString:(UITableViewCellStyle)cellStyle;
+
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle rowStyle:(ArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext;
+@end
 
 @implementation ArrayTVC
 
@@ -69,8 +77,21 @@
         }
 }
 
+
 - (void)addRowWithName:(NSString *)aName style:(ArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
           withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext {
+    
+    
+    [self addRowWithName:aName withDetail:nil cellStyle:UITableViewCellStyleDefault rowStyle:aStyle toggled:isToggled toSection:aSection withDelegate:aDelegate context:aContext];
+}
+
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection withDelegate:(id<ArrayTVCDelegate>)aDelegate 
+            context:(id)aContext {
+
+    [self addRowWithName:aName withDetail:aDetail cellStyle:UITableViewCellStyleValue1 rowStyle:ArrayTVCRowStylePlain toggled:NO toSection:aSection withDelegate:aDelegate context:aContext];
+}
+
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle rowStyle:(ArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext {
     
     NSMutableArray *sectionRows = nil;
     for (NSDictionary *section in _sections)
@@ -82,11 +103,13 @@
         [_sections addObject:[NSDictionary dictionaryWithObject:sectionRows = [NSMutableArray array] forKey:aSection]];
     
     [sectionRows addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                            NilToNSNull(aName),                         PearlATVCRowName,
-                            [NSNumber numberWithUnsignedInt:aStyle],    PearlATVCRowStyle,
-                            [NSNumber numberWithBool:isToggled],        PearlATVCRowToggled,
-                            NilToNSNull(aDelegate),                     PearlATVCRowDelegate,
-                            NilToNSNull(aContext),                      PearlATVCRowContext,
+                            NilToNSNull(aName),                                             PearlATVCRowName,
+                            NilToNSNull(aDetail),                                           PearlATVCRowDetail,
+                            [NSNumber numberWithUnsignedInt:aRowStyle],                     PearlATVCRowStyle,
+                            [NSNumber numberWithUnsignedInt:aCellStyle],                    PearlATVCCellStyle,
+                            [NSNumber numberWithBool:isToggled],                            PearlATVCRowToggled,
+                            NilToNSNull(aDelegate),                                         PearlATVCRowDelegate,
+                            NilToNSNull(aContext),                                          PearlATVCRowContext,
                             nil]];
 }
 
@@ -110,15 +133,19 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PearlATVCCellID];
-    if (cell == nil)
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:PearlATVCCellID] autorelease];
-    
+
     NSArray *sectionRows = [[[_sections objectAtIndex:indexPath.section] allValues] lastObject];
     NSDictionary *row = [sectionRows objectAtIndex:indexPath.row];
     
+    UITableViewCellStyle cellStyle = [NSNullToNil([row objectForKey:PearlATVCCellStyle]) unsignedIntValue];
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self toString:cellStyle]];
+    if (cell == nil)
+        cell = [[[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:[self toString:cellStyle]] autorelease];
+    
+    
     cell.textLabel.text = NSNullToNil([row objectForKey:PearlATVCRowName]);
+    cell.detailTextLabel.text = NSNullToNil([row objectForKey:PearlATVCRowDetail]);
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
@@ -180,6 +207,24 @@
                 break;
         }
     }
+}
+
+- (NSString *)toString:(UITableViewCellStyle)cellStyle {
+    
+    switch(cellStyle) {
+            
+        case UITableViewCellStyleDefault:
+            return @"UITableViewCellStyleDefault";
+        case UITableViewCellStyleValue1:
+            return @"UITableViewCellStyleValue1";
+        case UITableViewCellStyleValue2:
+            return @"UITableViewCellStyleValue2";
+        case UITableViewCellStyleSubtitle:
+            return @"UITableViewCellStyleSubtitle";            
+    }
+    
+    wrn(@"Unexpected cell style: %d", cellStyle);
+    return nil;
 }
 
 @end

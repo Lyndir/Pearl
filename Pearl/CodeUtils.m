@@ -100,6 +100,13 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
 	return [NSData dataWithBytesNoCopy:bytes length:length];
 }
 
+- (NSString *)encodeURL {
+    
+    return [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL,
+                                                                      CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), kCFStringEncodingUTF8))
+            autorelease];
+}
+
 @end
 
 @implementation NSData (CodeUtils)
@@ -218,7 +225,7 @@ static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZa
 @implementation CodeUtils
 
 + (NSString *)randomUUID {
-
+    
     CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
     @try {
         return [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid) autorelease];

@@ -20,17 +20,17 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     if ([digest caseInsensitiveCompare:@"None"] == NSOrderedSame)
         return PearlDigestNone;
     if ([digest caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestMD5;
     if ([digest caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
         return PearlDigestSHA1;
     if ([digest caseInsensitiveCompare:@"SHA224"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA224;
     if ([digest caseInsensitiveCompare:@"SHA256"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA256;
     if ([digest caseInsensitiveCompare:@"SHA384"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA384;
     if ([digest caseInsensitiveCompare:@"SHA512"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA512;
     
     err(@"Can't understand digest string: %@", digest);
     return PearlDigestNone;

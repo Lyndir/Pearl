@@ -36,9 +36,7 @@
 
 - (BOOL)isValid;
 
-- (X509_REQ *)csrWithDigest:(PearlDigest)digest
-                 commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-               localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c;
+- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
 
 @end
 
@@ -729,9 +727,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return NO;
 }
 
-- (X509_REQ *)csrWithDigest:(PearlDigest)digest
-                 commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-               localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c {
+- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
     
     X509_REQ *csr = X509_REQ_new();
     if (!csr) {
@@ -751,36 +747,16 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         err(@"OpenSSL error: %@", OpenSSLErrors());
         return nil;
     }
-    if (cn)
-        if (!X509_NAME_add_entry_by_txt(dn, "CN",    MBSTRING_ASC, (unsigned char *)[cn UTF8String], [cn length], -1, 0)) {
+    for (id subjectKey in [x509Subject allKeys]) {
+        NSString *subjectValue = [[x509Subject objectForKey:subjectKey] description];
+        
+        if (!X509_NAME_add_entry_by_txt(dn, [[subjectKey description] UTF8String], MBSTRING_ASC,
+                                        (unsigned char *)[subjectValue UTF8String],
+                                        [subjectValue length], -1, 0)) {
             err(@"OpenSSL error: %@", OpenSSLErrors());
             return nil;
         }
-    if (ou)
-        if (!X509_NAME_add_entry_by_txt(dn, "OU",    MBSTRING_ASC, (unsigned char *)[ou UTF8String], [ou length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
-            return nil;
-        }
-    if (o)
-        if (!X509_NAME_add_entry_by_txt(dn, "O",     MBSTRING_ASC, (unsigned char *)[o UTF8String], [o length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
-            return nil;
-        }
-    if (l)
-        if (!X509_NAME_add_entry_by_txt(dn, "L",     MBSTRING_ASC, (unsigned char *)[l UTF8String], [l length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
-            return nil;
-        }
-    if (st)
-        if (!X509_NAME_add_entry_by_txt(dn, "ST",    MBSTRING_ASC, (unsigned char *)[st UTF8String], [st length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
-            return nil;
-        }
-    if (c)
-        if (!X509_NAME_add_entry_by_txt(dn, "C",     MBSTRING_ASC, (unsigned char *)[c UTF8String], [c length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
-            return nil;
-        }
+    }
     if (!X509_REQ_set_subject_name(csr, dn)) {
         err(@"OpenSSL error: %@", OpenSSLErrors());
         return nil;
@@ -814,11 +790,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return csr;
 }
 
-- (NSData *)derEncodedCSRWithDigest:(PearlDigest)digest
-                         commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-                       localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c {
+- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
     
-    X509_REQ *csr = [self csrWithDigest:digest commonName:cn organisationUnit:ou organisationName:ou localityName:l stateName:st country:c];
+    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:digest];
     
     // Export
 	unsigned char *bufferOut, *bufferIn;
@@ -833,11 +807,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 }
 
 
-- (NSData *)pemEncodedCSRWithDigest:(PearlDigest)digest
-                         commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-                       localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c {
+- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
     
-    X509_REQ *csr = [self csrWithDigest:digest commonName:cn organisationUnit:ou organisationName:ou localityName:l stateName:st country:c];
+    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:digest];
     
     // Export
     BIO *bio = BIO_new(BIO_s_mem());

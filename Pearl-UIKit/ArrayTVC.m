@@ -17,11 +17,10 @@
 #define PearlATVCRowContext     @"Pearl.ArrayTVC.context"
 #define PearlATVCCellStyle      @"Pearl.ArrayTVC.cellstyle"
 
-@interface ArrayTVC() 
-
-- (NSString *)toString:(UITableViewCellStyle)cellStyle;
+@interface ArrayTVC (Private)
 
 - (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle rowStyle:(ArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext;
+
 @end
 
 @implementation ArrayTVC
@@ -138,10 +137,10 @@
     NSDictionary *row = [sectionRows objectAtIndex:indexPath.row];
     
     UITableViewCellStyle cellStyle = [NSNullToNil([row objectForKey:PearlATVCCellStyle]) unsignedIntValue];
-
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self toString:cellStyle]];
+    NSString *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil)
-        cell = [[[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:[self toString:cellStyle]] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:identifier] autorelease];
     
     
     cell.textLabel.text = NSNullToNil([row objectForKey:PearlATVCRowName]);
@@ -207,24 +206,6 @@
                 break;
         }
     }
-}
-
-- (NSString *)toString:(UITableViewCellStyle)cellStyle {
-    
-    switch(cellStyle) {
-            
-        case UITableViewCellStyleDefault:
-            return @"UITableViewCellStyleDefault";
-        case UITableViewCellStyleValue1:
-            return @"UITableViewCellStyleValue1";
-        case UITableViewCellStyleValue2:
-            return @"UITableViewCellStyleValue2";
-        case UITableViewCellStyleSubtitle:
-            return @"UITableViewCellStyleSubtitle";            
-    }
-    
-    wrn(@"Unexpected cell style: %d", cellStyle);
-    return nil;
 }
 
 @end

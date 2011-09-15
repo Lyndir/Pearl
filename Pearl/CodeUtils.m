@@ -129,6 +129,26 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
             autorelease];
 }
 
+- (NSString *)wrapAt:(NSUInteger)lineLength {
+ 
+    NSMutableString *wrappedString = [[self mutableCopy] autorelease];
+    for (NSUInteger i = lineLength; i < [wrappedString length]; i += lineLength + 1)
+        [wrappedString insertString:@"\n" atIndex:i];
+    
+    return wrappedString;
+}
+
+- (NSString *)wrapForMIME {
+    
+    return [self wrapAt:76];
+}
+
+- (NSString *)wrapForPEM {
+    
+    return [self wrapAt:64];
+}
+
+
 @end
 
 @implementation NSData (CodeUtils)

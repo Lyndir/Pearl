@@ -118,17 +118,14 @@
  * 
  * The result can be used by a certificate authority to generate a certificate for use by the owner of this key.
  */
-- (NSData *)derEncodedCSRWithDigest:(PearlDigest)digest
-                         commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-                       localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c;
+- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
+
 /**
  * Generate a certificate signing request signed by this private key and return it PEM-encoded.
  * 
  * The result can be used by a certificate authority to generate a certificate for use by the owner of this key.
  */
-- (NSData *)pemEncodedCSRWithDigest:(PearlDigest)digest
-                         commonName:(NSString *)cn organisationUnit:(NSString *)ou organisationName:(NSString *)o
-                       localityName:(NSString *)l stateName:(NSString *)st country:(NSString *)c;
+- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
 
 
 @end

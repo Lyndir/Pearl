@@ -20,17 +20,17 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     if ([digest caseInsensitiveCompare:@"None"] == NSOrderedSame)
         return PearlDigestNone;
     if ([digest caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestMD5;
     if ([digest caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
         return PearlDigestSHA1;
     if ([digest caseInsensitiveCompare:@"SHA224"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA224;
     if ([digest caseInsensitiveCompare:@"SHA256"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA256;
     if ([digest caseInsensitiveCompare:@"SHA384"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA384;
     if ([digest caseInsensitiveCompare:@"SHA512"] == NSOrderedSame)
-        return PearlDigestSHA1;
+        return PearlDigestSHA512;
     
     err(@"Can't understand digest string: %@", digest);
     return PearlDigestNone;
@@ -121,6 +121,33 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
 	realloc(bytes, length);
 	return [NSData dataWithBytesNoCopy:bytes length:length];
 }
+
+- (NSString *)encodeURL {
+    
+    return [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL,
+                                                                      CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), kCFStringEncodingUTF8))
+            autorelease];
+}
+
+- (NSString *)wrapAt:(NSUInteger)lineLength {
+ 
+    NSMutableString *wrappedString = [[self mutableCopy] autorelease];
+    for (NSUInteger i = lineLength; i < [wrappedString length]; i += lineLength + 1)
+        [wrappedString insertString:@"\n" atIndex:i];
+    
+    return wrappedString;
+}
+
+- (NSString *)wrapForMIME {
+    
+    return [self wrapAt:76];
+}
+
+- (NSString *)wrapForPEM {
+    
+    return [self wrapAt:64];
+}
+
 
 @end
 
@@ -240,7 +267,7 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
 @implementation CodeUtils
 
 + (NSString *)randomUUID {
-
+    
     CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
     @try {
         return [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid) autorelease];

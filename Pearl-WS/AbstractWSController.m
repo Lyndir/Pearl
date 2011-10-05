@@ -73,7 +73,7 @@
 - (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
                                completion:(void (^)(NSData *responseData))completion {
     
-    inf(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
+    dbg(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
     ASIHTTPRequest *request = nil;
     NSData *(^loadRequest)(void) = nil;
     
@@ -155,14 +155,14 @@
     dispatch_block_t handleRequest = ^{
         NSData *responseData = loadRequest();
         if ([request isCancelled]) {
-            inf(@"Cancelled: %@", request.url);
+            dbg(@"Cancelled: %@", request.url);
             completion(nil);
         }
         
         if (request.error)
             err(@"Failed from: %@, error: %@", request.url, request.error);
         else
-//            inf(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+            trc(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
         
         if ([self isSynchronous])
             completion(responseData);

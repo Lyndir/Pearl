@@ -25,6 +25,7 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
+#define trc(format, ...)    [[Logger get] trc:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define dbg(format, ...)    [[Logger get] dbg:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define inf(format, ...)    [[Logger get] inf:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define wrn(format, ...)    [[Logger get] wrn:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
@@ -73,6 +74,8 @@ typedef enum LogLevel {
 - (Logger *)logWithLevel:(LogLevel)aLevel andMessage:(NSString *)format, ...;
 /** Print all log messages of the given level or above to the console. */
 - (void)printAllWithLevel:(LogLevel)level;
+/** Log a new TRACE-level event. */
+- (Logger *)trc:(NSString *)format, ...;
 /** Log a new DEBUG-level event. */
 - (Logger *)dbg:(NSString *)format, ...;
 /** Log a new INFO-level event. */

@@ -181,6 +181,17 @@ static NSDateFormatter *logDateFormatter = nil;
 }
 
 
+- (Logger *)trc:(NSString *)format, ... {
+    
+    va_list argList;
+    va_start(argList, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    va_end(argList);
+    
+    return [self logWithLevel:LogLevelTrace andMessage:[message autorelease]];
+}
+
+
 - (Logger *)dbg:(NSString *)format, ... {
 
     va_list argList;

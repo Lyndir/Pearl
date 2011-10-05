@@ -56,14 +56,6 @@ static AlertViewController *currentAlert = nil;
     return self;
 }
 
-
-+ (void)showConnectionErrorWithBackButton:(BOOL)backButton {
-    
-    [AlertViewController showError:l(@"error.connection")
-                        backButton:backButton];
-}
-
-
 + (void)showError:(NSString *)message backButton:(BOOL)backButton {
     
     [self showError:message backButton:backButton abortButton:YES];

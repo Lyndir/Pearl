@@ -57,13 +57,6 @@
 - (id)initWithTitle:(NSString *)title message:(NSString *)msg
          backString:(NSString *)backString acceptString:(NSString *)acceptString
            callback:(id)target :(SEL)selector;
-    
-/**
- * Create an alert view controller which shows a connection error message.
- *
- * The message says that no connection could be established to the authentication server.
- */
-+ (void)showConnectionErrorWithBackButton:(BOOL)backButton;
 
 /**
  * Create an alert view controller which shows a given error message.

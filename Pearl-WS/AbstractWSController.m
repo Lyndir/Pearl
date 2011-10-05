@@ -198,7 +198,8 @@
     if (responseData == nil || !responseData.length) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showConnectionErrorWithBackButton:backOnError];
+            [AlertViewController showError:[PearlWSStrings get].errorWSConnection
+                                backButton:backOnError];
 #endif
         return nil;
     }
@@ -219,7 +220,8 @@
             [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showConnectionErrorWithBackButton:backOnError];
+            [AlertViewController showError:[PearlWSStrings get].errorWSConnection
+                                backButton:backOnError];
 #endif
         return nil;
     }
@@ -229,7 +231,7 @@
     if (resultCode == nil || resultCode == (id)[NSNull null]) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:l(@"error.ws.response.invalid") backButton:backOnError];
+            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid backButton:backOnError];
 #endif
         return nil;
     }
@@ -241,23 +243,23 @@
     if (outdated) {
         if ([resultCode intValue] == CODE_FAILURE_UPDATE_REQUIRED)
             // Required upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"common.title.error")
-                                                 message:l(@"error.ws.response.outdated.required")
-                                              backString:l(@"common.button.back")
-                                            acceptString:l(@"common.button.upgrade")
+            [[[[AlertViewController alloc] initWithTitle:[PearlStrings get].commonTitleError
+                                                 message:[PearlWSStrings get].errorWSResponseOutdatedRequired
+                                              backString:[PearlStrings get].commonButtonBack
+                                            acceptString:[PearlStrings get].commonButtonUpgrade
                                                 callback:self :@selector(upgrade:)] showAlert] release];
         else if ([resultCode intValue] == CODE_SUCCESS)
             // Optional upgrade.
-            [[[[AlertViewController alloc] initWithTitle:l(@"common.title.notice")
-                                                 message:l(@"error.ws.response.outdated.optional")
-                                              backString:l(@"common.button.back")
-                                            acceptString:l(@"common.button.upgrade")
+            [[[[AlertViewController alloc] initWithTitle:[PearlStrings get].commonTitleNotice
+                                                 message:[PearlWSStrings get].errorWSResponseOutdatedOptional
+                                              backString:[PearlStrings get].commonButtonBack
+                                            acceptString:[PearlStrings get].commonButtonUpgrade
                                                 callback:self :@selector(upgrade:)] showAlert] release];
     }
 #endif
     
     if ([resultCode intValue] != CODE_SUCCESS && [resultCode intValue] != CODE_FAILURE_UPDATE_REQUIRED) {
-        err(@"Response Code %d:\n%@", [resultCode intValue],
+        err(@"Response Code %d: %@", [resultCode intValue],
             [responseDictionary objectForKey:RESULT_KEY_DESC_TECHNICAL]);
         
         NSString *errorMessage = [responseDictionary objectForKey:RESULT_KEY_DESC_USER];
@@ -279,7 +281,8 @@
         }
 #ifdef PEARL_UIKIT
         else if (popupOnError)
-                [AlertViewController showConnectionErrorWithBackButton:backOnError];
+            [AlertViewController showError:[PearlWSStrings get].errorWSConnection
+                                backButton:backOnError];
 #endif
         
         return nil;
@@ -296,7 +299,7 @@
         if (value == nil || value == [NSNull null]) {
 #ifdef PEARL_UIKIT
             if (popupOnError)
-                [AlertViewController showError:l(@"error.ws.response.invalid")
+                [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid
                                     backButton:backOnError];
 #endif
             return nil;

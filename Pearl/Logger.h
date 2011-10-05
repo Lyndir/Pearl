@@ -25,13 +25,15 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define dbg(format, ...)    [[Logger get] dbg:@"%20s:%-5d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define inf(format, ...)    [[Logger get] inf:@"%20s:%-5d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define wrn(format, ...)    [[Logger get] wrn:@"%20s:%-5d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define err(format, ...)    [[Logger get] err:@"%20s:%-5d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define dbg(format, ...)    [[Logger get] dbg:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define inf(format, ...)    [[Logger get] inf:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define wrn(format, ...)    [[Logger get] wrn:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define err(format, ...)    [[Logger get] err:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 
 /** Levels that determine the importance of logging events. */
 typedef enum LogLevel {
+    /** Trace internal operations. */
+    LogLevelTrace,
     /** Inform the developer of certain events and information. */
     LogLevelDebug,
     /** General notice to the user and developer that something took place. */

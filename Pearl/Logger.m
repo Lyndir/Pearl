@@ -69,24 +69,27 @@ static NSDateFormatter *logDateFormatter = nil;
     
     NSString *levelString = nil;
     switch (self.level) {
+        case LogLevelTrace:
+            levelString = @"[TRACE]  ";
+            break;
         case LogLevelDebug:
-            levelString = @"DEBUG";
+            levelString = @"[DEBUG]  ";
             break;
         case LogLevelInfo:
-            levelString = @"INFO";
+            levelString = @"[INFO]   ";
             break;
         case LogLevelWarn:
-            levelString = @"WARNING";
+            levelString = @"[WARNING]";
             break;
         case LogLevelError:
-            levelString = @"ERROR";
+            levelString = @"[ERROR]  ";
             break;
         default:
             [NSException raise:NSInternalInconsistencyException
                         format:@"Formatting a message with a log level that is not understood."];
     }
     
-    return [NSString stringWithFormat:@"%@ [%-7@] %@\n",
+    return [NSString stringWithFormat:@"%@ %@ %@\n",
             [logDateFormatter stringFromDate:self.occurance], levelString, self.message];
 }
 
@@ -163,7 +166,8 @@ static NSDateFormatter *logDateFormatter = nil;
 
     if (aLevel >= self.autoprintLevel)
         NSLog(@"%@", message);
-    [self.messages addObject:message];
+    if (message.level > LogLevelTrace)
+        [self.messages addObject:message];
     
     return self;
 }

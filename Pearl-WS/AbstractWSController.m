@@ -162,7 +162,7 @@
         if (request.error)
             err(@"Failed from: %@, error: %@", request.url, request.error);
         else
-            inf(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+//            inf(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
         
         if ([self isSynchronous])
             completion(responseData);

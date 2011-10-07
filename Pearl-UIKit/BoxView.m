@@ -12,7 +12,7 @@
 
 
 @implementation BoxView
-@synthesize color = _color;
+@synthesize color = _color, width = _width, filled = _filled;
 
 + (id)boxed:(id)view {
     
@@ -22,17 +22,23 @@
 
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
     
-    return [[[self alloc] initWithFrame:aFrame color:aColor] autorelease];
+    return [self boxWithFrame:aFrame color:aColor width:2];
 }
 
-- (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
++ (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
+    
+    return [[[self alloc] initWithFrame:aFrame color:aColor width:aWidth] autorelease];
+}
+
+- (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
     
     if (!(self = [super initWithFrame:aFrame]))
         return self;
     
     self.color = aColor;
+    self.width = aWidth;
     self.userInteractionEnabled = NO;
-    self.opaque = YES;
+    self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
     
     return self;
@@ -46,8 +52,13 @@
 
 - (void)drawRect:(CGRect)rect {
     
-    CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
-    CGContextStrokeRectWithWidth(UIGraphicsGetCurrentContext(), self.bounds, 2);
+    if (self.filled) {
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
+        CGContextFillRect(UIGraphicsGetCurrentContext(), self.bounds);
+    } else {
+        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
+        CGContextStrokeRectWithWidth(UIGraphicsGetCurrentContext(), self.bounds, self.width);
+    }
 }
 
 @end

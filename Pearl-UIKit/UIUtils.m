@@ -246,6 +246,12 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)keyboardWillShow:(NSNotification *)n {
     
+    UIView *responder = [self findFirstResonder];
+    if (!responder)
+        // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
+        // Don't know why but since no keyboard actually appears in this case, ignore them.
+        return;
+
     if (keyboardActiveScrollView || !keyboardScrollView) {
         // Don't do any scrollview animation when one is already active (not yet deactivated) or when no scrollview is set.
         
@@ -270,15 +276,13 @@ static NSMutableSet     *dismissableResponders;
     CGRect keyboardScrollNewFrame           = keyboardActiveScrollView.frame;
     keyboardScrollNewFrame.size.height      -= hiddenRect.size.height;
     
-    UIView *responder = [self findFirstResonder];
-    if (responder) {
-        CGRect responderRect = [keyboardActiveScrollView convertRect:responder.bounds fromView:responder];
-        
-        if (responderRect.origin.y < keyboardScrollNewOffset.y)
-            keyboardScrollNewOffset.y = 0;
-        else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
-            keyboardScrollNewOffset.y = responderRect.origin.y;
-    }
+    CGRect responderRect = [keyboardActiveScrollView convertRect:responder.bounds fromView:responder];
+    
+    if (responderRect.origin.y < keyboardScrollNewOffset.y)
+        keyboardScrollNewOffset.y = 0;
+    else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
+        keyboardScrollNewOffset.y = responderRect.origin.y;
+    
     UIScrollView *animatingScrollView = keyboardActiveScrollView;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
@@ -456,7 +460,7 @@ static NSMutableSet     *dismissableResponders;
     // Handle certain types of view specially.
     if ([view isKindOfClass:[UISegmentedControl class]]) {
         UISegmentedControl *segmentView = (UISegmentedControl *)view;
-
+        
         // Localize titles of segments.
         for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
             [segmentView setTitle:[self applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
@@ -473,6 +477,12 @@ static NSMutableSet     *dismissableResponders;
             if (title)
                 [button setTitle:[self applyLocalization:title] forState:state];
         }
+    }
+    if ([view isKindOfClass:[UITabBar class]]) {
+        UITabBar *tabBar = (UITabBar *)view;
+        
+        for (UITabBarItem *item in tabBar.items)
+            item.title = [self applyLocalization:item.title];
     }
     
     // Load localization for all children, too.

@@ -15,13 +15,18 @@
 @interface BoxView : UIView {
 
     UIColor                             *_color;
+    CGFloat                             _width;
+    BOOL                                _filled;
 }
 
 @property (nonatomic, retain) UIColor   *color;
+@property (nonatomic, assign) CGFloat   width;
+@property (nonatomic, assign) BOOL      filled;
 
 + (id)boxed:(id)view;
 + (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
++ (BoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)width;
 
-- (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
+- (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)width;
 
 @end

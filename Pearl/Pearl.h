@@ -15,6 +15,6 @@
 #import "ObjectUtils.h"
 #import "PearlStrings.h"
 #import "Resettable.h"
-#import "Strings.h"
 #import "StringUtils.h"
+#import "Strings.h"
 #import "WebUtils.h"

@@ -86,6 +86,67 @@
 
 @implementation KeyChain
 
++ (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
+    
+    if (SecItemCopyMatching((CFDictionaryRef)query, NULL) == noErr)
+        return SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+    
+    else {
+        NSMutableDictionary *newItem = [[query mutableCopy] autorelease];
+        [newItem addEntriesFromDictionary:attributes];
+        
+        return SecItemAdd((CFDictionaryRef)newItem, NULL);
+    }
+}
+
++ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result {
+    
+    return SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)result);
+}
+
++ (NSDictionary *)createQueryForClass:(CFTypeRef)kSecClassValue
+                           attributes:(NSDictionary *)kSecAttrDictionary
+                              matches:(NSDictionary *)kSecMatchDictionary {
+    
+    NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:kSecClassValue forKey:kSecClass];
+    [query addEntriesFromDictionary:kSecAttrDictionary];
+    [query addEntriesFromDictionary:kSecMatchDictionary];
+    
+    return query;
+}
+
++ (id)runQuery:(NSDictionary *)query returnType:(CFTypeRef)kSecReturn {
+    
+    NSMutableDictionary *dataQuery = [query mutableCopy];
+    [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:kSecReturn];
+    
+    id result = nil;
+    if ([self findItemForQuery:query into:&result] != noErr)
+        return nil;
+    
+    return result;
+}
+
++ (id)itemForQuery:(NSDictionary *)query {
+    
+    return [self runQuery:query returnType:kSecReturnRef];
+}
+
++ (NSData *)persistentItemForQuery:(NSDictionary *)query {
+    
+    return (NSData *)[self runQuery:query returnType:kSecReturnPersistentRef];
+}
+
++ (NSDictionary *)attributesOfItemForQuery:(NSDictionary *)query {
+    
+    return (NSDictionary *)[self runQuery:query returnType:kSecReturnAttributes];
+}
+
++ (NSData *)dataOfItemForQuery:(NSDictionary *)query {
+    
+    return (NSData *)[self runQuery:query returnType:kSecReturnData];
+}
+
 + (BOOL)generateKeyPairWithTag:(NSString *)tag {
     
     NSDictionary *privKeyAttr   = [NSDictionary dictionaryWithObjectsAndKeys:

@@ -88,15 +88,20 @@
 
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
     
+    OSStatus resultCode;
     if (SecItemCopyMatching((CFDictionaryRef)query, NULL) == noErr)
-        return SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+        resultCode = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
     
     else {
         NSMutableDictionary *newItem = [[query mutableCopy] autorelease];
         [newItem addEntriesFromDictionary:attributes];
         
-        return SecItemAdd((CFDictionaryRef)newItem, NULL);
+        resultCode = SecItemAdd((CFDictionaryRef)newItem, NULL);
     }
+    
+    if (resultCode != noErr)
+        err(@"While adding or updating keychain item: %@ with attributes: %@, error occured: %d", query, attributes, resultCode);
+    return resultCode;
 }
 
 + (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result {
@@ -121,8 +126,9 @@
     [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:kSecReturn];
     
     id result = nil;
-    if ([self findItemForQuery:query into:&result] != noErr)
-        return nil;
+    OSStatus resultCode;
+    if ((resultCode = [self findItemForQuery:dataQuery into:&result]) != noErr)
+        err(@"While querying keychain for: %@, error occured: %d", dataQuery, resultCode);
     
     return result;
 }

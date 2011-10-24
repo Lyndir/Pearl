@@ -21,19 +21,42 @@
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
-#define CODE_SUCCESS                    0
-#define CODE_FAILURE_GENERIC            -1
-#define CODE_FAILURE_UPDATE_REQUIRED    -2
-
 #define REQUEST_KEY_VERSION             @"version"
 
-#define RESULT_KEY_CODE                 @"code"
-#define RESULT_KEY_DESC_USER            @"userDescription"
-#define RESULT_KEY_DESC_ARGUMENT        @"userDescriptionArguments"
-#define RESULT_KEY_DESC_TECHNICAL       @"technicalDescription"
-#define RESULT_KEY_CLIENT_OUTDATED      @"outdated"
-#define RESULT_KEY_RESULT               @"result"
 
+@implementation JSONResult
+
+@synthesize code = _code, outdated = _outdated;
+@synthesize userDescription = _userDescription, userDescriptionArguments = _userDescriptionArguments;
+@synthesize technicalDescription = _technicalDescription;
+@synthesize result = _result;
+
+- (id)initWithDictionary:(NSDictionary *)aDictionary {
+    
+    if (!(aDictionary == nil || (self = [super init])))
+        return nil;
+    
+    self.code                       = [NSNullToNil([aDictionary valueForKeyPath:@"code"]) intValue];
+    self.outdated                   = [NSNullToNil([aDictionary valueForKeyPath:@"outdated"]) boolValue];
+    self.userDescription            = NSNullToNil([aDictionary valueForKeyPath:@"userDescription"]);
+    self.userDescriptionArguments   = NSNullToNil([aDictionary valueForKeyPath:@"userDescriptionArguments"]);
+    self.technicalDescription       = NSNullToNil([aDictionary valueForKeyPath:@"technicalDescription"]);
+    self.result                     = NSNullToNil([aDictionary valueForKeyPath:@"result"]);
+    
+    return self;
+}
+
+- (void)dealloc {
+    
+    self.userDescription            = nil;
+    self.userDescriptionArguments   = nil;
+    self.technicalDescription       = nil;
+    self.result                     = nil;
+    
+    [super dealloc];
+}
+
+@end
 
 @implementation AbstractWSController
 
@@ -73,7 +96,7 @@
 - (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
                                completion:(void (^)(NSData *responseData))completion {
     
-    dbg(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
+    trc(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
     ASIHTTPRequest *request = nil;
     NSData *(^loadRequest)(void) = nil;
     
@@ -184,24 +207,27 @@
 }
 
 - (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
-             completion:(void (^)(id response))completion {
+             completion:(void (^)(BOOL success, JSONResult *response))completion {
     
     return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
-        completion([self validateAndParseResponse:responseData popupOnError:popupOnError allowBackOnError:backOnError requires:nil]);
+        JSONResult *response;
+        completion([self validateAndParseResponse:responseData into:&response
+                                     popupOnError:popupOnError allowBackOnError:backOnError requires:nil], response);
     }];
 }
 
 
-- (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
                       requires:(NSString *)key, ... {
     
+    *response = nil;
     if (responseData == nil || !responseData.length) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
             [AlertViewController showError:[PearlWSStrings get].errorWSConnection
                                 backButton:backOnError];
 #endif
-        return nil;
+        return NO;
     }
     
     // Trim off non-executable-JSON prefix.
@@ -214,41 +240,38 @@
     
     // Parse the JSON response data.
     id jsonError = nil;
-    NSDictionary *responseDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
+    NSDictionary *resultDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
     if (jsonError != nil) {
         err(@"JSON: %@, for response:\n%@", jsonError,
             [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSConnection
+            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid
                                 backButton:backOnError];
 #endif
-        return nil;
+        return NO;
     }
-    
-    // Check whether the request was successful.
-    NSNumber *resultCode = [responseDictionary objectForKey:RESULT_KEY_CODE];
-    if (resultCode == nil || resultCode == (id)[NSNull null]) {
+    *response = [[JSONResult alloc] initWithDictionary:resultDictionary];
+    if (!*response) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid backButton:backOnError];
+            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid
+                                backButton:backOnError];
 #endif
-        return nil;
+        return NO;
     }
     
     // Check whether the client is up-to-date enough.
 #ifdef PEARL_UIKIT
-    NSNumber *outdatedValue = [responseDictionary objectForKey:RESULT_KEY_CLIENT_OUTDATED];
-    BOOL outdated = ((id)outdatedValue != [NSNull null] && [outdatedValue boolValue]);
-    if (outdated) {
-        if ([resultCode intValue] == CODE_FAILURE_UPDATE_REQUIRED)
+    if ((*response).outdated) {
+        if ((*response).code == JSONResultCodeUpdateRequired)
             // Required upgrade.
             [[[[AlertViewController alloc] initWithTitle:[PearlStrings get].commonTitleError
                                                  message:[PearlWSStrings get].errorWSResponseOutdatedRequired
                                               backString:[PearlStrings get].commonButtonBack
                                             acceptString:[PearlStrings get].commonButtonUpgrade
                                                 callback:self :@selector(upgrade:)] showAlert] release];
-        else if ([resultCode intValue] == CODE_SUCCESS)
+        else
             // Optional upgrade.
             [[[[AlertViewController alloc] initWithTitle:[PearlStrings get].commonTitleNotice
                                                  message:[PearlWSStrings get].errorWSResponseOutdatedOptional
@@ -258,56 +281,49 @@
     }
 #endif
     
-    if ([resultCode intValue] != CODE_SUCCESS && [resultCode intValue] != CODE_FAILURE_UPDATE_REQUIRED) {
-        err(@"Response Code %d: %@", [resultCode intValue],
-            [responseDictionary objectForKey:RESULT_KEY_DESC_TECHNICAL]);
+    if ((*response).code != JSONResultCodeSuccess) {
+        err(@"Result Code %d: %@", (*response).code, (*response).technicalDescription);
         
-        NSString *errorMessage = [responseDictionary objectForKey:RESULT_KEY_DESC_USER];
-        if ((id)errorMessage != [NSNull null] && errorMessage.length) {
-            id errorArgument = nil;
-            NSUInteger a = 0;
-            NSMutableArray *errorArguments = [[NSMutableArray alloc] initWithCapacity:1];
-            while ((errorArgument = [responseDictionary objectForKey:[NSString stringWithFormat:@"%@%d",
-                                                                      RESULT_KEY_DESC_ARGUMENT, a++]])
-                   && errorArgument != [NSNull null])
-                [errorArguments addObject:errorArgument];
-            
 #ifdef PEARL_UIKIT
-            if (popupOnError)
-                [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:errorArguments]
+        if (popupOnError && (*response).code != JSONResultCodeUpdateRequired) {
+            NSString *errorMessage = (*response).userDescription;
+            if (errorMessage && errorMessage.length) {
+                [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:(*response).userDescriptionArguments]
                                     backButton:backOnError];
-#endif
-            [errorArguments release];
+            }
+            else
+                [AlertViewController showError:[PearlWSStrings get].errorWSResponseFailed
+                                    backButton:backOnError];
         }
-#ifdef PEARL_UIKIT
-        else if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSConnection
-                                backButton:backOnError];
 #endif
         
-        return nil;
+        return NO;
     }
     
-    // Get the result.
-    id result = [responseDictionary objectForKey:RESULT_KEY_RESULT];
-    
-    // Validate whether all required keys are set.  This assumes the result is a dictionary.
+    // Validate whether all required keys are set.  Keys are resolved using KVC.
     va_list args;
     va_start(args, key);
     for(NSString *nextKey = key; nextKey; nextKey = va_arg(args, NSString*)) {
-        id value = [result isKindOfClass:[NSDictionary class]]? [(NSDictionary *)result objectForKey:nextKey]: nil;
-        if (value == nil || value == [NSNull null]) {
+        id value = nil;
+        @try {
+            value = NSNullToNil([(*response) valueForKeyPath:nextKey]);
+        } @catch (NSException *e) {
+        }
+        
+        if (!value) {
+            err(@"Missing key: %@, in result: %@", nextKey, *response);
+            
 #ifdef PEARL_UIKIT
             if (popupOnError)
                 [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid
                                     backButton:backOnError];
 #endif
-            return nil;
+            return NO;
         }
     }
     va_end(args);
     
-    return result;
+    return YES;
 }
 
 @end

@@ -26,6 +26,7 @@
 
 @dynamic errorWSConnection;
 @dynamic errorWSResponseInvalid;
+@dynamic errorWSResponseFailed;
 @dynamic errorWSResponseOutdatedRequired;
 @dynamic errorWSResponseOutdatedOptional;
 

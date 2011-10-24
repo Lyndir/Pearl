@@ -17,6 +17,7 @@
 
 @property (nonatomic, readonly) NSString *errorWSConnection;
 @property (nonatomic, readonly) NSString *errorWSResponseInvalid;
+@property (nonatomic, readonly) NSString *errorWSResponseFailed;
 @property (nonatomic, readonly) NSString *errorWSResponseOutdatedRequired;
 @property (nonatomic, readonly) NSString *errorWSResponseOutdatedOptional;
 

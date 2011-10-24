@@ -17,6 +17,32 @@ typedef enum {
     WSRequestMethodPOST_JSON,
 } WSRequestMethod;
 
+typedef enum {
+    JSONResultCodeSuccess = 0,
+    JSONResultCodeGenericFailure = -1,
+    JSONResultCodeUpdateRequired = -2,
+} JSONResultCode;
+
+@interface JSONResult : NSObject {
+
+    JSONResultCode  _code;
+    BOOL            _outdated;
+    NSString        *_userDescription;
+    NSArray         *_userDescriptionArguments;
+    NSString        *_technicalDescription;
+    id              _result;
+}
+
+@property (nonatomic, assign) JSONResultCode    code;
+@property (nonatomic, retain) NSString          *userDescription;
+@property (nonatomic, retain) NSArray           *userDescriptionArguments;
+@property (nonatomic, retain) NSString          *technicalDescription;
+@property (nonatomic, assign) BOOL              outdated;
+@property (nonatomic, retain) id                result;
+
+- (id)initWithDictionary:(NSDictionary *)aDictionary;
+
+@end
 
 /**
  * The controller that manages the communication with JSON endpoints.
@@ -57,28 +83,30 @@ typedef enum {
  * @param backOnError
  *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
  * @param completion
- *        The block of code to execute on completion of the operation. The block takes one parameter: the object deserialized from a
- *        successful server response or nil if the request or reading of the response failed.
+ *        The block of code to execute on completion of the operation. The block takes two parameters:  A boolean indicating whether the
+ *        response was successfully parsed in and indicates a successful result, and the JSON response object if it was parsed successfully.
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
-             completion:(void (^)(id response))completion;
+             completion:(void (^)(BOOL success, JSONResult *response))completion;
 
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.
  *
  * @param responseData
  *        The JSON data that should be validated and parsed into an object.
+ * @param response
+ *        A pointer to where the response object should become available.  nil if the response data could not be parsed.
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
  * @param backOnError
  *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
  * @param requires
  *        A list of keys that are required to be present in the result object.
- * @return  An object reflecting the JSON data structure contained within the response's result or nil if the response isn't valid.
+ * @return A boolean indicating whether the response was successfully parsed, has a successful code and passed validation.
  */
-- (id)validateAndParseResponse:(NSData *)responseData popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
-                      requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+                        requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Override this method to provide the URL of the server's JSON webservice endpoint.

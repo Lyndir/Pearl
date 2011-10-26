@@ -61,49 +61,49 @@
 /**
  * Create an alert view controller which shows a given error message.
  */
-+ (void)showError:(NSString *)message backButton:(BOOL)backButton;
++ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton;
 
 /**
  * Create an alert view controller which shows a given error message.
  */
-+ (void)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
++ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
 
 /**
  * Create an alert view controller which shows a given notice message.
  */
-+ (void)showNotice:(NSString *)message;
++ (AlertViewController *)showNotice:(NSString *)message;
 
 /**
  * Create an alert view controller which shows a given notice message.
  */
-+ (void)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
++ (AlertViewController *)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
 
 /**
  * Create an alert view controller which shows a given message using a give dialog title.
  */
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title;
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title;
 
 /**
  * Create an alert view controller which shows a given message with two buttons.
  */
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
 
 /**
  * Create an alert view controller which shows a given message with two buttons and a callback for the second.
  */
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector;
-    
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
+                          backString:(NSString *)backString acceptString:(NSString *)acceptString
+                            callback:(id)target :(SEL)selector;
+
 /**
  * Create an alert view controller which shows a given error message using a give dialog title
  * and allows you to specify the text to use on the back and accept buttons.
  *
  * Use nil for either to hide it.
  */
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title
-         backString:(NSString *)backString acceptString:(NSString *)acceptString;
-    
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
+                          backString:(NSString *)backString acceptString:(NSString *)acceptString;
+
 
 #pragma mark ###############################
 #pragma mark Behaviors

@@ -33,7 +33,7 @@ static AlertViewController *currentAlert = nil;
 #pragma mark Lifecycle
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)msg backString:(NSString *)backString {
-
+    
     return [self initWithTitle:title message:msg backString:backString acceptString:nil callback:nil :nil];
 }
 
@@ -51,63 +51,61 @@ static AlertViewController *currentAlert = nil;
         [self setTarget:target selector:selector];
     
     alertView   = [[UIAlertView alloc] initWithTitle:title message:msg
-                                            delegate:self cancelButtonTitle:backString otherButtonTitles:acceptString, nil];
+                                            delegate:[self retain] cancelButtonTitle:backString otherButtonTitles:acceptString, nil];
     
     return self;
 }
 
-+ (void)showError:(NSString *)message backButton:(BOOL)backButton {
++ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton {
     
-    [self showError:message backButton:backButton abortButton:YES];
+    return [self showError:message backButton:backButton abortButton:YES];
 }
 
-+ (void)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
-    [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleError backButton:backButton abortButton:abortButton];
+    return [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleError backButton:backButton abortButton:abortButton];
 }
 
 
-+ (void)showNotice:(NSString *)message {
++ (AlertViewController *)showNotice:(NSString *)message {
     
-    [self showNotice:message backButton:YES abortButton:NO];
+    return [self showNotice:message backButton:YES abortButton:NO];
 }
 
 
-+ (void)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
-    [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleNotice backButton:backButton abortButton:abortButton];
+    return [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleNotice backButton:backButton abortButton:abortButton];
 }
 
 
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title {
-
-    [self showMessage:message withTitle:title backButton:YES abortButton:NO];
-}
-
-
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title {
     
-    [self showMessage:message withTitle:title
-           backString:backButton? [PearlStrings get].commonButtonBack: nil
-         acceptString:abortButton? (backButton? [PearlStrings get].commonButtonAbort: [PearlStrings get].commonButtonRetry): nil];
+    return [self showMessage:message withTitle:title backButton:YES abortButton:NO];
 }
 
 
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title
-         backString:(NSString *)backString acceptString:(NSString *)acceptString {
-
-    [self showMessage:message withTitle:title backString:backString acceptString:acceptString callback:nil :nil];
-}
-
-+ (void)showMessage:(NSString *)message withTitle:(NSString *)title
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector {
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
     
-    AlertViewController *alert = [[AlertViewController alloc] initWithTitle:title message:message
-                                                                 backString:backString acceptString:acceptString
-                                                                   callback:target :selector];
-    [alert showAlert];
-    [alert release];
+    return [self showMessage:message withTitle:title
+                  backString:backButton? [PearlStrings get].commonButtonBack: nil
+                acceptString:abortButton? (backButton? [PearlStrings get].commonButtonAbort: [PearlStrings get].commonButtonRetry): nil];
+}
+
+
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
+                          backString:(NSString *)backString acceptString:(NSString *)acceptString {
+    
+    return [self showMessage:message withTitle:title backString:backString acceptString:acceptString callback:nil :nil];
+}
+
++ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
+                          backString:(NSString *)backString acceptString:(NSString *)acceptString
+                            callback:(id)target :(SEL)selector {
+    
+    return [[[[AlertViewController alloc] initWithTitle:title message:message
+                                             backString:backString acceptString:acceptString
+                                               callback:target :selector] autorelease] showAlert];
 }
 
 
@@ -154,7 +152,7 @@ static AlertViewController *currentAlert = nil;
 - (AlertViewController *)showAlert {
     
     [alertView show];
-
+    
     [currentAlert release];
     currentAlert = [self retain];
     
@@ -171,7 +169,7 @@ static AlertViewController *currentAlert = nil;
 
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-
+    
     if (anAlertView.numberOfButtons == 1 || buttonIndex != 0) {
         if ([[invocation methodSignature] numberOfArguments] > 2)
             [invocation setArgument:[NSNumber numberWithInteger:buttonIndex] atIndex:2];
@@ -185,6 +183,12 @@ static AlertViewController *currentAlert = nil;
         [currentAlert release];
         currentAlert = nil;
     }
+    
+    // Clean up my delegate state.
+    [[invocation target] release];
+    [invocation release];
+    invocation = nil;
+    [self release];
 }
 
 

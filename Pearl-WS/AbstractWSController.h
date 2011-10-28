@@ -48,14 +48,20 @@ typedef enum {
  * The controller that manages the communication with JSON endpoints.
  */
 @interface AbstractWSController : NSObject {
-   
+
+    BOOL            _suppressOutdatedWarning;
 }
+
+@property (nonatomic, assign) BOOL              suppressOutdatedWarning;
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
 /** Obtain the webservice controller instance. */
 + (AbstractWSController *)get;
+
+/** Reset the active session and all warnings issued in it. */
+- (void)reset;
 
 /** Invoke a WS request, submitting the parameters encoded with the given method.
  *

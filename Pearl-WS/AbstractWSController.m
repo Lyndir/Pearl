@@ -59,7 +59,7 @@
 @end
 
 @implementation AbstractWSController
-
+@synthesize suppressOutdatedWarning = _suppressOutdatedWarning;
 
 #pragma mark ###############################
 #pragma mark Lifecycle
@@ -91,6 +91,12 @@
 - (BOOL)isSynchronous {
     
     return NO;
+}
+
+- (void)reset {
+    
+    [ASIHTTPRequest clearSession];
+    self.suppressOutdatedWarning = NO;
 }
 
 - (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
@@ -263,7 +269,9 @@
     
     // Check whether the client is up-to-date enough.
 #ifdef PEARL_UIKIT
-    if ((*response).outdated) {
+    if ((*response).outdated && !self.suppressOutdatedWarning) {
+        suppressOutdatedWarning = YES;
+        
         if ((*response).code == JSONResultCodeUpdateRequired)
             // Required upgrade.
             [[[[AlertViewController alloc] initWithTitle:[PearlStrings get].commonTitleError

@@ -270,7 +270,7 @@
     // Check whether the client is up-to-date enough.
 #ifdef PEARL_UIKIT
     if ((*response).outdated && !self.suppressOutdatedWarning) {
-        suppressOutdatedWarning = YES;
+        self.suppressOutdatedWarning = YES;
         
         if ((*response).code == JSONResultCodeUpdateRequired)
             // Required upgrade.

@@ -42,42 +42,49 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // Log application details.
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *name = [info objectForKey:@"CFBundleName"];
-    NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
-    NSString *build = [info objectForKey:@"CFBundleVersion"];
-    NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
-    NSString *copyright = [info objectForKey:@"NSHumanReadableCopyright"];
-    
-    if (!name)
-        name = displayName;
-    if (displayName && ![displayName isEqualToString:name])
-        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
-    if (!version)
-        version = build;
-    if (build && ![build isEqualToString:version])
-        version = [NSString stringWithFormat:@"%@ (%@)", version, build];
-    
-    inf(@"%@ v%@", name, version);
-    if (copyright)
-        inf(@"%@", copyright);
-    inf(@"===================================");
-
+    @try {
+        // Log application details.
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *name = [info objectForKey:@"CFBundleName"];
+        NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
+        NSString *build = [info objectForKey:@"CFBundleVersion"];
+        NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
+        NSString *copyright = [info objectForKey:@"NSHumanReadableCopyright"];
+        
+        if (!name)
+            name = displayName;
+        if (displayName && ![displayName isEqualToString:name])
+            name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
+        if (!version)
+            version = build;
+        if (build && ![build isEqualToString:version])
+            version = [NSString stringWithFormat:@"%@ (%@)", version, build];
+        
+        inf(@"%@ v%@", name, version);
+        if (copyright)
+            inf(@"%@", copyright);
+        inf(@"===================================");
+        
 #ifdef APNS
-    if ([[Config get].supportedNotifications unsignedIntegerValue])
-        [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+        if ([[Config get].supportedNotifications unsignedIntegerValue])
+            [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
 #endif
-
-    // Start the background music.
-    [self preSetup];
+        
+        // Start the background music.
+        [self preSetup];
+    }
+    @catch (NSException *exception) {
+        ftl(@"=== Exception Occurred! ===");
+        ftl(@"Name: %@; Reason: %@; Context: %@; Stack:\n%@", exception.name, exception.reason, exception.userInfo,
+            [exception callStackSymbols]);
+    }
     
     return NO;
 }
 
 
 - (void)preSetup {
-
+    
 #ifdef PEARL_MEDIA
     if ([[Config get].currentTrack isEqualToString:@"sequential"]) {
         // Restart sequentially from the start.
@@ -86,7 +93,7 @@
     } else
         [[AudioController get] playTrack:[Config get].currentTrack];
 #endif
-
+    
     if (!self.window) {
         self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
 #ifdef PEARL_UIKIT
@@ -107,7 +114,7 @@
 }
 
 - (void)restart {
-
+    
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
@@ -138,14 +145,14 @@
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-
+    
 #ifdef PEARL_MEDIA
     [[AudioController get] playTrack:nil];
 #endif
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-
+    
     [Config get].firstRun = [NSNumber numberWithBool:NO];
 }
 
@@ -212,7 +219,7 @@
 - (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application {
     
 }
-    
+
 - (void)dealloc {
     
     self.window = nil;

@@ -8,24 +8,6 @@
 
 #import "Logger.h"
 
-@interface LogMessage : NSObject
-{
-@private
-    NSString                            *message;
-    NSDate                              *occurance;
-    LogLevel                            level;
-}
-
-@property (readwrite, copy) NSString    *message;
-@property (readwrite, copy) NSDate      *occurance;
-@property (readwrite) LogLevel          level;
-
-+ (LogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
-
-- (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
-
-@end
-
 @implementation LogMessage
 
 @synthesize message, occurance, level;
@@ -65,32 +47,37 @@ static NSDateFormatter *logDateFormatter = nil;
     return self;
 }
 
-- (NSString *)description {
+- (NSString *)levelDescription {
     
-    NSString *levelString = nil;
     switch (self.level) {
         case LogLevelTrace:
-            levelString = @"[TRACE]  ";
+            return @"[TRACE]  ";
             break;
         case LogLevelDebug:
-            levelString = @"[DEBUG]  ";
+            return  @"[DEBUG]  ";
             break;
         case LogLevelInfo:
-            levelString = @"[INFO]   ";
+            return  @"[INFO]   ";
             break;
         case LogLevelWarn:
-            levelString = @"[WARNING]";
+            return  @"[WARNING]";
             break;
         case LogLevelError:
-            levelString = @"[ERROR]  ";
+            return  @"[ERROR]  ";
+            break;
+        case LogLevelFatal:
+            return  @"[FATAL]  ";
             break;
         default:
             [NSException raise:NSInternalInconsistencyException
                         format:@"Formatting a message with a log level that is not understood."];
     }
+}
+
+- (NSString *)description {
     
     return [NSString stringWithFormat:@"%@ %@ %@\n",
-            [logDateFormatter stringFromDate:self.occurance], levelString, self.message];
+            [logDateFormatter stringFromDate:self.occurance], [self levelDescription], self.message];
 }
 
 - (void)dealloc {
@@ -107,13 +94,14 @@ static NSDateFormatter *logDateFormatter = nil;
 @interface Logger ()
 
 @property (readwrite, retain) NSMutableArray           *messages;
+@property (readwrite, retain) NSMutableArray           *listeners;
 
 @end
 
 
 @implementation Logger
 
-@synthesize messages = _messages, autoprintLevel = _autoprintLevel;
+@synthesize messages = _messages, listeners = _listeners, autoprintLevel = _autoprintLevel;
 
 - (id)init {
     
@@ -121,6 +109,7 @@ static NSDateFormatter *logDateFormatter = nil;
         return nil;
     
     self.messages = [NSMutableArray arrayWithCapacity:20];
+    self.listeners = [NSMutableArray array];
     self.autoprintLevel = LogLevelInfo;
     
     return self;
@@ -153,6 +142,12 @@ static NSDateFormatter *logDateFormatter = nil;
 }
 
 
+- (void)registerListener:(BOOL (^)(LogMessage *message))listener {
+    
+    [self.listeners addObject:listener];
+}
+
+
 - (Logger *)logWithLevel:(LogLevel)aLevel andMessage:(NSString *)format, ... {
     
     va_list argList;
@@ -163,6 +158,10 @@ static NSDateFormatter *logDateFormatter = nil;
     [messageString release];
     
     va_end(argList);
+    
+    for (BOOL (^listener)(LogMessage *message) in self.listeners)
+        if (!listener(message))
+            return self;
 
     if (aLevel >= self.autoprintLevel)
         NSLog(@"%@", message);
@@ -233,6 +232,17 @@ static NSDateFormatter *logDateFormatter = nil;
     va_end(argList);
     
     return [self logWithLevel:LogLevelError andMessage:[message autorelease]];
+}
+
+
+- (Logger *)ftl:(NSString *)format, ... {
+    
+    va_list argList;
+    va_start(argList, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    va_end(argList);
+    
+    return [self logWithLevel:LogLevelFatal andMessage:[message autorelease]];
 }
 
 

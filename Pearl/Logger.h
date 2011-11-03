@@ -30,6 +30,7 @@
 #define inf(format, ...)    [[Logger get] inf:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define wrn(format, ...)    [[Logger get] wrn:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define err(format, ...)    [[Logger get] err:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define ftl(format, ...)    [[Logger get] ftl:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 
 /** Levels that determine the importance of logging events. */
 typedef enum LogLevel {
@@ -42,8 +43,29 @@ typedef enum LogLevel {
     /** Notice that something unexpected happened but was dealt with as best as possible. */
     LogLevelWarn,
     /** Notice that something went wrong that should be fixed. */
-    LogLevelError
+    LogLevelError,
+    /** Notice that something went wrong from which could not be recovered, causing the operation to abort. */
+    LogLevelFatal
 } LogLevel;
+
+@interface LogMessage : NSObject
+{
+@private
+    NSString                            *message;
+    NSDate                              *occurance;
+    LogLevel                            level;
+}
+
+@property (readwrite, copy) NSString    *message;
+@property (readwrite, copy) NSDate      *occurance;
+@property (readwrite) LogLevel          level;
+
++ (LogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
+
+- (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
+- (NSString *)levelDescription;
+
+@end
 
 /**
  * The Logger class provides a very simple general purpose Logging framework.
@@ -55,6 +77,7 @@ typedef enum LogLevel {
 
 @private
     NSMutableArray                      *_messages;
+    NSMutableArray                      *_listeners;
     LogLevel                            _autoprintLevel;
 }
 
@@ -65,6 +88,11 @@ typedef enum LogLevel {
 
 /** Obtain the logged events in a formatted string fit for display. */
 - (NSString *)formatMessages;
+
+/** Register a listener invoked for each message that gets logged.
+ * 
+ * @param listener A block that takes a message and returns YES if the message may be logged and passed to other listeners, or NO if its handling should be stopped and the message should not be logged. */
+- (void)registerListener:(BOOL (^)(LogMessage *message))listener;
 
 /** Log a new event on a specified level.
  *
@@ -84,5 +112,7 @@ typedef enum LogLevel {
 - (Logger *)wrn:(NSString *)format, ...;
 /** Log a new ERROR-level event. */
 - (Logger *)err:(NSString *)format, ...;
+/** Log a new FATAL-level event. */
+- (Logger *)ftl:(NSString *)format, ...;
 
 @end

@@ -229,7 +229,11 @@
 
 +(AbstractAppDelegate *) get {
     
-    return (AbstractAppDelegate *) [[UIApplication sharedApplication] delegate];
+    id delegate = [UIApplication sharedApplication].delegate;
+    if ([delegate isKindOfClass:[AbstractAppDelegate class]])
+        return (AbstractAppDelegate *) delegate;
+    
+    return nil;
 }
 
 

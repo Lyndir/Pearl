@@ -127,7 +127,7 @@
              [formRequest encodeURL:REQUEST_KEY_VERSION],
              [formRequest encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
             
-            loadRequest = ^{
+            loadRequest = [[^{
                 NSError *error = nil;
                 NSURLResponse *response = nil;
                 NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
@@ -135,7 +135,7 @@
                 request.error = error;
                 
                 return responseData;
-            };
+            } copy] autorelease];
             break;
         }
             
@@ -153,11 +153,11 @@
             }
             [formRequest setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
             
-            loadRequest = ^{
+            loadRequest = [[^{
                 [request startSynchronous];
                 
-                return request.responseData;
-            };
+                return [[request.responseData retain] autorelease];
+            } copy] autorelease];
             break;
         }
             
@@ -172,16 +172,16 @@
                 return nil;
             }
             
-            loadRequest = ^{
+            loadRequest = [[^{
                 [request startSynchronous];
                 
-                return request.responseData;
-            };
+                return [[request.responseData retain] autorelease];
+            } copy] autorelease];
             break;
         }
     }
     
-    dispatch_block_t handleRequest = ^{
+    dispatch_block_t handleRequest = [[^{
         NSData *responseData = loadRequest();
         if ([request isCancelled]) {
             dbg(@"Cancelled: %@", request.url);
@@ -199,7 +199,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(responseData);
             });
-    };
+    } copy] autorelease];
     
     if (request) {
         if ([self isSynchronous])

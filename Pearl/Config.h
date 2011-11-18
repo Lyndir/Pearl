@@ -38,6 +38,9 @@
 #define gameRandomFor(scope)    [[Config get] gameRandom:scope]
 #endif
 
+#define cBuild                  NSStringFromSelector(@selector(build))
+#define cVersion                NSStringFromSelector(@selector(version))
+#define cCopyright              NSStringFromSelector(@selector(copyright))
 #define cFirstRun               NSStringFromSelector(@selector(firstRun))
 #define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
 #define cSupportedNotifications NSStringFromSelector(@selector(supportedNotifications))
@@ -78,6 +81,9 @@
 @property (nonatomic, readonly, retain) NSUserDefaults      *defaults;
 @property (nonatomic, readonly, retain) NSMutableDictionary *resetTriggers;
 
+@property (nonatomic, readwrite, retain) NSString           *build;
+@property (nonatomic, readwrite, retain) NSString           *version;
+@property (nonatomic, readwrite, retain) NSString           *copyright;
 @property (nonatomic, readwrite, retain) NSNumber           *firstRun;
 @property (nonatomic, readwrite, retain) NSNumber           *supportedNotifications;
 @property (nonatomic, readwrite, assign) BOOL               notificationsChecked;

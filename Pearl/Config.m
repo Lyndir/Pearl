@@ -49,7 +49,7 @@
 @synthesize resetTriggers = _resetTriggers;
 @synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
 
-@dynamic firstRun, supportedNotifications, deviceToken;
+@dynamic build, version, copyright, firstRun, supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;
@@ -68,6 +68,9 @@
 
     self.defaults = [NSUserDefaults standardUserDefaults];
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     @"",                                                           cBuild,
+                                     @"",                                                           cVersion,
+                                     @"",                                                           cCopyright,
                                      [NSNumber numberWithBool:YES],                                 cFirstRun,
 
                                      [NSNumber numberWithInt:
@@ -103,6 +106,11 @@
                                      nil]];
 
     self.resetTriggers = [NSMutableDictionary dictionary];
+    
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    self.build = [info objectForKey:@"CFBundleVersion"];
+    self.version = [info objectForKey:@"CFBundleShortVersionString"];
+    self.copyright = [info objectForKey:@"NSHumanReadableCopyright"];
 
     return self;
 }
@@ -169,8 +177,13 @@
         [anInvocation getArgument:&newValue atIndex:2];
         dbg(@"Config Set %@ = [%@ ->] %@", selector, currentValue, newValue);
 
-        if ([newValue conformsToProtocol:@protocol(NSCoding)])
-            newValue = [NSKeyedArchiver archivedDataWithRootObject:newValue];
+        if (![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
+            // TODO: This doesn't yet check arrays and dictionaries recursively to see if they need coding.
+            if ([newValue conformsToProtocol:@protocol(NSCoding)])
+                newValue = [NSKeyedArchiver archivedDataWithRootObject:newValue];
+            else
+                err(@"Cannot update %@: Value type is not supported by plists and is not codable: %@", selector, newValue);
+        }
         [self.defaults setValue:newValue forKey:selector];
 
         [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];

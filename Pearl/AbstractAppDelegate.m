@@ -47,9 +47,9 @@
         NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
         NSString *name = [info objectForKey:@"CFBundleName"];
         NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
-        NSString *build = [info objectForKey:@"CFBundleVersion"];
-        NSString *version = [info objectForKey:@"CFBundleShortVersionString"];
-        NSString *copyright = [info objectForKey:@"NSHumanReadableCopyright"];
+        NSString *build = [Config get].build;
+        NSString *version = [Config get].version;
+        NSString *copyright = [Config get].copyright;
         
         if (!name)
             name = displayName;

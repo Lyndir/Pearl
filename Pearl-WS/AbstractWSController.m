@@ -125,7 +125,7 @@
             }
             [urlString appendFormat:@"%s%@=%@", hasQuery? "&": "?", 
              [formRequest encodeURL:REQUEST_KEY_VERSION],
-             [formRequest encodeURL:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey]]];
+             [formRequest encodeURL:[Config get].build]];
             
             loadRequest = [[^{
                 NSError *error = nil;
@@ -151,7 +151,7 @@
                 if (value != [NSNull null])
                     [formRequest setPostValue:[value description] forKey:key];
             }
-            [formRequest setPostValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:(id)kCFBundleVersionKey] forKey:REQUEST_KEY_VERSION];
+            [formRequest setPostValue:[Config get].build forKey:REQUEST_KEY_VERSION];
             
             loadRequest = [[^{
                 [request startSynchronous];

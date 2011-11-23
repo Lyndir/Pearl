@@ -175,9 +175,10 @@
 
         id newValue = nil;
         [anInvocation getArgument:&newValue atIndex:2];
+        newValue = NSNullToNil(newValue);
         dbg(@"Config Set %@ = [%@ ->] %@", selector, currentValue, newValue);
 
-        if (![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
+        if (newValue && ![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
             // TODO: This doesn't yet check arrays and dictionaries recursively to see if they need coding.
             if ([newValue conformsToProtocol:@protocol(NSCoding)])
                 newValue = [NSKeyedArchiver archivedDataWithRootObject:newValue];

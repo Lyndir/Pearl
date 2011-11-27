@@ -11,12 +11,16 @@ Integration
 
 The standard way of adding Pearl to your project is by following these steps:
 
-1. Create a Pearl "static library" target in your project.
-2. Navigate to the "Build Phases" settings of your main target and add the newly created Pearl target as a "Target Dependency", and its static library under "Link Binary With Libraries".
-3. In your Project Navigator, choose where you want to place the code of the Pearl modules and add the directory of each Pearl module you wish to use to your new Pearl target.
-    3.1. If any of the Pearl modules you've selected for use depend on other Pearl modules or external dependencies, add those modules and dependencies to your project as well.  I recommend you make separate targets for each external dependency, but that's really up to you.
-4. Open the "Pearl-Prefix.pch" that was created for your Pearl target in step 1, and add configuration reflecting your choice of Pearl modules (see below).
-5. Open the prefix file of your main target and import Pearl's prefix:
+1. Add the Pearl code to your project.  If your project is in a GIT repository, this will do, from your project root:
+
+    `mkdir -p External && git submodule add git://github.com/Lyndir/Pearl.git External/Pearl`
+
+2. Create a Pearl *static library* target in your project.
+3. Navigate to the *Build Phases* settings of your main target and add the newly created Pearl target as a *Target Dependency*, and its static library under *Link Binary With Libraries*.
+4. In your Project Navigator, choose where you want to place the code of the Pearl modules and add the directory of each Pearl module you wish to use to your new Pearl target.
+5. (optional) If any of the Pearl modules you've selected for use depend on other Pearl modules or external dependencies, add those modules and dependencies to your project as well.  I recommend you make separate targets for each external dependency, but that's really up to you.
+6. Open the `Pearl-Prefix.pch` that was created for your Pearl target in step 1, and add configuration reflecting your choice of Pearl modules (see below).
+7. Open the prefix file of your main target and import Pearl's prefix:
 
     `#import "Pearl-Prefix.pch"`
 
@@ -48,14 +52,14 @@ With your `Pearl-Prefix.pch` file set up, your Pearl target should now build fin
 
     #import "Pearl-Prefix.pch"
 
-If you're writing a library that uses Pearl, it's best for your library's prefix file to also assert that the Pearl-Prefix.pch of the library's host project has correctly imported the Pearl modules necessary for the library.  I recommend you do that by putting the following in your library's prefix, instead of the one-liner above:
+If you're writing a library that uses Pearl, it's best for your library's prefix file to also assert that the `Pearl-Prefix.pch` of the library's host project has correctly imported the Pearl modules necessary for the library.  I recommend you do that by putting the following in your library's prefix, instead of the one-liner above:
 
     #import "Pearl-Prefix.pch"
     #if !defined(PEARL) || !defined(PEARL_CRYPTO)
         #error Pearl-Prefix.pch should define: PEARL PEARL_CRYPTO
     #endif
 
-In this example, the library requires the Pearl and Pearl-Crypto modules.  If your library's prefix declares this, it forces the host application to have a `Pearl-Prefix.pch` that correctly defines and imports these modules.  If you don't do this and the host application's `Pearl-Prefix.pch` omits certain Pearl modules that you need, linkage errors or runtime errors may follow as Pearl won't be compiled with the correct modules.
+In this example, the library requires the `Pearl` and `Pearl-Crypto` modules.  If your library's prefix declares this, it forces the host application to have a `Pearl-Prefix.pch` that correctly defines and imports these modules.  If you don't do this and the host application's `Pearl-Prefix.pch` omits certain Pearl modules that you need, linkage errors or runtime errors may follow as Pearl won't be compiled with the correct modules.
 
 
 External Dependencies
@@ -68,5 +72,7 @@ Some modules require additional external dependencies: they can be found in the 
 Once checked out, when you update Pearl to a later version, you may need to update some of your external dependencies too.  In essence, you need to run `git submodule update`, but Pearl provides a script to make the process a little more regulated.  It's best to just run the script:
 
     ./Scripts/updateDependencies
+
+This script can also be useful to copy to your own repository.  Using this script, it becomes much easier for anyone that checks out your code to automatically fetch and update those submodules required to build your code.  If you want to use it for your own project, modify the header of your copy of the script to configure all the submodules that your own application uses, including `Pearl` and those dependencies which your needed Pearl modules require.
 
 Don't forget to also add the external library's sources to your project.  You probably want to put each under a separate static library target.  Some libraries have a bit of a different directory layout, make sure to only add the library's sources that you need, and not, for instance, its unit tests or example code.

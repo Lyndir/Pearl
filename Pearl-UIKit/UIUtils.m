@@ -94,9 +94,10 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
 
 @implementation UIUtils
 
-static UIScrollView     *keyboardScrollView, *keyboardActiveScrollView;
-static CGPoint          keyboardScrollOriginalOffset;
-static CGRect           keyboardScrollOriginalFrame;
+static UIScrollView     *keyboardScrollView_current, *keyboardScrollView_resized;
+static CGPoint          keyboardScrollView_originalOffset;
+static CGRect           keyboardScrollView_originalFrame;
+static BOOL             keyboardScrollView_shouldHide;
 static NSMutableSet     *dismissableResponders;
 
 + (void)autoSize:(UILabel *)label {
@@ -156,7 +157,7 @@ static NSMutableSet     *dismissableResponders;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:scrollView.window];
-    keyboardScrollView = scrollView;
+    keyboardScrollView_current = scrollView;
 }
 
 + (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
@@ -251,39 +252,42 @@ static NSMutableSet     *dismissableResponders;
         // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
         // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
-
-    if (keyboardActiveScrollView || !keyboardScrollView) {
-        // Don't do any scrollview animation when one is already active (not yet deactivated) or when no scrollview is set.
-        
-        if (keyboardActiveScrollView && keyboardActiveScrollView != keyboardScrollView)
-            err(@"Keyboard was activated for a scroll view while already active for another scroll view.  This shouldn't happen!");
+    
+    // Make sure no old view is still resized and a current view is set.
+    if (keyboardScrollView_resized || !keyboardScrollView_current) {
+        if (keyboardScrollView_resized && keyboardScrollView_resized != keyboardScrollView_current)
+            err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
+        else
+            keyboardScrollView_shouldHide = NO;
         
         return;
     }
+    assert(keyboardScrollView_current);
+    assert(!keyboardScrollView_resized);
     
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
-    keyboardActiveScrollView = keyboardScrollView;
+    keyboardScrollView_resized = keyboardScrollView_current;
     
     NSDictionary* userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect scrollRect   = [self frameInWindow:keyboardActiveScrollView];
+    CGRect scrollRect   = [self frameInWindow:keyboardScrollView_resized];
     CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
     
-    keyboardScrollOriginalOffset            = keyboardActiveScrollView.contentOffset;
-    keyboardScrollOriginalFrame             = keyboardActiveScrollView.frame;
-    CGPoint keyboardScrollNewOffset         = keyboardScrollOriginalOffset;
+    keyboardScrollView_originalOffset       = keyboardScrollView_resized.contentOffset;
+    keyboardScrollView_originalFrame        = keyboardScrollView_resized.frame;
+    CGPoint keyboardScrollNewOffset         = keyboardScrollView_originalOffset;
     keyboardScrollNewOffset.y               += keyboardRect.size.height / 2;
-    CGRect keyboardScrollNewFrame           = keyboardActiveScrollView.frame;
+    CGRect keyboardScrollNewFrame           = keyboardScrollView_resized.frame;
     keyboardScrollNewFrame.size.height      -= hiddenRect.size.height;
     
-    CGRect responderRect = [keyboardActiveScrollView convertRect:responder.bounds fromView:responder];
+    CGRect responderRect = [keyboardScrollView_resized convertRect:responder.bounds fromView:responder];
     
     if (responderRect.origin.y < keyboardScrollNewOffset.y)
         keyboardScrollNewOffset.y = 0;
     else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
         keyboardScrollNewOffset.y = responderRect.origin.y;
     
-    UIScrollView *animatingScrollView = keyboardActiveScrollView;
+    UIScrollView *animatingScrollView = keyboardScrollView_resized;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^{
@@ -295,26 +299,32 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)keyboardWillHide:(NSNotification *)n {
     
-    if (!keyboardActiveScrollView)
+    if (!keyboardScrollView_resized)
         // Don't do any scrollview animation when no scrollview is active.
         return;
     
-    NSDictionary* userInfo = [n userInfo];
-    CGPoint keyboardScrollNewOffset         = keyboardScrollOriginalOffset;
-    CGRect keyboardScrollNewFrame           = keyboardScrollOriginalFrame;
+    UIScrollView *animatingScrollView           = keyboardScrollView_resized;
+    CGRect animatingScrollView_originalFrame    = keyboardScrollView_originalFrame;
+    CGPoint animatingScrollView_originalOffset  = keyboardScrollView_originalOffset;
+    keyboardScrollView_shouldHide               = YES;
     
-    UIScrollView *animatingScrollView       = keyboardActiveScrollView;
-    CGPoint currentOffset = animatingScrollView.contentOffset;
-    animatingScrollView.frame               = keyboardScrollNewFrame;
-    animatingScrollView.contentOffset       = currentOffset;
-    [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                          delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                     animations:^{
-                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
-                     } completion:nil];
-    
-    // Active scrollview is restoring state.  Deactivate it so it can be reactivated.
-    keyboardActiveScrollView = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!keyboardScrollView_shouldHide)
+            return;
+        
+        CGPoint currentOffset                   = animatingScrollView.contentOffset;
+        animatingScrollView.frame               = animatingScrollView_originalFrame;
+        animatingScrollView.contentOffset       = currentOffset;
+        
+        [UIView animateWithDuration:[[n.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
+                              delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+                         animations:^{
+                             animatingScrollView.contentOffset = animatingScrollView_originalOffset;
+                         } completion:^(BOOL finished) {
+                         }];
+        
+        keyboardScrollView_resized = nil;
+    });
 }
 
 + (id)copyOf:(id)view {

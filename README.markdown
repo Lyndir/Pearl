@@ -52,7 +52,7 @@ With your `Pearl-Prefix.pch` file set up, your Pearl target should now build fin
 
     #import "Pearl-Prefix.pch"
 
-If you're writing a library that uses Pearl, it's best for your library's prefix file to also assert that the `Pearl-Prefix.pch` of the library's host project has correctly imported the Pearl modules necessary for the library.  I recommend you do that by putting the following in your library's prefix, instead of the one-liner above:
+If you're writing an open source library that uses Pearl, it's best for your library's prefix file to also assert that the `Pearl-Prefix.pch` of the library's host project has correctly imported the Pearl modules necessary for the library, when it builds your library's code.  I recommend you do that by putting the following in your library's prefix, instead of the one-liner above:
 
     #import "Pearl-Prefix.pch"
     #if !defined(PEARL) || !defined(PEARL_CRYPTO)
@@ -74,5 +74,11 @@ Once checked out, when you update Pearl to a later version, you may need to upda
     ./Scripts/updateDependencies
 
 This script can also be useful to copy to your own repository.  Using this script, it becomes much easier for anyone that checks out your code to automatically fetch and update those submodules required to build your code.  If you want to use it for your own project, modify the header of your copy of the script to configure all the submodules that your own application uses, including `Pearl` and those dependencies which your needed Pearl modules require.
+
+For instance, if your application uses Pearl and the UIKit module, you may want to copy this script file into your own repository and change its `dependencies` array to say this:
+
+    dependencies=( External/Pearl External/Pearl:External/{jrswizzle,uicolor-utilities} )
+
+As a result, anyone checkout out your application's repository need only run your `updateDependencies` copy, and it will automatically check out the `Pearl` git submodule, the `jrswizzle` git submodule and the `uicolor-utilities` git submodule.  Additionally, when you update your application's code, bumping the `Pearl` version, others can run your script to quickly update all submodules to their required versions.
 
 Don't forget to also add the external library's sources to your project.  You probably want to put each under a separate static library target.  Some libraries have a bit of a different directory layout, make sure to only add the library's sources that you need, and not, for instance, its unit tests or example code.

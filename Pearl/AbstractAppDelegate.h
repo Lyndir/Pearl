@@ -25,7 +25,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface AbstractAppDelegate : NSObject <UIApplicationDelegate> {
+@interface AbstractAppDelegate : UIResponder <UIApplicationDelegate> {
 
     UIWindow                                                                *_window;
     UINavigationController                                                  *_navigationController;

@@ -42,42 +42,42 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    @try {
-        // Log application details.
-        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-        NSString *name = [info objectForKey:@"CFBundleName"];
-        NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
-        NSString *build = [Config get].build;
-        NSString *version = [Config get].version;
-        NSString *copyright = [Config get].copyright;
-        
-        if (!name)
-            name = displayName;
-        if (displayName && ![displayName isEqualToString:name])
-            name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
-        if (!version)
-            version = build;
-        if (build && ![build isEqualToString:version])
-            version = [NSString stringWithFormat:@"%@ (%@)", version, build];
-        
-        inf(@"%@ v%@", name, version);
-        if (copyright)
-            inf(@"%@", copyright);
-        inf(@"===================================");
-        
-#ifdef APNS
-        if ([[Config get].supportedNotifications unsignedIntegerValue])
-            [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+#ifdef PEARL_WITH_CRASHKIT
+    CrashController *crash = [CrashController sharedInstance];
+    if ([Config get].crashReportsEmail)
+        [crash sendCrashReportsToEmail:[Config get].crashReportsEmail];
+    crash.delegate = self;
 #endif
-        
-        // Start the background music.
-        [self preSetup];
-    }
-    @catch (NSException *exception) {
-        ftl(@"=== Exception Occurred! ===");
-        ftl(@"Name: %@; Reason: %@; Context: %@; Stack:\n%@", exception.name, exception.reason, exception.userInfo,
-            [exception callStackSymbols]);
-    }
+    
+    // Log application details.
+    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+    NSString *name = [info objectForKey:@"CFBundleName"];
+    NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
+    NSString *build = [Config get].build;
+    NSString *version = [Config get].version;
+    NSString *copyright = [Config get].copyright;
+    
+    if (!name)
+        name = displayName;
+    if (displayName && ![displayName isEqualToString:name])
+        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
+    if (!version)
+        version = build;
+    if (build && ![build isEqualToString:version])
+        version = [NSString stringWithFormat:@"%@ (%@)", version, build];
+    
+    inf(@"%@ v%@", name, version);
+    if (copyright)
+        inf(@"%@", copyright);
+    inf(@"===================================");
+    
+#ifdef PEARL_WITH_APNS
+    if ([[Config get].supportedNotifications unsignedIntegerValue])
+        [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+#endif
+    
+    // Start the background music.
+    [self preSetup];
     
     return NO;
 }
@@ -104,6 +104,14 @@
         self.navigationController = (UINavigationController *) self.window.rootViewController;
 }
 
+- (void)onCrash {
+    
+    [[[[UIAlertView alloc] initWithTitle:[PearlStrings get].crashTitle
+                                 message:[PearlStrings get].crashContent
+                                delegate:nil
+                       cancelButtonTitle:@"OK"
+                       otherButtonTitles:nil] autorelease] show];
+}
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {
     
@@ -176,7 +184,7 @@
     
 }
 
-#ifdef APNS
+#ifdef PEARL_WITH_APNS
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [Config get].deviceToken = deviceToken;

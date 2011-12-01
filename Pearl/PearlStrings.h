@@ -43,5 +43,7 @@
 @property (nonatomic, readonly) NSString *commonButtonSave;
 @property (nonatomic, readonly) NSString *commonButtonSure;
 @property (nonatomic, readonly) NSString *commonButtonThanks;
+@property (nonatomic, readonly) NSString *crashTitle;
+@property (nonatomic, readonly) NSString *crashContent;
 
 @end

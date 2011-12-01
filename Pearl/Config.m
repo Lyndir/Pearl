@@ -49,7 +49,7 @@
 @synthesize resetTriggers = _resetTriggers;
 @synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
 
-@dynamic build, version, copyright, firstRun, supportedNotifications, deviceToken;
+@dynamic build, version, copyright, firstRun, crashReportsEmail, supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration, visualFx;

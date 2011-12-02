@@ -30,6 +30,16 @@
     return [[[self alloc] initWithFrame:aFrame color:aColor width:aWidth] autorelease];
 }
 
+- (id)init {
+    
+    return [self initWithFrame:CGRectZero];
+}
+
+- (id)initWithFrame:(CGRect)aFrame {
+    
+    return [self initWithFrame:aFrame color:[UIColor redColor] width:2];
+}
+
 - (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
     
     if (!(self = [super initWithFrame:aFrame]))
@@ -52,6 +62,16 @@
 
 - (void)drawRect:(CGRect)rect {
     
+    /* If created by means of XIB deserialization, -init isn't called. */
+    if (!self.color) {
+        self.color = [UIColor redColor];
+        self.width = 2;
+        self.userInteractionEnabled = NO;
+        self.opaque = NO;
+        self.backgroundColor = [UIColor clearColor];
+    }
+    
+    /* Draw our content box. */
     if (self.filled) {
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
         CGContextFillRect(UIGraphicsGetCurrentContext(), self.bounds);

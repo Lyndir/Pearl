@@ -91,12 +91,6 @@
     [self hideHud];
 }
 
-- (void)onCrash {
-
-    [[CCDirector sharedDirector] end];
-    [super onCrash];
-}
-
 - (void)hudMenuPressed {
 
     [NSException raise:NSInternalInconsistencyException format:@"Override me!"];

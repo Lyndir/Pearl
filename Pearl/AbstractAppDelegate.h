@@ -23,16 +23,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#ifdef PEARL_WITH_CRASHKIT
-#import "CrashController.h"
-#endif
 
 
-#ifdef PEARL_WITH_CRASHKIT
-@interface AbstractAppDelegate : UIResponder <UIApplicationDelegate, CrashSaveDelegate> {
-#else
 @interface AbstractAppDelegate : UIResponder <UIApplicationDelegate> {
-#endif
 
     UIWindow                                                                *_window;
     UINavigationController                                                  *_navigationController;

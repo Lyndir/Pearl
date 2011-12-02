@@ -42,13 +42,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-#ifdef PEARL_WITH_CRASHKIT
-    CrashController *crash = [CrashController sharedInstance];
-    if ([Config get].crashReportsEmail)
-        [crash sendCrashReportsToEmail:[Config get].crashReportsEmail];
-    crash.delegate = self;
-#endif
-    
     // Log application details.
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *name = [info objectForKey:@"CFBundleName"];
@@ -102,15 +95,6 @@
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
         self.navigationController = (UINavigationController *) self.window.rootViewController;
-}
-
-- (void)onCrash {
-    
-    [[[[UIAlertView alloc] initWithTitle:[PearlStrings get].crashTitle
-                                 message:[PearlStrings get].crashContent
-                                delegate:nil
-                       cancelButtonTitle:@"OK"
-                       otherButtonTitles:nil] autorelease] show];
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {

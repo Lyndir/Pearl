@@ -1,4 +1,4 @@
-// Supported toggles for this module: PEARL_WITH_CRASHKIT, PEARL_WITH_APNS
+// Supported toggles for this module: PEARL_WITH_APNS
 
 #ifndef PEARL
 #error PEARL used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL) in your Pearl prefix file.

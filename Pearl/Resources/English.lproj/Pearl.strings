@@ -33,10 +33,3 @@
 "common.button.save"                        = "Save";
 "common.button.sure"                        = "Sure!";
 "common.button.thanks"                      = "Thanks";
-
-/* Crash handling. */
-"crash.title"                               = "Uh oh!";
-"crash.content"                             = "The application just crashed.
-This isn't supposed to happen!
-
-Please send this crash report to the developers so they can get straight to work on fixing this problem.";

@@ -52,7 +52,5 @@
 @dynamic commonButtonSave;
 @dynamic commonButtonSure;
 @dynamic commonButtonThanks;
-@dynamic crashTitle;
-@dynamic crashContent;
 
 @end

@@ -42,7 +42,6 @@
 #define cVersion                NSStringFromSelector(@selector(version))
 #define cCopyright              NSStringFromSelector(@selector(copyright))
 #define cFirstRun               NSStringFromSelector(@selector(firstRun))
-#define cCrashReportsEmail      NSStringFromSelector(@selector(crashReportsEmail))
 #define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
 #define cSupportedNotifications NSStringFromSelector(@selector(supportedNotifications))
 
@@ -86,7 +85,6 @@
 @property (nonatomic, readwrite, retain) NSString           *version;
 @property (nonatomic, readwrite, retain) NSString           *copyright;
 @property (nonatomic, readwrite, retain) NSNumber           *firstRun;
-@property (nonatomic, readwrite, assign) NSString           *crashReportsEmail;
 @property (nonatomic, readwrite, retain) NSNumber           *supportedNotifications;
 @property (nonatomic, readwrite, assign) BOOL               notificationsChecked;
 @property (nonatomic, readwrite, assign) BOOL               notificationsSupported;

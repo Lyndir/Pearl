@@ -16,6 +16,3 @@
 [submodule "External/uicolor-utilities"]
 	path = External/uicolor-utilities
 	url = git://github.com/lhunath/uicolor-utilities.git
-[submodule "External/CrashKit"]
-	path = External/CrashKit
-	url = git://github.com/kaler/CrashKit.git

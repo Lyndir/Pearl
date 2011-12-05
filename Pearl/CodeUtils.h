@@ -34,6 +34,7 @@ PearlDigest PearlDigestFromNSString(NSString *digest);
 /** Encode the string for injection into parameters of a URL. */
 - (NSString *)encodeURL;
 
+- (NSString *)inject:(NSString *)injection interval:(NSUInteger)interval;
 - (NSString *)wrapAt:(NSUInteger)lineLength;
 - (NSString *)wrapForMIME;
 - (NSString *)wrapForPEM;

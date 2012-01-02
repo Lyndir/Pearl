@@ -131,13 +131,18 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
             autorelease];
 }
 
+- (NSString *)inject:(NSString *)injection interval:(NSUInteger)interval {
+    
+    NSMutableString *injectedString = [[self mutableCopy] autorelease];
+    for (NSUInteger i = interval; i < [injectedString length]; i += interval + 1)
+        [injectedString insertString:injection atIndex:i];
+    
+    return injectedString;
+}
+
 - (NSString *)wrapAt:(NSUInteger)lineLength {
  
-    NSMutableString *wrappedString = [[self mutableCopy] autorelease];
-    for (NSUInteger i = lineLength; i < [wrappedString length]; i += lineLength + 1)
-        [wrappedString insertString:@"\n" atIndex:i];
-    
-    return wrappedString;
+    return [self inject:@"\n" interval:lineLength];
 }
 
 - (NSString *)wrapForMIME {

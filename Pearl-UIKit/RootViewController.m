@@ -35,6 +35,9 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!(self = [super init]))
         return self;
     
+    if (!self.title)
+        self.title = @"Root View Controller";
+
     self.supportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
@@ -45,7 +48,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 
 - (id)initWithView:(UIView *)aView {
     
-    if (!(self = [super init]))
+    if (!(self = [self init]))
         return self;
     
     self.view = aView;
@@ -58,6 +61,9 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!(self = [super initWithCoder:aDecoder]))
         return self;
     
+    if (!self.title)
+        self.title = @"Root View Controller";
+
     self.supportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
@@ -71,6 +77,9 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!(self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
         return self;
     
+    if (!self.title)
+        self.title = @"Root View Controller";
+
     self.supportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
@@ -141,14 +150,14 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     
     BOOL rotate = [self isInterfaceOrientationSupported:interfaceOrientation];
-    dbg(@"autorotate to: %@ = %@", NSStringFromUIInterfaceOrientation(interfaceOrientation), rotate? @"YES": @"NO");
+    dbg(@"shouldAutorotateTo: %@ = %@", NSStringFromUIInterfaceOrientation(interfaceOrientation), rotate? @"YES": @"NO");
     
     return rotate;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     
-    dbg(@"rotated from: %@ to: %@", NSStringFromUIInterfaceOrientation(fromInterfaceOrientation), NSStringFromUIInterfaceOrientation([UIApplication sharedApplication].statusBarOrientation));
+    dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation(fromInterfaceOrientation), NSStringFromUIInterfaceOrientation([UIApplication sharedApplication].statusBarOrientation));
     [[AbstractAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 

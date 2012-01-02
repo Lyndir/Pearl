@@ -41,7 +41,7 @@
 - (IBAction)restart;
 - (void)shutdown:(id)caller;
 
-+(AbstractAppDelegate *) get;
++ (AbstractAppDelegate *)get;
 
 
 @end

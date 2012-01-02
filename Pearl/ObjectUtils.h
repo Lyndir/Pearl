@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#define ListInto(__array, __firstObject)                                                \
-            va_list __list;                                                             \
-            va_start(__list, __firstObject);                                            \
-            for (id __object = __firstObject; __object; __object = va_arg(__list, id))  \
-                [__array addObject:__object];                                           \
+#define va_into(__array, __firstParameter)                                                  \
+            va_list __list;                                                                 \
+            va_start(__list, __firstParameter);                                             \
+            for (id __object = __firstParameter; __object; __object = va_arg(__list, id))   \
+                [__array addObject:__object];                                               \
             va_end(__list);
 
 #define NilToNSNull(O)                                                                  \

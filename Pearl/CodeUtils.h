@@ -11,6 +11,7 @@
 
 typedef enum {
     PearlDigestNone,
+    PearlDigestMD4,
     PearlDigestMD5,
     PearlDigestSHA1,
     PearlDigestSHA224,

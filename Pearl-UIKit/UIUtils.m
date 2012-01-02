@@ -114,7 +114,7 @@ static NSMutableSet     *dismissableResponders;
 + (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... {
     
     NSMutableArray *ignoredSubviewsArray = [NSMutableArray array];
-    ListInto(ignoredSubviewsArray, ignoredSubviews);
+    va_into(ignoredSubviewsArray, ignoredSubviews);
     
     [self autoSizeContent:scrollView ignoreSubviewsArray:ignoredSubviewsArray];
 }
@@ -163,7 +163,7 @@ static NSMutableSet     *dismissableResponders;
 + (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
     
     NSMutableArray *ignoredSubviewsArray = [NSMutableArray array];
-    ListInto(ignoredSubviewsArray, ignoredSubviews);
+    va_into(ignoredSubviewsArray, ignoredSubviews);
     
     return [self contentBoundsFor:view ignoreSubviewsArray:ignoredSubviewsArray];
 }
@@ -232,7 +232,7 @@ static NSMutableSet     *dismissableResponders;
 + (void)makeDismissable:(UIView *)views, ... {
     
     NSMutableArray *viewsArray = [NSMutableArray array];
-    ListInto(viewsArray, views);
+    va_into(viewsArray, views);
     
     [self makeDismissableArray:viewsArray];
 }

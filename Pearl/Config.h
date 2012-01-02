@@ -134,5 +134,6 @@
 - (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
 
 +(Config *)                                             get;
++(void)                                                 flush;
 
 @end

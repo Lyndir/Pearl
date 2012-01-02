@@ -118,7 +118,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
-    [[AlertViewController currentAlert] dismissAlert];
+    [[AlertViewController activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
 #endif
 }
 

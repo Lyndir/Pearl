@@ -19,6 +19,8 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     digest = [digest stringByReplacingOccurrencesOfString:@"-" withString:@""];
     if ([digest caseInsensitiveCompare:@"None"] == NSOrderedSame)
         return PearlDigestNone;
+    if ([digest caseInsensitiveCompare:@"MD4"] == NSOrderedSame)
+        return PearlDigestMD4;
     if ([digest caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
         return PearlDigestMD5;
     if ([digest caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
@@ -197,6 +199,12 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     switch (digest) {
         case PearlDigestNone:
             return self;
+        case PearlDigestMD4: {
+            unsigned char result[CC_MD4_DIGEST_LENGTH];
+            CC_MD4(self.bytes, self.length, result);
+            
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
         case PearlDigestMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
             CC_MD5(self.bytes, self.length, result);

@@ -152,6 +152,11 @@
     return configInstance;
 }
 
++ (void)flush {
+    
+    [[self get].defaults synchronize];
+}
+
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
 

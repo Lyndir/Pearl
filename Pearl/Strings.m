@@ -44,7 +44,8 @@
                                                        withTemplate:@"$1."];
     key                 = [endAcronym stringByReplacingMatchesInString:key options:0 range:NSMakeRange(0, [key length])
                                                           withTemplate:@"$1."];
-    id value = [mainBundle localizedStringForKey:[key lowercaseString]
+    key                 = [key lowercaseString];
+    id value = [mainBundle localizedStringForKey:key
                                            value:[mainBundle localizedStringForKey:key value:nil table:self.tableName]
                                            table:nil];
     [anInvocation setReturnValue:&value];

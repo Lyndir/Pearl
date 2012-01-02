@@ -12,100 +12,142 @@
 #import "StringUtils.h"
 
 
-@interface AlertViewController ()
-
-- (void)popAll:(NSNumber *)buttonIndex;
-
-@end
-
-
 @implementation AlertViewController
+@synthesize alertView;
 
-static AlertViewController *currentAlert = nil;
+static NSMutableArray *activeAlerts = nil;
 
-+ (AlertViewController*)currentAlert {
++ (NSMutableArray *)activeAlerts {
     
-    return currentAlert;
+    if (!activeAlerts)
+        activeAlerts = [[NSMutableArray alloc] initWithCapacity:3];
+    
+    return activeAlerts;
 }
 
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)msg backString:(NSString *)backString {
+- (id)initWithTitle:(NSString *)title message:(NSString *)msg cancelTitle:(NSString *)cancelTitle {
     
-    return [self initWithTitle:title message:msg backString:backString acceptString:nil callback:nil :nil];
+    return [self initWithTitle:title message:msg tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
 }
 
+- (id)initWithTitle:(NSString *)title message:(NSString *)message
+  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self initWithTitle:title message:message tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+}
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)msg
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector {
+  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
     if (!(self = [super init]))
         return self;
     
     [self setTitle:title];
     
-    if (acceptString || target)
-        [self setTarget:target selector:selector];
+    tappedButtonBlock   = [aTappedButtonBlock copy];
+    alertView           = [[UIAlertView alloc] initWithTitle:title message:msg delegate:[self retain]
+                                           cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
     
-    alertView   = [[UIAlertView alloc] initWithTitle:title message:msg
-                                            delegate:[self retain] cancelButtonTitle:backString otherButtonTitles:acceptString, nil];
+    if (firstOtherTitle && otherTitlesList) {
+        for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
+            [alertView addButtonWithTitle:otherTitle];
+        va_end(otherTitlesList);
+    }
     
     return self;
 }
 
-+ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton {
++ (AlertViewController *)showError:(NSString *)message {
     
-    return [self showError:message backButton:backButton abortButton:YES];
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message tappedButtonBlock:nil
+                        cancelTitle:[PearlStrings get].commonButtonOkay otherTitles:nil];
 }
 
-+ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showError:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                       otherTitles:(NSString *)otherTitles, ...  {
     
-    return [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleError backButton:backButton abortButton:abortButton];
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles :otherTitlesList];
 }
-
 
 + (AlertViewController *)showNotice:(NSString *)message {
     
-    return [self showNotice:message backButton:YES abortButton:NO];
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message tappedButtonBlock:nil
+                        cancelTitle:[PearlStrings get].commonButtonThanks otherTitles:nil];
 }
 
-
-+ (AlertViewController *)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showNotice:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                        otherTitles:(NSString *)otherTitles, ... {
     
-    return [AlertViewController showMessage:message withTitle:[PearlStrings get].commonTitleNotice backButton:backButton abortButton:abortButton];
-}
-
-
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title {
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
     
-    return [self showMessage:message withTitle:title backButton:YES abortButton:NO];
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonThanks otherTitle:otherTitles :otherTitlesList];
 }
 
-
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton {
++ (AlertViewController *)showQuestionWithTitle:(NSString *)title message:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                                   cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
     
-    return [self showMessage:message withTitle:title
-                  backString:backButton? [PearlStrings get].commonButtonBack: nil
-                acceptString:abortButton? (backButton? [PearlStrings get].commonButtonAbort: [PearlStrings get].commonButtonRetry): nil];
-}
-
-
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
-                          backString:(NSString *)backString acceptString:(NSString *)acceptString {
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
     
-    return [self showMessage:message withTitle:title backString:backString acceptString:acceptString callback:nil :nil];
+    UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(12,40,260,25)];
+    alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    alertLabel.textColor = [UIColor whiteColor];
+    alertLabel.backgroundColor = [UIColor clearColor];
+    alertLabel.shadowColor = [UIColor blackColor];
+    alertLabel.shadowOffset = CGSizeMake(0, -1);
+    alertLabel.textAlignment = UITextAlignmentCenter;
+    alertLabel.text = message;
+    
+    UITextField *alertField = [[UITextField alloc] initWithFrame:CGRectMake(16,83,252,25)];
+    alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+    alertField.borderStyle = UITextBorderStyleRoundedRect;
+    
+    AlertViewController *alertVC = [[[self alloc] initWithTitle:title message:@"\n\n\n" tappedButtonBlock:^(NSInteger buttonIndex) {
+        aTappedButtonBlock(buttonIndex, alertField.text);
+    } cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList] autorelease];
+    
+    [alertVC.alertView addSubview:alertLabel];
+    [alertVC.alertView addSubview:alertField];
+    [alertField becomeFirstResponder];
+    [alertField release];
+    [alertLabel release];
+    [alertVC showAlert];
+
+    return alertVC;
 }
 
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
-                          backString:(NSString *)backString acceptString:(NSString *)acceptString
-                            callback:(id)target :(SEL)selector {
+
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
+                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
     return [[[[AlertViewController alloc] initWithTitle:title message:message
-                                             backString:backString acceptString:acceptString
-                                               callback:target :selector] autorelease] showAlert];
+                                      tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] autorelease] showAlert];
+}
+
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
+                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self showAlertWithTitle:title message:message tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
 
@@ -120,9 +162,8 @@ static AlertViewController *currentAlert = nil;
     [alertView release];
     alertView = nil;
     
-    [[invocation target] release];
-    [invocation release];
-    invocation = nil;
+    [tappedButtonBlock release];
+    tappedButtonBlock = nil;
     
     [super dealloc];
 }
@@ -131,30 +172,10 @@ static AlertViewController *currentAlert = nil;
 #pragma mark ###############################
 #pragma mark Behaviors
 
-- (void)setTarget:(id)t selector:(SEL)s {
-    
-    if (t == nil || s == nil) {
-        t = self;
-        s = @selector(popAll:);
-    }
-    
-    [[invocation target] release];
-    [invocation release];
-    invocation = nil;
-    
-    NSMethodSignature *sig = [[t class] instanceMethodSignatureForSelector:s];
-    invocation = [[NSInvocation invocationWithMethodSignature:sig] retain];
-    [invocation setTarget:[t retain]];
-    [invocation setSelector:s];
-}
-
-
 - (AlertViewController *)showAlert {
     
     [alertView show];
-    
-    [currentAlert release];
-    currentAlert = [self retain];
+    [((NSMutableArray *) [AlertViewController activeAlerts]) addObject:self];
     
     return self;
 }
@@ -170,31 +191,15 @@ static AlertViewController *currentAlert = nil;
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    if (anAlertView.numberOfButtons == 1 || buttonIndex != 0) {
-        if ([[invocation methodSignature] numberOfArguments] > 2)
-            [invocation setArgument:[NSNumber numberWithInteger:buttonIndex] atIndex:2];
-        [invocation invoke];
-    }
+    tappedButtonBlock(buttonIndex);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
-    if (currentAlert == self) {
-        [currentAlert release];
-        currentAlert = nil;
-    }
+    [((NSMutableArray *) [AlertViewController activeAlerts]) removeObject:self];
     
-    // Clean up my delegate state.
-    [[invocation target] release];
-    [invocation release];
-    invocation = nil;
-    [self release];
-}
-
-
-- (void)popAll:(NSNumber *)buttonIndex {
-    
-    [[AbstractAppDelegate get] restart];
+    [tappedButtonBlock release];
+    tappedButtonBlock = nil;
 }
 
 

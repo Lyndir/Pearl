@@ -19,29 +19,19 @@
 @private
     UIAlertView     *alertView;
     
-    NSInvocation    *invocation;
+    void (^tappedButtonBlock)(NSInteger buttonIndex);
 }
+
+@property (nonatomic, retain) UIAlertView *alertView;
 
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
 /**
- * A reference to the alert that's currently showing on screen.
- *
- * @return nil if no alert is showing.
+ * A list of all alerts in order of appearance.  The last object is the one currently showing.
  */
-+ (AlertViewController*)currentAlert;
-
-/**
- * Create an alert view controller which conveys the specified information.
- * The cancel/back button causes this view controller to get dismissed (returning to the previous state).
- *
- * @param title         The title of the alert.
- * @param message       The message string to display in the view.
- * @param backString    The text on the cancel/back button or nil to not show such a button.
- */
-- (id)initWithTitle:(NSString *)title message:(NSString *)msg backString:(NSString *)backString;
++ (NSArray *)activeAlerts;
 
 /**
  * Create an alert view controller which conveys the specified information.
@@ -54,55 +44,31 @@
  * @param acceptString  The text on the ok/accept button or nil to not show such a button.
  * @param callback      The target and selector to invoke when the accept button gets tapped.
  */
+- (id)initWithTitle:(NSString *)title message:(NSString *)message
+  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 - (id)initWithTitle:(NSString *)title message:(NSString *)msg
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector;
+  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
 
-/**
- * Create an alert view controller which shows a given error message.
- */
-+ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton;
 
-/**
- * Create an alert view controller which shows a given error message.
- */
-+ (AlertViewController *)showError:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
++ (AlertViewController *)showError:(NSString *)message;
++ (AlertViewController *)showError:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                       otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-/**
- * Create an alert view controller which shows a given notice message.
- */
 + (AlertViewController *)showNotice:(NSString *)message;
++ (AlertViewController *)showNotice:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                        otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-/**
- * Create an alert view controller which shows a given notice message.
- */
-+ (AlertViewController *)showNotice:(NSString *)message backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
++ (AlertViewController *)showQuestionWithTitle:(NSString *)title message:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                                   cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-/**
- * Create an alert view controller which shows a given message using a give dialog title.
- */
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title;
-
-/**
- * Create an alert view controller which shows a given message with two buttons.
- */
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title backButton:(BOOL)backButton abortButton:(BOOL)abortButton;
-
-/**
- * Create an alert view controller which shows a given message with two buttons and a callback for the second.
- */
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
-                          backString:(NSString *)backString acceptString:(NSString *)acceptString
-                            callback:(id)target :(SEL)selector;
-
-/**
- * Create an alert view controller which shows a given error message using a give dialog title
- * and allows you to specify the text to use on the back and accept buttons.
- *
- * Use nil for either to hide it.
- */
-+ (AlertViewController *)showMessage:(NSString *)message withTitle:(NSString *)title
-                          backString:(NSString *)backString acceptString:(NSString *)acceptString;
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
+                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
+                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 
 #pragma mark ###############################
@@ -119,15 +85,5 @@
  * Dismiss the alert managed by this view controller as though the back button had been tapped.
  */
 - (AlertViewController *)dismissAlert;
-
-/**
- * Change the callback to invoke when the alert's ok/accept button is tapped.
- *
- * @param target        The target object upon which the callback selector will be invoked.
- * @param selector      The callback selector to invoke on the target object as soon as the ok/accept button is tapped.
- *                      The selector should take (at least) one argument (NSNumber*).
- *                      That argument will be set to the index of the button that was used to dismiss the alert (base 1).
- */
-- (void)setTarget:(id)t selector:(SEL)s;
 
 @end

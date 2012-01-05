@@ -18,11 +18,13 @@
     
 @private
     UIAlertView     *alertView;
+    UITextField     *alertField;
     
     void (^tappedButtonBlock)(NSInteger buttonIndex);
 }
 
 @property (nonatomic, retain) UIAlertView *alertView;
+@property (nonatomic, retain) UITextField *alertField;
 
 
 #pragma mark ###############################
@@ -47,9 +49,16 @@
 - (id)initWithTitle:(NSString *)title message:(NSString *)message
   tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
-- (id)initWithTitle:(NSString *)title message:(NSString *)msg
+- (id)initWithTitle:(NSString *)title message:(NSString *)message
   tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
+
+- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
+          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
+          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
 
 
 + (AlertViewController *)showError:(NSString *)message;

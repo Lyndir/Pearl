@@ -13,7 +13,7 @@
 
 
 @implementation AlertViewController
-@synthesize alertView;
+@synthesize alertView, alertField;
 
 static NSMutableArray *activeAlerts = nil;
 
@@ -29,9 +29,9 @@ static NSMutableArray *activeAlerts = nil;
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)msg cancelTitle:(NSString *)cancelTitle {
+- (id)initWithTitle:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle {
     
-    return [self initWithTitle:title message:msg tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
+    return [self initWithTitle:title message:message tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message
@@ -44,7 +44,7 @@ static NSMutableArray *activeAlerts = nil;
     return [self initWithTitle:title message:message tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)msg
+- (id)initWithTitle:(NSString *)title message:(NSString *)message
   tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
@@ -54,7 +54,7 @@ static NSMutableArray *activeAlerts = nil;
     [self setTitle:title];
     
     tappedButtonBlock   = [aTappedButtonBlock copy];
-    alertView           = [[UIAlertView alloc] initWithTitle:title message:msg delegate:[self retain]
+    alertView           = [[UIAlertView alloc] initWithTitle:title message:message delegate:[self retain]
                                            cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
     
     if (firstOtherTitle && otherTitlesList) {
@@ -62,6 +62,48 @@ static NSMutableArray *activeAlerts = nil;
             [alertView addButtonWithTitle:otherTitle];
         va_end(otherTitlesList);
     }
+    
+    return self;
+}
+
+- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
+          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self initQuestionWithTitle:title message:message
+                     tappedButtonBlock:aTappedButtonBlock
+                           cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+}
+
+- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
+          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
+                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
+    
+    if (!(self = [self initWithTitle:title message:@"\n\n\n" tappedButtonBlock:^(NSInteger buttonIndex) {
+        if (aTappedButtonBlock)
+            aTappedButtonBlock(buttonIndex, alertField.text);
+    } cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList]))
+        return nil;
+    
+    UILabel *alertLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12,40,260,25)] autorelease];
+    alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    alertLabel.textColor = [UIColor whiteColor];
+    alertLabel.backgroundColor = [UIColor clearColor];
+    alertLabel.shadowColor = [UIColor blackColor];
+    alertLabel.shadowOffset = CGSizeMake(0, -1);
+    alertLabel.textAlignment = UITextAlignmentCenter;
+    alertLabel.text = message;
+    
+    self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16,83,252,25)] autorelease];
+    alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+    alertField.borderStyle = UITextBorderStyleRoundedRect;
+    
+    [alertView addSubview:alertLabel];
+    [alertView addSubview:alertField];
+    [alertField becomeFirstResponder];
     
     return self;
 }
@@ -118,16 +160,18 @@ static NSMutableArray *activeAlerts = nil;
     alertField.borderStyle = UITextBorderStyleRoundedRect;
     
     AlertViewController *alertVC = [[[self alloc] initWithTitle:title message:@"\n\n\n" tappedButtonBlock:^(NSInteger buttonIndex) {
-        aTappedButtonBlock(buttonIndex, alertField.text);
+        if (aTappedButtonBlock)
+            aTappedButtonBlock(buttonIndex, alertField.text);
     } cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList] autorelease];
     
+    alertVC.alertField = alertField;
     [alertVC.alertView addSubview:alertLabel];
     [alertVC.alertView addSubview:alertField];
     [alertField becomeFirstResponder];
     [alertField release];
     [alertLabel release];
     [alertVC showAlert];
-
+    
     return alertVC;
 }
 
@@ -191,7 +235,8 @@ static NSMutableArray *activeAlerts = nil;
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    tappedButtonBlock(buttonIndex);
+    if (tappedButtonBlock)
+        tappedButtonBlock(buttonIndex);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

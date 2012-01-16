@@ -89,6 +89,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     switch (digest) {
         case PearlDigestNone:
             return NULL;
+        case PearlDigestMD4:
+            return EVP_md4();
         case PearlDigestMD5:
             return EVP_md5();
         case PearlDigestSHA1:

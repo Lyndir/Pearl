@@ -191,7 +191,8 @@ static NSMutableArray *activeAlerts = nil;
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
-    tappedButtonBlock(buttonIndex);
+    if (tappedButtonBlock)
+        tappedButtonBlock(buttonIndex);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

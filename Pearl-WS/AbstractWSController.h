@@ -86,14 +86,12 @@ typedef enum {
  *        The method to use for encoding and submitting the request to the server.
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
- * @param backOnError
- *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
  * @param completion
  *        The block of code to execute on completion of the operation. The block takes two parameters:  A boolean indicating whether the
  *        response was successfully parsed in and indicates a successful result, and the JSON response object if it was parsed successfully.
  * @return The object responsible for handling this request while it's in progress.
  */
-- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError
              completion:(void (^)(BOOL success, JSONResult *response))completion;
 
 /**
@@ -105,13 +103,11 @@ typedef enum {
  *        A pointer to where the response object should become available.  nil if the response data could not be parsed.
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
- * @param backOnError
- *        Show a back button on error popups, allowing the user to dismiss the popup without resetting the UI.
  * @param requires
  *        A list of keys that are required to be present in the result object.
  * @return A boolean indicating whether the response was successfully parsed, has a successful code and passed validation.
  */
-- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError allowBackOnError:(BOOL)backOnError
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError
                         requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
@@ -121,9 +117,8 @@ typedef enum {
 
 /**
  * Invoked when a user presses the Upgrade button on an alert resulting from a web service call indicating that the client is outdated.
- * @param button The index of the button that was used to dismiss the alert (base 1).
  */
-- (void)upgrade:(NSNumber *)button;
+- (void)upgrade;
 
 /**
  * Override this method to make the operations synchronous.  Defaults to NO.

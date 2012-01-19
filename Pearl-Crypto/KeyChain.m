@@ -30,6 +30,35 @@
 
 @implementation NSData (KeyChain)
 
+static NSString *NSStringFromErrSec(OSStatus status) {
+    
+    switch (status) {
+        case errSecSuccess:
+            return @"errSecSuccess: No error.";
+        case errSecUnimplemented:
+            return @"errSecUnimplemented: Function or operation not implemented.";
+        case errSecParam:
+            return @"errSecParam: One or more parameters passed to a function where not valid.";
+        case errSecAllocate:
+            return @"errSecAllocate: Failed to allocate memory.";
+        case errSecNotAvailable:
+            return @"errSecNotAvailable: No keychain is available. You may need to restart your computer.";
+        case errSecDuplicateItem:
+            return @"errSecDuplicateItem: The specified item already exists in the keychain.";
+        case errSecItemNotFound:
+            return @"errSecItemNotFound: The specified item could not be found in the keychain.";
+        case errSecInteractionNotAllowed:
+            return @"errSecInteractionNotAllowed: User interaction is not allowed.";
+        case errSecDecode:
+            return @"errSecDecode: Unable to decode the provided data.";
+        case errSecAuthFailed:
+            return @"errSecAuthFailed: The user name or passphrase you entered is not correct.";
+    }
+    
+    wrn(@"Security Error status code not known: %d", status);
+    return [NSString stringWithFormat:@"Status not known: %d", status];
+}
+
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     switch ([self length]) {
@@ -55,7 +84,7 @@
     SecKeyRef privateKey = nil;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
     if (status != errSecSuccess || privateKey == nil) {
-        err(@"Problem during key lookup; status == %d.", status);
+        err(@"During key lookup, error occured: %d: %@", status, NSStringFromErrSec(status));
         return nil;
     }
     
@@ -70,7 +99,7 @@
                            signedHashBytes, &signedHashBytesSize);
     CFRelease(privateKey);
     if (status != errSecSuccess) {
-        err(@"Problem during data signing; status == %d.", status);
+        err(@"During data signing, error occured: %d: %@", status, NSStringFromErrSec(status));
         return nil;
     }
     
@@ -88,20 +117,30 @@
 
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
     
-    OSStatus resultCode;
-    if (SecItemCopyMatching((CFDictionaryRef)query, NULL) == noErr)
-        resultCode = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
-    
-    else {
+    OSStatus status = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+    if (status == errSecItemNotFound) {
         NSMutableDictionary *newItem = [[query mutableCopy] autorelease];
         [newItem addEntriesFromDictionary:attributes];
         
-        resultCode = SecItemAdd((CFDictionaryRef)newItem, NULL);
-    }
+        status = SecItemAdd((CFDictionaryRef)newItem, NULL);
+        if (status != noErr)
+            err(@"While adding keychain item: %@, error occured: %d: %@",
+                newItem, status, NSStringFromErrSec(status));
+    } else if (status != noErr)
+        err(@"While updating keychain item: %@ with attributes: %@, error occured: %d: %@",
+            query, attributes, status, NSStringFromErrSec(status));
+
+    return status;
+}
+
++ (OSStatus)deleteItemForQuery:(NSDictionary *)query {
     
-    if (resultCode != noErr)
-        err(@"While adding or updating keychain item: %@ with attributes: %@, error occured: %d", query, attributes, resultCode);
-    return resultCode;
+    OSStatus status = SecItemDelete((CFDictionaryRef)query);
+    if (status != noErr && status != errSecItemNotFound)
+        err(@"While looking for keychain item: %@, error occured: %d: %@",
+            query, status, NSStringFromErrSec(status));
+    
+    return status;
 }
 
 + (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result {
@@ -126,9 +165,10 @@
     [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:kSecReturn];
     
     id result = nil;
-    OSStatus resultCode;
-    if ((resultCode = [self findItemForQuery:dataQuery into:&result]) != noErr)
-        err(@"While querying keychain for: %@, error occured: %d", dataQuery, resultCode);
+    OSStatus status = [self findItemForQuery:dataQuery into:&result];
+    if (status != noErr)
+        err(@"While querying keychain for: %@, error occured: %d: %@",
+            dataQuery, status, NSStringFromErrSec(status));
     
     return result;
 }
@@ -173,7 +213,7 @@
     
     OSStatus status = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, nil, nil);
     if (status != errSecSuccess) {
-        err(@"Problem during key generation; status == %d.", status);
+        err(@"During key generation, error occured: %d: %@", status, NSStringFromErrSec(status));
         return NO;
     }
     
@@ -194,7 +234,7 @@
     // Get the key bits.
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *)&publicKeyData);
     if (status != errSecSuccess) {
-        err(@"Problem during public key export; status == %d.", status);
+        err(@"During public key export, error occured: %d: %@", status, NSStringFromErrSec(status));
         return nil;
     }
     

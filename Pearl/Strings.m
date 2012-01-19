@@ -14,7 +14,7 @@
 
 - (id)initWithTable:(NSString *)tableName {
     
-    if (!( self = [super init] ))
+    if (!(self = [super init]))
         return nil;
     
     self.tableName = tableName;
@@ -30,9 +30,6 @@
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     
-    static NSBundle *mainBundle = nil;
-    if (!mainBundle)
-        mainBundle = [NSBundle mainBundle];
     static NSRegularExpression *newWord = nil, *endAcronym = nil;
     if (!newWord)
         newWord = [[NSRegularExpression alloc] initWithPattern:@"(\\p{Ll})(?=\\p{Lu})" options:0 error:nil];
@@ -45,9 +42,9 @@
     key                 = [endAcronym stringByReplacingMatchesInString:key options:0 range:NSMakeRange(0, [key length])
                                                           withTemplate:@"$1."];
     key                 = [key lowercaseString];
-    id value = [mainBundle localizedStringForKey:key
-                                           value:[mainBundle localizedStringForKey:key value:nil table:self.tableName]
-                                           table:nil];
+    id tableValue       = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:self.tableName];
+    id value            = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
+    
     [anInvocation setReturnValue:&value];
 }
 

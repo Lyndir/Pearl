@@ -1,6 +1,0 @@
-/* Strings that describe error conditions. */
-"error.ws.connection"                       = "Could not connect to the server.";
-"error.ws.response.invalid"                 = "Incompatible server response.";
-"error.ws.response.failed"                  = "The operation failed.";
-"error.ws.response.outdated.required"       = "A new version is available.\nPlease upgrade before proceding.";
-"error.ws.response.outdated.optional"       = "A new version is available.";

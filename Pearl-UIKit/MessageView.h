@@ -21,7 +21,7 @@
 }
 
 @property (nonatomic, assign) UIRectCorner  corners;
-@property (nonatomic, assign) UIColor       *fill;
+@property (nonatomic, retain) UIColor       *fill;
 @property (nonatomic, assign) CGSize        radii;
 
 @end

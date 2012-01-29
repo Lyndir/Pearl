@@ -35,6 +35,8 @@
 @property (nonatomic, readonly) NSString *commonButtonDone;
 @property (nonatomic, readonly) NSString *commonButtonBack;
 @property (nonatomic, readonly) NSString *commonButtonRetry;
+@property (nonatomic, readonly) NSString *commonButtonCancel;
+@property (nonatomic, readonly) NSString *commonButtonContinue;
 @property (nonatomic, readonly) NSString *commonButtonAbort;
 @property (nonatomic, readonly) NSString *commonButtonUpgrade;
 @property (nonatomic, readonly) NSString *commonButtonYes;

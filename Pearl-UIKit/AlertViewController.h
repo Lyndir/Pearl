@@ -20,7 +20,7 @@
     UIAlertView     *alertView;
     UITextField     *alertField;
     
-    void (^tappedButtonBlock)(NSInteger buttonIndex);
+    void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
 }
 
 @property (nonatomic, retain) UIAlertView *alertView;
@@ -36,47 +36,34 @@
 + (NSArray *)activeAlerts;
 
 /**
- * Create an alert view controller which conveys the specified information.
- * The cancel/back button causes this view controller to get dismissed (returning to the previous state).
- * The ok/accept button can be used for custom action.
+ * Create an alert view controller that controls an alert message.
  *
- * @param title         The title of the alert.
- * @param message       The message string to display in the view.
- * @param backString    The text on the cancel/back button or nil to not show such a button.
- * @param acceptString  The text on the ok/accept button or nil to not show such a button.
- * @param callback      The target and selector to invoke when the accept button gets tapped.
+ * @param title             The title of the alert.
+ * @param message           The message string to display in the view.
+ * @param viewStyle         The type of alert to show.  This is used to indicate whether text fields need to be added to the alert.
+ * @param tappedButtonBlock A block that gets invoked when the user taps a button of the alert.  The tapped alert view is given along with the index of the button that was tapped.
+ * @param cancelTitle       The text on the cancel button or nil to not show this button.
+ * @param otherTitles       The text on action buttons or nil to not show any such buttons.
  */
-- (id)initWithTitle:(NSString *)title message:(NSString *)message
-  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
-- (id)initWithTitle:(NSString *)title message:(NSString *)message
-  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
-        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
-
-- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
-          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
-- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
-          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
-
 
 + (AlertViewController *)showError:(NSString *)message;
-+ (AlertViewController *)showError:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showError:(NSString *)message
+                 tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                        otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 + (AlertViewController *)showNotice:(NSString *)message;
-+ (AlertViewController *)showNotice:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showNotice:(NSString *)message
+                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                         otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (AlertViewController *)showQuestionWithTitle:(NSString *)title message:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                                   cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
-
-+ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
-                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
-                                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
-+ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
-                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+/**
+ * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
+ */
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                                 cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 

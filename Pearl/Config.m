@@ -170,24 +170,27 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
     NSString *selector = NSStringFromSelector(anInvocation.selector);
+    BOOL isSetter = [selector isSetter];
+    selector = [selector setterToGetter];
 
     id currentValue = [self.defaults valueForKey:selector];
-    if ([currentValue isKindOfClass:[NSData class]])
+    if ([currentValue isKindOfClass:[NSData class]]) {
+        trc(@"Unarchiving %@.%@", [self class], selector);
         currentValue = [NSKeyedUnarchiver unarchiveObjectWithData:currentValue];
+    }
 
-    if ([selector isSetter]) {
-        selector = [selector setterToGetter];
-
+    if (isSetter) {
         id newValue = nil;
         [anInvocation getArgument:&newValue atIndex:2];
         newValue = NSNullToNil(newValue);
-        dbg(@"Config Set %@ = [%@ ->] %@", selector, currentValue, newValue);
+        dbg(@"%@.%@ = [%@ ->] %@", [self class], selector, currentValue, newValue);
 
         if (newValue && ![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
             // TODO: This doesn't yet check arrays and dictionaries recursively to see if they need coding.
-            if ([newValue conformsToProtocol:@protocol(NSCoding)])
+            if ([newValue conformsToProtocol:@protocol(NSCoding)]) {
+                trc(@"Archiving %@.%@", [self class], selector);
                 newValue = [NSKeyedArchiver archivedDataWithRootObject:newValue];
-            else
+            } else
                 err(@"Cannot update %@: Value type is not supported by plists and is not codable: %@", selector, newValue);
         }
         [self.defaults setValue:newValue forKey:selector];
@@ -198,10 +201,8 @@
             [(id<Resettable>) [[AbstractAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
 
-    else {
-        //dbg(@"Config Get %@ = %@", selector, value);
+    else
         [anInvocation setReturnValue:&currentValue];
-    }
 }
 
 

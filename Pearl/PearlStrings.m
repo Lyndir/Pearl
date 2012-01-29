@@ -44,6 +44,8 @@
 @dynamic commonButtonDone;
 @dynamic commonButtonBack;
 @dynamic commonButtonRetry;
+@dynamic commonButtonCancel;
+@dynamic commonButtonContinue;
 @dynamic commonButtonAbort;
 @dynamic commonButtonUpgrade;
 @dynamic commonButtonYes;

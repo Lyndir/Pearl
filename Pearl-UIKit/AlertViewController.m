@@ -12,6 +12,17 @@
 #import "StringUtils.h"
 
 
+@interface AlertViewController (Private)
+
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
+
+@end
+
 @implementation AlertViewController
 @synthesize alertView, alertField;
 
@@ -31,21 +42,21 @@ static NSMutableArray *activeAlerts = nil;
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle {
     
-    return [self initWithTitle:title message:message tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
+    return [self initWithTitle:title message:message viewStyle:UIAlertViewStyleDefault tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
 }
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)message
-  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self initWithTitle:title message:message tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+    return [self initWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)message
-  tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
     if (!(self = [super init]))
@@ -53,9 +64,38 @@ static NSMutableArray *activeAlerts = nil;
     
     [self setTitle:title];
     
-    tappedButtonBlock   = [aTappedButtonBlock copy];
-    alertView           = [[UIAlertView alloc] initWithTitle:title message:message delegate:[self retain]
-                                           cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
+    tappedButtonBlock               = [aTappedButtonBlock copy];
+    alertView                       = [[UIAlertView alloc] initWithTitle:title message:message delegate:[self retain]
+                                                       cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
+    
+    if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
+        // iOS 5+
+        alertView.alertViewStyle    = viewStyle;
+        if (viewStyle != UIAlertViewStyleDefault)
+            self.alertField         = [self.alertView textFieldAtIndex:0];
+    } else if (viewStyle != UIAlertViewStyleDefault) {
+        // iOS <5
+        UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(12, 40, 260, 25)];
+        alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        alertLabel.textColor = [UIColor whiteColor];
+        alertLabel.backgroundColor = [UIColor clearColor];
+        alertLabel.shadowColor = [UIColor blackColor];
+        alertLabel.shadowOffset = CGSizeMake(0, -1);
+        alertLabel.textAlignment = UITextAlignmentCenter;
+        alertLabel.text = message;
+        self.alertView.message = @"\n\n\n";
+        
+        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16, 83, 252, 25)] autorelease];
+        alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+        alertField.borderStyle = UITextBorderStyleRoundedRect;
+        if (viewStyle == UIAlertViewStyleSecureTextInput)
+            alertField.secureTextEntry = YES;
+        
+        [self.alertView addSubview:alertLabel];
+        [self.alertView addSubview:self.alertField];
+        [alertField becomeFirstResponder];
+        [alertLabel release];
+    }
     
     if (firstOtherTitle && otherTitlesList) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
@@ -66,132 +106,60 @@ static NSMutableArray *activeAlerts = nil;
     return self;
 }
 
-- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
-          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
-    
-    va_list(otherTitlesList);
-    va_start(otherTitlesList, otherTitles);
-    
-    return [self initQuestionWithTitle:title message:message
-                     tappedButtonBlock:aTappedButtonBlock
-                           cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
-}
-
-- (id)initQuestionWithTitle:(NSString *)title message:(NSString *)message
-          tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
-    
-    if (!(self = [self initWithTitle:title message:@"\n\n\n" tappedButtonBlock:^(NSInteger buttonIndex) {
-        if (aTappedButtonBlock)
-            aTappedButtonBlock(buttonIndex, alertField.text);
-    } cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList]))
-        return nil;
-    
-    UILabel *alertLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12,40,260,25)] autorelease];
-    alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    alertLabel.textColor = [UIColor whiteColor];
-    alertLabel.backgroundColor = [UIColor clearColor];
-    alertLabel.shadowColor = [UIColor blackColor];
-    alertLabel.shadowOffset = CGSizeMake(0, -1);
-    alertLabel.textAlignment = UITextAlignmentCenter;
-    alertLabel.text = message;
-    
-    self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16,83,252,25)] autorelease];
-    alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
-    alertField.borderStyle = UITextBorderStyleRoundedRect;
-    
-    [alertView addSubview:alertLabel];
-    [alertView addSubview:alertField];
-    [alertField becomeFirstResponder];
-    
-    return self;
-}
-
 + (AlertViewController *)showError:(NSString *)message {
     
-    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message tappedButtonBlock:nil
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
+                  tappedButtonBlock:nil
                         cancelTitle:[PearlStrings get].commonButtonOkay otherTitles:nil];
 }
 
-+ (AlertViewController *)showError:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showError:(NSString *)message
+                 tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                        otherTitles:(NSString *)otherTitles, ...  {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message tappedButtonBlock:aTappedButtonBlock
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
+                  tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles :otherTitlesList];
 }
 
 + (AlertViewController *)showNotice:(NSString *)message {
     
-    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message tappedButtonBlock:nil
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
+                  tappedButtonBlock:nil
                         cancelTitle:[PearlStrings get].commonButtonThanks otherTitles:nil];
 }
 
-+ (AlertViewController *)showNotice:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showNotice:(NSString *)message
+                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                         otherTitles:(NSString *)otherTitles, ... {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message tappedButtonBlock:aTappedButtonBlock
+    return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
+                  tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonThanks otherTitle:otherTitles :otherTitlesList];
 }
 
-+ (AlertViewController *)showQuestionWithTitle:(NSString *)title message:(NSString *)message tappedButtonBlock:(void (^)(NSInteger buttonIndex, NSString *answer))aTappedButtonBlock
-                                   cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
-    
-    va_list(otherTitlesList);
-    va_start(otherTitlesList, otherTitles);
-    
-    UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(12,40,260,25)];
-    alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    alertLabel.textColor = [UIColor whiteColor];
-    alertLabel.backgroundColor = [UIColor clearColor];
-    alertLabel.shadowColor = [UIColor blackColor];
-    alertLabel.shadowOffset = CGSizeMake(0, -1);
-    alertLabel.textAlignment = UITextAlignmentCenter;
-    alertLabel.text = message;
-    
-    UITextField *alertField = [[UITextField alloc] initWithFrame:CGRectMake(16,83,252,25)];
-    alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
-    alertField.borderStyle = UITextBorderStyleRoundedRect;
-    
-    AlertViewController *alertVC = [[[self alloc] initWithTitle:title message:@"\n\n\n" tappedButtonBlock:^(NSInteger buttonIndex) {
-        if (aTappedButtonBlock)
-            aTappedButtonBlock(buttonIndex, alertField.text);
-    } cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList] autorelease];
-    
-    alertVC.alertField = alertField;
-    [alertVC.alertView addSubview:alertLabel];
-    [alertVC.alertView addSubview:alertField];
-    [alertField becomeFirstResponder];
-    [alertField release];
-    [alertLabel release];
-    [alertVC showAlert];
-    
-    return alertVC;
-}
-
-
-+ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
-                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                                 cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
-    return [[[[AlertViewController alloc] initWithTitle:title message:message
+    return [[[[AlertViewController alloc] initWithTitle:title message:message viewStyle:viewStyle
                                       tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] autorelease] showAlert];
 }
 
-+ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message
-                          tappedButtonBlock:(void (^)(NSInteger buttonIndex))aTappedButtonBlock
++ (AlertViewController *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                                 cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self showAlertWithTitle:title message:message tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+    return [self showAlertWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
 
@@ -236,7 +204,7 @@ static NSMutableArray *activeAlerts = nil;
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (tappedButtonBlock)
-        tappedButtonBlock(buttonIndex);
+        tappedButtonBlock(self.alertView, buttonIndex);
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

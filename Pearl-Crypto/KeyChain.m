@@ -166,8 +166,8 @@ static NSString *NSStringFromErrSec(OSStatus status) {
     
     id result = nil;
     OSStatus status = [self findItemForQuery:dataQuery into:&result];
-    if (status != noErr)
-        err(@"While querying keychain for: %@, error occured: %d: %@",
+    if (status != noErr && status != errSecItemNotFound)
+        wrn(@"While querying keychain for: %@, error occured: %d: %@",
             dataQuery, status, NSStringFromErrSec(status));
     
     return result;

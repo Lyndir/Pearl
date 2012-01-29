@@ -25,6 +25,9 @@
 
 - (NSString *)getterToSetter {
     
+    if ([self isSetter])
+        return self;
+    
     NSRange firstChar, rest;
     firstChar.location  = 0;
     firstChar.length    = 1;
@@ -38,6 +41,9 @@
 
 
 - (NSString *)setterToGetter {
+    
+    if ([self isGetter])
+        return self;
     
     NSRange firstChar, rest;
     firstChar.location  = 3;

@@ -157,7 +157,8 @@ static NSMutableSet     *dismissableResponders;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:scrollView.window];
-    keyboardScrollView_current = scrollView;
+    [keyboardScrollView_current release];
+    keyboardScrollView_current = [scrollView retain];
 }
 
 + (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
@@ -240,7 +241,7 @@ static NSMutableSet     *dismissableResponders;
 + (void)makeDismissableArray:(NSArray *)viewsArray {
     
     if (!dismissableResponders)
-        dismissableResponders = [NSMutableSet set];
+        dismissableResponders = [[NSMutableSet alloc] initWithCapacity:3];
     
     [dismissableResponders addObjectsFromArray:viewsArray];
 }
@@ -266,7 +267,8 @@ static NSMutableSet     *dismissableResponders;
     assert(!keyboardScrollView_resized);
     
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
-    keyboardScrollView_resized = keyboardScrollView_current;
+    [keyboardScrollView_resized release];
+    keyboardScrollView_resized = [keyboardScrollView_current retain];
     
     NSDictionary* userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];

@@ -12,77 +12,151 @@
 #import "StringUtils.h"
 
 
-@interface SheetViewController ()
+@interface SheetViewController (Private)
 
-- (void)popAll:(NSNumber *)buttonIndex;
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+         otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
++ (SheetViewController *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+                                 otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
 
 @end
 
 
 @implementation SheetViewController
+@synthesize sheetView;
+
++ (NSMutableArray *)activeSheets {
+    
+    static NSMutableArray *activeSheets = nil;
+    if (!activeSheets)
+        activeSheets = [[NSMutableArray alloc] initWithCapacity:3];
+    
+    return activeSheets;
+}
 
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-- (id)initWithTitle:(NSString *)aTitle {
+- (id)initWithTitle:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle {
     
-    return [self initWithTitle:aTitle backString:nil acceptString:nil callback:nil :nil];
+    return [self initWithTitle:title message:message viewStyle:UIActionSheetStyleAutomatic tappedButtonBlock:nil
+                   cancelTitle:cancelTitle destructiveTitle:nil otherTitles:nil];
 }
 
-
-- (id)initWithTitle:(NSString *)aTitle backString:(NSString *)backString {
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+        otherTitles:(NSString *)otherTitles, ... {
     
-    return [self initWithTitle:aTitle backString:backString acceptString:nil callback:nil :nil];
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self initWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock
+                   cancelTitle:cancelTitle destructiveTitle:destructiveTitle
+                    otherTitle:otherTitles :otherTitlesList];
 }
 
-
-- (id)initWithTitle:(NSString *)aTitle
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector {
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+         otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
     if (!(self = [super init]))
         return self;
     
-    [self setTitle:aTitle];
+    [self setTitle:title];
     
-    if (acceptString || target)
-        [self setTarget:target selector:selector];
+    tappedButtonBlock               = [aTappedButtonBlock copy];
+    sheetView                       = [[UIActionSheet alloc] initWithTitle:title delegate:[self retain]
+                                                         cancelButtonTitle:nil destructiveButtonTitle:nil
+                                                         otherButtonTitles:firstOtherTitle, nil];
+    sheetView.actionSheetStyle = viewStyle;
     
-    sheetView = [[UIActionSheet alloc] initWithTitle:aTitle delegate:self
-                                   cancelButtonTitle:backString destructiveButtonTitle:nil
-                                   otherButtonTitles:acceptString, nil];
+    if (firstOtherTitle && otherTitlesList) {
+        for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
+            [sheetView addButtonWithTitle:otherTitle];
+        va_end(otherTitlesList);
+    }
+    if (cancelTitle)
+        sheetView.cancelButtonIndex = [sheetView addButtonWithTitle:cancelTitle];
+    if (destructiveTitle)
+        sheetView.destructiveButtonIndex = [sheetView addButtonWithTitle:destructiveTitle];
     
-    // We retain ourselves until the sheet is dismissed.
-    // See -actionSheet:didDismissWithButtonIndex: for the release.
-    return [self retain];
+    return self;
+}
+
++ (SheetViewController *)showError:(NSString *)message {
+    
+    return [self showSheetWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIActionSheetStyleAutomatic
+                  tappedButtonBlock:nil
+                        cancelTitle:[PearlStrings get].commonButtonOkay destructiveTitle:nil otherTitles:nil];
+}
+
++ (SheetViewController *)showError:(NSString *)message
+                 tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                       destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ...  {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self showSheetWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIActionSheetStyleAutomatic
+                  tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonOkay destructiveTitle:destructiveTitle
+                         otherTitle:otherTitles :otherTitlesList];
+}
+
++ (SheetViewController *)showNotice:(NSString *)message {
+    
+    return [self showSheetWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIActionSheetStyleAutomatic
+                  tappedButtonBlock:nil
+                        cancelTitle:[PearlStrings get].commonButtonThanks destructiveTitle:nil otherTitles:nil];
+}
+
++ (SheetViewController *)showNotice:(NSString *)message
+                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                        destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self showSheetWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIActionSheetStyleAutomatic
+                  tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonThanks destructiveTitle:destructiveTitle
+                         otherTitle:otherTitles :otherTitlesList];
+}
+
++ (SheetViewController *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+                                 otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
+    
+    return [[[[SheetViewController alloc] initWithTitle:title message:message viewStyle:viewStyle
+                                      tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle destructiveTitle:destructiveTitle
+                                             otherTitle:firstOtherTitle :otherTitlesList] autorelease] showSheet];
+}
+
++ (SheetViewController *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+                                otherTitles:(NSString *)otherTitles, ... {
+    
+    va_list(otherTitlesList);
+    va_start(otherTitlesList, otherTitles);
+    
+    return [self showSheetWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:cancelTitle destructiveTitle:destructiveTitle
+                         otherTitle:otherTitles :otherTitlesList];
 }
 
 
-+ (SheetViewController *)showMessage:(NSString *)message {
+- (void)didReceiveMemoryWarning {
     
-    return [self showMessage:message backButton:YES];
-}
-
-
-+ (SheetViewController *)showMessage:(NSString *)message backButton:(BOOL)backButton {
-    
-    return [self showMessage:message
-                  backString:backButton? [PearlStrings get].commonButtonBack: nil
-                acceptString:[PearlStrings get].commonButtonAbort];
-}
-
-
-+ (SheetViewController *)showMessage:(NSString *)message
-         backString:(NSString *)backString acceptString:(NSString *)acceptString {
-    
-    SheetViewController *sheet = [[SheetViewController alloc] initWithTitle:message
-                                                                 backString:backString acceptString:acceptString
-                                                                   callback:nil :nil];
-    [sheet showSheet];
-    [sheet autorelease];
-    
-    return sheet;
+    [super didReceiveMemoryWarning];
 }
 
 
@@ -91,9 +165,8 @@
     [sheetView release];
     sheetView = nil;
     
-    [[invocation target] release];
-    [invocation release];
-    invocation = nil;
+    [tappedButtonBlock release];
+    tappedButtonBlock = nil;
     
     [super dealloc];
 }
@@ -102,27 +175,10 @@
 #pragma mark ###############################
 #pragma mark Behaviors
 
-- (void)setTarget:(id)t selector:(SEL)s {
-    
-    if (t == nil || s == nil) {
-        t = self;
-        s = @selector(popAll:);
-    }
-    
-    [[invocation target] release];
-    [invocation release];
-    invocation = nil;
-    
-    NSMethodSignature *sig = [[t class] instanceMethodSignatureForSelector:s];
-    invocation = [[NSInvocation invocationWithMethodSignature:sig] retain];
-    [invocation setTarget:[t retain]];
-    [invocation setSelector:s];
-}
-
-
 - (SheetViewController *)showSheet {
     
     [sheetView showInView:[UIApplication sharedApplication].keyWindow];
+    [((NSMutableArray *) [SheetViewController activeSheets]) addObject:self];
     
     return self;
 }
@@ -137,23 +193,17 @@
 
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-
-    if (actionSheet.numberOfButtons == 1 || buttonIndex != 0) {
-        if ([[invocation methodSignature] numberOfArguments] > 2)
-            [invocation setArgument:[NSNumber numberWithInteger:buttonIndex] atIndex:2];
-        [invocation invoke];
-    }
+    
+    if (tappedButtonBlock)
+        tappedButtonBlock(self.sheetView, buttonIndex);
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-
-    [self release];
-}
-
-
-- (void)popAll:(NSNumber *)buttonIndex {
     
-    [[AbstractAppDelegate get] restart];
+    [((NSMutableArray *) [SheetViewController activeSheets]) removeObject:self];
+    
+    [tappedButtonBlock release];
+    tappedButtonBlock = nil;
 }
 
 

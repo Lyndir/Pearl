@@ -1,4 +1,0 @@
-I depend on the following external libraries:
-
-    - iOSPorts/ports/security/openssl/openssl.xcodeproj: ssl
-    - iOSPorts/ports/security/openssl/openssl.xcodeproj: crypto

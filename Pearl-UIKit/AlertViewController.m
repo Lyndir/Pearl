@@ -26,10 +26,9 @@
 @implementation AlertViewController
 @synthesize alertView, alertField;
 
-static NSMutableArray *activeAlerts = nil;
-
 + (NSMutableArray *)activeAlerts {
     
+    static NSMutableArray *activeAlerts = nil;
     if (!activeAlerts)
         activeAlerts = [[NSMutableArray alloc] initWithCapacity:3];
     

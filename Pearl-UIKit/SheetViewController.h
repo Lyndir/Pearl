@@ -10,68 +10,59 @@
 
 
 /**
- * The sheet view controller manages a view that displays a short message to the user.
+ * The sheet view controller manages a view that displays a short message and choices to the user.
  *
- * The user is presented with a message in small font at the bottom of the screen.
+ * The user is presented with a message in small font at the bottom of the screen along with some buttons that let him choose an action.
  */
 @interface SheetViewController : UIViewController <UIActionSheetDelegate> {
 
 @private
     UIActionSheet           *sheetView;
     
-    NSInvocation            *invocation;
+    void (^tappedButtonBlock)(UIActionSheet *sheet, NSInteger buttonIndex);
 }
+
+@property (nonatomic, retain) UIActionSheet *sheetView;
 
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
 /**
- * Create a sheet view controller which conveys the specified information.
- *
- * @param title     The title to put in the navigation bar.
+ * A list of all sheets in order of appearance.  The last object is the one currently showing.
  */
-- (id)initWithTitle:(NSString *)title;
++ (NSArray *)activeSheets;
+/**
+ * Create a sheet view controller that conveys the specified information and presents the specified actions.
+ *
+ * @param title             The title of the sheet.
+ * @param message           The message string to display in the view.
+ * @param viewStyle         The type of sheet to show.
+ * @param tappedButtonBlock A block that gets invoked when the user taps a button of the sheet.  The tapped sheet view is given along with the index of the button that was tapped.
+ * @param cancelTitle       The text on the cancel button or nil to not show this button.
+ * @param otherTitles       The text on action buttons or nil to not show any such buttons.
+ */
+- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+
++ (SheetViewController *)showError:(NSString *)message;
++ (SheetViewController *)showError:(NSString *)message
+                 tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                       destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+
++ (SheetViewController *)showNotice:(NSString *)message;
++ (SheetViewController *)showNotice:(NSString *)message
+                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                        destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
- * Create a sheet view controller which conveys the specified information.
- * The cancel/back button causes this view controller to get dismissed (returning to the previous state).
- *
- * @param title         The title of the sheet.
- * @param backString    The text on the cancel/back button or nil to not show such a button.
+ * Initializes and shows a sheet.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
-- (id)initWithTitle:(NSString *)aTitle backString:(NSString *)backString;
-
-/**
- * Create a sheet view controller which conveys the specified information.
- * The cancel/back button causes this view controller to get dismissed (returning to the previous state).
- * The ok/accept button can be used for custom action.
- *
- * @param title         The title of the sheet.
- * @param backString    The text on the cancel/back button or nil to not show such a button.
- * @param acceptString  The text on the ok/accept button or nil to not show such a button.
- * @param callback      The target and selector to invoke when the accept button gets tapped.
- */
-- (id)initWithTitle:(NSString *)aTitle
-         backString:(NSString *)backString acceptString:(NSString *)acceptString
-           callback:(id)target :(SEL)selector;
-
-/**
- * Create a sheet view controller which shows a given message.
- */
-+ (SheetViewController *)showMessage:(NSString *)message;
-/**
- * Create a sheet view controller which shows a given message which allows you to hide the back button.
- */
-+ (SheetViewController *)showMessage:(NSString *)message backButton:(BOOL)backButton;
-/**
- * Create a sheet view controller which shows a given message
- * and allows you to specify the text to use on the back and accept buttons.
- *
- * Use nil for either to hide it.
- */
-+ (SheetViewController *)showMessage:(NSString *)message
-                          backString:(NSString *)backString acceptString:(NSString *)acceptString;
++ (SheetViewController *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+                                cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
+                                otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 
 #pragma mark ###############################
@@ -90,15 +81,5 @@
  * @return  self, for chaining.
  */
 - (SheetViewController *)dismissSheet;
-
-/**
- * Change the callback to invoke when the sheet's back/accept button is tapped.
- *
- * @param target        The target object upon which the callback selector will be invoked.
- * @param selector      The callback selector to invoke on the target object as soon as the back/accept button is tapped.
- *                      The selector should take (at least) one argument (NSNumber*).
- *                      That argument will be set to the index of the button that was used to dismiss the alert (base 1).
- */
-- (void)setTarget:(id)t selector:(SEL)s;
 
 @end

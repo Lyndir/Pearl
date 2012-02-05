@@ -1,5 +1,3 @@
-// Supported toggles for this module: PEARL_WITH_OPENSSL
-
 #ifndef PEARL_CRYPTO
 #error PEARL_CRYPTO used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL_CRYPTO) in your Pearl prefix file.
 #endif

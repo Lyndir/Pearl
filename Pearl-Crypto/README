@@ -1,0 +1,12 @@
+Supported toggles for this module:
+    - PEARL_WITH_OPENSSL: Add support for OpenSSL which enabled an ObjC OpenSSL wrapper class.
+
+Defines that can be overridden to alter behavior:
+    - kCipherAlgorithm (Default: kCCAlgorithmAES128)
+    - kCipherKeySize (Default: kCCKeySizeAES128)
+    - kCipherBlockSize (Default: 8)
+
+I depend on the following external libraries:
+
+    - iOSPorts/ports/security/openssl/openssl.xcodeproj: ssl
+    - iOSPorts/ports/security/openssl/openssl.xcodeproj: crypto

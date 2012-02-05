@@ -11,6 +11,7 @@
 #import "GradientView.h"
 #import "Layout.h"
 #import "LayoutView.h"
+#import "MessageView.h"
 #import "RootViewController.h"
 #import "SheetViewController.h"
 #import "UIDebug.h"

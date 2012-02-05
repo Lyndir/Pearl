@@ -1,0 +1,2 @@
+Supported toggles for this module:
+    - PEARL_WITH_APNS: Enables integrated APNs handling.  Registers the app for usage of APN and makes its token available via Config.

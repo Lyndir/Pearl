@@ -9,6 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCryptor.h>
 
+#ifndef kCipherAlgorithm
+#define kCipherAlgorithm    kCCAlgorithmAES128
+#endif
+#ifndef kCipherKeySize
+#define kCipherKeySize      kCCKeySizeAES128
+#endif
+#ifndef kCipherBlockSize
+#define kCipherBlockSize    8
+#endif
+
 
 @interface NSString (CryptUtils)
 

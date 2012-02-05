@@ -12,10 +12,6 @@
 #import "CryptUtils.h"
 #import "Logger.h"
 
-#define kCipherAlgorithm    kCCAlgorithmAES128
-#define kCipherKeySize      kCCKeySizeAES128
-#define kCipherBlockSize    8
-
 
 @implementation NSString (CryptUtils)
 

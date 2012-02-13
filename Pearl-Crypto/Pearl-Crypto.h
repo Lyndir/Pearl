@@ -6,3 +6,4 @@
 #import "CryptUtils.h"
 #import "KeyChain.h"
 #import "RSAKey.h"
+#import "SCrypt.h"

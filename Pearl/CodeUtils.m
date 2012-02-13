@@ -160,6 +160,22 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
 
 @implementation NSData (CodeUtils)
 
++ (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... {
+    
+    NSMutableArray *datasArray = [NSMutableArray arrayWithCapacity:3];
+    va_into(datasArray, datas);
+    
+    NSUInteger capacity = [datasArray count] - 1;
+    for (NSData *data in datasArray)
+        capacity += data.length;
+    
+    NSMutableData *concatenated = [NSMutableData dataWithCapacity:capacity];
+    for (NSData *data in datasArray)
+        [concatenated appendData:data];
+    
+    return concatenated;
+}
+
 - (NSString *)encodeHex {
     
     NSMutableString *hex = [NSMutableString stringWithCapacity:self.length * 2];

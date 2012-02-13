@@ -44,6 +44,11 @@ PearlDigest PearlDigestFromNSString(NSString *digest);
 
 @interface NSData (CodeUtils)
 
+/**
+ * Concatenate the given data objects by putting the given delimitor inbetween them.
+ */
++ (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... NS_REQUIRES_NIL_TERMINATION;
+
 /** Generate a hash for the bytes. */
 - (NSData *)hashWith:(PearlDigest)digest;
 /** Append the given delimitor and the given salt to the bytes. */

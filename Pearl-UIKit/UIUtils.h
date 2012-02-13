@@ -29,6 +29,18 @@ CGPoint CGPointFromCGSizeCenter(const CGSize size);
 CGSize CGSizeFromCGPoint(const CGPoint point);
 CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
+@interface UIView (UIUtils)
+
+- (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *subview))continueAfter;
+
+@end
+
+@interface UIImage (UIUtils)
+
+- (UIImage *)highlightedImage;
+
+@end
+
 @interface UIUtils : NSObject {
 
 }

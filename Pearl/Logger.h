@@ -32,6 +32,8 @@
 #define err(format, ...)    [[Logger get] err:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 #define ftl(format, ...)    [[Logger get] ftl:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 
+NSString *errstr(void);
+
 /** Levels that determine the importance of logging events. */
 typedef enum LogLevel {
     /** Trace internal operations. */
@@ -64,6 +66,7 @@ typedef enum LogLevel {
 
 - (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel;
 - (NSString *)levelDescription;
+- (NSString *)messageDescription;
 
 @end
 

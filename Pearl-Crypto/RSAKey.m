@@ -124,7 +124,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_generate_key(keyBitLength, RSA_F4, NULL, NULL);
     
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -149,7 +149,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -175,7 +175,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -202,7 +202,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -231,7 +231,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -259,7 +259,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -284,7 +284,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -312,7 +312,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, derEncodedKey.length);
     
     if (!rsaKey || ![self isValid]) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -330,21 +330,21 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
     PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, derEncodedKey.length);
     if (!pkcs12) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     X509 *cert;
     EVP_PKEY *pkey = EVP_PKEY_new();
     if (!PKCS12_parse(pkcs12, [keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], &pkey, &cert, NULL)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     _key = pkey->pkey.rsa;
     
     if (!rsaKey || ![self isValid]) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -370,7 +370,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = pkey->pkey.rsa;
     
     if (!rsaKey || ![self isValid]) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -385,7 +385,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_new();
     if (!rsaKey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         [self release];
         return nil;
     }
@@ -437,7 +437,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (check > 0)
         return YES;
     
-    err(@"OpenSSL error: %@", OpenSSLErrors());
+    err(@"[OpenSSL] %@", OpenSSLErrors());
     return NO;
 }
 
@@ -527,7 +527,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
                                friendlyName? (char *)[friendlyName cStringUsingEncoding:NSUTF8StringEncoding]: NULL,
                                pkey, NULL, NULL, -1, -1, PKCS12_DEFAULT_ITER, PKCS12_DEFAULT_ITER, 0);
     if (!pkcs12) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -536,7 +536,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 	unsigned char *bufferOut, *bufferIn;
     bufferOut = bufferIn = malloc(length);
     if (!i2d_PKCS12(pkcs12, &bufferIn)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -551,12 +551,12 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, EVP_des_ede3_cbc(),
                                          (unsigned char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], [keyPhrase length],
                                          NULL, NULL)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
+            err(@"[OpenSSL] %@", OpenSSLErrors());
             return nil;
         }
     } else {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, NULL, NULL, 0, NULL, NULL)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
+            err(@"[OpenSSL] %@", OpenSSLErrors());
             return nil;
         }
     }
@@ -583,7 +583,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
     
-    err(@"OpenSSL error: %@", OpenSSLErrors());
+    err(@"[OpenSSL] %@", OpenSSLErrors());
     return nil;
 }
 
@@ -600,7 +600,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
     
-    err(@"OpenSSL error: %@", OpenSSLErrors());
+    err(@"[OpenSSL] %@", OpenSSLErrors());
     return nil;
 }
 
@@ -611,22 +611,22 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -634,7 +634,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     NSData *hash = [data hashWith:digest];
     size_t length;
     if (EVP_PKEY_sign(ctx, NULL, &length, hash.bytes, hash.length) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -643,7 +643,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     
     if (EVP_PKEY_sign(ctx, buffer, &length, hash.bytes, hash.length) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -657,22 +657,22 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return NO;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return NO;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return NO;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return NO;
     }
     
@@ -681,7 +681,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, hash.bytes, hash.length))
         return YES;
     
-    err(@"OpenSSL error: %@", OpenSSLErrors());
+    err(@"[OpenSSL] %@", OpenSSLErrors());
     return NO;
 }
 
@@ -692,29 +692,29 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new(pkey, NULL);
     if (!ctx) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_sign_init(ctx) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     /* Perform Operation */
     size_t length;
     if (EVP_PKEY_verify_recover(ctx, NULL, &length, signature.bytes, signature.length) <= 0) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -725,7 +725,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (EVP_PKEY_verify_recover(ctx, buffer, &length, signature.bytes, signature.length))
         return [NSData dataWithBytes:buffer length:length];
     
-    err(@"OpenSSL error: %@", OpenSSLErrors());
+    err(@"[OpenSSL] %@", OpenSSLErrors());
     return NO;
 }
 
@@ -733,20 +733,20 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     X509_REQ *csr = X509_REQ_new();
     if (!csr) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     // Version
     if (!X509_REQ_set_version(csr, 0L)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     // Subject Name
     X509_NAME *dn = X509_NAME_new();
     if (!dn) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     for (id subjectKey in [x509Subject allKeys]) {
@@ -755,12 +755,12 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         if (!X509_NAME_add_entry_by_txt(dn, [[subjectKey description] UTF8String], MBSTRING_ASC,
                                         (unsigned char *)[subjectValue UTF8String],
                                         [subjectValue length], -1, 0)) {
-            err(@"OpenSSL error: %@", OpenSSLErrors());
+            err(@"[OpenSSL] %@", OpenSSLErrors());
             return nil;
         }
     }
     if (!X509_REQ_set_subject_name(csr, dn)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     X509_NAME_free(dn);
@@ -769,23 +769,23 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     EVP_PKEY *pkey = EVP_PKEY_new();
     EVP_PKEY_assign_RSA(pkey, rsaKey); 
     if (!pkey) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     if (!X509_REQ_set_pubkey(csr, pkey)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     // Sign
     if (!X509_REQ_sign(csr, pkey, EVP_md(digest))) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
     // Verify
     if (!X509_REQ_verify(csr, pkey)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     
@@ -816,7 +816,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     // Export
     BIO *bio = BIO_new(BIO_s_mem());
     if (!PEM_write_bio_X509_REQ(bio, csr)) {
-        err(@"OpenSSL error: %@", OpenSSLErrors());
+        err(@"[OpenSSL] %@", OpenSSLErrors());
         return nil;
     }
     NSUInteger length = BIO_ctrl_pending(bio);

@@ -83,6 +83,48 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
 
+@implementation UIView (UIUtils)
+
+- (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *))continueAfter {
+    
+    for (UIView *subview in self.subviews)
+        if (continueAfter(subview))
+            [subview iterateSubviewsContinueAfter:continueAfter];
+}
+
+@end
+
+@implementation UIImage (UIUtils)
+
+- (UIImage *)highlightedImage {
+    
+    const CGRect    bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
+    UIColor*        color = [[[UIColor alloc] initWithWhite:1 alpha:0.7] autorelease];
+    
+    UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
+    CGContextRef    context = UIGraphicsGetCurrentContext();
+    
+    // transform CG* coords to UI* coords
+    CGContextTranslateCTM(context, 0, bounds.size.height);
+    CGContextScaleCTM(context, 1, -1);
+    
+    // draw original image
+    CGContextDrawImage(context, bounds, self.CGImage);
+    
+    // draw highlight overlay
+    CGContextClipToMask(context, bounds, self.CGImage);
+    CGContextSetBlendMode(context, kCGBlendModeOverlay);
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextFillRect(context, bounds);
+    
+    // finish image context
+    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return result;
+}
+
+@end
 
 @interface UIUtils ()
 

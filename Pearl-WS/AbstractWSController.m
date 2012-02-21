@@ -273,16 +273,18 @@
             // Required upgrade.
             [AlertViewController showAlertWithTitle:[PearlStrings get].commonTitleError
                                             message:[PearlWSStrings get].errorWSResponseOutdatedRequired
-                                  tappedButtonBlock:^(NSInteger buttonIndex) {
-                                      if (buttonIndex)
+                                          viewStyle:UIAlertViewStyleDefault
+                                  tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                                      if (buttonIndex == [alert firstOtherButtonIndex])
                                           [self upgrade];
                                   } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
         else
             // Optional upgrade.
             [AlertViewController showAlertWithTitle:[PearlStrings get].commonTitleError
                                             message:[PearlWSStrings get].errorWSResponseOutdatedOptional
-                                  tappedButtonBlock:^(NSInteger buttonIndex) {
-                                      if (buttonIndex)
+                                          viewStyle:UIAlertViewStyleDefault
+                                  tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                                      if (buttonIndex == [alert firstOtherButtonIndex])
                                           [self upgrade];
                                   } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
     }

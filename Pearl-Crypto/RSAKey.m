@@ -103,6 +103,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
             return EVP_sha384();
         case PearlDigestSHA512:
             return EVP_sha512();
+        case PearlDigestCount:
+            break;
     }
     
     err(@"Unsupported digest: %d", digest);

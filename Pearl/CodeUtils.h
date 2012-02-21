@@ -18,6 +18,7 @@ typedef enum {
     PearlDigestSHA256,
     PearlDigestSHA384,
     PearlDigestSHA512,
+    PearlDigestCount,
 } PearlDigest;
 
 PearlDigest PearlDigestFromNSString(NSString *digest);

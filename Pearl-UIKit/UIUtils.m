@@ -99,7 +99,7 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
 - (UIImage *)highlightedImage {
     
     const CGRect    bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
-    UIColor*        color = [[[UIColor alloc] initWithWhite:1 alpha:0.7] autorelease];
+    UIColor         *color = [[[UIColor alloc] initWithWhite:1 alpha:0.7f] autorelease];
     
     UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
     CGContextRef    context = UIGraphicsGetCurrentContext();

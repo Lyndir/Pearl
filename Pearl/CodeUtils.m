@@ -141,7 +141,7 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
 }
 
 - (NSString *)wrapAt:(NSUInteger)lineLength {
- 
+    
     return [self inject:@"\n" interval:lineLength];
 }
 
@@ -262,6 +262,8 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
+        case PearlDigestCount:
+            break;
     }
     
     err(@"Digest not supported: %d", digest);

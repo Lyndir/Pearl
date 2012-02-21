@@ -15,17 +15,21 @@
  */
 
 //
-//  Resettable.h
+//  WebUtils.h
 //  Pearl
 //
-//  Created by Maarten Billemont on 26/10/08.
-//  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
+//  Created by Maarten Billemont on 18/01/11.
+//  Copyright 2011 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 
 
-@protocol Resettable
+@interface PearlWebUtils : NSObject {
+@private
 
--(void) reset;
+}
+
++ (NSString *)urlEncode:(NSString *)value;
 
 @end

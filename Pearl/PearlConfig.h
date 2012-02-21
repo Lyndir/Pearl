@@ -15,7 +15,7 @@
  */
 
 //
-//  Config.h
+//  PearlConfig.h
 //  Pearl
 //
 //  Created by Maarten Billemont on 25/10/08.
@@ -65,7 +65,7 @@
 #define cTrackNames             NSStringFromSelector(@selector(trackNames))
 #define cCurrentTrack           NSStringFromSelector(@selector(currentTrack))
 
-@interface Config : NSObject {
+@interface PearlConfig : NSObject {
 
     NSUserDefaults                                          *_defaults;
 
@@ -133,7 +133,7 @@
 - (NSUInteger)gameRandom:(NSUInteger)scope;
 - (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
 
-+(Config *)                                             get;
++(PearlConfig *)                                             get;
 +(void)                                                 flush;
 
 @end

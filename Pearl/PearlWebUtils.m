@@ -15,30 +15,23 @@
  */
 
 //
-//  ValidatingTextField.h
+//  WebUtils.m
 //  Pearl
 //
-//  Created by Maarten Billemont on 04/11/10.
-//  Copyright, lhunath (Maarten Billemont) 2010. All rights reserved.
+//  Created by Maarten Billemont on 18/01/11.
+//  Copyright 2011 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PearlWebUtils.h"
 
-@class ValidatingTextField;
 
-@protocol ValidatingTextFieldDelegate
+@implementation PearlWebUtils
 
-- (BOOL)isValid:(ValidatingTextField *)textField;
-
-@end
-
-@interface ValidatingTextField : UITextField {
-
-    BOOL                            (^_isValid)(void);
-    UIView                          *_validView, *_invalidView;
-    id<ValidatingTextFieldDelegate> _validationDelegate;
++ (NSString *)urlEncode:(NSString *)value {
+    
+    return [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)value, NULL,
+                                                                      CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
+                                                                      kCFStringEncodingUTF8)) autorelease];
 }
-
-@property (nonatomic, assign) IBOutlet id<ValidatingTextFieldDelegate> validationDelegate;
 
 @end

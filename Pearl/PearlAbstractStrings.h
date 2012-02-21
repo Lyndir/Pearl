@@ -15,30 +15,22 @@
  */
 
 //
-//  ValidatingTextField.h
-//  Pearl
+//  Created by lhunath on 11/07/11.
 //
-//  Created by Maarten Billemont on 04/11/10.
-//  Copyright, lhunath (Maarten Billemont) 2010. All rights reserved.
+//  To change this template use File | Settings | File Templates.
 //
 
-#import <UIKit/UIKit.h>
 
-@class ValidatingTextField;
+#import <Foundation/Foundation.h>
 
-@protocol ValidatingTextFieldDelegate
 
-- (BOOL)isValid:(ValidatingTextField *)textField;
+@interface PearlAbstractStrings : NSObject {
 
-@end
-
-@interface ValidatingTextField : UITextField {
-
-    BOOL                            (^_isValid)(void);
-    UIView                          *_validView, *_invalidView;
-    id<ValidatingTextFieldDelegate> _validationDelegate;
+    NSString                            *_tableName;
 }
 
-@property (nonatomic, assign) IBOutlet id<ValidatingTextFieldDelegate> validationDelegate;
+- (id)initWithTable:(NSString *)tableName;
+
+@property(nonatomic, retain) NSString   *tableName;
 
 @end

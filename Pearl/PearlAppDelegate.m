@@ -15,28 +15,28 @@
  */
 
 //
-//  AbstractAppDelegate.m
+//  PearlAbstractAppDelegate.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 18/10/08.
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "AbstractAppDelegate.h"
-#import "Logger.h"
-#import "Config.h"
+#import "PearlAppDelegate.h"
+#import "PearlLogger.h"
+#import "PearlConfig.h"
 #ifdef PEARL_MEDIA
 #import "AudioController.h"
 #endif
-#import "Resettable.h"
+#import "PearlResettable.h"
 #ifdef PEARL_UIKIT
 #import "AlertViewController.h"
 #import "RootViewController.h"
 #endif
-#import "CodeUtils.h"
+#import "PearlCodeUtils.h"
 
 
-@implementation AbstractAppDelegate
+@implementation PearlAppDelegate
 @synthesize window = _window, navigationController = _navigationController;
 
 
@@ -46,9 +46,9 @@
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     NSString *name = [info objectForKey:@"CFBundleName"];
     NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
-    NSString *build = [Config get].build;
-    NSString *version = [Config get].version;
-    NSString *copyright = [Config get].copyright;
+    NSString *build = [PearlConfig get].build;
+    NSString *version = [PearlConfig get].version;
+    NSString *copyright = [PearlConfig get].copyright;
     
     if (!name)
         name = displayName;
@@ -65,8 +65,8 @@
     inf(@"===================================");
     
 #ifdef PEARL_WITH_APNS
-    if ([[Config get].supportedNotifications unsignedIntegerValue])
-        [application registerForRemoteNotificationTypes:[[Config get].supportedNotifications unsignedIntegerValue]];
+    if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
+        [application registerForRemoteNotificationTypes:[[PearlConfig get].supportedNotifications unsignedIntegerValue]];
 #endif
     
     // Start the background music.
@@ -145,7 +145,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     
-    [Config get].firstRun = [NSNumber numberWithBool:NO];
+    [PearlConfig get].firstRun = [NSNumber numberWithBool:NO];
 }
 
 - (void)applicationSignificantTimeChange:(UIApplication *)application {
@@ -171,9 +171,9 @@
 #ifdef PEARL_WITH_APNS
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
-    [Config get].deviceToken = deviceToken;
-    [Config get].notificationsSupported = YES;
-    [Config get].notificationsChecked = YES;
+    [PearlConfig get].deviceToken = deviceToken;
+    [PearlConfig get].notificationsSupported = YES;
+    [PearlConfig get].notificationsChecked = YES;
     
     dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
@@ -181,8 +181,8 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     
-    [Config get].notificationsSupported = NO;
-    [Config get].notificationsChecked = YES;
+    [PearlConfig get].notificationsSupported = NO;
+    [PearlConfig get].notificationsChecked = YES;
     
     wrn(@"Couldn't register with the APNs: %@", error);
 }
@@ -219,11 +219,11 @@
     [super dealloc];
 }
 
-+(AbstractAppDelegate *) get {
++(PearlAppDelegate *) get {
     
     id delegate = [UIApplication sharedApplication].delegate;
-    if ([delegate isKindOfClass:[AbstractAppDelegate class]])
-        return (AbstractAppDelegate *) delegate;
+    if ([delegate isKindOfClass:[PearlAppDelegate class]])
+        return (PearlAppDelegate *) delegate;
     
     return nil;
 }

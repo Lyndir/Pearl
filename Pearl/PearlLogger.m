@@ -1,13 +1,29 @@
+/*
+ *   Copyright 2009, Maarten Billemont
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
 //
-//  Logger.m
+//  PearlLogger.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 21/08/09.
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "Logger.h"
-@implementation LogMessage
+#import "PearlLogger.h"
+@implementation PearlLogMessage
 
 @synthesize message, occurance, level;
 
@@ -25,13 +41,13 @@ static NSDateFormatter *logDateFormatter = nil;
 }
 
 
-+ (LogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel {
++ (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
     
     return [[[self alloc] initWithMessage:aMessage at:anOccurance withLevel:aLevel] autorelease];
 }
 
 
-- (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(LogLevel)aLevel {
+- (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
     
     if (!(self = [super init]))
         return nil;
@@ -49,22 +65,22 @@ static NSDateFormatter *logDateFormatter = nil;
 - (NSString *)levelDescription {
     
     switch (self.level) {
-        case LogLevelTrace:
+        case PearlLogLevelTrace:
             return @"[TRACE]  ";
             break;
-        case LogLevelDebug:
+        case PearlLogLevelDebug:
             return  @"[DEBUG]  ";
             break;
-        case LogLevelInfo:
+        case PearlLogLevelInfo:
             return  @"[INFO]   ";
             break;
-        case LogLevelWarn:
+        case PearlLogLevelWarn:
             return  @"[WARNING]";
             break;
-        case LogLevelError:
+        case PearlLogLevelError:
             return  @"[ERROR]  ";
             break;
-        case LogLevelFatal:
+        case PearlLogLevelFatal:
             return  @"[FATAL]  ";
             break;
         default:
@@ -96,7 +112,7 @@ static NSDateFormatter *logDateFormatter = nil;
 @end
 
 
-@interface Logger ()
+@interface PearlLogger ()
 
 @property (readwrite, retain) NSMutableArray           *messages;
 @property (readwrite, retain) NSMutableArray           *listeners;
@@ -104,7 +120,7 @@ static NSDateFormatter *logDateFormatter = nil;
 @end
 
 
-@implementation Logger
+@implementation PearlLogger
 
 @synthesize messages = _messages, listeners = _listeners, autoprintLevel = _autoprintLevel;
 
@@ -115,17 +131,17 @@ static NSDateFormatter *logDateFormatter = nil;
     
     self.messages = [NSMutableArray arrayWithCapacity:20];
     self.listeners = [NSMutableArray array];
-    self.autoprintLevel = LogLevelInfo;
+    self.autoprintLevel = PearlLogLevelInfo;
     
     return self;
 }
 
 
-+ (Logger *)get {
++ (PearlLogger *)get {
     
-    static Logger *logger = nil;
+    static PearlLogger *logger = nil;
     if (!logger)
-        logger = [Logger new];
+        logger = [PearlLogger new];
     
     return logger;
 }
@@ -138,7 +154,7 @@ static NSDateFormatter *logDateFormatter = nil;
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     
     NSMutableString *formattedLog = [NSMutableString new];
-    for (LogMessage *message in self.messages)
+    for (PearlLogMessage *message in self.messages)
         [formattedLog appendString:[message description]];
     
     [dateFormatter release];
@@ -147,107 +163,107 @@ static NSDateFormatter *logDateFormatter = nil;
 }
 
 
-- (void)registerListener:(BOOL (^)(LogMessage *message))listener {
+- (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener {
     
     [self.listeners addObject:listener];
 }
 
 
-- (Logger *)logWithLevel:(LogLevel)aLevel andMessage:(NSString *)format, ... {
+- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     
     NSString *messageString = [[NSString alloc] initWithFormat:format arguments:argList];
-    LogMessage *message = [LogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
+    PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
     [messageString release];
     
     va_end(argList);
     
-    for (BOOL (^listener)(LogMessage *message) in self.listeners)
+    for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
         if (!listener(message))
             return self;
     
     if (aLevel >= self.autoprintLevel)
         NSLog(@"%@", [message messageDescription]);
-    if (message.level > LogLevelTrace)
+    if (message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
     
     return self;
 }
 
 
-- (void)printAllWithLevel:(LogLevel)level {
+- (void)printAllWithLevel:(PearlLogLevel)level {
     
-    for (LogMessage *message in self.messages)
+    for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
             NSLog(@"%@", message);
 }
 
 
-- (Logger *)trc:(NSString *)format, ... {
+- (PearlLogger *)trc:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelTrace andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelTrace andMessage:[message autorelease]];
 }
 
 
-- (Logger *)dbg:(NSString *)format, ... {
+- (PearlLogger *)dbg:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelDebug andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelDebug andMessage:[message autorelease]];
 }
 
 
-- (Logger *)inf:(NSString *)format, ... {
+- (PearlLogger *)inf:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelInfo andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelInfo andMessage:[message autorelease]];
 }
 
 
-- (Logger *)wrn:(NSString *)format, ... {
+- (PearlLogger *)wrn:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelWarn andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelWarn andMessage:[message autorelease]];
 }
 
 
-- (Logger *)err:(NSString *)format, ... {
+- (PearlLogger *)err:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelError andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelError andMessage:[message autorelease]];
 }
 
 
-- (Logger *)ftl:(NSString *)format, ... {
+- (PearlLogger *)ftl:(NSString *)format, ... {
     
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:LogLevelFatal andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelFatal andMessage:[message autorelease]];
 }
 
 

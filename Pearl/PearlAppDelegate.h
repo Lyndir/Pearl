@@ -15,7 +15,7 @@
  */
 
 //
-//  AbstractAppDelegate.h
+//  PearlAbstractAppDelegate.h
 //  Pearl
 //
 //  Created by Maarten Billemont on 18/10/08.
@@ -25,7 +25,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface AbstractAppDelegate : UIResponder <UIApplicationDelegate> {
+@interface PearlAppDelegate : UIResponder <UIApplicationDelegate> {
 
     UIWindow                                                                *_window;
     UINavigationController                                                  *_navigationController;
@@ -41,7 +41,7 @@
 - (IBAction)restart;
 - (void)shutdown:(id)caller;
 
-+ (AbstractAppDelegate *)get;
++ (PearlAppDelegate *)get;
 
 
 @end

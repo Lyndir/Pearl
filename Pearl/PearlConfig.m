@@ -15,17 +15,17 @@
  */
 
 //
-//  Config.m
+//  PearlConfig.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 25/10/08.
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "Config.h"
-#import "Logger.h"
-#import "AbstractAppDelegate.h"
-#import "Resettable.h"
+#import "PearlConfig.h"
+#import "PearlLogger.h"
+#import "PearlAppDelegate.h"
+#import "PearlResettable.h"
 #import "NSString_SEL.h"
 #import "StringUtils.h"
 #import "PearlStrings.h"
@@ -34,7 +34,7 @@
 #endif
 
 
-@interface Config ()
+@interface PearlConfig ()
 
 @property (nonatomic, readwrite, retain) NSUserDefaults         *defaults;
 
@@ -43,7 +43,7 @@
 @end
 
 
-@implementation Config
+@implementation PearlConfig
 
 @synthesize defaults = _defaults;
 @synthesize resetTriggers = _resetTriggers;
@@ -143,9 +143,9 @@
 }
 
 
-+(Config *) get {
++(PearlConfig *) get {
 
-    static Config *configInstance = nil;
+    static PearlConfig *configInstance = nil;
     if(!configInstance)
         configInstance = [self new];
 
@@ -195,10 +195,10 @@
         }
         [self.defaults setValue:newValue forKey:selector];
 
-        [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
+        [[PearlAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
-            [(id<Resettable>) [[AbstractAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
+            [(id<PearlResettable>) [[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
 
     else
@@ -260,7 +260,7 @@
     NSString *oldTrack = [self.defaults objectForKey:cCurrentTrack];
     [self.defaults setObject:currentTrack forKey:cCurrentTrack];
 
-    [[AbstractAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack) fromValue:oldTrack];
+    [[PearlAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack) fromValue:oldTrack];
 }
 -(NSString *) currentTrackName {
 

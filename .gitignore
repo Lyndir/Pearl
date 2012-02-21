@@ -1,2 +1,6 @@
-# OS-Specific junk.
+# XCode
+/*.xcodeproj/*
+!/*.xcodeproj/*.pbxproj
+!/*.xcodeproj/xcshareddata
+!/*.xcodeproj/xcshareddata/*
 .DS_Store

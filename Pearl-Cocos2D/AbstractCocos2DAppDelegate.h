@@ -22,7 +22,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "AbstractAppDelegate.h"
+#import "PearlAppDelegate.h"
 #import "UILayer.h"
 #import "HUDLayer.h"
 #import "ShadeLayer.h"

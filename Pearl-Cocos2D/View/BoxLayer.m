@@ -8,6 +8,7 @@
 
 #import "BoxLayer.h"
 #import "Layout.h"
+#import "GLUtils.h"
 
 
 @implementation BoxLayer

@@ -23,7 +23,7 @@
 //
 
 #import "ShadeLayer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "AbstractCocos2DAppDelegate.h"
 #import "Remove.h"
 #import "MenuItemSymbolic.h"
@@ -66,7 +66,7 @@
     self.fadeNextEntry              = YES;
     self.backgroundOffset           = CGPointZero;
     
-    ccColor4B shadeColor            = ccc4l([[Config get].shadeColor longValue]);
+    ccColor4B shadeColor            = ccc4l([[PearlConfig get].shadeColor longValue]);
     self.opacity                    = shadeColor.a;
     self.color                      = ccc4to3(shadeColor);
 
@@ -76,13 +76,13 @@
     [self setBackButton:nil];
     [self setNextButton:nil];
     self.backMenu = [CCMenu menuWithItems:self.backButton, nil];
-    self.backMenu.position = ccp([[Config get].fontSize unsignedIntValue] * 1.5f,
-                                 [[Config get].fontSize unsignedIntValue]);
+    self.backMenu.position = ccp([[PearlConfig get].fontSize unsignedIntValue] * 1.5f,
+                                 [[PearlConfig get].fontSize unsignedIntValue]);
     [self.backMenu alignItemsHorizontally];
     
     self.nextMenu = [CCMenu menuWithItems:self.nextButton, nil];
-    self.nextMenu.position = ccp(self.contentSize.width - [[Config get].fontSize unsignedIntValue] * 1.5f,
-                                 [[Config get].fontSize unsignedIntValue]);
+    self.nextMenu.position = ccp(self.contentSize.width - [[PearlConfig get].fontSize unsignedIntValue] * 1.5f,
+                                 [[PearlConfig get].fontSize unsignedIntValue]);
     [self.nextMenu alignItemsHorizontally];
 
     [self addChild:self.backMenu z:9];
@@ -215,7 +215,7 @@
     
     [self runAction:[CCSequence actions:
                      [CCEaseSineOut actionWithAction:
-                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                      [CCMoveTo actionWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                           position:CGPointZero]],
                      [CCCallFunc actionWithTarget:self selector:@selector(ready)],
                      nil]];
@@ -226,7 +226,7 @@
     
     [self runAction:[CCSequence actions:
                      [CCEaseSineOut actionWithAction:
-                      [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                      [CCMoveTo actionWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                           position:ccp((self.pushed? -1: 1) * self.contentSize.width, 0)]],
                      [CCCallFunc actionWithTarget:self selector:@selector(gone)],
                      [Remove action],

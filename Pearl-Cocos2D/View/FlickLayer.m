@@ -23,7 +23,7 @@
 //
 
 #import "FlickLayer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 
 
 @interface FlickLayer ()
@@ -90,8 +90,8 @@
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
-    [CCMenuItemFont setFontName:[Config get].symbolicFontName];
-    [CCMenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    [CCMenuItemFont setFontName:[PearlConfig get].symbolicFontName];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].largeFontSize unsignedIntValue]];
     self.right                   = [CCMenuItemFont itemFromString:@" ▹ "
                                                          target:self selector:@selector(right:)];
     self.left                    = [CCMenuItemFont itemFromString:@" ◃ "

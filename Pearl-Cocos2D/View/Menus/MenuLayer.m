@@ -22,7 +22,7 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "AbstractAppDelegate.h"
+#import "PearlAppDelegate.h"
 #import "MenuLayer.h"
 #import "MenuItemSpacer.h"
 #ifdef PEARL_MEDIA

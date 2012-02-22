@@ -28,7 +28,7 @@
 #import "ShadeLayer.h"
 
 
-@interface AbstractCocos2DAppDelegate : AbstractAppDelegate {
+@interface AbstractCocos2DAppDelegate : PearlAppDelegate {
 
     UILayer                                                  *_uiLayer;
     HUDLayer                                                 *_hudLayer;

@@ -4,6 +4,8 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "AutoTween.h"
+
 
 @interface AutoTween ()
 

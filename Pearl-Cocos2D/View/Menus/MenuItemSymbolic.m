@@ -7,7 +7,7 @@
 //
 
 #import "MenuItemSymbolic.h"
-#import "Config.h"
+#import "PearlConfig.h"
 
 
 @implementation MenuItemSymbolic
@@ -35,8 +35,8 @@
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
-    [CCMenuItemFont setFontName:[Config get].symbolicFontName];
-    [CCMenuItemFont setFontSize:[[Config get].largeFontSize unsignedIntValue]];
+    [CCMenuItemFont setFontName:[PearlConfig get].symbolicFontName];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].largeFontSize unsignedIntValue]];
 
     @try {
         self = ([super initFromString:symbol target:aTarget selector:aSelector]);

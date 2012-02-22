@@ -53,7 +53,7 @@ static NSMutableDictionary *nodeActivity;
 
 + (void)printStateForNode:(CCNode *)node indent:(NSUInteger)indent {
     
-    Logger *logger = [Logger get];
+    PearlLogger *logger = [PearlLogger get];
     
     NSValue *nodeValue = [NSValue valueWithPointer:node];
     if (nodeActivity == nil)

@@ -233,8 +233,10 @@
     
     return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
         JSONResult *response;
-        completion([self validateAndParseResponse:responseData into:&response
-                                     popupOnError:popupOnError requires:nil], response);
+        BOOL valid = [self validateAndParseResponse:responseData into:&response
+                                       popupOnError:popupOnError requires:nil];
+        
+        completion(valid, response);
     }];
 }
 

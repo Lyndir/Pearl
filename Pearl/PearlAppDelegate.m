@@ -79,12 +79,12 @@
 - (void)preSetup {
     
 #ifdef PEARL_MEDIA
-    if ([[Config get].currentTrack isEqualToString:@"sequential"]) {
+    if ([[PearlConfig get].currentTrack isEqualToString:@"sequential"]) {
         // Restart sequentially from the start.
-        [Config get].playingTrack = nil;
+        [PearlConfig get].playingTrack = nil;
         [[AudioController get] playTrack:@"sequential"];
     } else
-        [[AudioController get] playTrack:[Config get].currentTrack];
+        [[AudioController get] playTrack:[PearlConfig get].currentTrack];
 #endif
     
     if (!self.window) {

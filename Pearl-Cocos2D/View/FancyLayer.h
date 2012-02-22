@@ -22,6 +22,7 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "cocos2d.h"
 
 typedef struct Margin {
     CGFloat top;

@@ -23,12 +23,12 @@
 //
 
 #import "AbstractCocos2DAppDelegate.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "Splash.h"
-#import "Resettable.h"
+#import "PearlResettable.h"
 #import "DebugLayer.h"
 #import "ShadeLayer.h"
-#import "DeviceUtils.h"
+#import "PearlDeviceUtils.h"
 
 @interface CCDirector ()
 
@@ -62,7 +62,7 @@
 	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
 		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
     [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
-    if ([DeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         // An iPad in iPhone compatibility mode.
         [CCDirector sharedDirector].contentScaleFactor *= 2;
 #if DEBUG
@@ -79,8 +79,8 @@
     srandom(time(nil));
 
     // CCMenu items font.
-    [CCMenuItemFont setFontSize:[[Config get].fontSize intValue]];
-    [CCMenuItemFont setFontName:[Config get].fontName];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].fontSize intValue]];
+    [CCMenuItemFont setFontName:[PearlConfig get].fontName];
     self.menuLayers = [NSMutableArray arrayWithCapacity:3];
 
     // Build the game scene.
@@ -191,8 +191,8 @@
 
         else {
             // CCLayer is already showing.
-            if ([layer conformsToProtocol:@protocol(Resettable)])
-                [(ShadeLayer<Resettable> *) layer reset];
+            if ([layer conformsToProtocol:@protocol(PearlResettable)])
+                [(ShadeLayer<PearlResettable> *) layer reset];
 
             return;
         }
@@ -281,9 +281,9 @@
 }
 
 
-+(AbstractAppDelegate *) get {
++(PearlAppDelegate *) get {
 
-    return (AbstractAppDelegate *) [[UIApplication sharedApplication] delegate];
+    return (PearlAppDelegate *) [[UIApplication sharedApplication] delegate];
 }
 
 

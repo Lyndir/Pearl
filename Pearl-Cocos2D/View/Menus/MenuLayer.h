@@ -22,7 +22,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "Resettable.h"
+#import "cocos2d.h"
+#import "PearlResettable.h"
 #import "ShadeLayer.h"
 
 typedef enum MenuLayout {
@@ -50,7 +51,7 @@ typedef enum MenuLayout {
 @end
 
 
-@interface MenuLayer : ShadeLayer <Resettable> {
+@interface MenuLayer : ShadeLayer <PearlResettable> {
 
 @private
     NSArray                                                         *_items;

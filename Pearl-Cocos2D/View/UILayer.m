@@ -24,7 +24,7 @@
 
 #import "UILayer.h"
 #import "Remove.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "CCDebug.h"
 
 #define kFilteringFactor            0.4f
@@ -191,7 +191,7 @@
     
     [self resetMessage:msg];
     [self.messageLabel runAction:[CCSequence actions:
-                             [CCMoveBy actionWithDuration:1 position:ccp(0, -([[Config get].fontSize intValue] * 2))],
+                             [CCMoveBy actionWithDuration:1 position:ccp(0, -([[PearlConfig get].fontSize intValue] * 2))],
                              [CCFadeTo actionWithDuration:2 opacity:0x00],
                              nil]];
     
@@ -218,16 +218,16 @@
         }
         
         self.messageLabel = [CCLabelTTF labelWithString:msg
-                                          fontName:[Config get].fixedFontName
-                                          fontSize:[[Config get].fontSize intValue]];
+                                          fontName:[PearlConfig get].fixedFontName
+                                          fontSize:[[PearlConfig get].fontSize intValue]];
         [self addChild: self.messageLabel z:1];
     }
     else
         [self.messageLabel setString:msg];
     
     CGSize winSize = [[CCDirector sharedDirector] winSize];
-    [self.messageLabel setPosition:ccp([self.messageLabel contentSize].width / 2 + [[Config get].fontSize intValue],
-                                  winSize.height + [[Config get].fontSize intValue])];
+    [self.messageLabel setPosition:ccp([self.messageLabel contentSize].width / 2 + [[PearlConfig get].fontSize intValue],
+                                  winSize.height + [[PearlConfig get].fontSize intValue])];
     [self.messageLabel setOpacity:0xff];
 }
 

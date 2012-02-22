@@ -7,7 +7,8 @@
 //
 
 #import "MenuItemBlock.h"
-#import "Config.h"
+#import "PearlConfig.h"
+#import "GLUtils.h"
 
 
 @implementation MenuItemBlock

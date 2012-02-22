@@ -23,7 +23,7 @@
 //
 
 #import "GLUtils.h"
-#import "Logger.h"
+#import "PearlLogger.h"
 
 int GLCheck(char *file, int line) {
     
@@ -34,25 +34,25 @@ int GLCheck(char *file, int line) {
     while ((glErr=glGetError()) != GL_NO_ERROR) {
         switch(glErr) {
             case GL_INVALID_ENUM:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_INVALID_ENUM",         file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_ENUM",         file, line];
                 break;
             case GL_INVALID_VALUE:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_INVALID_VALUE",        file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_VALUE",        file, line];
                 break;
             case GL_INVALID_OPERATION:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_INVALID_OPERATION",    file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_OPERATION",    file, line];
                 break;
             case GL_STACK_OVERFLOW:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_STACK_OVERFLOW",       file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_STACK_OVERFLOW",       file, line];
                 break;
             case GL_STACK_UNDERFLOW:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_STACK_UNDERFLOW",      file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_STACK_UNDERFLOW",      file, line];
                 break;
             case GL_OUT_OF_MEMORY:
-                [[Logger get] err:@"%30s:%-5d\t    -> GL_OUT_OF_MEMORY",        file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_OUT_OF_MEMORY",        file, line];
                 break;
             default:
-                [[Logger get] err:@"%30s:%-5d\t    -> UNKNOWN",                 file, line];
+                [[PearlLogger get] err:@"%30s:%-5d\t    -> UNKNOWN",                 file, line];
         }
     }
     

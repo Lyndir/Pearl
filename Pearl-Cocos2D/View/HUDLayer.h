@@ -25,7 +25,7 @@
 #import "BarLayer.h"
 
 
-@interface HUDLayer : BarLayer<Resettable> {
+@interface HUDLayer : BarLayer<PearlResettable> {
 
     CCSprite                                            *_scoreSprite;
     CCLabelAtlas                                        *_scoreCount;

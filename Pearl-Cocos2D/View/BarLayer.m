@@ -23,7 +23,7 @@
 //
 
 #import "BarLayer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "GLUtils.h"
 #import "Remove.h"
 
@@ -111,9 +111,9 @@
     if (self.messageLabel)
         [self removeChild:self.messageLabel cleanup:YES];
     
-    CGFloat fontSize = [[Config get].smallFontSize intValue];
+    CGFloat fontSize = [[PearlConfig get].smallFontSize intValue];
     self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
-                                           fontName:[Config get].fixedFontName fontSize:fontSize];
+                                           fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
     
     if(important) {
         self.renderColor = 0x993333FF;
@@ -141,9 +141,9 @@
     
     self.position = self.hidePosition;
     [self runAction:[CCSpawn actions:
-                     [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                     [CCMoveTo actionWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                          position:self.showPosition],
-                     [CCFadeIn actionWithDuration:[[Config get].transitionDuration floatValue]],
+                     [CCFadeIn actionWithDuration:[[PearlConfig get].transitionDuration floatValue]],
                      nil]];
 }
 
@@ -168,9 +168,9 @@
     
     self.position = self.showPosition;
     [self runAction:[CCSpawn actions:
-                     [CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+                     [CCMoveTo actionWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                          position:self.hidePosition],
-                     [CCFadeOut actionWithDuration:[[Config get].transitionDuration floatValue]],
+                     [CCFadeOut actionWithDuration:[[PearlConfig get].transitionDuration floatValue]],
                      nil]];
 }
 

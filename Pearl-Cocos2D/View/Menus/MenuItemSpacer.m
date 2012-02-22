@@ -23,7 +23,7 @@
 //
 
 #import "MenuItemSpacer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 
 
 @interface MenuItemSpacer ()
@@ -54,17 +54,17 @@
 
 -(id) initSmall {
     
-    return [self initWithHeight:[[Config get].smallFontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].smallFontSize intValue]];
 }
 
 -(id) initNormal {
     
-    return [self initWithHeight:[[Config get].fontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].fontSize intValue]];
 }
 
 -(id) initLarge {
     
-    return [self initWithHeight:[[Config get].largeFontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].largeFontSize intValue]];
 }
 
 

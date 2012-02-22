@@ -23,8 +23,8 @@
 //
 
 #import "AudioController.h"
-#import "Logger.h"
-#import "Config.h"
+#import "PearlLogger.h"
+#import "PearlConfig.h"
 
 @interface AudioController ()
 
@@ -47,7 +47,7 @@
     
     static SystemSoundID clicky = 0;
     
-    if([[Config get].soundFx boolValue]) {
+    if([[PearlConfig get].soundFx boolValue]) {
         if(clicky == 0)
             clicky = [AudioController loadEffectWithName:@"snapclick.caf"];
         
@@ -77,7 +77,7 @@
         return;
     
     if(self.nextTrack == nil)
-        [[Config get] setCurrentTrack:nil];
+        [[PearlConfig get] setCurrentTrack:nil];
     
     [self startNextTrack];
 }
@@ -90,9 +90,9 @@
     } else if(self.nextTrack) {
         NSString *track = self.nextTrack;
         if([track isEqualToString:@"random"])
-            track = [Config get].randomTrack;
+            track = [PearlConfig get].randomTrack;
         if([track isEqualToString:@"sequential"])
-            track = [Config get].nextTrack;
+            track = [PearlConfig get].nextTrack;
         NSURL *nextUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:track ofType:nil]];
         
         if(self.audioPlayer != nil && ![self.audioPlayer.url isEqual:nextUrl]) {
@@ -105,8 +105,8 @@
         [self.audioPlayer setDelegate:self];
         [self.audioPlayer play];
         
-        [[Config get] setPlayingTrack:track];
-        [[Config get] setCurrentTrack:self.nextTrack];
+        [[PearlConfig get] setPlayingTrack:track];
+        [[PearlConfig get] setCurrentTrack:self.nextTrack];
     }
 }
 
@@ -144,7 +144,7 @@
 
 +(void) playEffect:(SystemSoundID)soundFileObject {
     
-    if([[Config get].soundFx boolValue])
+    if([[PearlConfig get].soundFx boolValue])
         AudioServicesPlaySystemSound(soundFileObject);
 }
 

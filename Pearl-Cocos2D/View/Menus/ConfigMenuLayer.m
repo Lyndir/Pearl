@@ -23,10 +23,11 @@
 //
 
 #import "ConfigMenuLayer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "MenuItemTitle.h"
 #import "NSString_SEL.h"
 #import "StringUtils.h"
+#import "PearlCocos2DStrings.h"
 
 
 @interface ConfigMenuLayer ()
@@ -149,7 +150,7 @@
         NSString *selector = [self.itemConfigs objectForKey:itemValue];
         CCMenuItemToggle *item = [itemValue pointerValue];
 
-        id t = [Config get];
+        id t = [PearlConfig get];
         SEL s = NSSelectorFromString(selector);
 
         // Search t's class hierarchy for the selector.
@@ -183,7 +184,7 @@
 
 - (void)tapped:(CCMenuItemToggle *)toggle {
 
-    id t = [Config get];
+    id t = [PearlConfig get];
     SEL s = [self configForItem:toggle];
     SEL setterS = NSSelectorFromString([NSStringFromSelector(s) getterToSetter]);
     id toggledValue = nil;

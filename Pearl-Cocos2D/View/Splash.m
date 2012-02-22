@@ -23,7 +23,7 @@
 //
 
 #import "Splash.h"
-#import "Config.h"
+#import "PearlConfig.h"
 #import "AbstractCocos2DAppDelegate.h"
 #import "BarSprite.h"
 
@@ -36,7 +36,7 @@
 
 - (id)initWithGameScene:(CCScene *)uiScene {
 
-    if (!(self = [super initWithDuration:[[Config get].transitionDuration floatValue]
+    if (!(self = [super initWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                    scene:uiScene
                              orientation:kOrientationDownOver]))
         return nil;

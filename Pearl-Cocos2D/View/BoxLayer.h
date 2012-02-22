@@ -6,7 +6,7 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "cocos2d.h"
 
 
 /**

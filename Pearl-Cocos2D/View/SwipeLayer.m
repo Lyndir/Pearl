@@ -23,7 +23,7 @@
 //
 
 #import "SwipeLayer.h"
-#import "Config.h"
+#import "PearlConfig.h"
 
 #define gSwipeMinHorizontal 50
 #define gSwipeMaxVertical 100
@@ -141,7 +141,7 @@
         && fabsf(self.swipeStart.y - swipePoint.y) < gSwipeMaxVertical)
         self.swiped = YES;
     
-    CGFloat swipeActionDuration = [[Config get].transitionDuration floatValue];
+    CGFloat swipeActionDuration = [[PearlConfig get].transitionDuration floatValue];
     if(self.swipeAction) {
         if(![self.swipeAction isDone])
             swipeActionDuration -= self.swipeAction.elapsed;
@@ -190,7 +190,7 @@
         [self stopAction:self.swipeAction];
     
     if(self.swiped)
-        [self runAction:self.swipeAction = [CCSequence actionOne:[CCMoveTo actionWithDuration:[[Config get].transitionDuration floatValue]
+        [self runAction:self.swipeAction = [CCSequence actionOne:[CCMoveTo actionWithDuration:[[PearlConfig get].transitionDuration floatValue]
                                                                                  position:swipeTarget]
                                                            two:[CCCallFunc actionWithTarget:self selector:@selector(swipeDone:)]]];
     else

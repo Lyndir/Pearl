@@ -7,7 +7,7 @@
 //
 
 #import "MenuItemTitle.h"
-#import "Config.h"
+#import "PearlConfig.h"
 
 
 @implementation MenuItemTitle
@@ -23,8 +23,8 @@
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
-    [CCMenuItemFont setFontName:[Config get].fixedFontName];
-    [CCMenuItemFont setFontSize:[[Config get].smallFontSize intValue]];
+    [CCMenuItemFont setFontName:[PearlConfig get].fixedFontName];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].smallFontSize intValue]];
     
     self = ([super initFromString:title target:nil selector:nil]);
     

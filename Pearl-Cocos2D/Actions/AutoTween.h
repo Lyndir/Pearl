@@ -4,6 +4,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "cocos2d.h"
 
 
 typedef struct {

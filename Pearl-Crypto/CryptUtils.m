@@ -12,6 +12,57 @@
 #import "CryptUtils.h"
 #import "Logger.h"
 
+NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status) {
+    
+    switch (status) {
+        case kCCSuccess:
+            return [NSString stringWithFormat:@"Operation completed normally (kCCSuccess: %d).", status];
+        case kCCParamError:
+            return [NSString stringWithFormat:@"Illegal parameter value (kCCParamError: %d).", status];
+        case kCCBufferTooSmall:
+            return [NSString stringWithFormat:@"Insufficent buffer provided for specified operation (kCCBufferTooSmall: %d).", status];
+        case kCCMemoryFailure:
+            return [NSString stringWithFormat:@"Memory allocation failure (kCCMemoryFailure: %d).", status];
+        case kCCAlignmentError:
+            return [NSString stringWithFormat:@"Input size was not aligned properly (kCCAlignmentError: %d).", status];
+        case kCCDecodeError:
+            return [NSString stringWithFormat:@"Input data did not decode or decrypt properly (kCCDecodeError: %d).", status];
+        case kCCUnimplemented:
+            return [NSString stringWithFormat:@"Function not implemented for the current algorithm (kCCUnimplemented: %d).", status];
+    }
+    
+    wrn(@"Common Crypto status code not known: %d", status);
+    return [NSString stringWithFormat:@"Unknown status (%d).", status];
+}
+
+NSString *NSStringFromErrSec(OSStatus status) {
+    
+    switch (status) {
+        case errSecSuccess:
+            return [NSString stringWithFormat:@"No error (errSecSuccess: %d).", status];
+        case errSecUnimplemented:
+            return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %d).", status];
+        case errSecParam:
+            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %d).", status];
+        case errSecAllocate:
+            return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %d).", status];
+        case errSecNotAvailable:
+            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %d).", status];
+        case errSecDuplicateItem:
+            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %d).", status];
+        case errSecItemNotFound:
+            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %d).", status];
+        case errSecInteractionNotAllowed:
+            return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %d).", status];
+        case errSecDecode:
+            return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %d).", status];
+        case errSecAuthFailed:
+            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %d).", status];
+    }
+    
+    wrn(@"Security Error status code not known: %d", status);
+    return [NSString stringWithFormat:@"Unknown status (%d).", status];
+}
 
 @implementation NSString (CryptUtils)
 
@@ -44,8 +95,8 @@
 
 - (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options {
     
-    if (symmetricKey.length < kCipherKeySize) {
-        err(@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, kCipherKeySize);
+    if (symmetricKey.length != kCipherKeySize) {
+        err(@"Key size (%d) doesn't match cipher size (%d).", symmetricKey.length, kCipherKeySize);
         return nil;
     }
     
@@ -60,7 +111,8 @@
                                            nil, self.bytes, self.length,
                                            buffer, sizeof(uint8_t) * 1000, &movedBytes);
         if (ccStatus != kCCSuccess) {
-            err(@"Problem during cryption; ccStatus == %d.", ccStatus);
+            err(@"Problem during %@: %@",
+                encryptOrDecrypt == kCCEncrypt? @"encryption": @"decryption", NSStringFromCCCryptorStatus(ccStatus));
             return nil;
         }
         
@@ -96,7 +148,7 @@
     SecKeyRef privateKey = nil;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
     if (status != errSecSuccess || privateKey == nil) {
-        err(@"Problem during key lookup; status == %d.", status);
+        err(@"Problem during key lookup: %@", NSStringFromErrSec(status));
         return nil;
     }
     
@@ -111,7 +163,7 @@
                            signedHashBytes, &signedHashBytesSize);
     CFRelease(privateKey);
     if (status != errSecSuccess) {
-        err(@"Problem during data signing; status == %d.", status);
+        err(@"Problem during data signing: %@", NSStringFromErrSec(status));
         return nil;
     }
     

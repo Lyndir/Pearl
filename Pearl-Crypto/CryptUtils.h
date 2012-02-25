@@ -19,6 +19,8 @@
 #define kCipherBlockSize    8
 #endif
 
+NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status);
+NSString *NSStringFromErrSec(OSStatus status);
 
 @interface NSString (CryptUtils)
 

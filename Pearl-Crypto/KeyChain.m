@@ -30,35 +30,6 @@
 
 @implementation NSData (KeyChain)
 
-static NSString *NSStringFromErrSec(OSStatus status) {
-    
-    switch (status) {
-        case errSecSuccess:
-            return @"errSecSuccess: No error.";
-        case errSecUnimplemented:
-            return @"errSecUnimplemented: Function or operation not implemented.";
-        case errSecParam:
-            return @"errSecParam: One or more parameters passed to a function where not valid.";
-        case errSecAllocate:
-            return @"errSecAllocate: Failed to allocate memory.";
-        case errSecNotAvailable:
-            return @"errSecNotAvailable: No keychain is available. You may need to restart your computer.";
-        case errSecDuplicateItem:
-            return @"errSecDuplicateItem: The specified item already exists in the keychain.";
-        case errSecItemNotFound:
-            return @"errSecItemNotFound: The specified item could not be found in the keychain.";
-        case errSecInteractionNotAllowed:
-            return @"errSecInteractionNotAllowed: User interaction is not allowed.";
-        case errSecDecode:
-            return @"errSecDecode: Unable to decode the provided data.";
-        case errSecAuthFailed:
-            return @"errSecAuthFailed: The user name or passphrase you entered is not correct.";
-    }
-    
-    wrn(@"Security Error status code not known: %d", status);
-    return [NSString stringWithFormat:@"Status not known: %d", status];
-}
-
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     switch ([self length]) {

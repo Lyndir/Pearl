@@ -27,10 +27,10 @@
 #import "PearlAppDelegate.h"
 #import "PearlResettable.h"
 #import "NSString_SEL.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "PearlStrings.h"
 #ifdef PEARL_MEDIA
-#import "AudioController.h"
+#import "PearlAudioController.h"
 #endif
 
 
@@ -247,9 +247,9 @@
 
 #ifdef PEARL_MEDIA
     if ([aMusic boolValue] && ![self.music boolValue])
-        [[AudioController get] playTrack:@"random"];
+        [[PearlAudioController get] playTrack:@"random"];
     if (![aMusic boolValue] && [self.music boolValue])
-        [[AudioController get] playTrack:nil];
+        [[PearlAudioController get] playTrack:nil];
 #endif
 }
 - (void)setCurrentTrack: (NSString *)currentTrack {

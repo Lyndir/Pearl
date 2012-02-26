@@ -7,7 +7,7 @@
 //
 
 #import "CCDebug.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "JRSwizzle.h"
 
 

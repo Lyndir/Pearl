@@ -24,7 +24,7 @@
 
 #import "HUDLayer.h"
 #ifdef PEARL_MEDIA
-#import "AudioController.h"
+#import "PearlAudioController.h"
 #endif
 #import "AbstractCocos2DAppDelegate.h"
 
@@ -147,7 +147,7 @@
 
     if (self.visible) {
 #ifdef PEARL_MEDIA
-        [[AudioController get] clickEffect];
+        [[PearlAudioController get] clickEffect];
 #endif
         [[AbstractCocos2DAppDelegate get] hudMenuPressed];
     }

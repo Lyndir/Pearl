@@ -25,7 +25,7 @@
 #import "AlertViewController.h"
 #import "Layout.h"
 #import "PearlAppDelegate.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 
 
 @interface AlertViewController (Private)

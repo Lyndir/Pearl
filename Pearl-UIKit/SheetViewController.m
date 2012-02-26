@@ -25,7 +25,7 @@
 #import "PearlAppDelegate.h"
 #import "SheetViewController.h"
 #import "Layout.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 
 
 @interface SheetViewController (Private)

@@ -18,8 +18,8 @@
 
 #ifdef PEARL_WITH_SCRYPT
 #import "SCrypt.h"
-#import "ObjectUtils.h"
-#import "Logger.h"
+#import "PearlObjectUtils.h"
+#import "PearlLogger.h"
 #import <scrypt/crypto_scrypt.h>
 #import <scrypt/scryptenc.h>
 

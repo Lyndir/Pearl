@@ -17,5 +17,5 @@
 #import "PearlStrings.h"
 #import "PearlResettable.h"
 #import "PearlAbstractStrings.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "PearlWebUtils.h"

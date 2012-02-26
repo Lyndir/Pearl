@@ -27,7 +27,7 @@
 #import "PearlAppDelegate.h"
 #import "BoxView.h"
 #import "PearlObjectUtils.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 
 
 CGRect CGRectSetX(CGRect rect, CGFloat x) {

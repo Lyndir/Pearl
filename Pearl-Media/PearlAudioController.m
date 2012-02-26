@@ -22,11 +22,11 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "AudioController.h"
+#import "PearlAudioController.h"
 #import "PearlLogger.h"
 #import "PearlConfig.h"
 
-@interface AudioController ()
+@interface PearlAudioController ()
 
 @property (readwrite, retain) AVAudioPlayer                *audioPlayer;
 @property (readwrite, copy) NSString                     *nextTrack;
@@ -36,7 +36,7 @@
 @end
 
 
-@implementation AudioController
+@implementation PearlAudioController
 
 @synthesize audioPlayer = _audioPlayer;
 @synthesize nextTrack = _nextTrack;
@@ -49,13 +49,13 @@
     
     if([[PearlConfig get].soundFx boolValue]) {
         if(clicky == 0)
-            clicky = [AudioController loadEffectWithName:@"snapclick.caf"];
+            clicky = [PearlAudioController loadEffectWithName:@"snapclick.caf"];
         
-        [AudioController playEffect:clicky];
+        [PearlAudioController playEffect:clicky];
     }
     
     else {
-        [AudioController disposeEffect:clicky];
+        [PearlAudioController disposeEffect:clicky];
         clicky = 0;
     }
 }
@@ -115,14 +115,14 @@
     
     SystemSoundID effect = [(NSNumber *) [self.effects objectForKey:bundleName] unsignedIntValue];
     if (effect == 0) {
-        effect = [AudioController loadEffectWithName:[NSString stringWithFormat:@"%@.caf", bundleName]];
+        effect = [PearlAudioController loadEffectWithName:[NSString stringWithFormat:@"%@.caf", bundleName]];
         if (effect == 0)
             return;
         
         [self.effects setObject:[NSNumber numberWithUnsignedInt:effect] forKey:bundleName];
     }
     
-    [AudioController playEffect:effect];
+    [PearlAudioController playEffect:effect];
 }
 
 
@@ -169,9 +169,9 @@
     AudioServicesDisposeSystemSoundID(soundFileObject);
 }
 
-+(AudioController *) get {
++(PearlAudioController *) get {
     
-    static AudioController *sharedAudioController = nil;
+    static PearlAudioController *sharedAudioController = nil;
     if(sharedAudioController == nil)
         sharedAudioController = [self new];
     

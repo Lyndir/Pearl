@@ -3,7 +3,7 @@
 //
 
 // Pearl Configuration
-//#define PEARL_COCOS2D
+#define PEARL_COCOS2D
 #define PEARL_CRYPTO
 #define PEARL_MEDIA
 #define PEARL_UIKIT
@@ -11,12 +11,13 @@
 #define PEARL
 
 #define PEARL_WITH_APNS
+#define PEARL_WITH_SCRYPT
 #define PEARL_WITH_OPENSSL
 
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>
 
-//#import "Pearl-Cocos2D.h"
+#import "Pearl-Cocos2D.h"
 #import "Pearl-Crypto.h"
 #import "Pearl-Media.h"
 #import "Pearl-UIKit.h"

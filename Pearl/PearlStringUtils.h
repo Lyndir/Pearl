@@ -39,7 +39,7 @@ NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix);
 
 NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);
 
-@interface StringUtils : NSObject {
+@interface PearlStringUtils : NSObject {
 @private
     
 }

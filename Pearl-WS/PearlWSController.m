@@ -22,7 +22,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2009. All rights reserved.
 //
 
-#import "AbstractWSController.h"
+#import "PearlWSController.h"
 #import "NSDictionary_JSONExtensions.h"
 #import "NSString_NSArrayFormat.h"
 #ifdef PEARL_UIKIT
@@ -31,7 +31,7 @@
 #import "ASIFormDataRequest.h"
 #import "ASIHttpRequest.h"
 #import "PearlLogger.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "CJSONSerializer.h"
 #import "NSObject_Export.h"
 
@@ -40,7 +40,7 @@
 #define REQUEST_KEY_VERSION             @"version"
 
 
-@implementation JSONResult
+@implementation PearlJSONResult
 
 @synthesize code = _code, outdated = _outdated;
 @synthesize userDescription = _userDescription, userDescriptionArguments = _userDescriptionArguments;
@@ -74,15 +74,15 @@
 
 @end
 
-@implementation AbstractWSController
+@implementation PearlWSController
 @synthesize suppressOutdatedWarning = _suppressOutdatedWarning;
 
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-+ (AbstractWSController *)get {
++ (PearlWSController *)get {
     
-    static AbstractWSController *wsInstance;
+    static PearlWSController *wsInstance;
     if(!wsInstance)
         wsInstance = [self new];
     
@@ -229,10 +229,10 @@
 }
 
 - (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError
-             completion:(void (^)(BOOL success, JSONResult *response))completion {
+             completion:(void (^)(BOOL success, PearlJSONResult *response))completion {
     
     return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
-        JSONResult *response;
+        PearlJSONResult *response;
         BOOL valid = [self validateAndParseResponse:responseData into:&response
                                        popupOnError:popupOnError requires:nil];
         
@@ -241,7 +241,7 @@
 }
 
 
-- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(PearlJSONResult **)response popupOnError:(BOOL)popupOnError
                         requires:(NSString *)key, ... {
     
     *response = nil;
@@ -273,7 +273,7 @@
 #endif
         return NO;
     }
-    *response = [[JSONResult alloc] initWithDictionary:resultDictionary];
+    *response = [[PearlJSONResult alloc] initWithDictionary:resultDictionary];
     if (!*response) {
 #ifdef PEARL_UIKIT
         if (popupOnError)

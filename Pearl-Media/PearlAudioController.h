@@ -26,7 +26,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 
-@interface AudioController : NSObject <AVAudioPlayerDelegate> {
+@interface PearlAudioController : NSObject <AVAudioPlayerDelegate> {
 
     AVAudioPlayer                *_audioPlayer;
     NSString                     *_nextTrack;
@@ -44,6 +44,6 @@
 + (void)playEffect:(SystemSoundID)soundFileObject;
 + (void)disposeEffect:(SystemSoundID)soundFileObject;
 
-+ (AudioController *)get;
++ (PearlAudioController *)get;
 
 @end

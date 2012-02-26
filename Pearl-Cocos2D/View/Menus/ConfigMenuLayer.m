@@ -26,7 +26,7 @@
 #import "PearlConfig.h"
 #import "MenuItemTitle.h"
 #import "NSString_SEL.h"
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "PearlCocos2DStrings.h"
 
 

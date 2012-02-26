@@ -178,7 +178,7 @@
 - (void)back {
     
 #ifdef PEARL_MEDIA
-    [[AudioController get] clickEffect];
+    [[PearlAudioController get] clickEffect];
 #endif
     [[AbstractCocos2DAppDelegate get] popLayer];
 }

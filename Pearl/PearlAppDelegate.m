@@ -26,7 +26,7 @@
 #import "PearlLogger.h"
 #import "PearlConfig.h"
 #ifdef PEARL_MEDIA
-#import "AudioController.h"
+#import "PearlAudioController.h"
 #endif
 #import "PearlResettable.h"
 #ifdef PEARL_UIKIT
@@ -82,9 +82,9 @@
     if ([[PearlConfig get].currentTrack isEqualToString:@"sequential"]) {
         // Restart sequentially from the start.
         [PearlConfig get].playingTrack = nil;
-        [[AudioController get] playTrack:@"sequential"];
+        [[PearlAudioController get] playTrack:@"sequential"];
     } else
-        [[AudioController get] playTrack:[PearlConfig get].currentTrack];
+        [[PearlAudioController get] playTrack:[PearlConfig get].currentTrack];
 #endif
     
     if (!self.window) {
@@ -139,7 +139,7 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
     
 #ifdef PEARL_MEDIA
-    [[AudioController get] playTrack:nil];
+    [[PearlAudioController get] playTrack:nil];
 #endif
 }
 

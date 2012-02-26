@@ -39,7 +39,7 @@ typedef enum {
     JSONResultCodeUpdateRequired = -2,
 } JSONResultCode;
 
-@interface JSONResult : NSObject {
+@interface PearlJSONResult : NSObject {
 
     JSONResultCode  _code;
     BOOL            _outdated;
@@ -63,7 +63,7 @@ typedef enum {
 /**
  * The controller that manages the communication with JSON endpoints.
  */
-@interface AbstractWSController : NSObject {
+@interface PearlWSController : NSObject {
 
     BOOL            _suppressOutdatedWarning;
 }
@@ -74,7 +74,7 @@ typedef enum {
 #pragma mark Lifecycle
 
 /** Obtain the webservice controller instance. */
-+ (AbstractWSController *)get;
++ (PearlWSController *)get;
 
 /** Reset the active session and all warnings issued in it. */
 - (void)reset;
@@ -108,7 +108,7 @@ typedef enum {
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError
-             completion:(void (^)(BOOL success, JSONResult *response))completion;
+             completion:(void (^)(BOOL success, PearlJSONResult *response))completion;
 
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.
@@ -123,7 +123,7 @@ typedef enum {
  *        A list of keys that are required to be present in the result object.
  * @return A boolean indicating whether the response was successfully parsed, has a successful code and passed validation.
  */
-- (BOOL)validateAndParseResponse:(NSData *)responseData into:(JSONResult **)response popupOnError:(BOOL)popupOnError
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(PearlJSONResult **)response popupOnError:(BOOL)popupOnError
                         requires:(NSString *)key, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**

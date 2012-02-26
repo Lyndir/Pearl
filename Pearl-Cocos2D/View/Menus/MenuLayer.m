@@ -26,7 +26,7 @@
 #import "MenuLayer.h"
 #import "MenuItemSpacer.h"
 #ifdef PEARL_MEDIA
-#import "AudioController.h"
+#import "PearlAudioController.h"
 #endif
 
 
@@ -47,7 +47,7 @@
     BOOL itemTouched = [super ccTouchBegan:touch withEvent:event];
 #ifdef PEARL_MEDIA
     if (itemTouched && [self itemForTouch:touch].isEnabled)
-        [[AudioController get] clickEffect];
+        [[PearlAudioController get] clickEffect];
 #endif
     
     return itemTouched;

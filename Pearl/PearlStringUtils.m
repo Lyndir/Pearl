@@ -22,7 +22,7 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "StringUtils.h"
+#import "PearlStringUtils.h"
 #import "PearlStrings.h"
 
 
@@ -71,6 +71,6 @@ NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     return numbers;
 }
 
-@implementation StringUtils
+@implementation PearlStringUtils
 
 @end

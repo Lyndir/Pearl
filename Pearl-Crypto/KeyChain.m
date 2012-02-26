@@ -132,7 +132,7 @@
 
 + (id)runQuery:(NSDictionary *)query returnType:(CFTypeRef)kSecReturn {
     
-    NSMutableDictionary *dataQuery = [query mutableCopy];
+    NSMutableDictionary *dataQuery = [[query mutableCopy] autorelease];
     [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:kSecReturn];
     
     id result = nil;

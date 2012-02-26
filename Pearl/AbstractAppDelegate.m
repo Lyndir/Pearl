@@ -43,12 +43,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Log application details.
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *name = [info objectForKey:@"CFBundleName"];
-    NSString *displayName = [info objectForKey:@"CFBundleDisplayName"];
+    NSString *name = [[InfoPlist get] CFBundleName];
+    NSString *displayName = [[InfoPlist get] CFBundleDisplayName];
     NSString *build = [Config get].build;
     NSString *version = [Config get].version;
-    NSString *copyright = [Config get].copyright;
     
     if (!name)
         name = displayName;
@@ -59,10 +57,7 @@
     if (build && ![build isEqualToString:version])
         version = [NSString stringWithFormat:@"%@ (%@)", version, build];
     
-    inf(@"%@ v%@", name, version);
-    if (copyright)
-        inf(@"%@", copyright);
-    inf(@"===================================");
+    inf(@"%@ %@", name, version);
     
 #ifdef PEARL_WITH_APNS
     if ([[Config get].supportedNotifications unsignedIntegerValue])

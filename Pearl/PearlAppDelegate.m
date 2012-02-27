@@ -45,8 +45,8 @@
     // Log application details.
     NSString *name = [[PearlInfoPlist get] CFBundleName];
     NSString *displayName = [[PearlInfoPlist get] CFBundleDisplayName];
-    NSString *build = [Config get].build;
-    NSString *version = [Config get].version;
+    NSString *build = [PearlConfig get].build;
+    NSString *version = [PearlConfig get].version;
     
     if (!name)
         name = displayName;

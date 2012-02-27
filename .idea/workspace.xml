@@ -2,35 +2,111 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cbeecb39-d0da-492b-9d3c-838c20a556a1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/Pearl.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/projectCodeStyle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Pearl.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/xcode.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Media/AudioController.h" afterPath="$PROJECT_DIR$/Pearl-Media/PearlAudioController.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Media/AudioController.m" afterPath="$PROJECT_DIR$/Pearl-Media/PearlAudioController.m" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-WS/AbstractWSController.h" afterPath="$PROJECT_DIR$/Pearl-WS/PearlWSController.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-WS/AbstractWSController.m" afterPath="$PROJECT_DIR$/Pearl-WS/PearlWSController.m" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/StringUtils.h" afterPath="$PROJECT_DIR$/Pearl/PearlStringUtils.h" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/StringUtils.m" afterPath="$PROJECT_DIR$/Pearl/PearlStringUtils.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/CCDebug.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/CCDebug.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/HUDLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/HUDLayer.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/ConfigMenuLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/ConfigMenuLayer.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuLayer.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ShadeLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/ShadeLayer.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Crypto/SCrypt.m" afterPath="$PROJECT_DIR$/Pearl-Crypto/SCrypt.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Media/Pearl-Media.h" afterPath="$PROJECT_DIR$/Pearl-Media/Pearl-Media.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-UIKit/AlertViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/AlertViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-UIKit/SheetViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/SheetViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIUtils.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/UIUtils.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-WS/Pearl-WS.h" afterPath="$PROJECT_DIR$/Pearl-WS/Pearl-WS.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TODO" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/PearlCCRemove.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/PearlCCRemove.m" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCActivitySprite.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCActivitySprite.m" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.m" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ActivitySprite.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ActivitySprite.m" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ConfirmationViewController.h" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ConfirmationViewController.m" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/AbstractCocos2DAppDelegate.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/PearlCocos2DAppDelegate.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/AbstractCocos2DAppDelegate.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/PearlCocos2DAppDelegate.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/AutoTween.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/PearlCCAutoTween.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/AutoTween.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/Actions/PearlCCAutoTween.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/CCDebug.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/PearlCCDebug.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/CCDebug.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/PearlCCDebug.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BarLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBarLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BarLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBarLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BarSprite.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBarSprite.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BarSprite.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBarSprite.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BoxLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBoxLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/BoxLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCBoxLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/DebugLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCDebugLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/DebugLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCDebugLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/FancyLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCFancyLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/FancyLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCFancyLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/FlickLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCFlickLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/FlickLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCFlickLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/HUDLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCHUDLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/HUDLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCHUDLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/ConfigMenuLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCConfigMenuLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/ConfigMenuLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCConfigMenuLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemBlock.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemBlock.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemBlock.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemBlock.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemSpacer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemSpacer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemSpacer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemSpacer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemSymbolic.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemSymbolic.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemSymbolic.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemSymbolic.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemTitle.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemTitle.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuItemTitle.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuItemTitle.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/MenuLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Menus/PearlCCMenuLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ScrollLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCScrollLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ScrollLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCScrollLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ShadeLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCShadeLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/ShadeLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCShadeLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Splash.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCSplash.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Splash.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCSplash.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/SwipeLayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCSwipeLayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/SwipeLayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCSwipeLayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/UILayer.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCUILayer.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/UILayer.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/PearlCCUILayer.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Utility/GLUtils.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Utility/PearlGLUtils.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/View/Utility/GLUtils.m" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/View/Utility/PearlGLUtils.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/CryptUtils.h" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlCryptUtils.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/CryptUtils.m" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlCryptUtils.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/KeyChain.h" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlKeyChain.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/KeyChain.m" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlKeyChain.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/RSAKey.h" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlRSAKey.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/RSAKey.m" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlRSAKey.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/SCrypt.h" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlSCrypt.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-Crypto/SCrypt.m" afterPath="$PROJECT_DIR$/Pearl-Crypto/PearlSCrypt.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/AlertViewController.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlAlert.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/AlertViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlAlert.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ArrayTVC.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlArrayTVC.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ArrayTVC.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlArrayTVC.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/BoxView.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlBoxView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/BoxView.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlBoxView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/GradientView.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlGradientView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/GradientView.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlGradientView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/Layout.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlLayout.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/Layout.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlLayout.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/LayoutView.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlLayoutView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/LayoutView.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlLayoutView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/MessageView.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/MessageView.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/RootViewController.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlRootViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/RootViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlRootViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/SheetViewController.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlSheet.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/SheetViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlSheet.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIDebug.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlUIDebug.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIDebug.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlUIDebug.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIImage_Scaling.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIImage_Scaling.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIUtils.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/UIUtils.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ValidatingTextField.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlValidatingTextField.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/ValidatingTextField.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlValidatingTextField.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/WebViewController.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl-UIKit/WebViewController.m" afterPath="$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/InfoPlist.h" afterPath="$PROJECT_DIR$/Pearl/PearlInfoPlist.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/InfoPlist.m" afterPath="$PROJECT_DIR$/Pearl/PearlInfoPlist.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSObject_Export.h" afterPath="$PROJECT_DIR$/Pearl/NSObject_PearlExport.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSObject_Export.m" afterPath="$PROJECT_DIR$/Pearl/NSObject_PearlExport.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSString_NSArrayFormat.h" afterPath="$PROJECT_DIR$/Pearl/NSString_PearlNSArrayFormat.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSString_NSArrayFormat.m" afterPath="$PROJECT_DIR$/Pearl/NSString_PearlNSArrayFormat.m" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSString_SEL.h" afterPath="$PROJECT_DIR$/Pearl/NSString_PearlSEL.h" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Pearl/NSString_SEL.m" afterPath="$PROJECT_DIR$/Pearl/NSString_PearlSEL.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Cocos2D/Pearl-Cocos2D.h" afterPath="$PROJECT_DIR$/Pearl-Cocos2D/Pearl-Cocos2D.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-Crypto/Pearl-Crypto.h" afterPath="$PROJECT_DIR$/Pearl-Crypto/Pearl-Crypto.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-UIKit/Pearl-UIKit.h" afterPath="$PROJECT_DIR$/Pearl-UIKit/Pearl-UIKit.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl-WS/PearlWSController.m" afterPath="$PROJECT_DIR$/Pearl-WS/PearlWSController.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/Pearl.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl/Pearl-Prefix.pch" afterPath="$PROJECT_DIR$/Pearl/Pearl-Prefix.pch" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl/Pearl.h" afterPath="$PROJECT_DIR$/Pearl/Pearl.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl/PearlAppDelegate.m" afterPath="$PROJECT_DIR$/Pearl/PearlAppDelegate.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pearl/PearlConfig.m" afterPath="$PROJECT_DIR$/Pearl/PearlConfig.m" />
@@ -55,17 +131,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CryptUtils.m" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Pearl-Crypto/CryptUtils.m">
+      <file leaf-file-name="PearlUIUtils.m" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="26" selection-start="943" selection-end="943" vertical-scroll-proportion="0.34371108">
+            <state line="101" column="29" selection-start="3160" selection-end="3160" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CryptUtils.h" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pearl-Crypto/CryptUtils.h">
+      <file leaf-file-name="PearlUIUtils.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="20" selection-start="1777" selection-end="1782" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UIImage_PearlScaling.m" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="30" selection-start="938" selection-end="938" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PearlWebViewController.m" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.m">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -73,27 +167,66 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SCrypt.h" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pearl-Crypto/SCrypt.h">
+      <file leaf-file-name="PearlWebViewController.h" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="13" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.12745099">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SCrypt.m" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pearl-Crypto/SCrypt.m">
+      <file leaf-file-name="PearlValidatingTextField.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlValidatingTextField.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="18" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#678#696#0" expanded="true" />
-              </folding>
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UIImage_PearlScaling.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="25" selection-start="836" selection-end="836" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PearlMessageView.m" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PearlMessageView.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PearlGradientView.h" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlGradientView.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -101,9 +234,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Pearl/Pearl-Prefix.pch" />
-        <option value="$PROJECT_DIR$/Pearl-Crypto/SCrypt.m" />
-        <option value="$PROJECT_DIR$/Pearl-Crypto/CryptUtils.m" />
+        <option value="$PROJECT_DIR$/Pearl/NSString_PearlNSArrayFormat.h" />
+        <option value="$PROJECT_DIR$/Pearl/NSString_PearlNSArrayFormat.m" />
+        <option value="$PROJECT_DIR$/Pearl/NSString_PearlSEL.h" />
+        <option value="$PROJECT_DIR$/Pearl/NSString_PearlSEL.m" />
+        <option value="$PROJECT_DIR$/Pearl/PearlInfoPlist.h" />
+        <option value="$PROJECT_DIR$/Pearl-Cocos2D/PearlCCDebug.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlAlert.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/Pearl-UIKit.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/ConfirmationViewController.m" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlGradientView.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.m" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.m" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlValidatingTextField.h" />
+        <option value="$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.h" />
       </list>
     </option>
   </component>
@@ -160,7 +306,7 @@
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Pearl-Crypto" />
+              <option name="myItemId" value="Frameworks" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodePBXReferenceNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -198,13 +344,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1680" height="937" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977462" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977462" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.6702254" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24984913" sideWeight="0.6702254" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
@@ -212,7 +359,6 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -272,67 +418,114 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Pearl/PearlLogger.m">
+    <entry file="file://$PROJECT_DIR$/Pearl/NSString_PearlSEL.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="0" selection-start="2543" selection-end="2543" vertical-scroll-proportion="0.48692402">
+        <state line="39" column="0" selection-start="970" selection-end="970" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl/PearlLogger.h">
+    <entry file="file://$PROJECT_DIR$/Pearl/PearlInfoPlist.h">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl/Pearl-Prefix.pch">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="0" selection-start="278" selection-end="278" vertical-scroll-proportion="0.598513">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl-Cocos2D/View/ScrollLayer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="8" selection-start="806" selection-end="806" vertical-scroll-proportion="0.33271375">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="6" selection-start="1499" selection-end="1499" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl-Crypto/SCrypt.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="18" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#678#696#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl-Crypto/SCrypt.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="13" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl-Crypto/CryptUtils.h">
+    <entry file="file://$PROJECT_DIR$/Pearl-Cocos2D/PearlCocos2DStrings.h">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pearl-Crypto/CryptUtils.m">
+    <entry file="file://$PROJECT_DIR$/Pearl-Cocos2D/PearlCCDebug.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="26" selection-start="943" selection-end="943" vertical-scroll-proportion="0.34371108">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlAlert.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/Pearl-UIKit.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="303" selection-end="303" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlGradientView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlMessageView.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="30" selection-start="938" selection-end="938" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="20" selection-start="1777" selection-end="1782" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlUIUtils.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="29" selection-start="3160" selection-end="3160" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/UIImage_PearlScaling.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="25" selection-start="836" selection-end="836" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlValidatingTextField.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-UIKit/PearlWebViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.12745099">
           <folding />
         </state>
       </provider>

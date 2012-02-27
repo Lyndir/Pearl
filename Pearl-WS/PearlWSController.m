@@ -24,16 +24,16 @@
 
 #import "PearlWSController.h"
 #import "NSDictionary_JSONExtensions.h"
-#import "NSString_NSArrayFormat.h"
+#import "NSString_PearlNSArrayFormat.h"
 #ifdef PEARL_UIKIT
-#import "AlertViewController.h"
+#import "PearlAlert.h"
 #endif
 #import "ASIFormDataRequest.h"
 #import "ASIHttpRequest.h"
 #import "PearlLogger.h"
 #import "PearlStringUtils.h"
 #import "CJSONSerializer.h"
-#import "NSObject_Export.h"
+#import "NSObject_PearlExport.h"
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
@@ -248,7 +248,7 @@
     if (responseData == nil || !responseData.length) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSConnection];
+            [PearlAlert showError:[PearlWSStrings get].errorWSConnection];
 #endif
         return NO;
     }
@@ -269,7 +269,7 @@
             [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid];
+            [PearlAlert showError:[PearlWSStrings get].errorWSResponseInvalid];
 #endif
         return NO;
     }
@@ -277,7 +277,7 @@
     if (!*response) {
 #ifdef PEARL_UIKIT
         if (popupOnError)
-            [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid];
+            [PearlAlert showError:[PearlWSStrings get].errorWSResponseInvalid];
 #endif
         return NO;
     }
@@ -289,7 +289,7 @@
         
         if ((*response).code == JSONResultCodeUpdateRequired)
             // Required upgrade.
-            [AlertViewController showAlertWithTitle:[PearlStrings get].commonTitleError
+            [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
                                             message:[PearlWSStrings get].errorWSResponseOutdatedRequired
                                           viewStyle:UIAlertViewStyleDefault
                                   tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
@@ -298,7 +298,7 @@
                                   } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
         else
             // Optional upgrade.
-            [AlertViewController showAlertWithTitle:[PearlStrings get].commonTitleError
+            [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
                                             message:[PearlWSStrings get].errorWSResponseOutdatedOptional
                                           viewStyle:UIAlertViewStyleDefault
                                   tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
@@ -315,10 +315,10 @@
         if (popupOnError && (*response).code != JSONResultCodeUpdateRequired) {
             NSString *errorMessage = (*response).userDescription;
             if (errorMessage && errorMessage.length) {
-                [AlertViewController showError:[NSString stringWithFormat:l(errorMessage) array:(*response).userDescriptionArguments]];
+                [PearlAlert showError:[NSString stringWithFormat:l(errorMessage) array:(*response).userDescriptionArguments]];
             }
             else
-                [AlertViewController showError:[PearlWSStrings get].errorWSResponseFailed];
+                [PearlAlert showError:[PearlWSStrings get].errorWSResponseFailed];
         }
 #endif
         
@@ -340,7 +340,7 @@
             
 #ifdef PEARL_UIKIT
             if (popupOnError)
-                [AlertViewController showError:[PearlWSStrings get].errorWSResponseInvalid];
+                [PearlAlert showError:[PearlWSStrings get].errorWSResponseInvalid];
 #endif
             return NO;
         }

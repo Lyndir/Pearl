@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA10974714F438C300EB000C /* InfoPlist.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972314F438C300EB000C /* InfoPlist.h */; };
-		DA10974814F438C300EB000C /* InfoPlist.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972414F438C300EB000C /* InfoPlist.m */; };
-		DA10974914F438C300EB000C /* NSObject_Export.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972514F438C300EB000C /* NSObject_Export.h */; };
-		DA10974A14F438C300EB000C /* NSObject_Export.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972614F438C300EB000C /* NSObject_Export.m */; };
-		DA10974B14F438C300EB000C /* NSString_NSArrayFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972714F438C300EB000C /* NSString_NSArrayFormat.h */; };
-		DA10974C14F438C300EB000C /* NSString_NSArrayFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972814F438C300EB000C /* NSString_NSArrayFormat.m */; };
-		DA10974D14F438C300EB000C /* NSString_SEL.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972914F438C300EB000C /* NSString_SEL.h */; };
-		DA10974E14F438C300EB000C /* NSString_SEL.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972A14F438C300EB000C /* NSString_SEL.m */; };
+		DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972314F438C300EB000C /* PearlInfoPlist.h */; };
+		DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972414F438C300EB000C /* PearlInfoPlist.m */; };
+		DA10974914F438C300EB000C /* NSObject_PearlExport.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972514F438C300EB000C /* NSObject_PearlExport.h */; };
+		DA10974A14F438C300EB000C /* NSObject_PearlExport.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972614F438C300EB000C /* NSObject_PearlExport.m */; };
+		DA10974B14F438C300EB000C /* NSString_PearlNSArrayFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972714F438C300EB000C /* NSString_PearlNSArrayFormat.h */; };
+		DA10974C14F438C300EB000C /* NSString_PearlNSArrayFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972814F438C300EB000C /* NSString_PearlNSArrayFormat.m */; };
+		DA10974D14F438C300EB000C /* NSString_PearlSEL.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972914F438C300EB000C /* NSString_PearlSEL.h */; };
+		DA10974E14F438C300EB000C /* NSString_PearlSEL.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972A14F438C300EB000C /* NSString_PearlSEL.m */; };
 		DA10974F14F438C300EB000C /* Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972B14F438C300EB000C /* Pearl.h */; };
 		DA10975014F438C300EB000C /* PearlAbstractStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972C14F438C300EB000C /* PearlAbstractStrings.h */; };
 		DA10975114F438C300EB000C /* PearlAbstractStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972D14F438C300EB000C /* PearlAbstractStrings.m */; };
@@ -39,102 +39,100 @@
 		DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974014F438C300EB000C /* PearlWebUtils.m */; };
 		DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10974514F438C300EB000C /* PearlStringUtils.h */; };
 		DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974614F438C300EB000C /* PearlStringUtils.m */; };
-		DA109BF514F438D600EB000C /* AbstractCocos2DAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976814F438D400EB000C /* AbstractCocos2DAppDelegate.h */; };
-		DA109BF614F438D600EB000C /* AbstractCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* AbstractCocos2DAppDelegate.m */; };
-		DA109BF714F438D600EB000C /* AutoTween.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976B14F438D400EB000C /* AutoTween.h */; };
-		DA109BF814F438D600EB000C /* AutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* AutoTween.m */; };
-		DA109BF914F438D600EB000C /* Remove.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976D14F438D400EB000C /* Remove.h */; };
-		DA109BFA14F438D600EB000C /* Remove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* Remove.m */; };
-		DA109BFB14F438D600EB000C /* CCDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976F14F438D400EB000C /* CCDebug.h */; };
-		DA109BFC14F438D600EB000C /* CCDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977014F438D400EB000C /* CCDebug.m */; };
+		DA109BF514F438D600EB000C /* PearlCocos2DAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */; };
+		DA109BF614F438D600EB000C /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
+		DA109BF714F438D600EB000C /* PearlCCAutoTween.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976B14F438D400EB000C /* PearlCCAutoTween.h */; };
+		DA109BF814F438D600EB000C /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
+		DA109BF914F438D600EB000C /* PearlCCRemove.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976D14F438D400EB000C /* PearlCCRemove.h */; };
+		DA109BFA14F438D600EB000C /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
+		DA109BFB14F438D600EB000C /* PearlCCDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976F14F438D400EB000C /* PearlCCDebug.h */; };
+		DA109BFC14F438D600EB000C /* PearlCCDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977014F438D400EB000C /* PearlCCDebug.m */; };
 		DA109BFD14F438D600EB000C /* Pearl-Cocos2D-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */; };
 		DA109BFE14F438D600EB000C /* Pearl-Cocos2D.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977214F438D400EB000C /* Pearl-Cocos2D.h */; };
 		DA109BFF14F438D600EB000C /* PearlCocos2DStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977314F438D400EB000C /* PearlCocos2DStrings.h */; };
 		DA109C0014F438D600EB000C /* PearlCocos2DStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977414F438D400EB000C /* PearlCocos2DStrings.m */; };
-		DA109C0114F438D600EB000C /* ActivitySprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A414F438D400EB000C /* ActivitySprite.h */; };
-		DA109C0214F438D600EB000C /* ActivitySprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A514F438D400EB000C /* ActivitySprite.m */; };
-		DA109C0314F438D600EB000C /* BarLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A614F438D400EB000C /* BarLayer.h */; };
-		DA109C0414F438D600EB000C /* BarLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A714F438D400EB000C /* BarLayer.m */; };
-		DA109C0514F438D600EB000C /* BarSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A814F438D400EB000C /* BarSprite.h */; };
-		DA109C0614F438D600EB000C /* BarSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A914F438D400EB000C /* BarSprite.m */; };
-		DA109C0714F438D600EB000C /* BoxLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AA14F438D400EB000C /* BoxLayer.h */; };
-		DA109C0814F438D600EB000C /* BoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AB14F438D400EB000C /* BoxLayer.m */; };
-		DA109C0914F438D600EB000C /* DebugLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AC14F438D400EB000C /* DebugLayer.h */; };
-		DA109C0A14F438D600EB000C /* DebugLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AD14F438D400EB000C /* DebugLayer.m */; };
-		DA109C0B14F438D600EB000C /* FancyLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AE14F438D400EB000C /* FancyLayer.h */; };
-		DA109C0C14F438D600EB000C /* FancyLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AF14F438D400EB000C /* FancyLayer.m */; };
-		DA109C0D14F438D600EB000C /* FlickLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B014F438D400EB000C /* FlickLayer.h */; };
-		DA109C0E14F438D600EB000C /* FlickLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B114F438D400EB000C /* FlickLayer.m */; };
-		DA109C0F14F438D600EB000C /* HUDLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B214F438D400EB000C /* HUDLayer.h */; };
-		DA109C1014F438D600EB000C /* HUDLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B314F438D400EB000C /* HUDLayer.m */; };
-		DA109C1114F438D600EB000C /* ConfigMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B514F438D400EB000C /* ConfigMenuLayer.h */; };
-		DA109C1214F438D600EB000C /* ConfigMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B614F438D400EB000C /* ConfigMenuLayer.m */; };
-		DA109C1314F438D600EB000C /* MenuItemBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B714F438D400EB000C /* MenuItemBlock.h */; };
-		DA109C1414F438D600EB000C /* MenuItemBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B814F438D400EB000C /* MenuItemBlock.m */; };
-		DA109C1514F438D600EB000C /* MenuItemSpacer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B914F438D400EB000C /* MenuItemSpacer.h */; };
-		DA109C1614F438D600EB000C /* MenuItemSpacer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BA14F438D400EB000C /* MenuItemSpacer.m */; };
-		DA109C1714F438D600EB000C /* MenuItemSymbolic.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BB14F438D400EB000C /* MenuItemSymbolic.h */; };
-		DA109C1814F438D600EB000C /* MenuItemSymbolic.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BC14F438D400EB000C /* MenuItemSymbolic.m */; };
-		DA109C1914F438D600EB000C /* MenuItemTitle.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BD14F438D400EB000C /* MenuItemTitle.h */; };
-		DA109C1A14F438D600EB000C /* MenuItemTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BE14F438D400EB000C /* MenuItemTitle.m */; };
-		DA109C1B14F438D600EB000C /* MenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BF14F438D400EB000C /* MenuLayer.h */; };
-		DA109C1C14F438D600EB000C /* MenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C014F438D400EB000C /* MenuLayer.m */; };
-		DA109C1D14F438D600EB000C /* ScrollLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C114F438D400EB000C /* ScrollLayer.h */; };
-		DA109C1E14F438D600EB000C /* ScrollLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C214F438D400EB000C /* ScrollLayer.m */; };
-		DA109C1F14F438D600EB000C /* ShadeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C314F438D400EB000C /* ShadeLayer.h */; };
-		DA109C2014F438D600EB000C /* ShadeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C414F438D400EB000C /* ShadeLayer.m */; };
-		DA109C2114F438D600EB000C /* Splash.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C514F438D400EB000C /* Splash.h */; };
-		DA109C2214F438D600EB000C /* Splash.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C614F438D400EB000C /* Splash.m */; };
-		DA109C2314F438D600EB000C /* SwipeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C714F438D400EB000C /* SwipeLayer.h */; };
-		DA109C2414F438D600EB000C /* SwipeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C814F438D400EB000C /* SwipeLayer.m */; };
-		DA109C2514F438D600EB000C /* UILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C914F438D400EB000C /* UILayer.h */; };
-		DA109C2614F438D600EB000C /* UILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CA14F438D400EB000C /* UILayer.m */; };
-		DA109C2714F438D600EB000C /* GLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CC14F438D400EB000C /* GLUtils.h */; };
-		DA109C2814F438D600EB000C /* GLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CD14F438D400EB000C /* GLUtils.m */; };
-		DA109C2914F438D600EB000C /* CryptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CF14F438D400EB000C /* CryptUtils.h */; };
-		DA109C2A14F438D600EB000C /* CryptUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D014F438D400EB000C /* CryptUtils.m */; };
-		DA109C2B14F438D600EB000C /* KeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D114F438D400EB000C /* KeyChain.h */; };
-		DA109C2C14F438D600EB000C /* KeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D214F438D400EB000C /* KeyChain.m */; };
+		DA109C0114F438D600EB000C /* PearlCCActivitySprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A414F438D400EB000C /* PearlCCActivitySprite.h */; };
+		DA109C0214F438D600EB000C /* PearlCCActivitySprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A514F438D400EB000C /* PearlCCActivitySprite.m */; };
+		DA109C0314F438D600EB000C /* PearlCCBarLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A614F438D400EB000C /* PearlCCBarLayer.h */; };
+		DA109C0414F438D600EB000C /* PearlCCBarLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A714F438D400EB000C /* PearlCCBarLayer.m */; };
+		DA109C0514F438D600EB000C /* PearlCCBarSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A814F438D400EB000C /* PearlCCBarSprite.h */; };
+		DA109C0614F438D600EB000C /* PearlCCBarSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A914F438D400EB000C /* PearlCCBarSprite.m */; };
+		DA109C0714F438D600EB000C /* PearlCCBoxLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AA14F438D400EB000C /* PearlCCBoxLayer.h */; };
+		DA109C0814F438D600EB000C /* PearlCCBoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AB14F438D400EB000C /* PearlCCBoxLayer.m */; };
+		DA109C0914F438D600EB000C /* PearlCCDebugLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AC14F438D400EB000C /* PearlCCDebugLayer.h */; };
+		DA109C0A14F438D600EB000C /* PearlCCDebugLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AD14F438D400EB000C /* PearlCCDebugLayer.m */; };
+		DA109C0B14F438D600EB000C /* PearlCCFancyLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AE14F438D400EB000C /* PearlCCFancyLayer.h */; };
+		DA109C0C14F438D600EB000C /* PearlCCFancyLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AF14F438D400EB000C /* PearlCCFancyLayer.m */; };
+		DA109C0D14F438D600EB000C /* PearlCCFlickLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B014F438D400EB000C /* PearlCCFlickLayer.h */; };
+		DA109C0E14F438D600EB000C /* PearlCCFlickLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B114F438D400EB000C /* PearlCCFlickLayer.m */; };
+		DA109C0F14F438D600EB000C /* PearlCCHUDLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B214F438D400EB000C /* PearlCCHUDLayer.h */; };
+		DA109C1014F438D600EB000C /* PearlCCHUDLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B314F438D400EB000C /* PearlCCHUDLayer.m */; };
+		DA109C1114F438D600EB000C /* PearlCCConfigMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B514F438D400EB000C /* PearlCCConfigMenuLayer.h */; };
+		DA109C1214F438D600EB000C /* PearlCCConfigMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B614F438D400EB000C /* PearlCCConfigMenuLayer.m */; };
+		DA109C1314F438D600EB000C /* PearlCCMenuItemBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B714F438D400EB000C /* PearlCCMenuItemBlock.h */; };
+		DA109C1414F438D600EB000C /* PearlCCMenuItemBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B814F438D400EB000C /* PearlCCMenuItemBlock.m */; };
+		DA109C1514F438D600EB000C /* PearlCCMenuItemSpacer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B914F438D400EB000C /* PearlCCMenuItemSpacer.h */; };
+		DA109C1614F438D600EB000C /* PearlCCMenuItemSpacer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BA14F438D400EB000C /* PearlCCMenuItemSpacer.m */; };
+		DA109C1714F438D600EB000C /* PearlCCMenuItemSymbolic.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BB14F438D400EB000C /* PearlCCMenuItemSymbolic.h */; };
+		DA109C1814F438D600EB000C /* PearlCCMenuItemSymbolic.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BC14F438D400EB000C /* PearlCCMenuItemSymbolic.m */; };
+		DA109C1914F438D600EB000C /* PearlCCMenuItemTitle.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BD14F438D400EB000C /* PearlCCMenuItemTitle.h */; };
+		DA109C1A14F438D600EB000C /* PearlCCMenuItemTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BE14F438D400EB000C /* PearlCCMenuItemTitle.m */; };
+		DA109C1B14F438D600EB000C /* PearlCCMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BF14F438D400EB000C /* PearlCCMenuLayer.h */; };
+		DA109C1C14F438D600EB000C /* PearlCCMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C014F438D400EB000C /* PearlCCMenuLayer.m */; };
+		DA109C1D14F438D600EB000C /* PearlCCScrollLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C114F438D400EB000C /* PearlCCScrollLayer.h */; };
+		DA109C1E14F438D600EB000C /* PearlCCScrollLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C214F438D400EB000C /* PearlCCScrollLayer.m */; };
+		DA109C1F14F438D600EB000C /* PearlCCShadeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C314F438D400EB000C /* PearlCCShadeLayer.h */; };
+		DA109C2014F438D600EB000C /* PearlCCShadeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C414F438D400EB000C /* PearlCCShadeLayer.m */; };
+		DA109C2114F438D600EB000C /* PearlCCSplash.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C514F438D400EB000C /* PearlCCSplash.h */; };
+		DA109C2214F438D600EB000C /* PearlCCSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C614F438D400EB000C /* PearlCCSplash.m */; };
+		DA109C2314F438D600EB000C /* PearlCCSwipeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C714F438D400EB000C /* PearlCCSwipeLayer.h */; };
+		DA109C2414F438D600EB000C /* PearlCCSwipeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C814F438D400EB000C /* PearlCCSwipeLayer.m */; };
+		DA109C2514F438D600EB000C /* PearlCCUILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C914F438D400EB000C /* PearlCCUILayer.h */; };
+		DA109C2614F438D600EB000C /* PearlCCUILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CA14F438D400EB000C /* PearlCCUILayer.m */; };
+		DA109C2714F438D600EB000C /* PearlGLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CC14F438D400EB000C /* PearlGLUtils.h */; };
+		DA109C2814F438D600EB000C /* PearlGLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CD14F438D400EB000C /* PearlGLUtils.m */; };
+		DA109C2914F438D600EB000C /* PearlCryptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CF14F438D400EB000C /* PearlCryptUtils.h */; };
+		DA109C2A14F438D600EB000C /* PearlCryptUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D014F438D400EB000C /* PearlCryptUtils.m */; };
+		DA109C2B14F438D600EB000C /* PearlKeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D114F438D400EB000C /* PearlKeyChain.h */; };
+		DA109C2C14F438D600EB000C /* PearlKeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D214F438D400EB000C /* PearlKeyChain.m */; };
 		DA109C2D14F438D600EB000C /* Pearl-Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D314F438D400EB000C /* Pearl-Crypto.h */; };
-		DA109C2E14F438D600EB000C /* RSAKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D514F438D400EB000C /* RSAKey.h */; };
-		DA109C2F14F438D600EB000C /* RSAKey.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D614F438D400EB000C /* RSAKey.m */; };
-		DA109C3014F438D600EB000C /* SCrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D714F438D400EB000C /* SCrypt.h */; };
-		DA109C3114F438D600EB000C /* SCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D814F438D400EB000C /* SCrypt.m */; };
+		DA109C2E14F438D600EB000C /* PearlRSAKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D514F438D400EB000C /* PearlRSAKey.h */; };
+		DA109C2F14F438D600EB000C /* PearlRSAKey.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D614F438D400EB000C /* PearlRSAKey.m */; };
+		DA109C3014F438D600EB000C /* PearlSCrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D714F438D400EB000C /* PearlSCrypt.h */; };
+		DA109C3114F438D600EB000C /* PearlSCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D814F438D400EB000C /* PearlSCrypt.m */; };
 		DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DA14F438D400EB000C /* PearlAudioController.h */; };
 		DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DB14F438D400EB000C /* PearlAudioController.m */; };
 		DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DC14F438D400EB000C /* Pearl-Media.h */; };
-		DA109C3514F438D600EB000C /* AlertViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DE14F438D400EB000C /* AlertViewController.h */; };
-		DA109C3614F438D600EB000C /* AlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DF14F438D400EB000C /* AlertViewController.m */; };
-		DA109C3714F438D600EB000C /* ArrayTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E014F438D400EB000C /* ArrayTVC.h */; };
-		DA109C3814F438D600EB000C /* ArrayTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E114F438D400EB000C /* ArrayTVC.m */; };
-		DA109C3914F438D600EB000C /* BoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E214F438D400EB000C /* BoxView.h */; };
-		DA109C3A14F438D600EB000C /* BoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E314F438D400EB000C /* BoxView.m */; };
-		DA109C3B14F438D600EB000C /* ConfirmationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E414F438D400EB000C /* ConfirmationViewController.h */; };
-		DA109C3C14F438D600EB000C /* ConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E514F438D400EB000C /* ConfirmationViewController.m */; };
-		DA109C3D14F438D600EB000C /* GradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E614F438D400EB000C /* GradientView.h */; };
-		DA109C3E14F438D600EB000C /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E714F438D400EB000C /* GradientView.m */; };
-		DA109C3F14F438D600EB000C /* Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E814F438D400EB000C /* Layout.h */; };
-		DA109C4014F438D600EB000C /* Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E914F438D400EB000C /* Layout.m */; };
-		DA109C4114F438D600EB000C /* LayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EA14F438D400EB000C /* LayoutView.h */; };
-		DA109C4214F438D600EB000C /* LayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097EB14F438D400EB000C /* LayoutView.m */; };
-		DA109C4314F438D600EB000C /* MessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EC14F438D400EB000C /* MessageView.h */; };
-		DA109C4414F438D600EB000C /* MessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097ED14F438D400EB000C /* MessageView.m */; };
+		DA109C3514F438D600EB000C /* PearlAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DE14F438D400EB000C /* PearlAlert.h */; };
+		DA109C3614F438D600EB000C /* PearlAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DF14F438D400EB000C /* PearlAlert.m */; };
+		DA109C3714F438D600EB000C /* PearlArrayTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E014F438D400EB000C /* PearlArrayTVC.h */; };
+		DA109C3814F438D600EB000C /* PearlArrayTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E114F438D400EB000C /* PearlArrayTVC.m */; };
+		DA109C3914F438D600EB000C /* PearlBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E214F438D400EB000C /* PearlBoxView.h */; };
+		DA109C3A14F438D600EB000C /* PearlBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E314F438D400EB000C /* PearlBoxView.m */; };
+		DA109C3D14F438D600EB000C /* PearlGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E614F438D400EB000C /* PearlGradientView.h */; };
+		DA109C3E14F438D600EB000C /* PearlGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E714F438D400EB000C /* PearlGradientView.m */; };
+		DA109C3F14F438D600EB000C /* PearlLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E814F438D400EB000C /* PearlLayout.h */; };
+		DA109C4014F438D600EB000C /* PearlLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E914F438D400EB000C /* PearlLayout.m */; };
+		DA109C4114F438D600EB000C /* PearlLayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EA14F438D400EB000C /* PearlLayoutView.h */; };
+		DA109C4214F438D600EB000C /* PearlLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097EB14F438D400EB000C /* PearlLayoutView.m */; };
+		DA109C4314F438D600EB000C /* PearlMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EC14F438D400EB000C /* PearlMessageView.h */; };
+		DA109C4414F438D600EB000C /* PearlMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097ED14F438D400EB000C /* PearlMessageView.m */; };
 		DA109C4514F438D600EB000C /* Pearl-UIKit-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */; };
 		DA109C4614F438D600EB000C /* Pearl-UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EF14F438D400EB000C /* Pearl-UIKit.h */; };
-		DA109C4714F438D600EB000C /* RootViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDD14F438D500EB000C /* RootViewController.h */; };
-		DA109C4814F438D600EB000C /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BDE14F438D500EB000C /* RootViewController.m */; };
-		DA109C4914F438D600EB000C /* SheetViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDF14F438D500EB000C /* SheetViewController.h */; };
-		DA109C4A14F438D600EB000C /* SheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE014F438D500EB000C /* SheetViewController.m */; };
-		DA109C4B14F438D600EB000C /* UIDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE114F438D500EB000C /* UIDebug.h */; };
-		DA109C4C14F438D600EB000C /* UIDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE214F438D500EB000C /* UIDebug.m */; };
-		DA109C4D14F438D600EB000C /* UIImage_Scaling.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE314F438D500EB000C /* UIImage_Scaling.h */; };
-		DA109C4E14F438D600EB000C /* UIImage_Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE414F438D500EB000C /* UIImage_Scaling.m */; };
-		DA109C4F14F438D600EB000C /* UIUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE514F438D500EB000C /* UIUtils.h */; };
-		DA109C5014F438D600EB000C /* UIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE614F438D500EB000C /* UIUtils.m */; };
-		DA109C5114F438D600EB000C /* ValidatingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE714F438D500EB000C /* ValidatingTextField.h */; };
-		DA109C5214F438D600EB000C /* ValidatingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE814F438D500EB000C /* ValidatingTextField.m */; };
-		DA109C5314F438D600EB000C /* WebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE914F438D500EB000C /* WebViewController.h */; };
-		DA109C5414F438D600EB000C /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BEA14F438D500EB000C /* WebViewController.m */; };
+		DA109C4714F438D600EB000C /* PearlRootViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDD14F438D500EB000C /* PearlRootViewController.h */; };
+		DA109C4814F438D600EB000C /* PearlRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BDE14F438D500EB000C /* PearlRootViewController.m */; };
+		DA109C4914F438D600EB000C /* PearlSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDF14F438D500EB000C /* PearlSheet.h */; };
+		DA109C4A14F438D600EB000C /* PearlSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE014F438D500EB000C /* PearlSheet.m */; };
+		DA109C4B14F438D600EB000C /* PearlUIDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE114F438D500EB000C /* PearlUIDebug.h */; };
+		DA109C4C14F438D600EB000C /* PearlUIDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE214F438D500EB000C /* PearlUIDebug.m */; };
+		DA109C4D14F438D600EB000C /* UIImage_PearlScaling.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE314F438D500EB000C /* UIImage_PearlScaling.h */; };
+		DA109C4E14F438D600EB000C /* UIImage_PearlScaling.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE414F438D500EB000C /* UIImage_PearlScaling.m */; };
+		DA109C4F14F438D600EB000C /* PearlUIUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE514F438D500EB000C /* PearlUIUtils.h */; };
+		DA109C5014F438D600EB000C /* PearlUIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE614F438D500EB000C /* PearlUIUtils.m */; };
+		DA109C5114F438D600EB000C /* PearlValidatingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE714F438D500EB000C /* PearlValidatingTextField.h */; };
+		DA109C5214F438D600EB000C /* PearlValidatingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE814F438D500EB000C /* PearlValidatingTextField.m */; };
+		DA109C5314F438D600EB000C /* PearlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE914F438D500EB000C /* PearlWebViewController.h */; };
+		DA109C5414F438D600EB000C /* PearlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BEA14F438D500EB000C /* PearlWebViewController.m */; };
 		DA109C5514F438D600EB000C /* PearlWSController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BEC14F438D500EB000C /* PearlWSController.h */; };
 		DA109C5614F438D600EB000C /* PearlWSController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BED14F438D500EB000C /* PearlWSController.m */; };
 		DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BEE14F438D500EB000C /* Pearl-WS.h */; };
@@ -454,14 +452,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DA10972314F438C300EB000C /* InfoPlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoPlist.h; sourceTree = "<group>"; };
-		DA10972414F438C300EB000C /* InfoPlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoPlist.m; sourceTree = "<group>"; };
-		DA10972514F438C300EB000C /* NSObject_Export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObject_Export.h; sourceTree = "<group>"; };
-		DA10972614F438C300EB000C /* NSObject_Export.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObject_Export.m; sourceTree = "<group>"; };
-		DA10972714F438C300EB000C /* NSString_NSArrayFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_NSArrayFormat.h; sourceTree = "<group>"; };
-		DA10972814F438C300EB000C /* NSString_NSArrayFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_NSArrayFormat.m; sourceTree = "<group>"; };
-		DA10972914F438C300EB000C /* NSString_SEL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_SEL.h; sourceTree = "<group>"; };
-		DA10972A14F438C300EB000C /* NSString_SEL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_SEL.m; sourceTree = "<group>"; };
+		DA10972314F438C300EB000C /* PearlInfoPlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlInfoPlist.h; sourceTree = "<group>"; };
+		DA10972414F438C300EB000C /* PearlInfoPlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlInfoPlist.m; sourceTree = "<group>"; };
+		DA10972514F438C300EB000C /* NSObject_PearlExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObject_PearlExport.h; sourceTree = "<group>"; };
+		DA10972614F438C300EB000C /* NSObject_PearlExport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObject_PearlExport.m; sourceTree = "<group>"; };
+		DA10972714F438C300EB000C /* NSString_PearlNSArrayFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_PearlNSArrayFormat.h; sourceTree = "<group>"; };
+		DA10972814F438C300EB000C /* NSString_PearlNSArrayFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_PearlNSArrayFormat.m; sourceTree = "<group>"; };
+		DA10972914F438C300EB000C /* NSString_PearlSEL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_PearlSEL.h; sourceTree = "<group>"; };
+		DA10972A14F438C300EB000C /* NSString_PearlSEL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_PearlSEL.m; sourceTree = "<group>"; };
 		DA10972B14F438C300EB000C /* Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pearl.h; sourceTree = "<group>"; };
 		DA10972C14F438C300EB000C /* PearlAbstractStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAbstractStrings.h; sourceTree = "<group>"; };
 		DA10972D14F438C300EB000C /* PearlAbstractStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAbstractStrings.m; sourceTree = "<group>"; };
@@ -488,14 +486,14 @@
 		DA10974414F438C300EB000C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Pearl.strings; sourceTree = "<group>"; };
 		DA10974514F438C300EB000C /* PearlStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlStringUtils.h; sourceTree = "<group>"; };
 		DA10974614F438C300EB000C /* PearlStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlStringUtils.m; sourceTree = "<group>"; };
-		DA10976814F438D400EB000C /* AbstractCocos2DAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractCocos2DAppDelegate.h; sourceTree = "<group>"; };
-		DA10976914F438D400EB000C /* AbstractCocos2DAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractCocos2DAppDelegate.m; sourceTree = "<group>"; };
-		DA10976B14F438D400EB000C /* AutoTween.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoTween.h; sourceTree = "<group>"; };
-		DA10976C14F438D400EB000C /* AutoTween.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoTween.m; sourceTree = "<group>"; };
-		DA10976D14F438D400EB000C /* Remove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Remove.h; sourceTree = "<group>"; };
-		DA10976E14F438D400EB000C /* Remove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Remove.m; sourceTree = "<group>"; };
-		DA10976F14F438D400EB000C /* CCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCDebug.h; sourceTree = "<group>"; };
-		DA10977014F438D400EB000C /* CCDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCDebug.m; sourceTree = "<group>"; };
+		DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCocos2DAppDelegate.h; sourceTree = "<group>"; };
+		DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCocos2DAppDelegate.m; sourceTree = "<group>"; };
+		DA10976B14F438D400EB000C /* PearlCCAutoTween.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCAutoTween.h; sourceTree = "<group>"; };
+		DA10976C14F438D400EB000C /* PearlCCAutoTween.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCAutoTween.m; sourceTree = "<group>"; };
+		DA10976D14F438D400EB000C /* PearlCCRemove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCRemove.h; sourceTree = "<group>"; };
+		DA10976E14F438D400EB000C /* PearlCCRemove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCRemove.m; sourceTree = "<group>"; };
+		DA10976F14F438D400EB000C /* PearlCCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCDebug.h; sourceTree = "<group>"; };
+		DA10977014F438D400EB000C /* PearlCCDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCDebug.m; sourceTree = "<group>"; };
 		DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-Cocos2D-Dependencies.h"; sourceTree = "<group>"; };
 		DA10977214F438D400EB000C /* Pearl-Cocos2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-Cocos2D.h"; sourceTree = "<group>"; };
 		DA10977314F438D400EB000C /* PearlCocos2DStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCocos2DStrings.h; sourceTree = "<group>"; };
@@ -542,75 +540,73 @@
 		DA1097A014F438D400EB000C /* wheel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wheel.png; sourceTree = "<group>"; };
 		DA1097A114F438D400EB000C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "zh-Hans"; path = "zh-Hans.lproj/menu.png"; sourceTree = "<group>"; };
 		DA1097A214F438D400EB000C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "zh-Hans"; path = "zh-Hans.lproj/score.png"; sourceTree = "<group>"; };
-		DA1097A414F438D400EB000C /* ActivitySprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivitySprite.h; sourceTree = "<group>"; };
-		DA1097A514F438D400EB000C /* ActivitySprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitySprite.m; sourceTree = "<group>"; };
-		DA1097A614F438D400EB000C /* BarLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarLayer.h; sourceTree = "<group>"; };
-		DA1097A714F438D400EB000C /* BarLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarLayer.m; sourceTree = "<group>"; };
-		DA1097A814F438D400EB000C /* BarSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarSprite.h; sourceTree = "<group>"; };
-		DA1097A914F438D400EB000C /* BarSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarSprite.m; sourceTree = "<group>"; };
-		DA1097AA14F438D400EB000C /* BoxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxLayer.h; sourceTree = "<group>"; };
-		DA1097AB14F438D400EB000C /* BoxLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoxLayer.m; sourceTree = "<group>"; };
-		DA1097AC14F438D400EB000C /* DebugLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugLayer.h; sourceTree = "<group>"; };
-		DA1097AD14F438D400EB000C /* DebugLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLayer.m; sourceTree = "<group>"; };
-		DA1097AE14F438D400EB000C /* FancyLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FancyLayer.h; sourceTree = "<group>"; };
-		DA1097AF14F438D400EB000C /* FancyLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FancyLayer.m; sourceTree = "<group>"; };
-		DA1097B014F438D400EB000C /* FlickLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickLayer.h; sourceTree = "<group>"; };
-		DA1097B114F438D400EB000C /* FlickLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickLayer.m; sourceTree = "<group>"; };
-		DA1097B214F438D400EB000C /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
-		DA1097B314F438D400EB000C /* HUDLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUDLayer.m; sourceTree = "<group>"; };
-		DA1097B514F438D400EB000C /* ConfigMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigMenuLayer.h; sourceTree = "<group>"; };
-		DA1097B614F438D400EB000C /* ConfigMenuLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigMenuLayer.m; sourceTree = "<group>"; };
-		DA1097B714F438D400EB000C /* MenuItemBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemBlock.h; sourceTree = "<group>"; };
-		DA1097B814F438D400EB000C /* MenuItemBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemBlock.m; sourceTree = "<group>"; };
-		DA1097B914F438D400EB000C /* MenuItemSpacer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSpacer.h; sourceTree = "<group>"; };
-		DA1097BA14F438D400EB000C /* MenuItemSpacer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemSpacer.m; sourceTree = "<group>"; };
-		DA1097BB14F438D400EB000C /* MenuItemSymbolic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemSymbolic.h; sourceTree = "<group>"; };
-		DA1097BC14F438D400EB000C /* MenuItemSymbolic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemSymbolic.m; sourceTree = "<group>"; };
-		DA1097BD14F438D400EB000C /* MenuItemTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItemTitle.h; sourceTree = "<group>"; };
-		DA1097BE14F438D400EB000C /* MenuItemTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItemTitle.m; sourceTree = "<group>"; };
-		DA1097BF14F438D400EB000C /* MenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuLayer.h; sourceTree = "<group>"; };
-		DA1097C014F438D400EB000C /* MenuLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuLayer.m; sourceTree = "<group>"; };
-		DA1097C114F438D400EB000C /* ScrollLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollLayer.h; sourceTree = "<group>"; };
-		DA1097C214F438D400EB000C /* ScrollLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollLayer.m; sourceTree = "<group>"; };
-		DA1097C314F438D400EB000C /* ShadeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadeLayer.h; sourceTree = "<group>"; };
-		DA1097C414F438D400EB000C /* ShadeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadeLayer.m; sourceTree = "<group>"; };
-		DA1097C514F438D400EB000C /* Splash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Splash.h; sourceTree = "<group>"; };
-		DA1097C614F438D400EB000C /* Splash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Splash.m; sourceTree = "<group>"; };
-		DA1097C714F438D400EB000C /* SwipeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeLayer.h; sourceTree = "<group>"; };
-		DA1097C814F438D400EB000C /* SwipeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeLayer.m; sourceTree = "<group>"; };
-		DA1097C914F438D400EB000C /* UILayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILayer.h; sourceTree = "<group>"; };
-		DA1097CA14F438D400EB000C /* UILayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILayer.m; sourceTree = "<group>"; };
-		DA1097CC14F438D400EB000C /* GLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLUtils.h; sourceTree = "<group>"; };
-		DA1097CD14F438D400EB000C /* GLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUtils.m; sourceTree = "<group>"; };
-		DA1097CF14F438D400EB000C /* CryptUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptUtils.h; sourceTree = "<group>"; };
-		DA1097D014F438D400EB000C /* CryptUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptUtils.m; sourceTree = "<group>"; };
-		DA1097D114F438D400EB000C /* KeyChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChain.h; sourceTree = "<group>"; };
-		DA1097D214F438D400EB000C /* KeyChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChain.m; sourceTree = "<group>"; };
+		DA1097A414F438D400EB000C /* PearlCCActivitySprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCActivitySprite.h; sourceTree = "<group>"; };
+		DA1097A514F438D400EB000C /* PearlCCActivitySprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCActivitySprite.m; sourceTree = "<group>"; };
+		DA1097A614F438D400EB000C /* PearlCCBarLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCBarLayer.h; sourceTree = "<group>"; };
+		DA1097A714F438D400EB000C /* PearlCCBarLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCBarLayer.m; sourceTree = "<group>"; };
+		DA1097A814F438D400EB000C /* PearlCCBarSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCBarSprite.h; sourceTree = "<group>"; };
+		DA1097A914F438D400EB000C /* PearlCCBarSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCBarSprite.m; sourceTree = "<group>"; };
+		DA1097AA14F438D400EB000C /* PearlCCBoxLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCBoxLayer.h; sourceTree = "<group>"; };
+		DA1097AB14F438D400EB000C /* PearlCCBoxLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCBoxLayer.m; sourceTree = "<group>"; };
+		DA1097AC14F438D400EB000C /* PearlCCDebugLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCDebugLayer.h; sourceTree = "<group>"; };
+		DA1097AD14F438D400EB000C /* PearlCCDebugLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCDebugLayer.m; sourceTree = "<group>"; };
+		DA1097AE14F438D400EB000C /* PearlCCFancyLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCFancyLayer.h; sourceTree = "<group>"; };
+		DA1097AF14F438D400EB000C /* PearlCCFancyLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCFancyLayer.m; sourceTree = "<group>"; };
+		DA1097B014F438D400EB000C /* PearlCCFlickLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCFlickLayer.h; sourceTree = "<group>"; };
+		DA1097B114F438D400EB000C /* PearlCCFlickLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCFlickLayer.m; sourceTree = "<group>"; };
+		DA1097B214F438D400EB000C /* PearlCCHUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCHUDLayer.h; sourceTree = "<group>"; };
+		DA1097B314F438D400EB000C /* PearlCCHUDLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCHUDLayer.m; sourceTree = "<group>"; };
+		DA1097B514F438D400EB000C /* PearlCCConfigMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCConfigMenuLayer.h; sourceTree = "<group>"; };
+		DA1097B614F438D400EB000C /* PearlCCConfigMenuLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCConfigMenuLayer.m; sourceTree = "<group>"; };
+		DA1097B714F438D400EB000C /* PearlCCMenuItemBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCMenuItemBlock.h; sourceTree = "<group>"; };
+		DA1097B814F438D400EB000C /* PearlCCMenuItemBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCMenuItemBlock.m; sourceTree = "<group>"; };
+		DA1097B914F438D400EB000C /* PearlCCMenuItemSpacer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCMenuItemSpacer.h; sourceTree = "<group>"; };
+		DA1097BA14F438D400EB000C /* PearlCCMenuItemSpacer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCMenuItemSpacer.m; sourceTree = "<group>"; };
+		DA1097BB14F438D400EB000C /* PearlCCMenuItemSymbolic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCMenuItemSymbolic.h; sourceTree = "<group>"; };
+		DA1097BC14F438D400EB000C /* PearlCCMenuItemSymbolic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCMenuItemSymbolic.m; sourceTree = "<group>"; };
+		DA1097BD14F438D400EB000C /* PearlCCMenuItemTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCMenuItemTitle.h; sourceTree = "<group>"; };
+		DA1097BE14F438D400EB000C /* PearlCCMenuItemTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCMenuItemTitle.m; sourceTree = "<group>"; };
+		DA1097BF14F438D400EB000C /* PearlCCMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCMenuLayer.h; sourceTree = "<group>"; };
+		DA1097C014F438D400EB000C /* PearlCCMenuLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCMenuLayer.m; sourceTree = "<group>"; };
+		DA1097C114F438D400EB000C /* PearlCCScrollLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCScrollLayer.h; sourceTree = "<group>"; };
+		DA1097C214F438D400EB000C /* PearlCCScrollLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCScrollLayer.m; sourceTree = "<group>"; };
+		DA1097C314F438D400EB000C /* PearlCCShadeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCShadeLayer.h; sourceTree = "<group>"; };
+		DA1097C414F438D400EB000C /* PearlCCShadeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCShadeLayer.m; sourceTree = "<group>"; };
+		DA1097C514F438D400EB000C /* PearlCCSplash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCSplash.h; sourceTree = "<group>"; };
+		DA1097C614F438D400EB000C /* PearlCCSplash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCSplash.m; sourceTree = "<group>"; };
+		DA1097C714F438D400EB000C /* PearlCCSwipeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCSwipeLayer.h; sourceTree = "<group>"; };
+		DA1097C814F438D400EB000C /* PearlCCSwipeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCSwipeLayer.m; sourceTree = "<group>"; };
+		DA1097C914F438D400EB000C /* PearlCCUILayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCCUILayer.h; sourceTree = "<group>"; };
+		DA1097CA14F438D400EB000C /* PearlCCUILayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCCUILayer.m; sourceTree = "<group>"; };
+		DA1097CC14F438D400EB000C /* PearlGLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLUtils.h; sourceTree = "<group>"; };
+		DA1097CD14F438D400EB000C /* PearlGLUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlGLUtils.m; sourceTree = "<group>"; };
+		DA1097CF14F438D400EB000C /* PearlCryptUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlCryptUtils.h; sourceTree = "<group>"; };
+		DA1097D014F438D400EB000C /* PearlCryptUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlCryptUtils.m; sourceTree = "<group>"; };
+		DA1097D114F438D400EB000C /* PearlKeyChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlKeyChain.h; sourceTree = "<group>"; };
+		DA1097D214F438D400EB000C /* PearlKeyChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlKeyChain.m; sourceTree = "<group>"; };
 		DA1097D314F438D400EB000C /* Pearl-Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-Crypto.h"; sourceTree = "<group>"; };
 		DA1097D414F438D400EB000C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		DA1097D514F438D400EB000C /* RSAKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAKey.h; sourceTree = "<group>"; };
-		DA1097D614F438D400EB000C /* RSAKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAKey.m; sourceTree = "<group>"; };
-		DA1097D714F438D400EB000C /* SCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCrypt.h; sourceTree = "<group>"; };
-		DA1097D814F438D400EB000C /* SCrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCrypt.m; sourceTree = "<group>"; };
+		DA1097D514F438D400EB000C /* PearlRSAKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlRSAKey.h; sourceTree = "<group>"; };
+		DA1097D614F438D400EB000C /* PearlRSAKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlRSAKey.m; sourceTree = "<group>"; };
+		DA1097D714F438D400EB000C /* PearlSCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlSCrypt.h; sourceTree = "<group>"; };
+		DA1097D814F438D400EB000C /* PearlSCrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlSCrypt.m; sourceTree = "<group>"; };
 		DA1097DA14F438D400EB000C /* PearlAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAudioController.h; sourceTree = "<group>"; };
 		DA1097DB14F438D400EB000C /* PearlAudioController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAudioController.m; sourceTree = "<group>"; };
 		DA1097DC14F438D400EB000C /* Pearl-Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-Media.h"; sourceTree = "<group>"; };
-		DA1097DE14F438D400EB000C /* AlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertViewController.h; sourceTree = "<group>"; };
-		DA1097DF14F438D400EB000C /* AlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertViewController.m; sourceTree = "<group>"; };
-		DA1097E014F438D400EB000C /* ArrayTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayTVC.h; sourceTree = "<group>"; };
-		DA1097E114F438D400EB000C /* ArrayTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayTVC.m; sourceTree = "<group>"; };
-		DA1097E214F438D400EB000C /* BoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxView.h; sourceTree = "<group>"; };
-		DA1097E314F438D400EB000C /* BoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoxView.m; sourceTree = "<group>"; };
-		DA1097E414F438D400EB000C /* ConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmationViewController.h; sourceTree = "<group>"; };
-		DA1097E514F438D400EB000C /* ConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfirmationViewController.m; sourceTree = "<group>"; };
-		DA1097E614F438D400EB000C /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientView.h; sourceTree = "<group>"; };
-		DA1097E714F438D400EB000C /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientView.m; sourceTree = "<group>"; };
-		DA1097E814F438D400EB000C /* Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Layout.h; sourceTree = "<group>"; };
-		DA1097E914F438D400EB000C /* Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Layout.m; sourceTree = "<group>"; };
-		DA1097EA14F438D400EB000C /* LayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayoutView.h; sourceTree = "<group>"; };
-		DA1097EB14F438D400EB000C /* LayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayoutView.m; sourceTree = "<group>"; };
-		DA1097EC14F438D400EB000C /* MessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageView.h; sourceTree = "<group>"; };
-		DA1097ED14F438D400EB000C /* MessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageView.m; sourceTree = "<group>"; };
+		DA1097DE14F438D400EB000C /* PearlAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAlert.h; sourceTree = "<group>"; };
+		DA1097DF14F438D400EB000C /* PearlAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAlert.m; sourceTree = "<group>"; };
+		DA1097E014F438D400EB000C /* PearlArrayTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlArrayTVC.h; sourceTree = "<group>"; };
+		DA1097E114F438D400EB000C /* PearlArrayTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlArrayTVC.m; sourceTree = "<group>"; };
+		DA1097E214F438D400EB000C /* PearlBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlBoxView.h; sourceTree = "<group>"; };
+		DA1097E314F438D400EB000C /* PearlBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlBoxView.m; sourceTree = "<group>"; };
+		DA1097E614F438D400EB000C /* PearlGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGradientView.h; sourceTree = "<group>"; };
+		DA1097E714F438D400EB000C /* PearlGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlGradientView.m; sourceTree = "<group>"; };
+		DA1097E814F438D400EB000C /* PearlLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlLayout.h; sourceTree = "<group>"; };
+		DA1097E914F438D400EB000C /* PearlLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlLayout.m; sourceTree = "<group>"; };
+		DA1097EA14F438D400EB000C /* PearlLayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlLayoutView.h; sourceTree = "<group>"; };
+		DA1097EB14F438D400EB000C /* PearlLayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlLayoutView.m; sourceTree = "<group>"; };
+		DA1097EC14F438D400EB000C /* PearlMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlMessageView.h; sourceTree = "<group>"; };
+		DA1097ED14F438D400EB000C /* PearlMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlMessageView.m; sourceTree = "<group>"; };
 		DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-UIKit-Dependencies.h"; sourceTree = "<group>"; };
 		DA1097EF14F438D400EB000C /* Pearl-UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-UIKit.h"; sourceTree = "<group>"; };
 		DA1097F014F438D400EB000C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
@@ -1615,20 +1611,20 @@
 		DA109BDA14F438D500EB000C /* zoom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom.png; sourceTree = "<group>"; };
 		DA109BDB14F438D500EB000C /* zoom_in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom_in.png; sourceTree = "<group>"; };
 		DA109BDC14F438D500EB000C /* zoom_out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom_out.png; sourceTree = "<group>"; };
-		DA109BDD14F438D500EB000C /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		DA109BDE14F438D500EB000C /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		DA109BDF14F438D500EB000C /* SheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SheetViewController.h; sourceTree = "<group>"; };
-		DA109BE014F438D500EB000C /* SheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SheetViewController.m; sourceTree = "<group>"; };
-		DA109BE114F438D500EB000C /* UIDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDebug.h; sourceTree = "<group>"; };
-		DA109BE214F438D500EB000C /* UIDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDebug.m; sourceTree = "<group>"; };
-		DA109BE314F438D500EB000C /* UIImage_Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImage_Scaling.h; sourceTree = "<group>"; };
-		DA109BE414F438D500EB000C /* UIImage_Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImage_Scaling.m; sourceTree = "<group>"; };
-		DA109BE514F438D500EB000C /* UIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIUtils.h; sourceTree = "<group>"; };
-		DA109BE614F438D500EB000C /* UIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIUtils.m; sourceTree = "<group>"; };
-		DA109BE714F438D500EB000C /* ValidatingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidatingTextField.h; sourceTree = "<group>"; };
-		DA109BE814F438D500EB000C /* ValidatingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValidatingTextField.m; sourceTree = "<group>"; };
-		DA109BE914F438D500EB000C /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		DA109BEA14F438D500EB000C /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		DA109BDD14F438D500EB000C /* PearlRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlRootViewController.h; sourceTree = "<group>"; };
+		DA109BDE14F438D500EB000C /* PearlRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlRootViewController.m; sourceTree = "<group>"; };
+		DA109BDF14F438D500EB000C /* PearlSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlSheet.h; sourceTree = "<group>"; };
+		DA109BE014F438D500EB000C /* PearlSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlSheet.m; sourceTree = "<group>"; };
+		DA109BE114F438D500EB000C /* PearlUIDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlUIDebug.h; sourceTree = "<group>"; };
+		DA109BE214F438D500EB000C /* PearlUIDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlUIDebug.m; sourceTree = "<group>"; };
+		DA109BE314F438D500EB000C /* UIImage_PearlScaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImage_PearlScaling.h; sourceTree = "<group>"; };
+		DA109BE414F438D500EB000C /* UIImage_PearlScaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImage_PearlScaling.m; sourceTree = "<group>"; };
+		DA109BE514F438D500EB000C /* PearlUIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlUIUtils.h; sourceTree = "<group>"; };
+		DA109BE614F438D500EB000C /* PearlUIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlUIUtils.m; sourceTree = "<group>"; };
+		DA109BE714F438D500EB000C /* PearlValidatingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlValidatingTextField.h; sourceTree = "<group>"; };
+		DA109BE814F438D500EB000C /* PearlValidatingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlValidatingTextField.m; sourceTree = "<group>"; };
+		DA109BE914F438D500EB000C /* PearlWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlWebViewController.h; sourceTree = "<group>"; };
+		DA109BEA14F438D500EB000C /* PearlWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlWebViewController.m; sourceTree = "<group>"; };
 		DA109BEC14F438D500EB000C /* PearlWSController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlWSController.h; sourceTree = "<group>"; };
 		DA109BED14F438D500EB000C /* PearlWSController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlWSController.m; sourceTree = "<group>"; };
 		DA109BEE14F438D500EB000C /* Pearl-WS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-WS.h"; sourceTree = "<group>"; };
@@ -1983,11 +1979,11 @@
 		DA10976714F438D400EB000C /* Pearl-Cocos2D */ = {
 			isa = PBXGroup;
 			children = (
-				DA10976814F438D400EB000C /* AbstractCocos2DAppDelegate.h */,
-				DA10976914F438D400EB000C /* AbstractCocos2DAppDelegate.m */,
+				DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */,
+				DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */,
 				DA10976A14F438D400EB000C /* Actions */,
-				DA10976F14F438D400EB000C /* CCDebug.h */,
-				DA10977014F438D400EB000C /* CCDebug.m */,
+				DA10976F14F438D400EB000C /* PearlCCDebug.h */,
+				DA10977014F438D400EB000C /* PearlCCDebug.m */,
 				DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */,
 				DA10977214F438D400EB000C /* Pearl-Cocos2D.h */,
 				DA10977314F438D400EB000C /* PearlCocos2DStrings.h */,
@@ -2002,10 +1998,10 @@
 		DA10976A14F438D400EB000C /* Actions */ = {
 			isa = PBXGroup;
 			children = (
-				DA10976B14F438D400EB000C /* AutoTween.h */,
-				DA10976C14F438D400EB000C /* AutoTween.m */,
-				DA10976D14F438D400EB000C /* Remove.h */,
-				DA10976E14F438D400EB000C /* Remove.m */,
+				DA10976B14F438D400EB000C /* PearlCCAutoTween.h */,
+				DA10976C14F438D400EB000C /* PearlCCAutoTween.m */,
+				DA10976D14F438D400EB000C /* PearlCCRemove.h */,
+				DA10976E14F438D400EB000C /* PearlCCRemove.m */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -2049,33 +2045,33 @@
 		DA1097A314F438D400EB000C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				DA1097A414F438D400EB000C /* ActivitySprite.h */,
-				DA1097A514F438D400EB000C /* ActivitySprite.m */,
-				DA1097A614F438D400EB000C /* BarLayer.h */,
-				DA1097A714F438D400EB000C /* BarLayer.m */,
-				DA1097A814F438D400EB000C /* BarSprite.h */,
-				DA1097A914F438D400EB000C /* BarSprite.m */,
-				DA1097AA14F438D400EB000C /* BoxLayer.h */,
-				DA1097AB14F438D400EB000C /* BoxLayer.m */,
-				DA1097AC14F438D400EB000C /* DebugLayer.h */,
-				DA1097AD14F438D400EB000C /* DebugLayer.m */,
-				DA1097AE14F438D400EB000C /* FancyLayer.h */,
-				DA1097AF14F438D400EB000C /* FancyLayer.m */,
-				DA1097B014F438D400EB000C /* FlickLayer.h */,
-				DA1097B114F438D400EB000C /* FlickLayer.m */,
-				DA1097B214F438D400EB000C /* HUDLayer.h */,
-				DA1097B314F438D400EB000C /* HUDLayer.m */,
+				DA1097A414F438D400EB000C /* PearlCCActivitySprite.h */,
+				DA1097A514F438D400EB000C /* PearlCCActivitySprite.m */,
+				DA1097A614F438D400EB000C /* PearlCCBarLayer.h */,
+				DA1097A714F438D400EB000C /* PearlCCBarLayer.m */,
+				DA1097A814F438D400EB000C /* PearlCCBarSprite.h */,
+				DA1097A914F438D400EB000C /* PearlCCBarSprite.m */,
+				DA1097AA14F438D400EB000C /* PearlCCBoxLayer.h */,
+				DA1097AB14F438D400EB000C /* PearlCCBoxLayer.m */,
+				DA1097AC14F438D400EB000C /* PearlCCDebugLayer.h */,
+				DA1097AD14F438D400EB000C /* PearlCCDebugLayer.m */,
+				DA1097AE14F438D400EB000C /* PearlCCFancyLayer.h */,
+				DA1097AF14F438D400EB000C /* PearlCCFancyLayer.m */,
+				DA1097B014F438D400EB000C /* PearlCCFlickLayer.h */,
+				DA1097B114F438D400EB000C /* PearlCCFlickLayer.m */,
+				DA1097B214F438D400EB000C /* PearlCCHUDLayer.h */,
+				DA1097B314F438D400EB000C /* PearlCCHUDLayer.m */,
 				DA1097B414F438D400EB000C /* Menus */,
-				DA1097C114F438D400EB000C /* ScrollLayer.h */,
-				DA1097C214F438D400EB000C /* ScrollLayer.m */,
-				DA1097C314F438D400EB000C /* ShadeLayer.h */,
-				DA1097C414F438D400EB000C /* ShadeLayer.m */,
-				DA1097C514F438D400EB000C /* Splash.h */,
-				DA1097C614F438D400EB000C /* Splash.m */,
-				DA1097C714F438D400EB000C /* SwipeLayer.h */,
-				DA1097C814F438D400EB000C /* SwipeLayer.m */,
-				DA1097C914F438D400EB000C /* UILayer.h */,
-				DA1097CA14F438D400EB000C /* UILayer.m */,
+				DA1097C114F438D400EB000C /* PearlCCScrollLayer.h */,
+				DA1097C214F438D400EB000C /* PearlCCScrollLayer.m */,
+				DA1097C314F438D400EB000C /* PearlCCShadeLayer.h */,
+				DA1097C414F438D400EB000C /* PearlCCShadeLayer.m */,
+				DA1097C514F438D400EB000C /* PearlCCSplash.h */,
+				DA1097C614F438D400EB000C /* PearlCCSplash.m */,
+				DA1097C714F438D400EB000C /* PearlCCSwipeLayer.h */,
+				DA1097C814F438D400EB000C /* PearlCCSwipeLayer.m */,
+				DA1097C914F438D400EB000C /* PearlCCUILayer.h */,
+				DA1097CA14F438D400EB000C /* PearlCCUILayer.m */,
 				DA1097CB14F438D400EB000C /* Utility */,
 			);
 			path = View;
@@ -2084,18 +2080,18 @@
 		DA1097B414F438D400EB000C /* Menus */ = {
 			isa = PBXGroup;
 			children = (
-				DA1097B514F438D400EB000C /* ConfigMenuLayer.h */,
-				DA1097B614F438D400EB000C /* ConfigMenuLayer.m */,
-				DA1097B714F438D400EB000C /* MenuItemBlock.h */,
-				DA1097B814F438D400EB000C /* MenuItemBlock.m */,
-				DA1097B914F438D400EB000C /* MenuItemSpacer.h */,
-				DA1097BA14F438D400EB000C /* MenuItemSpacer.m */,
-				DA1097BB14F438D400EB000C /* MenuItemSymbolic.h */,
-				DA1097BC14F438D400EB000C /* MenuItemSymbolic.m */,
-				DA1097BD14F438D400EB000C /* MenuItemTitle.h */,
-				DA1097BE14F438D400EB000C /* MenuItemTitle.m */,
-				DA1097BF14F438D400EB000C /* MenuLayer.h */,
-				DA1097C014F438D400EB000C /* MenuLayer.m */,
+				DA1097B514F438D400EB000C /* PearlCCConfigMenuLayer.h */,
+				DA1097B614F438D400EB000C /* PearlCCConfigMenuLayer.m */,
+				DA1097B714F438D400EB000C /* PearlCCMenuItemBlock.h */,
+				DA1097B814F438D400EB000C /* PearlCCMenuItemBlock.m */,
+				DA1097B914F438D400EB000C /* PearlCCMenuItemSpacer.h */,
+				DA1097BA14F438D400EB000C /* PearlCCMenuItemSpacer.m */,
+				DA1097BB14F438D400EB000C /* PearlCCMenuItemSymbolic.h */,
+				DA1097BC14F438D400EB000C /* PearlCCMenuItemSymbolic.m */,
+				DA1097BD14F438D400EB000C /* PearlCCMenuItemTitle.h */,
+				DA1097BE14F438D400EB000C /* PearlCCMenuItemTitle.m */,
+				DA1097BF14F438D400EB000C /* PearlCCMenuLayer.h */,
+				DA1097C014F438D400EB000C /* PearlCCMenuLayer.m */,
 			);
 			path = Menus;
 			sourceTree = "<group>";
@@ -2103,8 +2099,8 @@
 		DA1097CB14F438D400EB000C /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				DA1097CC14F438D400EB000C /* GLUtils.h */,
-				DA1097CD14F438D400EB000C /* GLUtils.m */,
+				DA1097CC14F438D400EB000C /* PearlGLUtils.h */,
+				DA1097CD14F438D400EB000C /* PearlGLUtils.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -2112,16 +2108,16 @@
 		DA1097CE14F438D400EB000C /* Pearl-Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				DA1097CF14F438D400EB000C /* CryptUtils.h */,
-				DA1097D014F438D400EB000C /* CryptUtils.m */,
-				DA1097D114F438D400EB000C /* KeyChain.h */,
-				DA1097D214F438D400EB000C /* KeyChain.m */,
+				DA1097CF14F438D400EB000C /* PearlCryptUtils.h */,
+				DA1097D014F438D400EB000C /* PearlCryptUtils.m */,
+				DA1097D114F438D400EB000C /* PearlKeyChain.h */,
+				DA1097D214F438D400EB000C /* PearlKeyChain.m */,
 				DA1097D314F438D400EB000C /* Pearl-Crypto.h */,
 				DA1097D414F438D400EB000C /* README */,
-				DA1097D514F438D400EB000C /* RSAKey.h */,
-				DA1097D614F438D400EB000C /* RSAKey.m */,
-				DA1097D714F438D400EB000C /* SCrypt.h */,
-				DA1097D814F438D400EB000C /* SCrypt.m */,
+				DA1097D514F438D400EB000C /* PearlRSAKey.h */,
+				DA1097D614F438D400EB000C /* PearlRSAKey.m */,
+				DA1097D714F438D400EB000C /* PearlSCrypt.h */,
+				DA1097D814F438D400EB000C /* PearlSCrypt.m */,
 			);
 			path = "Pearl-Crypto";
 			sourceTree = "<group>";
@@ -2139,40 +2135,38 @@
 		DA1097DD14F438D400EB000C /* Pearl-UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				DA1097DE14F438D400EB000C /* AlertViewController.h */,
-				DA1097DF14F438D400EB000C /* AlertViewController.m */,
-				DA1097E014F438D400EB000C /* ArrayTVC.h */,
-				DA1097E114F438D400EB000C /* ArrayTVC.m */,
-				DA1097E214F438D400EB000C /* BoxView.h */,
-				DA1097E314F438D400EB000C /* BoxView.m */,
-				DA1097E414F438D400EB000C /* ConfirmationViewController.h */,
-				DA1097E514F438D400EB000C /* ConfirmationViewController.m */,
-				DA1097E614F438D400EB000C /* GradientView.h */,
-				DA1097E714F438D400EB000C /* GradientView.m */,
-				DA1097E814F438D400EB000C /* Layout.h */,
-				DA1097E914F438D400EB000C /* Layout.m */,
-				DA1097EA14F438D400EB000C /* LayoutView.h */,
-				DA1097EB14F438D400EB000C /* LayoutView.m */,
-				DA1097EC14F438D400EB000C /* MessageView.h */,
-				DA1097ED14F438D400EB000C /* MessageView.m */,
+				DA1097DE14F438D400EB000C /* PearlAlert.h */,
+				DA1097DF14F438D400EB000C /* PearlAlert.m */,
+				DA1097E014F438D400EB000C /* PearlArrayTVC.h */,
+				DA1097E114F438D400EB000C /* PearlArrayTVC.m */,
+				DA1097E214F438D400EB000C /* PearlBoxView.h */,
+				DA1097E314F438D400EB000C /* PearlBoxView.m */,
+				DA1097E614F438D400EB000C /* PearlGradientView.h */,
+				DA1097E714F438D400EB000C /* PearlGradientView.m */,
+				DA1097E814F438D400EB000C /* PearlLayout.h */,
+				DA1097E914F438D400EB000C /* PearlLayout.m */,
+				DA1097EA14F438D400EB000C /* PearlLayoutView.h */,
+				DA1097EB14F438D400EB000C /* PearlLayoutView.m */,
+				DA1097EC14F438D400EB000C /* PearlMessageView.h */,
+				DA1097ED14F438D400EB000C /* PearlMessageView.m */,
 				DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */,
 				DA1097EF14F438D400EB000C /* Pearl-UIKit.h */,
 				DA1097F014F438D400EB000C /* README */,
 				DA1097F114F438D400EB000C /* Resources */,
-				DA109BDD14F438D500EB000C /* RootViewController.h */,
-				DA109BDE14F438D500EB000C /* RootViewController.m */,
-				DA109BDF14F438D500EB000C /* SheetViewController.h */,
-				DA109BE014F438D500EB000C /* SheetViewController.m */,
-				DA109BE114F438D500EB000C /* UIDebug.h */,
-				DA109BE214F438D500EB000C /* UIDebug.m */,
-				DA109BE314F438D500EB000C /* UIImage_Scaling.h */,
-				DA109BE414F438D500EB000C /* UIImage_Scaling.m */,
-				DA109BE514F438D500EB000C /* UIUtils.h */,
-				DA109BE614F438D500EB000C /* UIUtils.m */,
-				DA109BE714F438D500EB000C /* ValidatingTextField.h */,
-				DA109BE814F438D500EB000C /* ValidatingTextField.m */,
-				DA109BE914F438D500EB000C /* WebViewController.h */,
-				DA109BEA14F438D500EB000C /* WebViewController.m */,
+				DA109BDD14F438D500EB000C /* PearlRootViewController.h */,
+				DA109BDE14F438D500EB000C /* PearlRootViewController.m */,
+				DA109BDF14F438D500EB000C /* PearlSheet.h */,
+				DA109BE014F438D500EB000C /* PearlSheet.m */,
+				DA109BE114F438D500EB000C /* PearlUIDebug.h */,
+				DA109BE214F438D500EB000C /* PearlUIDebug.m */,
+				DA109BE314F438D500EB000C /* UIImage_PearlScaling.h */,
+				DA109BE414F438D500EB000C /* UIImage_PearlScaling.m */,
+				DA109BE514F438D500EB000C /* PearlUIUtils.h */,
+				DA109BE614F438D500EB000C /* PearlUIUtils.m */,
+				DA109BE714F438D500EB000C /* PearlValidatingTextField.h */,
+				DA109BE814F438D500EB000C /* PearlValidatingTextField.m */,
+				DA109BE914F438D500EB000C /* PearlWebViewController.h */,
+				DA109BEA14F438D500EB000C /* PearlWebViewController.m */,
 			);
 			path = "Pearl-UIKit";
 			sourceTree = "<group>";
@@ -3660,14 +3654,14 @@
 		DADD1E2414F3BE5500413D09 /* Pearl */ = {
 			isa = PBXGroup;
 			children = (
-				DA10972314F438C300EB000C /* InfoPlist.h */,
-				DA10972414F438C300EB000C /* InfoPlist.m */,
-				DA10972514F438C300EB000C /* NSObject_Export.h */,
-				DA10972614F438C300EB000C /* NSObject_Export.m */,
-				DA10972714F438C300EB000C /* NSString_NSArrayFormat.h */,
-				DA10972814F438C300EB000C /* NSString_NSArrayFormat.m */,
-				DA10972914F438C300EB000C /* NSString_SEL.h */,
-				DA10972A14F438C300EB000C /* NSString_SEL.m */,
+				DA10972314F438C300EB000C /* PearlInfoPlist.h */,
+				DA10972414F438C300EB000C /* PearlInfoPlist.m */,
+				DA10972514F438C300EB000C /* NSObject_PearlExport.h */,
+				DA10972614F438C300EB000C /* NSObject_PearlExport.m */,
+				DA10972714F438C300EB000C /* NSString_PearlNSArrayFormat.h */,
+				DA10972814F438C300EB000C /* NSString_PearlNSArrayFormat.m */,
+				DA10972914F438C300EB000C /* NSString_PearlSEL.h */,
+				DA10972A14F438C300EB000C /* NSString_PearlSEL.m */,
 				DA10972B14F438C300EB000C /* Pearl.h */,
 				DA10972C14F438C300EB000C /* PearlAbstractStrings.h */,
 				DA10972D14F438C300EB000C /* PearlAbstractStrings.m */,
@@ -3909,10 +3903,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA10974714F438C300EB000C /* InfoPlist.h in Headers */,
-				DA10974914F438C300EB000C /* NSObject_Export.h in Headers */,
-				DA10974B14F438C300EB000C /* NSString_NSArrayFormat.h in Headers */,
-				DA10974D14F438C300EB000C /* NSString_SEL.h in Headers */,
+				DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */,
+				DA10974914F438C300EB000C /* NSObject_PearlExport.h in Headers */,
+				DA10974B14F438C300EB000C /* NSString_PearlNSArrayFormat.h in Headers */,
+				DA10974D14F438C300EB000C /* NSString_PearlSEL.h in Headers */,
 				DA10974F14F438C300EB000C /* Pearl.h in Headers */,
 				DA10975014F438C300EB000C /* PearlAbstractStrings.h in Headers */,
 				DA10975214F438C300EB000C /* PearlAppDelegate.h in Headers */,
@@ -3926,57 +3920,56 @@
 				DA10976114F438C300EB000C /* PearlStrings.h in Headers */,
 				DA10976314F438C300EB000C /* PearlWebUtils.h in Headers */,
 				DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */,
-				DA109BF514F438D600EB000C /* AbstractCocos2DAppDelegate.h in Headers */,
-				DA109BF714F438D600EB000C /* AutoTween.h in Headers */,
-				DA109BF914F438D600EB000C /* Remove.h in Headers */,
-				DA109BFB14F438D600EB000C /* CCDebug.h in Headers */,
+				DA109BF514F438D600EB000C /* PearlCocos2DAppDelegate.h in Headers */,
+				DA109BF714F438D600EB000C /* PearlCCAutoTween.h in Headers */,
+				DA109BF914F438D600EB000C /* PearlCCRemove.h in Headers */,
+				DA109BFB14F438D600EB000C /* PearlCCDebug.h in Headers */,
 				DA109BFD14F438D600EB000C /* Pearl-Cocos2D-Dependencies.h in Headers */,
 				DA109BFE14F438D600EB000C /* Pearl-Cocos2D.h in Headers */,
 				DA109BFF14F438D600EB000C /* PearlCocos2DStrings.h in Headers */,
-				DA109C0114F438D600EB000C /* ActivitySprite.h in Headers */,
-				DA109C0314F438D600EB000C /* BarLayer.h in Headers */,
-				DA109C0514F438D600EB000C /* BarSprite.h in Headers */,
-				DA109C0714F438D600EB000C /* BoxLayer.h in Headers */,
-				DA109C0914F438D600EB000C /* DebugLayer.h in Headers */,
-				DA109C0B14F438D600EB000C /* FancyLayer.h in Headers */,
-				DA109C0D14F438D600EB000C /* FlickLayer.h in Headers */,
-				DA109C0F14F438D600EB000C /* HUDLayer.h in Headers */,
-				DA109C1114F438D600EB000C /* ConfigMenuLayer.h in Headers */,
-				DA109C1314F438D600EB000C /* MenuItemBlock.h in Headers */,
-				DA109C1514F438D600EB000C /* MenuItemSpacer.h in Headers */,
-				DA109C1714F438D600EB000C /* MenuItemSymbolic.h in Headers */,
-				DA109C1914F438D600EB000C /* MenuItemTitle.h in Headers */,
-				DA109C1B14F438D600EB000C /* MenuLayer.h in Headers */,
-				DA109C1D14F438D600EB000C /* ScrollLayer.h in Headers */,
-				DA109C1F14F438D600EB000C /* ShadeLayer.h in Headers */,
-				DA109C2114F438D600EB000C /* Splash.h in Headers */,
-				DA109C2314F438D600EB000C /* SwipeLayer.h in Headers */,
-				DA109C2514F438D600EB000C /* UILayer.h in Headers */,
-				DA109C2714F438D600EB000C /* GLUtils.h in Headers */,
-				DA109C2914F438D600EB000C /* CryptUtils.h in Headers */,
-				DA109C2B14F438D600EB000C /* KeyChain.h in Headers */,
+				DA109C0114F438D600EB000C /* PearlCCActivitySprite.h in Headers */,
+				DA109C0314F438D600EB000C /* PearlCCBarLayer.h in Headers */,
+				DA109C0514F438D600EB000C /* PearlCCBarSprite.h in Headers */,
+				DA109C0714F438D600EB000C /* PearlCCBoxLayer.h in Headers */,
+				DA109C0914F438D600EB000C /* PearlCCDebugLayer.h in Headers */,
+				DA109C0B14F438D600EB000C /* PearlCCFancyLayer.h in Headers */,
+				DA109C0D14F438D600EB000C /* PearlCCFlickLayer.h in Headers */,
+				DA109C0F14F438D600EB000C /* PearlCCHUDLayer.h in Headers */,
+				DA109C1114F438D600EB000C /* PearlCCConfigMenuLayer.h in Headers */,
+				DA109C1314F438D600EB000C /* PearlCCMenuItemBlock.h in Headers */,
+				DA109C1514F438D600EB000C /* PearlCCMenuItemSpacer.h in Headers */,
+				DA109C1714F438D600EB000C /* PearlCCMenuItemSymbolic.h in Headers */,
+				DA109C1914F438D600EB000C /* PearlCCMenuItemTitle.h in Headers */,
+				DA109C1B14F438D600EB000C /* PearlCCMenuLayer.h in Headers */,
+				DA109C1D14F438D600EB000C /* PearlCCScrollLayer.h in Headers */,
+				DA109C1F14F438D600EB000C /* PearlCCShadeLayer.h in Headers */,
+				DA109C2114F438D600EB000C /* PearlCCSplash.h in Headers */,
+				DA109C2314F438D600EB000C /* PearlCCSwipeLayer.h in Headers */,
+				DA109C2514F438D600EB000C /* PearlCCUILayer.h in Headers */,
+				DA109C2714F438D600EB000C /* PearlGLUtils.h in Headers */,
+				DA109C2914F438D600EB000C /* PearlCryptUtils.h in Headers */,
+				DA109C2B14F438D600EB000C /* PearlKeyChain.h in Headers */,
 				DA109C2D14F438D600EB000C /* Pearl-Crypto.h in Headers */,
-				DA109C2E14F438D600EB000C /* RSAKey.h in Headers */,
-				DA109C3014F438D600EB000C /* SCrypt.h in Headers */,
+				DA109C2E14F438D600EB000C /* PearlRSAKey.h in Headers */,
+				DA109C3014F438D600EB000C /* PearlSCrypt.h in Headers */,
 				DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */,
 				DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */,
-				DA109C3514F438D600EB000C /* AlertViewController.h in Headers */,
-				DA109C3714F438D600EB000C /* ArrayTVC.h in Headers */,
-				DA109C3914F438D600EB000C /* BoxView.h in Headers */,
-				DA109C3B14F438D600EB000C /* ConfirmationViewController.h in Headers */,
-				DA109C3D14F438D600EB000C /* GradientView.h in Headers */,
-				DA109C3F14F438D600EB000C /* Layout.h in Headers */,
-				DA109C4114F438D600EB000C /* LayoutView.h in Headers */,
-				DA109C4314F438D600EB000C /* MessageView.h in Headers */,
+				DA109C3514F438D600EB000C /* PearlAlert.h in Headers */,
+				DA109C3714F438D600EB000C /* PearlArrayTVC.h in Headers */,
+				DA109C3914F438D600EB000C /* PearlBoxView.h in Headers */,
+				DA109C3D14F438D600EB000C /* PearlGradientView.h in Headers */,
+				DA109C3F14F438D600EB000C /* PearlLayout.h in Headers */,
+				DA109C4114F438D600EB000C /* PearlLayoutView.h in Headers */,
+				DA109C4314F438D600EB000C /* PearlMessageView.h in Headers */,
 				DA109C4514F438D600EB000C /* Pearl-UIKit-Dependencies.h in Headers */,
 				DA109C4614F438D600EB000C /* Pearl-UIKit.h in Headers */,
-				DA109C4714F438D600EB000C /* RootViewController.h in Headers */,
-				DA109C4914F438D600EB000C /* SheetViewController.h in Headers */,
-				DA109C4B14F438D600EB000C /* UIDebug.h in Headers */,
-				DA109C4D14F438D600EB000C /* UIImage_Scaling.h in Headers */,
-				DA109C4F14F438D600EB000C /* UIUtils.h in Headers */,
-				DA109C5114F438D600EB000C /* ValidatingTextField.h in Headers */,
-				DA109C5314F438D600EB000C /* WebViewController.h in Headers */,
+				DA109C4714F438D600EB000C /* PearlRootViewController.h in Headers */,
+				DA109C4914F438D600EB000C /* PearlSheet.h in Headers */,
+				DA109C4B14F438D600EB000C /* PearlUIDebug.h in Headers */,
+				DA109C4D14F438D600EB000C /* UIImage_PearlScaling.h in Headers */,
+				DA109C4F14F438D600EB000C /* PearlUIUtils.h in Headers */,
+				DA109C5114F438D600EB000C /* PearlValidatingTextField.h in Headers */,
+				DA109C5314F438D600EB000C /* PearlWebViewController.h in Headers */,
 				DA109C5514F438D600EB000C /* PearlWSController.h in Headers */,
 				DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */,
 				DA109C5814F438D600EB000C /* PearlWSStrings.h in Headers */,
@@ -4363,10 +4356,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA10974814F438C300EB000C /* InfoPlist.m in Sources */,
-				DA10974A14F438C300EB000C /* NSObject_Export.m in Sources */,
-				DA10974C14F438C300EB000C /* NSString_NSArrayFormat.m in Sources */,
-				DA10974E14F438C300EB000C /* NSString_SEL.m in Sources */,
+				DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */,
+				DA10974A14F438C300EB000C /* NSObject_PearlExport.m in Sources */,
+				DA10974C14F438C300EB000C /* NSString_PearlNSArrayFormat.m in Sources */,
+				DA10974E14F438C300EB000C /* NSString_PearlSEL.m in Sources */,
 				DA10975114F438C300EB000C /* PearlAbstractStrings.m in Sources */,
 				DA10975314F438C300EB000C /* PearlAppDelegate.m in Sources */,
 				DA10975514F438C300EB000C /* PearlCodeUtils.m in Sources */,
@@ -4378,51 +4371,50 @@
 				DA10976214F438C300EB000C /* PearlStrings.m in Sources */,
 				DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */,
 				DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */,
-				DA109BF614F438D600EB000C /* AbstractCocos2DAppDelegate.m in Sources */,
-				DA109BF814F438D600EB000C /* AutoTween.m in Sources */,
-				DA109BFA14F438D600EB000C /* Remove.m in Sources */,
-				DA109BFC14F438D600EB000C /* CCDebug.m in Sources */,
+				DA109BF614F438D600EB000C /* PearlCocos2DAppDelegate.m in Sources */,
+				DA109BF814F438D600EB000C /* PearlCCAutoTween.m in Sources */,
+				DA109BFA14F438D600EB000C /* PearlCCRemove.m in Sources */,
+				DA109BFC14F438D600EB000C /* PearlCCDebug.m in Sources */,
 				DA109C0014F438D600EB000C /* PearlCocos2DStrings.m in Sources */,
-				DA109C0214F438D600EB000C /* ActivitySprite.m in Sources */,
-				DA109C0414F438D600EB000C /* BarLayer.m in Sources */,
-				DA109C0614F438D600EB000C /* BarSprite.m in Sources */,
-				DA109C0814F438D600EB000C /* BoxLayer.m in Sources */,
-				DA109C0A14F438D600EB000C /* DebugLayer.m in Sources */,
-				DA109C0C14F438D600EB000C /* FancyLayer.m in Sources */,
-				DA109C0E14F438D600EB000C /* FlickLayer.m in Sources */,
-				DA109C1014F438D600EB000C /* HUDLayer.m in Sources */,
-				DA109C1214F438D600EB000C /* ConfigMenuLayer.m in Sources */,
-				DA109C1414F438D600EB000C /* MenuItemBlock.m in Sources */,
-				DA109C1614F438D600EB000C /* MenuItemSpacer.m in Sources */,
-				DA109C1814F438D600EB000C /* MenuItemSymbolic.m in Sources */,
-				DA109C1A14F438D600EB000C /* MenuItemTitle.m in Sources */,
-				DA109C1C14F438D600EB000C /* MenuLayer.m in Sources */,
-				DA109C1E14F438D600EB000C /* ScrollLayer.m in Sources */,
-				DA109C2014F438D600EB000C /* ShadeLayer.m in Sources */,
-				DA109C2214F438D600EB000C /* Splash.m in Sources */,
-				DA109C2414F438D600EB000C /* SwipeLayer.m in Sources */,
-				DA109C2614F438D600EB000C /* UILayer.m in Sources */,
-				DA109C2814F438D600EB000C /* GLUtils.m in Sources */,
-				DA109C2A14F438D600EB000C /* CryptUtils.m in Sources */,
-				DA109C2C14F438D600EB000C /* KeyChain.m in Sources */,
-				DA109C2F14F438D600EB000C /* RSAKey.m in Sources */,
-				DA109C3114F438D600EB000C /* SCrypt.m in Sources */,
+				DA109C0214F438D600EB000C /* PearlCCActivitySprite.m in Sources */,
+				DA109C0414F438D600EB000C /* PearlCCBarLayer.m in Sources */,
+				DA109C0614F438D600EB000C /* PearlCCBarSprite.m in Sources */,
+				DA109C0814F438D600EB000C /* PearlCCBoxLayer.m in Sources */,
+				DA109C0A14F438D600EB000C /* PearlCCDebugLayer.m in Sources */,
+				DA109C0C14F438D600EB000C /* PearlCCFancyLayer.m in Sources */,
+				DA109C0E14F438D600EB000C /* PearlCCFlickLayer.m in Sources */,
+				DA109C1014F438D600EB000C /* PearlCCHUDLayer.m in Sources */,
+				DA109C1214F438D600EB000C /* PearlCCConfigMenuLayer.m in Sources */,
+				DA109C1414F438D600EB000C /* PearlCCMenuItemBlock.m in Sources */,
+				DA109C1614F438D600EB000C /* PearlCCMenuItemSpacer.m in Sources */,
+				DA109C1814F438D600EB000C /* PearlCCMenuItemSymbolic.m in Sources */,
+				DA109C1A14F438D600EB000C /* PearlCCMenuItemTitle.m in Sources */,
+				DA109C1C14F438D600EB000C /* PearlCCMenuLayer.m in Sources */,
+				DA109C1E14F438D600EB000C /* PearlCCScrollLayer.m in Sources */,
+				DA109C2014F438D600EB000C /* PearlCCShadeLayer.m in Sources */,
+				DA109C2214F438D600EB000C /* PearlCCSplash.m in Sources */,
+				DA109C2414F438D600EB000C /* PearlCCSwipeLayer.m in Sources */,
+				DA109C2614F438D600EB000C /* PearlCCUILayer.m in Sources */,
+				DA109C2814F438D600EB000C /* PearlGLUtils.m in Sources */,
+				DA109C2A14F438D600EB000C /* PearlCryptUtils.m in Sources */,
+				DA109C2C14F438D600EB000C /* PearlKeyChain.m in Sources */,
+				DA109C2F14F438D600EB000C /* PearlRSAKey.m in Sources */,
+				DA109C3114F438D600EB000C /* PearlSCrypt.m in Sources */,
 				DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */,
-				DA109C3614F438D600EB000C /* AlertViewController.m in Sources */,
-				DA109C3814F438D600EB000C /* ArrayTVC.m in Sources */,
-				DA109C3A14F438D600EB000C /* BoxView.m in Sources */,
-				DA109C3C14F438D600EB000C /* ConfirmationViewController.m in Sources */,
-				DA109C3E14F438D600EB000C /* GradientView.m in Sources */,
-				DA109C4014F438D600EB000C /* Layout.m in Sources */,
-				DA109C4214F438D600EB000C /* LayoutView.m in Sources */,
-				DA109C4414F438D600EB000C /* MessageView.m in Sources */,
-				DA109C4814F438D600EB000C /* RootViewController.m in Sources */,
-				DA109C4A14F438D600EB000C /* SheetViewController.m in Sources */,
-				DA109C4C14F438D600EB000C /* UIDebug.m in Sources */,
-				DA109C4E14F438D600EB000C /* UIImage_Scaling.m in Sources */,
-				DA109C5014F438D600EB000C /* UIUtils.m in Sources */,
-				DA109C5214F438D600EB000C /* ValidatingTextField.m in Sources */,
-				DA109C5414F438D600EB000C /* WebViewController.m in Sources */,
+				DA109C3614F438D600EB000C /* PearlAlert.m in Sources */,
+				DA109C3814F438D600EB000C /* PearlArrayTVC.m in Sources */,
+				DA109C3A14F438D600EB000C /* PearlBoxView.m in Sources */,
+				DA109C3E14F438D600EB000C /* PearlGradientView.m in Sources */,
+				DA109C4014F438D600EB000C /* PearlLayout.m in Sources */,
+				DA109C4214F438D600EB000C /* PearlLayoutView.m in Sources */,
+				DA109C4414F438D600EB000C /* PearlMessageView.m in Sources */,
+				DA109C4814F438D600EB000C /* PearlRootViewController.m in Sources */,
+				DA109C4A14F438D600EB000C /* PearlSheet.m in Sources */,
+				DA109C4C14F438D600EB000C /* PearlUIDebug.m in Sources */,
+				DA109C4E14F438D600EB000C /* UIImage_PearlScaling.m in Sources */,
+				DA109C5014F438D600EB000C /* PearlUIUtils.m in Sources */,
+				DA109C5214F438D600EB000C /* PearlValidatingTextField.m in Sources */,
+				DA109C5414F438D600EB000C /* PearlWebViewController.m in Sources */,
 				DA109C5614F438D600EB000C /* PearlWSController.m in Sources */,
 				DA109C5914F438D600EB000C /* PearlWSStrings.m in Sources */,
 			);

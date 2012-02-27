@@ -26,7 +26,7 @@
 #import "PearlLogger.h"
 #import "PearlAppDelegate.h"
 #import "PearlResettable.h"
-#import "NSString_SEL.h"
+#import "NSString_PearlSEL.h"
 #import "PearlStringUtils.h"
 #import "PearlStrings.h"
 #ifdef PEARL_MEDIA

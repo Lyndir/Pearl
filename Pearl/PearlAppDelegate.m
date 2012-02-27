@@ -30,8 +30,8 @@
 #endif
 #import "PearlResettable.h"
 #ifdef PEARL_UIKIT
-#import "AlertViewController.h"
-#import "RootViewController.h"
+#import "PearlAlert.h"
+#import "PearlRootViewController.h"
 #endif
 #import "PearlCodeUtils.h"
 
@@ -90,7 +90,7 @@
     if (!self.window) {
         self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
 #ifdef PEARL_UIKIT
-        self.window.rootViewController = [[RootViewController new] autorelease];
+        self.window.rootViewController = [[PearlRootViewController new] autorelease];
 #endif
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
@@ -110,7 +110,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
-    [[AlertViewController activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
+    [[PearlAlert activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
 #endif
 }
 

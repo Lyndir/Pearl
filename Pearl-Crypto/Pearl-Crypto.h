@@ -3,7 +3,7 @@
 #endif
 
 #import "Pearl.h"
-#import "CryptUtils.h"
-#import "KeyChain.h"
-#import "RSAKey.h"
-#import "SCrypt.h"
+#import "PearlCryptUtils.h"
+#import "PearlKeyChain.h"
+#import "PearlRSAKey.h"
+#import "PearlSCrypt.h"

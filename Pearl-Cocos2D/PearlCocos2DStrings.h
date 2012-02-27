@@ -9,7 +9,7 @@
 #import "Strings.h"
 
 
-@interface PearlCocos2DStrings : Strings {
+@interface PearlCocos2DStrings : PearlAbstractStrings {
 
 }
 

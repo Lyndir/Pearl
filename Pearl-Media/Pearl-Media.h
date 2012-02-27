@@ -3,4 +3,4 @@
 #endif
 
 #import "Pearl.h"
-#import "AudioController.h"
+#import "PearlAudioController.h"

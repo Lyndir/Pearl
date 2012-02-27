@@ -17,11 +17,11 @@
 
 + (PearlCocos2DStrings *)get {
 
-    static PearlCocos2DStrings *pearlStrings = nil;
-    if (pearlStrings == nil)
-        pearlStrings = [PearlCocos2DStrings new];
+    static PearlCocos2DStrings *instance = nil;
+    if (!instance)
+        instance = [self new];
 
-    return pearlStrings;
+    return instance;
 }
 
 @dynamic menuConfig;

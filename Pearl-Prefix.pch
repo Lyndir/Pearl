@@ -1,0 +1,42 @@
+/*
+ *   Copyright 2009, Maarten Billemont
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+//
+// Prefix header for all source files of the 'Pearl' target in the 'Pearl' project
+//
+
+// Pearl Configuration
+#define PEARL
+#define PEARL_COCOS2D
+#define PEARL_CRYPTO
+#define PEARL_MEDIA
+#define PEARL_UIKIT
+#define PEARL_WS
+
+#define PEARL_WITH_APNS
+#define PEARL_WITH_OPENSSL
+#define PEARL_WITH_SCRYPT
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+
+    #import "Pearl.h"
+    #import "Pearl-Cocos2D.h"
+    #import "Pearl-Crypto.h"
+    #import "Pearl-Media.h"
+    #import "Pearl-UIKit.h"
+    #import "Pearl-WS.h"
+#endif

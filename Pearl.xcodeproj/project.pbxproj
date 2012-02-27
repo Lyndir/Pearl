@@ -3615,6 +3615,7 @@
 				DA1097DD14F438D400EB000C /* Pearl-UIKit */,
 				DA109BEB14F438D500EB000C /* Pearl-WS */,
 				DADD1E2414F3BE5500413D09 /* Pearl */,
+				DADD1E2514F3BE5500413D09 /* Supporting Files */,
 				DADD1E3814F3BE5500413D09 /* PearlTests */,
 				DA109DD714F45F8900EB000C /* ASIHttpRequest */,
 				DA109C7B14F45EEB00EB000C /* cocos2d */,
@@ -3688,7 +3689,6 @@
 				DA10974214F438C300EB000C /* Resources */,
 				DA10974514F438C300EB000C /* PearlStringUtils.h */,
 				DA10974614F438C300EB000C /* PearlStringUtils.m */,
-				DADD1E2514F3BE5500413D09 /* Supporting Files */,
 			);
 			path = Pearl;
 			sourceTree = "<group>";
@@ -4612,7 +4612,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl/Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
 			};
 			name = Debug;
@@ -4621,7 +4621,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl/Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
 			};
 			name = Release;

@@ -45,18 +45,18 @@
 
 -(void) clickEffect {
     
-    static SystemSoundID clicky = 0;
+    static SystemSoundID instance = 0;
     
     if([[PearlConfig get].soundFx boolValue]) {
-        if(clicky == 0)
-            clicky = [PearlAudioController loadEffectWithName:@"snapclick.caf"];
+        if (!instance)
+            instance = [PearlAudioController loadEffectWithName:@"snapclick.caf"];
         
-        [PearlAudioController playEffect:clicky];
+        [PearlAudioController playEffect:instance];
     }
     
     else {
-        [PearlAudioController disposeEffect:clicky];
-        clicky = 0;
+        [PearlAudioController disposeEffect:instance];
+        instance = 0;
     }
 }
 
@@ -171,11 +171,11 @@
 
 +(PearlAudioController *) get {
     
-    static PearlAudioController *sharedAudioController = nil;
-    if(sharedAudioController == nil)
-        sharedAudioController = [self new];
+    static PearlAudioController *instance = nil;
+    if(!instance)
+        instance = [self new];
     
-    return sharedAudioController;
+    return instance;
 }
 
 @end

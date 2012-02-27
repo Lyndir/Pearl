@@ -30,17 +30,17 @@
 #endif
 
 
-@interface ClickMenu : CCMenu
+@interface PearlCCClickMenu : CCMenu
 
 @end
 
-@interface ClickMenu (Private)
+@interface PearlCCClickMenu (Private)
 
 -(CCMenuItem *) itemForTouch: (UITouch *) touch;
 
 @end
 
-@implementation ClickMenu
+@implementation PearlCCClickMenu
 
 -(BOOL) ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event {
 
@@ -81,7 +81,7 @@
 
 
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo items:(CCMenuItem *)menuItem, ... {
++ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo items:(CCMenuItem *)menuItem, ... {
     
     if (!menuItem)
         [NSException raise:NSInvalidArgumentException
@@ -101,13 +101,13 @@
 }
 
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
++ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
     
     return [[[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems] autorelease];
 }
 
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ... {
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ... {
     
     va_list list;
     va_start(list, menuItem);
@@ -123,7 +123,7 @@
 }
 
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:aLogo itemsFromArray:(NSArray *)menuItems {
     
     if(!(self = [super init]))
         return nil;
@@ -131,7 +131,7 @@
     self.delegate           = aDelegate;
     self.logo               = aLogo;
     self.items              = menuItems;
-    self.layout             = MenuLayoutVertical;
+    self.layout             = PearlCCMenuLayoutVertical;
     
     return self;
 }
@@ -162,7 +162,7 @@
 }
 
 
-- (void)setLayout:(MenuLayout)newLayout {
+- (void)setLayout:(PearlCCMenuLayout)newLayout {
     
     _layout = newLayout;
     
@@ -204,7 +204,7 @@
     if (self.menu)
         return;
     
-    self.menu = [ClickMenu menuWithItems:nil];
+    self.menu = [PearlCCClickMenu menuWithItems:nil];
     self.menu.isRelativeAnchorPoint = YES;
     self.menu.anchorPoint = ccp(-0.5f, -0.5f);
     self.menu.position = self.offset;
@@ -224,7 +224,7 @@
 - (void)doLayout {
     
     switch (self.layout) {
-        case MenuLayoutVertical: {
+        case PearlCCMenuLayoutVertical: {
             for (CCMenuItem *item in self.items)
                 [self.menu addChild:item];
 
@@ -232,7 +232,7 @@
             break;
         }
 
-        case MenuLayoutColumns: {
+        case PearlCCMenuLayoutColumns: {
             NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
             NSUInteger r = 0;
 
@@ -270,7 +270,7 @@
             break;
         }
             
-        case MenuLayoutCustomColumns: {
+        case PearlCCMenuLayoutCustomColumns: {
             NSNumber *cols[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
             for (NSUInteger c = 0; c < self.itemCounts.count; ++c)
                 cols[c] = [self.itemCounts objectAtIndex:c];
@@ -282,7 +282,7 @@
              cols[5], cols[6], cols[7], cols[8], cols[9], nil];
             break;
         }
-        case MenuLayoutCustomRows: {
+        case PearlCCMenuLayoutCustomRows: {
             NSNumber *rows[10] = { nil, nil, nil, nil, nil, nil, nil, nil, nil, nil };
             for (NSUInteger r = 0; r < self.itemCounts.count; ++r)
                 rows[r] = [self.itemCounts objectAtIndex:r];

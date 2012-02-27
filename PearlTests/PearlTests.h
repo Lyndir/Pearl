@@ -1,13 +1,5 @@
-//
-//  PearlTests.h
-//  PearlTests
-//
-//  Created by Maarten Billemont on 21/02/12.
-//  Copyright (c) 2012 Lyndir. All rights reserved.
-//
+#ifndef PEARLTESTS
+#error PEARLTESTS used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARLTESTS) in your Pearl prefix file.
+#endif
 
-#import <SenTestingKit/SenTestingKit.h>
-
-@interface PearlTests : SenTestCase
-
-@end
+#import "Pearl.h"

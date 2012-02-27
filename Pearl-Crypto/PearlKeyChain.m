@@ -30,7 +30,7 @@
 #import "PearlLogger.h"
 
 
-@implementation NSString (KeyChain)
+@implementation NSString (PearlKeyChain)
 
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
@@ -44,7 +44,7 @@
 
 @end
 
-@implementation NSData (KeyChain)
+@implementation NSData (PearlKeyChain)
 
 static NSString *NSStringFromErrSec(OSStatus status) {
     

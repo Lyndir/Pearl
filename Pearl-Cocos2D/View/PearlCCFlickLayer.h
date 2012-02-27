@@ -25,7 +25,7 @@
 #import "PearlCCScrollLayer.h"
 
 
-@interface PearlCCFlickLayer : CCLayer<ScrollLayerDelegate> {
+@interface PearlCCFlickLayer : CCLayer<PearlCCScrollLayerDelegate> {
 
     PearlCCScrollLayer *_content;
 

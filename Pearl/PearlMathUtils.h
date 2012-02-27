@@ -24,5 +24,4 @@
 
 #import <Foundation/Foundation.h>
 
-#define Sign(number)                                                                    \
-            (number < 0? -1: 1)
+#define Sign(number) (number < 0? -1: 1)

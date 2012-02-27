@@ -33,11 +33,11 @@
 
 + (PearlStrings *)get {
 
-    static PearlStrings *pearlStrings = nil;
-    if (pearlStrings == nil)
-        pearlStrings = [PearlStrings new];
+    static PearlStrings *instance = nil;
+    if (!instance)
+        instance = [self new];
 
-    return pearlStrings;
+    return instance;
 }
 
 @dynamic timeDaySuffix;

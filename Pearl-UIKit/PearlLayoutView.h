@@ -25,23 +25,23 @@
 #import <UIKit/UIKit.h>
 
 typedef enum {
-    GravityNorth,
-    GravityEast,
-    GravitySouth,
-    GravityWest,
-} Gravity;
+    PearlLayoutGravityNorth,
+    PearlLayoutGravityEast,
+    PearlLayoutGravitySouth,
+    PearlLayoutGravityWest,
+} PearlLayoutGravity;
 
 @interface PearlLayoutView : UIView {
     
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                        gravity:(Gravity)gravity;
+                        gravity:(PearlLayoutGravity)gravity;
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                        gravity:(Gravity)gravity;
+                        gravity:(PearlLayoutGravity)gravity;
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                        gravity:(Gravity)gravity;
+                        gravity:(PearlLayoutGravity)gravity;
 
-- (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(Gravity)gravity;
+- (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity;
 
 @end

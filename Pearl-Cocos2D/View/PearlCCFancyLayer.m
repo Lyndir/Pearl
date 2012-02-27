@@ -54,8 +54,8 @@
     if(!(self = [super init]))
         return self;
     
-    self.outerPadding    = margin(5.0f, 5.0f, 5.0f, 5.0f);
-    self.padding         = margin(30.0f, 30.0f, 50.0f, 30.0f);
+    self.outerPadding    = PearlMarginMake(5.0f, 5.0f, 5.0f, 5.0f);
+    self.padding         = PearlMarginMake(30.0f, 30.0f, 50.0f, 30.0f);
     self.backColor       = ccc4(0x00, 0x00, 0x00, 0xdd);
     self.colorGradient   = ccc4(0x00, 0x00, 0x00, 0xdd);
     self.innerRatio      = 1.0f / 50.0f;
@@ -158,14 +158,14 @@
 }
 
 
--(void) setOuterPadding:(Margin)anOuterPadding {
+-(void) setOuterPadding:(PearlMargin)anOuterPadding {
     
     _outerPadding = anOuterPadding;
     [self update];
 }
 
 
--(void) setPadding:(Margin)aPadding {
+-(void) setPadding:(PearlMargin)aPadding {
     
     _padding = aPadding;
     [self update];

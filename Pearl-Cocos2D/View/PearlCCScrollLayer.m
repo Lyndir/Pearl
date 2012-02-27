@@ -25,7 +25,7 @@
 #import "PearlCCScrollLayer.h"
 #import "PearlGLUtils.h"
 
-#define kDefaultScrollPerSecond     0.01f
+#define ScrollPerSecond     0.01f
 
 
 @interface PearlCCScrollLayer ()
@@ -60,13 +60,13 @@
 
 
 
-+ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
++ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
 
     return [[[self alloc] initWithContentSize:contentSize direction:direction] autorelease];
 }
 
 
-+ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(ScrollContentDirection)direction {
++ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction {
 
     PearlCCScrollLayer *scrollLayer = [self scrollWithContentSize:node.contentSize direction:direction];
     [scrollLayer addChild:node];
@@ -75,13 +75,13 @@
 }
 
 
-- (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction {
+- (id)initWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
 
     if (!(self = [super init]))
         return nil;
     
     self.scrollRatio             = ccp(0.0f, 1.0f);
-    self.scrollPerSecond         = kDefaultScrollPerSecond;
+    self.scrollPerSecond         = ScrollPerSecond;
     self.scrollContentSize       = contentSize;
     self.scrollContentDirection  = direction;
     self.isTouchEnabled     = YES;
@@ -170,16 +170,16 @@
                                   fmaxf(self.scrollContentSize.height - self.contentSize.height, 0));
     CGPoint limitPoint      = point;
     
-    if (self.scrollContentDirection & ScrollContentDirectionBottomToTop)
+    if (self.scrollContentDirection & PearlCCScrollContentDirectionBottomToTop)
         limitPoint.y        = fminf(fmaxf(point.y, -scrollBound.y), 0);
-    else if (self.scrollContentDirection & ScrollContentDirectionTopToBottom)
+    else if (self.scrollContentDirection & PearlCCScrollContentDirectionTopToBottom)
         limitPoint.y        = fminf(fmaxf(point.y, 0), scrollBound.y);
     else
         limitPoint.y        = 0;
 
-    if (self.scrollContentDirection & ScrollContentDirectionLeftToRight)
+    if (self.scrollContentDirection & PearlCCScrollContentDirectionLeftToRight)
         limitPoint.x        = fminf(fmaxf(point.x, -scrollBound.x), 0);
-    else if (self.scrollContentDirection & ScrollContentDirectionRightToLeft)
+    else if (self.scrollContentDirection & PearlCCScrollContentDirectionRightToLeft)
         limitPoint.x        = fminf(fmaxf(point.x, 0), scrollBound.x);
     else
         limitPoint.x        = 0;
@@ -242,7 +242,7 @@
         return;
     }
 
-    CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / kDefaultScrollPerSecond) * self.scrollPerSecond * dt);
+    CGPoint tickStep        = ccpMult(scrollLeft, (scrollLeftLen + 4 / ScrollPerSecond) * self.scrollPerSecond * dt);
     self.position           = ccpAdd(self.position, tickStep);
 }
 
@@ -290,11 +290,11 @@
         CGPoint from        = ccpSub(ccp(5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 10, 5), self.position);
         CGPoint scrollPointFrom, scrollPointTo;
-        if (self.scrollContentDirection & ScrollContentDirectionLeftToRight) {
+        if (self.scrollContentDirection & PearlCCScrollContentDirectionLeftToRight) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f));
             scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f - 0.05f));
         }
-        else if (self.scrollContentDirection & ScrollContentDirectionRightToLeft) {
+        else if (self.scrollContentDirection & PearlCCScrollContentDirectionRightToLeft) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f));
             scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.x * 0.95f + 0.05f));
         } else
@@ -309,11 +309,11 @@
         CGPoint from        = ccpSub(ccp(self.contentSize.width - 5, 5), self.position);
         CGPoint to          = ccpSub(ccp(self.contentSize.width - 5, self.contentSize.height - 10), self.position);
         CGPoint scrollPointFrom, scrollPointTo;
-        if (self.scrollContentDirection & ScrollContentDirectionTopToBottom) {
+        if (self.scrollContentDirection & PearlCCScrollContentDirectionTopToBottom) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f));
             scrollPointTo   = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f + 0.05f));
         }
-        else if (self.scrollContentDirection & ScrollContentDirectionBottomToTop) {
+        else if (self.scrollContentDirection & PearlCCScrollContentDirectionBottomToTop) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f));
             scrollPointTo   = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.y * 0.95f + 0.05f));
         } else

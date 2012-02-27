@@ -26,7 +26,7 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 
-@interface NSString (KeyChain)
+@interface NSString (PearlKeyChain)
 
 /** Create a signature for this object using the assymetric key in the given tag.
  *
@@ -40,7 +40,7 @@
 
 @end
 
-@interface NSData (KeyChain)
+@interface NSData (PearlKeyChain)
 
 /** Create a signature for this object using the assymetric key in the given tag.
  *

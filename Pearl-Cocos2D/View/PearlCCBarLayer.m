@@ -30,15 +30,15 @@
 
 @interface PearlCCBarLayer ()
 
-@property (readwrite, retain) CCMenuItemFont         *menuButton;
-@property (readwrite, retain) CCMenu                 *menuMenu;
-@property (readwrite, retain) CCLabelTTF                *messageLabel;
+@property (readwrite, retain) CCMenuItemFont        *menuButton;
+@property (readwrite, retain) CCMenu                *menuMenu;
+@property (readwrite, retain) CCLabelTTF            *messageLabel;
 
-@property (readwrite, assign) long                 textColor;
-@property (readwrite, assign) long                 renderColor;
+@property (readwrite, assign) long                  textColor;
+@property (readwrite, assign) long                  renderColor;
 @property (readwrite, assign) CGPoint               showPosition;
 
-@property (nonatomic, readwrite, assign) BOOL                 dismissed;
+@property (nonatomic, readwrite, assign) BOOL       dismissed;
 
 @end
 

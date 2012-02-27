@@ -60,8 +60,8 @@
 
 - (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options {
     
-    if (symmetricKey.length < kCipherKeySize) {
-        err(@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, kCipherKeySize);
+    if (symmetricKey.length < PearlCryptKeySize) {
+        err(@"Key is too small for the cipher size (%d < %d)", symmetricKey.length, PearlCryptKeySize);
         return nil;
     }
     
@@ -71,7 +71,7 @@
     
     // Encrypt / Decrypt
     @try {
-        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, kCipherAlgorithm, *options, 
+        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, PearlCryptAlgorithm, *options,
                                            symmetricKey.bytes, symmetricKey.length,
                                            nil, self.bytes, self.length,
                                            buffer, sizeof(uint8_t) * 1000, &movedBytes);
@@ -168,7 +168,7 @@
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42
 // Helper function for ASN.1 encoding
-static size_t derEncodeLength(unsigned char* buf, size_t length) {
+static size_t DEREncodeLength(unsigned char* buf, size_t length) {
     
     // encode length in ASN.1 DER format
     if (length < 128) {
@@ -192,7 +192,6 @@ static size_t derEncodeLength(unsigned char* buf, size_t length) {
         /* Sequence of length 0xd made up of OID followed by NULL */
         0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
         0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00
-        
     };
     
     NSMutableData *encKey = [NSMutableData data];
@@ -210,7 +209,7 @@ static size_t derEncodeLength(unsigned char* buf, size_t length) {
                           // Build up overall size made up of -
                           // size of OID + size of bitstring encoding + size of actual key
     size_t i = sizeof(_encodedRSAEncryptionOID) + 2 + bitstringEncLength + key.length;
-    size_t j = derEncodeLength(&builder[1], i);
+    size_t j = DEREncodeLength(&builder[1], i);
     [encKey appendBytes:builder length:j +1];
     
     // First part of the sequence is the OID
@@ -218,7 +217,7 @@ static size_t derEncodeLength(unsigned char* buf, size_t length) {
     
     // Now add the bitstring
     builder[0] = 0x03;
-    j = derEncodeLength(&builder[1], key.length + 1);
+    j = DEREncodeLength(&builder[1], key.length + 1);
     builder[j+1] = 0x00;
     [encKey appendBytes:builder length:j + 2];
     

@@ -26,7 +26,7 @@
 
 @class PearlValidatingTextField;
 
-@protocol ValidatingTextFieldDelegate
+@protocol PearlValidatingTextFieldDelegate
 
 - (BOOL)isValid:(PearlValidatingTextField *)textField;
 
@@ -36,9 +36,9 @@
 
     BOOL                            (^_isValid)(void);
     UIView                          *_validView, *_invalidView;
-    id<ValidatingTextFieldDelegate> _validationDelegate;
+    id<PearlValidatingTextFieldDelegate> _validationDelegate;
 }
 
-@property (nonatomic, assign) IBOutlet id<ValidatingTextFieldDelegate> validationDelegate;
+@property (nonatomic, assign) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
 
 @end

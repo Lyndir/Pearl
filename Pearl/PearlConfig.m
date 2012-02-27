@@ -57,7 +57,7 @@
 
 #pragma mark Internal
 
--(id) init {
+- (id)init {
 
     if(!(self = [super init]))
         return self;
@@ -68,40 +68,40 @@
 
     self.defaults = [NSUserDefaults standardUserDefaults];
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-                                     @"",                                                           cBuild,
-                                     @"",                                                           cVersion,
-                                     @"",                                                           cCopyright,
-                                     [NSNumber numberWithBool:YES],                                 cFirstRun,
+                                     @"",                                                           NSStringFromSelector(@selector(build)),
+                                     @"",                                                           NSStringFromSelector(@selector(version)),
+                                     @"",                                                           NSStringFromSelector(@selector(copyright)),
+                                     [NSNumber numberWithBool:YES],                                 NSStringFromSelector(@selector(firstRun)),
 
                                      [NSNumber numberWithInt:
-                                      [[PearlStrings get].fontSizeNormal intValue]],                cFontSize,
+                                      [[PearlStrings get].fontSizeNormal intValue]],                NSStringFromSelector(@selector(fontSize)),
                                      [NSNumber numberWithInt:
-                                      [[PearlStrings get].fontSizeLarge intValue]],                 cLargeFontSize,
+                                      [[PearlStrings get].fontSizeLarge intValue]],                 NSStringFromSelector(@selector(largeFontSize)),
                                      [NSNumber numberWithInt:
-                                      [[PearlStrings get].fontSizeSmall intValue]],                 cSmallFontSize,
-                                     [PearlStrings get].fontFamilyDefault,                          cFontName,
-                                     [PearlStrings get].fontFamilyFixed,                            cFixedFontName,
-                                     [PearlStrings get].fontFamilySymbolic,                         cSymbolicFontName,
+                                      [[PearlStrings get].fontSizeSmall intValue]],                 NSStringFromSelector(@selector(smallFontSize)),
+                                     [PearlStrings get].fontFamilyDefault,                          NSStringFromSelector(@selector(fontName)),
+                                     [PearlStrings get].fontFamilyFixed,                            NSStringFromSelector(@selector(fixedFontName)),
+                                     [PearlStrings get].fontFamilySymbolic,                         NSStringFromSelector(@selector(symbolicFontName)),
 
-                                     [NSNumber numberWithLong:       0x332222cc],                   cShadeColor,
-                                     [NSNumber numberWithFloat:      0.4f],                         cTransitionDuration,
+                                     [NSNumber numberWithLong:       0x332222cc],                   NSStringFromSelector(@selector(shadeColor)),
+                                     [NSNumber numberWithFloat:      0.4f],                         NSStringFromSelector(@selector(transitionDuration)),
 
-                                     [NSNumber numberWithBool:       YES],                          cSoundFx,
-                                     [NSNumber numberWithBool:       NO],                           cVoice,
-                                     [NSNumber numberWithBool:       YES],                          cVibration,
-                                     [NSNumber numberWithBool:       YES],                          cVisualFx,
+                                     [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(soundFx)),
+                                     [NSNumber numberWithBool:       NO],                           NSStringFromSelector(@selector(voice)),
+                                     [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(vibration)),
+                                     [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(visualFx)),
 
                                      [NSArray arrayWithObjects:
                                       @"sequential",
                                       @"random",
                                       @"",
-                                      nil],                                                         cTracks,
+                                      nil],                                                         NSStringFromSelector(@selector(tracks)),
                                      [NSArray arrayWithObjects:
                                       [PearlStrings get].songSequential,
                                       [PearlStrings get].songRandom,
                                       [PearlStrings get].songOff,
-                                      nil],                                                         cTrackNames,
-                                     @"sequential",                                                 cCurrentTrack,
+                                      nil],                                                         NSStringFromSelector(@selector(trackNames)),
+                                     @"sequential",                                                 NSStringFromSelector(@selector(currentTrack)),
 
                                      nil]];
 
@@ -116,7 +116,7 @@
 }
 
 
--(void) dealloc {
+- (void)dealloc {
 
     self.defaults = nil;
 
@@ -143,13 +143,13 @@
 }
 
 
-+(PearlConfig *) get {
++ (PearlConfig *)get {
 
-    static PearlConfig *configInstance = nil;
-    if(!configInstance)
-        configInstance = [self new];
+    static PearlConfig *instance = nil;
+    if(!instance)
+        instance = [self new];
 
-    return configInstance;
+    return instance;
 }
 
 + (void)flush {
@@ -257,10 +257,10 @@
     if(currentTrack == nil)
         currentTrack = @"";
 
-    NSString *oldTrack = [self.defaults objectForKey:cCurrentTrack];
-    [self.defaults setObject:currentTrack forKey:cCurrentTrack];
+    NSString *oldTrack = [self.defaults objectForKey:NSStringFromSelector(@selector(currentTrack))];
+    [self.defaults setObject:currentTrack forKey:NSStringFromSelector(@selector(currentTrack))];
 
-    [[PearlAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(cCurrentTrack) fromValue:oldTrack];
+    [[PearlAppDelegate get] didUpdateConfigForKey:@selector(currentTrack) fromValue:oldTrack];
 }
 -(NSString *) currentTrackName {
 
@@ -293,9 +293,9 @@
         srandom(aSeed);
         free(_gameRandomSeeds);
         free(_gameRandomCounters);
-        _gameRandomSeeds            = malloc(sizeof(NSUInteger) * cMaxGameScope);
-        _gameRandomCounters         = malloc(sizeof(NSUInteger) * cMaxGameScope);
-        for (NSUInteger s = 0; s < cMaxGameScope; ++s){
+        _gameRandomSeeds            = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
+        _gameRandomCounters         = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
+        for (NSUInteger s = 0; s < PearlMaxGameRandom; ++s){
             _gameRandomSeeds[s]     = (NSUInteger) random();
             _gameRandomCounters[s]  = 0;
         }
@@ -304,12 +304,12 @@
 
 - (NSUInteger)gameRandom {
 
-    return [self gameRandom:cMaxGameScope - 1];
+    return [self gameRandom:PearlMaxGameRandom - 1];
 }
 
 - (NSUInteger)gameRandom:(NSUInteger)scope {
 
-    NSAssert2(scope < cMaxGameScope, @"Scope (%d) must be < %d", scope, cMaxGameScope);
+    NSAssert2(scope < PearlMaxGameRandom, @"Scope (%d) must be < %d", scope, PearlMaxGameRandom);
 
     @synchronized(self) {
         srandom(_gameRandomSeeds[scope]++);

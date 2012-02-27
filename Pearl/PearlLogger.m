@@ -27,16 +27,16 @@
 
 @synthesize message, occurance, level;
 
-static NSDateFormatter *logDateFormatter = nil;
+static NSDateFormatter *PearlLogDateFormatter = nil;
 
 + (void)initialize {
     
     [super initialize];
     
-    if (!logDateFormatter) {
-        logDateFormatter = [NSDateFormatter new];
-        [logDateFormatter setDateStyle:NSDateFormatterNoStyle];
-        [logDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    if (!PearlLogDateFormatter) {
+        PearlLogDateFormatter = [NSDateFormatter new];
+        [PearlLogDateFormatter setDateStyle:NSDateFormatterNoStyle];
+        [PearlLogDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     }
 }
 
@@ -92,7 +92,7 @@ static NSDateFormatter *logDateFormatter = nil;
 - (NSString *)description {
     
     return [NSString stringWithFormat:@"%@ %@\n",
-            [logDateFormatter stringFromDate:self.occurance], [self messageDescription]];
+            [PearlLogDateFormatter stringFromDate:self.occurance], [self messageDescription]];
 }
 
 - (NSString *)messageDescription {
@@ -139,11 +139,11 @@ static NSDateFormatter *logDateFormatter = nil;
 
 + (PearlLogger *)get {
     
-    static PearlLogger *logger = nil;
-    if (!logger)
-        logger = [PearlLogger new];
+    static PearlLogger *instance = nil;
+    if (!instance)
+        instance = [PearlLogger new];
     
-    return logger;
+    return instance;
 }
 
 

@@ -25,7 +25,7 @@
 #import "PearlCCMenuLayer.h"
 
 
-@protocol ConfigMenuDelegate
+@protocol PearlCCConfigMenuDelegate
 
 @optional
 /** Return a string that will be the text label in the UI for the given setting. */
@@ -51,21 +51,21 @@
 @interface PearlCCConfigMenuLayer : PearlCCMenuLayer {
 
     NSDictionary                                                            *_itemConfigs;
-    id<NSObject, ConfigMenuDelegate>                                        _configDelegate;
+    id<NSObject, PearlCCConfigMenuDelegate>                                        _configDelegate;
 }
 
-@property (nonatomic, readwrite, retain) id<NSObject, ConfigMenuDelegate>   configDelegate;
+@property (nonatomic, readwrite, retain) id<NSObject, PearlCCConfigMenuDelegate>   configDelegate;
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
++ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                              settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
++ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
               settings:(SEL)setting, ...;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate, ConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;
 
 - (SEL)configForItem:(CCMenuItemToggle *)item;

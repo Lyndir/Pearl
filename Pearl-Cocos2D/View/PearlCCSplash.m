@@ -28,11 +28,11 @@
 #import "PearlCCBarSprite.h"
 
 
-@interface SplashTransition : CCTransitionZoomFlipY
+@interface PearlCCSplashTransition : CCTransitionZoomFlipY
 
 @end
 
-@implementation SplashTransition
+@implementation PearlCCSplashTransition
 
 - (id)initWithGameScene:(CCScene *)uiScene {
 
@@ -102,7 +102,7 @@
         [uiScene addChild:[PearlCocos2DAppDelegate get].uiLayer];
         
         // Build a transition scene from the splash scene to the game scene.
-        CCTransitionScene *transitionScene = [[SplashTransition alloc] initWithGameScene:uiScene];
+        CCTransitionScene *transitionScene = [[PearlCCSplashTransition alloc] initWithGameScene:uiScene];
         
         [uiScene release];
         

@@ -26,8 +26,6 @@
 
 
 @interface PearlWebUtils : NSObject {
-@private
-
 }
 
 + (NSString *)urlEncode:(NSString *)value;

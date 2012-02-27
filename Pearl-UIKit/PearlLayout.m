@@ -24,7 +24,6 @@
 
 #import "PearlLayout.h"
 
-
 @interface PearlLayout ()
 
 @property (nonatomic, readwrite, retain) UIScrollView   *scrollView;
@@ -112,7 +111,7 @@
     CGFloat y = top;
     if(y == d) {
         if (self.lastChild)
-            y = [self.lastChild frame].origin.y + [self.lastChild frame].size.height + kPadding;
+            y = [self.lastChild frame].origin.y + [self.lastChild frame].size.height + PearlLayoutPadding;
         else
             y = 20;
     }
@@ -120,7 +119,7 @@
     [newView setFrame:CGRectMake(0,
                                  y,
                                  self.contentView.frame.size.width,
-                                 self.scrollView.frame.size.height / 1 - y - kPadding - minus)];
+                                 self.scrollView.frame.size.height / 1 - y - PearlLayoutPadding - minus)];
     
     return [self add:newView usingDefault:-1];
 }
@@ -154,7 +153,7 @@
         x = (self.contentView.bounds.size.width - w) / 2;
     if(y == d) {
         if (self.lastChild)
-            y = self.lastChild.frame.origin.y + self.lastChild.frame.size.height + kPadding;
+            y = self.lastChild.frame.origin.y + self.lastChild.frame.size.height + PearlLayoutPadding;
         else
             y = 20;
     }

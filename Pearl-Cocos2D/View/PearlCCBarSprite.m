@@ -24,7 +24,7 @@
 
 #import "PearlCCBarSprite.h"
 
-#define kSmoothingTime 0.1f
+#define SmoothingTime 0.1f
 
 
 @interface PearlCCBarSprite ()
@@ -103,9 +103,9 @@
 
 - (void)update:(ccTime)dt {
     
-    self.smoothTimeElapsed   = fminf(kSmoothingTime, self.smoothTimeElapsed + dt);
+    self.smoothTimeElapsed   = fminf(SmoothingTime, self.smoothTimeElapsed + dt);
 
-    CGFloat completion  = self.smoothTimeElapsed / kSmoothingTime;
+    CGFloat completion  = self.smoothTimeElapsed / SmoothingTime;
     self.current             = ccpAdd(self.current, ccpMult(ccpSub(self.target, self.current), completion));
     
     CGPoint bar         = ccpSub(self.current, self.position);
@@ -122,7 +122,7 @@
         self.smoothTimeElapsed      = 0;
     } else {
         _target = self.current      = t;
-        self.smoothTimeElapsed      = kSmoothingTime;
+        self.smoothTimeElapsed      = SmoothingTime;
         [self update:0];
     }
     

@@ -55,11 +55,11 @@
 
 + (PearlInfoPlist *)get {
     
-    static PearlInfoPlist *infoPlist = nil;
-    if (!infoPlist)
-        infoPlist = [PearlInfoPlist new];
+    static PearlInfoPlist *instance = nil;
+    if (!instance)
+        instance = [self new];
     
-    return infoPlist;
+    return instance;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {

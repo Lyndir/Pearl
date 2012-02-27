@@ -21,7 +21,7 @@
 #import "PearlCodeUtils.h"
 
 
-@interface RSAKey : NSObject
+@interface PearlRSAKey : NSObject
 {
     void                            *_key;
     BOOL                            _isPublicKey;
@@ -47,7 +47,7 @@
 /**
  * Convert this key to its public equivalent, discarting any private factors.
  */
-- (RSAKey *)publicKey;
+- (PearlRSAKey *)publicKey;
 /**
  * Export this key to a DER-encoded ASN1 structure.
  */

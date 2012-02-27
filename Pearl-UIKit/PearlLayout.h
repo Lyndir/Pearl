@@ -24,8 +24,9 @@
 
 #import <UIKit/UIKit.h>
 
-#define kPadding        5
-
+#ifndef PearlLayoutPadding
+#define PearlLayoutPadding        5
+#endif
 
 /**
  * View layout utility.

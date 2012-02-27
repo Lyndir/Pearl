@@ -28,19 +28,19 @@
 @implementation PearlLayoutView
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                        gravity:(Gravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
     
     return [self viewWithContent:contentView padWidth:padWidth padHeight:0 gravity:gravity];
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                        gravity:(Gravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
     
     return [self viewWithContent:contentView padWidth:0 padHeight:padHeight gravity:gravity];
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                        gravity:(Gravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
     
     return [[[self alloc]
              initWithContent:contentView
@@ -50,7 +50,7 @@
             autorelease];
 }
 
-- (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(Gravity)gravity {
+- (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity {
     
     if (!(self = [super initWithFrame:CGRectMake(0, 0, width, height)]))
         return self;
@@ -58,15 +58,15 @@
     CGSize size = contentView.frame.size;
     CGFloat x = 0, y = 0;
     switch (gravity) {
-        case GravityNorth:
+        case PearlLayoutGravityNorth:
             break;
-        case GravityEast:
+        case PearlLayoutGravityEast:
             x = width - size.width;
             break;
-        case GravitySouth:
+        case PearlLayoutGravitySouth:
             y = height - size.height;
             break;
-        case GravityWest:
+        case PearlLayoutGravityWest:
             break;
     }
     

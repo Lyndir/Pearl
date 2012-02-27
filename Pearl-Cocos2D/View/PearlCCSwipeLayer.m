@@ -25,8 +25,8 @@
 #import "PearlCCSwipeLayer.h"
 #import "PearlConfig.h"
 
-#define gSwipeMinHorizontal 50
-#define gSwipeMaxVertical 100
+#define SwipeMinHorizontal 50
+#define SwipeMaxVertical 100
 
 
 @interface PearlCCSwipeLayer ()
@@ -137,8 +137,8 @@
     CGPoint point = [touch locationInView:[touch view]];
 
     CGPoint swipePoint = ccp(point.y, point.x);
-    if(fabsf(self.swipeStart.x - swipePoint.x) > gSwipeMinHorizontal
-        && fabsf(self.swipeStart.y - swipePoint.y) < gSwipeMaxVertical)
+    if(fabsf(self.swipeStart.x - swipePoint.x) > SwipeMinHorizontal
+        && fabsf(self.swipeStart.y - swipePoint.y) < SwipeMaxVertical)
         self.swiped = YES;
     
     CGFloat swipeActionDuration = [[PearlConfig get].transitionDuration floatValue];

@@ -26,22 +26,22 @@
 
 typedef enum {
     /** Submit the parameters in a www-form encoded HTTP-GET request. */
-    WSRequestMethodGET_REST,
+    PearlWSRequestMethodGET_REST,
     /** Submit the parameters in a www-form encoded HTTP-POST request. */
-    WSRequestMethodPOST_REST,
+    PearlWSRequestMethodPOST_REST,
     /** Submit the parameters in a JSON encoded HTTP-POST request. */
-    WSRequestMethodPOST_JSON,
-} WSRequestMethod;
+    PearlWSRequestMethodPOST_JSON,
+} PearlWSRequestMethod;
 
 typedef enum {
-    JSONResultCodeSuccess = 0,
-    JSONResultCodeGenericFailure = -1,
-    JSONResultCodeUpdateRequired = -2,
-} JSONResultCode;
+    PearlJSONResultCodeSuccess = 0,
+    PearlJSONResultCodeGenericFailure = -1,
+    PearlJSONResultCodeUpdateRequired = -2,
+} PearlJSONResultCode;
 
 @interface PearlJSONResult : NSObject {
 
-    JSONResultCode  _code;
+    PearlJSONResultCode _code;
     BOOL            _outdated;
     NSString        *_userDescription;
     NSArray         *_userDescriptionArguments;
@@ -49,7 +49,7 @@ typedef enum {
     id              _result;
 }
 
-@property (nonatomic, assign) JSONResultCode    code;
+@property (nonatomic, assign) PearlJSONResultCode code;
 @property (nonatomic, retain) NSString          *userDescription;
 @property (nonatomic, retain) NSArray           *userDescriptionArguments;
 @property (nonatomic, retain) NSString          *technicalDescription;
@@ -90,7 +90,7 @@ typedef enum {
  *        or nil if the request or reading of the response failed.
  * @return The object responsible for handling this request while it's in progress.
  */
-- (id)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
+- (id)requestWithDictionary:(NSDictionary *)parameters method:(PearlWSRequestMethod)method
                  completion:(void (^)(NSData *responseData))completion;
 
 
@@ -107,7 +107,7 @@ typedef enum {
  *        response was successfully parsed in and indicates a successful result, and the JSON response object if it was parsed successfully.
  * @return The object responsible for handling this request while it's in progress.
  */
-- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError
+- (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
              completion:(void (^)(BOOL success, PearlJSONResult *response))completion;
 
 /**

@@ -25,25 +25,25 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCryptor.h>
 
-#ifndef kCipherAlgorithm
-#define kCipherAlgorithm    kCCAlgorithmAES128
+#ifndef PearlCryptAlgorithm
+#define PearlCryptAlgorithm     kCCAlgorithmAES128
 #endif
-#ifndef kCipherKeySize
-#define kCipherKeySize      kCCKeySizeAES128
+#ifndef PearlCryptKeySize
+#define PearlCryptKeySize       kCCKeySizeAES128
 #endif
-#ifndef kCipherBlockSize
-#define kCipherBlockSize    8
+#ifndef PearlCryptBlockSize
+#define PearlCryptBlockSize     8
 #endif
 
 
-@interface NSString (CryptUtils)
+@interface NSString (PearlCryptUtils)
 
 /** Encrypt this plain-text string object with the given key. */
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
 
 @end
 
-@interface NSData (CryptUtils)
+@interface NSData (PearlCryptUtils)
 
 /** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;

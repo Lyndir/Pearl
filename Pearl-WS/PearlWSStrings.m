@@ -33,11 +33,11 @@
 
 + (PearlWSStrings *)get {
 
-    static PearlWSStrings *pearlWSStrings = nil;
-    if (pearlWSStrings == nil)
-        pearlWSStrings = [PearlWSStrings new];
+    static PearlWSStrings *instance = nil;
+    if (!instance)
+        instance = [self new];
 
-    return pearlWSStrings;
+    return instance;
 }
 
 @dynamic errorWSConnection;

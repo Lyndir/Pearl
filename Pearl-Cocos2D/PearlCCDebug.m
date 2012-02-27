@@ -11,10 +11,9 @@
 #import "JRSwizzle.h"
 
 
-static NSMutableDictionary *drawOrder_CCDebug;
-static NSUInteger order_CCDebug;
+static NSMutableDictionary *PearlCCDebugDrawOrder;
 
-@interface Activity : NSObject {
+@interface PearlCCDebugActivity : NSObject {
 @private
     NSInteger                               index;
     NSString                                *lastDescription;
@@ -22,26 +21,24 @@ static NSUInteger order_CCDebug;
 
 @property (nonatomic, retain) NSString      *lastDescription;
 
-+ (Activity *)activity;
++ (PearlCCDebugActivity *)activity;
 
 - (char)activityStateWithDescription:(NSString *)description;
 
 @end
 
-@interface CCNode (CCDebug)
+@interface CCNode (PearlCCDebug)
 
-- (void)draw_CCDebug;
+- (void)draw_PearlCCDebug;
 
 @end
 
 @implementation PearlCCDebug
 
-static NSMutableDictionary *nodeActivity;
-
 + (void)initialize {
     
     NSError *error = nil;
-    [CCNode jr_swizzleMethod:@selector(draw) withMethod:@selector(draw_CCDebug) error:&error];
+    [CCNode jr_swizzleMethod:@selector(draw) withMethod:@selector(draw_PearlCCDebug) error:&error];
     if (error)
         dbg(@"Swizzling error: %@", error);
 }
@@ -52,22 +49,22 @@ static NSMutableDictionary *nodeActivity;
 }
 
 + (void)printStateForNode:(CCNode *)node indent:(NSUInteger)indent {
-    
-    PearlLogger *logger = [PearlLogger get];
-    
-    NSValue *nodeValue = [NSValue valueWithPointer:node];
+
+    static NSMutableDictionary *nodeActivity;
     if (nodeActivity == nil)
         nodeActivity = [[NSMutableDictionary alloc] init];
-    Activity *activity = [nodeActivity objectForKey:nodeValue];
+
+    NSValue *nodeValue = [NSValue valueWithPointer:node];
+    PearlCCDebugActivity *activity = [nodeActivity objectForKey:nodeValue];
     if (activity == nil)
-        [nodeActivity setObject:activity = [Activity activity] forKey:nodeValue];
+        [nodeActivity setObject:activity = [PearlCCDebugActivity activity] forKey:nodeValue];
     
     NSString *nodeDescription = [self describe:node];
     char activityState = [activity activityStateWithDescription:nodeDescription];
 
-    NSNumber *drawOrder = [drawOrder_CCDebug objectForKey:nodeValue];
+    NSNumber *drawOrder = [PearlCCDebugDrawOrder objectForKey:nodeValue];
 
-    [logger dbg:@"%*s%@. [%c] %@", 4 * indent, "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription];
+    [[PearlLogger get] dbg:@"%*s%@. [%c] %@", 4 * indent, "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription];
     for (CCNode *child in node.children)
         [self printStateForNode:child indent:indent + 1];
 }
@@ -79,13 +76,11 @@ static NSMutableDictionary *nodeActivity;
 
 @end
 
-@implementation Activity
+@implementation PearlCCDebugActivity
 
 @synthesize lastDescription;
 
-static char activityStates[4] = "-\\|/";
-
-+ (Activity *)activity {
++ (PearlCCDebugActivity *)activity {
     
     return [[self new] autorelease];
 }
@@ -102,6 +97,7 @@ static char activityStates[4] = "-\\|/";
 
 - (char)activityStateWithDescription:(NSString *)description {
     
+    static char activityStates[4] = "-\\|/";
     if (![lastDescription isEqualToString:description]) {
         index = (index + 1) % (sizeof(activityStates) / sizeof(char));
         self.lastDescription = description;
@@ -112,18 +108,20 @@ static char activityStates[4] = "-\\|/";
 
 @end
 
-@implementation CCNode (CCDebug)
+@implementation CCNode (PearlCCDebug)
 
-- (void)draw_CCDebug {
+- (void)draw_PearlCCDebug {
     
-    if (!drawOrder_CCDebug)
-        drawOrder_CCDebug = [[NSMutableDictionary alloc] init];
+    if (!PearlCCDebugDrawOrder)
+        PearlCCDebugDrawOrder = [[NSMutableDictionary alloc] init];
+
+    static NSUInteger order = 0;
     if ([self isKindOfClass:[CCScene class]])
-        order_CCDebug = 0;
+        order = 0;
 
-    [drawOrder_CCDebug setObject:[NSNumber numberWithUnsignedInt:order_CCDebug++] forKey:[NSValue valueWithPointer:self]];
+    [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInt:order++] forKey:[NSValue valueWithPointer:self]];
     
-    [self draw_CCDebug];
+    [self draw_PearlCCDebug];
 }
 
 @end

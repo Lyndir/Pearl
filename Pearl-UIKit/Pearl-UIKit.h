@@ -14,7 +14,7 @@
 #import "PearlRootViewController.h"
 #import "PearlSheet.h"
 #import "PearlUIDebug.h"
-#import "UIImage_PearlScaling.h"
 #import "PearlUIUtils.h"
 #import "PearlValidatingTextField.h"
 #import "PearlWebViewController.h"
+#import "UIImage_PearlScaling.h"

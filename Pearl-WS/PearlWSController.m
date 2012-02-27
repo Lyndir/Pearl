@@ -82,11 +82,11 @@
 
 + (PearlWSController *)get {
     
-    static PearlWSController *wsInstance;
-    if(!wsInstance)
-        wsInstance = [self new];
+    static PearlWSController *instance;
+    if(!instance)
+        instance = [self new];
     
-    return wsInstance;
+    return instance;
 }
 
 
@@ -115,7 +115,7 @@
     self.suppressOutdatedWarning = NO;
 }
 
-- (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(WSRequestMethod)method
+- (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(PearlWSRequestMethod)method
                                completion:(void (^)(NSData *responseData))completion {
     
     trc(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
@@ -123,7 +123,7 @@
     NSData *(^loadRequest)(void) = nil;
     
     switch (method) {
-        case WSRequestMethodGET_REST: {
+        case PearlWSRequestMethodGET_REST: {
             ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
             request = formRequest;
             
@@ -155,7 +155,7 @@
             break;
         }
             
-        case WSRequestMethodPOST_REST: {
+        case PearlWSRequestMethodPOST_REST: {
             // Build the request.
             ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
             request = formRequest;
@@ -177,7 +177,7 @@
             break;
         }
             
-        case WSRequestMethodPOST_JSON: {
+        case PearlWSRequestMethodPOST_JSON: {
             // Build the request.
             request = [[[ASIHTTPRequest alloc] initWithURL:[self serverURL]] autorelease];
             
@@ -228,7 +228,7 @@
     return request;
 }
 
-- (id)requestWithObject:(id)object method:(WSRequestMethod)method popupOnError:(BOOL)popupOnError
+- (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
              completion:(void (^)(BOOL success, PearlJSONResult *response))completion {
     
     return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
@@ -287,7 +287,7 @@
     if ((*response).outdated && !self.suppressOutdatedWarning) {
         self.suppressOutdatedWarning = YES;
         
-        if ((*response).code == JSONResultCodeUpdateRequired)
+        if ((*response).code == PearlJSONResultCodeUpdateRequired)
             // Required upgrade.
             [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
                                             message:[PearlWSStrings get].errorWSResponseOutdatedRequired
@@ -308,11 +308,11 @@
     }
 #endif
     
-    if ((*response).code != JSONResultCodeSuccess) {
+    if ((*response).code != PearlJSONResultCodeSuccess) {
         err(@"Result Code %d: %@", (*response).code, (*response).technicalDescription);
         
 #ifdef PEARL_UIKIT
-        if (popupOnError && (*response).code != JSONResultCodeUpdateRequired) {
+        if (popupOnError && (*response).code != PearlJSONResultCodeUpdateRequired) {
             NSString *errorMessage = (*response).userDescription;
             if (errorMessage && errorMessage.length) {
                 [PearlAlert showError:[NSString stringWithFormat:l(errorMessage) array:(*response).userDescriptionArguments]];

@@ -27,8 +27,8 @@
 #import "PearlConfig.h"
 #import "PearlCCDebug.h"
 
-#define kFilteringFactor            0.4f
-#define kAccelerometerFrequency     50 //Hz
+#define AccelerometerFilteringFactor            0.4f
+#define AccelerometerFrequency     50 //Hz
 
 
 @interface PearlCCUILayer ()
@@ -70,7 +70,7 @@
     self.callbackQueue = [NSMutableArray arrayWithCapacity:3];
     
     //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
-    //theAccelerometer.updateInterval = 1 / kAccelerometerFrequency;
+    //theAccelerometer.updateInterval = 1 / AccelerometerFrequency;
     
     //[self schedule:@selector(debug:) interval:1];
 
@@ -124,9 +124,9 @@
 -(void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
     
     // Use a basic low-pass filter to keep only the gravity component of each axis.
-    self.accelX = (acceleration.x * kFilteringFactor) + (self.accelX * (1.0f - kFilteringFactor));
-    self.accelY = (acceleration.y * kFilteringFactor) + (self.accelY * (1.0f - kFilteringFactor));
-    self.accelZ = (acceleration.z * kFilteringFactor) + (self.accelZ * (1.0f - kFilteringFactor));
+    self.accelX = (acceleration.x * AccelerometerFilteringFactor) + (self.accelX * (1.0f - AccelerometerFilteringFactor));
+    self.accelY = (acceleration.y * AccelerometerFilteringFactor) + (self.accelY * (1.0f - AccelerometerFilteringFactor));
+    self.accelZ = (acceleration.z * AccelerometerFilteringFactor) + (self.accelZ * (1.0f - AccelerometerFilteringFactor));
     
     // Use the acceleration data.
     if(self.accelX > 0.5)

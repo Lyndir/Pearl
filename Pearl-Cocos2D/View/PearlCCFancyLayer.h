@@ -24,25 +24,24 @@
 
 #import "cocos2d.h"
 
-typedef struct Margin {
+typedef struct {
     CGFloat top;
     CGFloat right;
     CGFloat bottom;
     CGFloat left;
-} Margin;
+} PearlMargin;
 
-static inline Margin
-margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
+static inline PearlMargin PearlMarginMake(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
-    Margin margin = { top, right, bottom, left };
+    PearlMargin margin = { top, right, bottom, left };
     return margin;
 }
 
 @interface PearlCCFancyLayer : CCLayer <CCRGBAProtocol> {
 
     CGSize                                   _contentSizeInPixels;
-    Margin                                   _outerPadding;
-    Margin                                   _padding;
+    PearlMargin _outerPadding;
+    PearlMargin _padding;
     float                                    _innerRatio;
     ccColor4B                                _backColor, _colorGradient;
 
@@ -52,8 +51,8 @@ margin(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
 @property (nonatomic, readonly) CGSize      contentSizeInPixels;
 @property (nonatomic, readwrite) ccColor4B  colorGradient;
-@property (nonatomic, readwrite) Margin     outerPadding;
-@property (nonatomic, readwrite) Margin     padding;
+@property (nonatomic, readwrite) PearlMargin outerPadding;
+@property (nonatomic, readwrite) PearlMargin padding;
 @property (nonatomic, readwrite) float      innerRatio;
 
 -(void) update;

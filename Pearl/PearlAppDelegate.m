@@ -222,7 +222,7 @@
 +(PearlAppDelegate *) get {
     
     id delegate = [UIApplication sharedApplication].delegate;
-    if ([delegate isKindOfClass:[PearlAppDelegate class]])
+    if ([delegate isKindOfClass:[self class]])
         return (PearlAppDelegate *) delegate;
     
     return nil;

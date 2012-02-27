@@ -84,7 +84,7 @@
     if (!(self = [super init]))
         return nil;
     
-    self.content                 = [PearlCCScrollLayer scrollWithContentSize:CGSizeZero direction:ScrollContentDirectionLeftToRight];
+    self.content                 = [PearlCCScrollLayer scrollWithContentSize:CGSizeZero direction:PearlCCScrollContentDirectionLeftToRight];
     self.content.delegate        = self;
     [self addChild:self.content];
     

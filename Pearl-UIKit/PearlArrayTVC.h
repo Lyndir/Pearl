@@ -24,14 +24,14 @@
 #import <UIKit/UIKit.h>
 
 typedef enum {
-    ArrayTVCRowStylePlain,              // A row that does nothing.
-    ArrayTVCRowStyleLink,               // A row that can be tapped.
-    ArrayTVCRowStyleDisclosure,         // A row that has a detail disclosure arrow.
-    ArrayTVCRowStyleCheck,              // A row that the user can put a checkmark on.
-    ArrayTVCRowStyleToggle,             // A row that has a toggle component.
-} ArrayTVCRowStyle;
+    PearlArrayTVCRowStylePlain,              // A row that does nothing.
+    PearlArrayTVCRowStyleLink,               // A row that can be tapped.
+    PearlArrayTVCRowStyleDisclosure,         // A row that has a detail disclosure arrow.
+    PearlArrayTVCRowStyleCheck,              // A row that the user can put a checkmark on.
+    PearlArrayTVCRowStyleToggle,             // A row that has a toggle component.
+} PearlArrayTVCRowStyle;
 
-@protocol ArrayTVCDelegate
+@protocol PearlArrayTVCDelegate
 
 /**
  * Invoked on the delegate of a row when that row is activated (eg. by a user's tap).
@@ -70,14 +70,14 @@ typedef enum {
  * Add a row to the table with the given name as label in the given section.
  * When tapped, activateRowNamed:inSection:withContext: will be invoked on the given delegate.
  */
-- (void)addRowWithName:(NSString *)aName style:(ArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
-          withDelegate:(id<ArrayTVCDelegate>)aDelegate context:(id)aContext;
+- (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
+          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext;
 
 /**
  * Add a row to the table of style UITableViewCellStyleValue1 where aName is used for the left aligned label and aDetail for the detailTextLabel.
  * When tapped, activateRowNamed:inSection:withContext: will be invoked on the given delegate.
  */
-- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection withDelegate:(id<ArrayTVCDelegate>)aDelegate 
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection withDelegate:(id<PearlArrayTVCDelegate>)aDelegate
             context:(id)aContext;
 
 /**

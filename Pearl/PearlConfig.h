@@ -24,46 +24,19 @@
 
 #import <UIKit/UIKit.h>
 
-#define cMaxGameScope           1024
+#define PearlMaxGameRandom          1024
 
 #if DEBUG
-#define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1 from:basename(__FILE__) :__LINE__]
+#define PearlGameRandom()           [[PearlConfig get] gameRandom:PearlMaxGameRandom-1 from:basename(__FILE__) :__LINE__]
 #else
-#define gameRandom()            [[Config get] gameRandom:cMaxGameScope-1]
+#define PearlGameRandom()           [[PearlConfig get] gameRandom:PearlMaxGameRandom-1]
 #endif
 
 #if DEBUG
-#define gameRandomFor(scope)    [[Config get] gameRandom:scope from:basename(__FILE__) :__LINE__]
+#define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope from:basename(__FILE__) :__LINE__]
 #else
-#define gameRandomFor(scope)    [[Config get] gameRandom:scope]
+#define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope]
 #endif
-
-#define cBuild                  NSStringFromSelector(@selector(build))
-#define cVersion                NSStringFromSelector(@selector(version))
-#define cCopyright              NSStringFromSelector(@selector(copyright))
-#define cFirstRun               NSStringFromSelector(@selector(firstRun))
-#define cDeviceToken            NSStringFromSelector(@selector(deviceToken))
-#define cSupportedNotifications NSStringFromSelector(@selector(supportedNotifications))
-
-#define cFontSize               NSStringFromSelector(@selector(fontSize))
-#define cLargeFontSize          NSStringFromSelector(@selector(largeFontSize))
-#define cSmallFontSize          NSStringFromSelector(@selector(smallFontSize))
-#define cFixedFontName          NSStringFromSelector(@selector(fixedFontName))
-#define cFontName               NSStringFromSelector(@selector(fontName))
-#define cSymbolicFontName       NSStringFromSelector(@selector(symbolicFontName))
-
-#define cShadeColor             NSStringFromSelector(@selector(shadeColor))
-#define cTransitionDuration     NSStringFromSelector(@selector(transitionDuration))
-
-#define cSoundFx                NSStringFromSelector(@selector(soundFx))
-#define cMusic                  NSStringFromSelector(@selector(music))
-#define cVoice                  NSStringFromSelector(@selector(voice))
-#define cVibration              NSStringFromSelector(@selector(vibration))
-#define cVisualFx               NSStringFromSelector(@selector(visualFx))
-
-#define cTracks                 NSStringFromSelector(@selector(tracks))
-#define cTrackNames             NSStringFromSelector(@selector(trackNames))
-#define cCurrentTrack           NSStringFromSelector(@selector(currentTrack))
 
 @interface PearlConfig : NSObject {
 
@@ -115,7 +88,7 @@
 @property (nonatomic, readwrite, retain) NSNumber           *vibration;
 @property (nonatomic, readwrite, retain) NSNumber           *visualFx;
 
--(NSDate *) today;
+- (NSDate *)today;
 
 - (void)setGameRandomSeed:(NSUInteger)aSeed;
 
@@ -133,7 +106,7 @@
 - (NSUInteger)gameRandom:(NSUInteger)scope;
 - (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
 
-+(PearlConfig *)                                             get;
-+(void)                                                 flush;
++ (PearlConfig *)                                           get;
++ (void)                                                    flush;
 
 @end

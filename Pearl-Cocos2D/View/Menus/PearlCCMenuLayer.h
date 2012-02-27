@@ -26,16 +26,16 @@
 #import "PearlResettable.h"
 #import "PearlCCShadeLayer.h"
 
-typedef enum MenuLayout {
-    MenuLayoutVertical,
-    MenuLayoutColumns,
-    MenuLayoutCustomColumns,
-    MenuLayoutCustomRows,
-} MenuLayout;
+typedef enum {
+    PearlCCMenuLayoutVertical,
+    PearlCCMenuLayoutColumns,
+    PearlCCMenuLayoutCustomColumns,
+    PearlCCMenuLayoutCustomRows,
+} PearlCCMenuLayout;
 
 @class PearlCCMenuLayer;
 
-@protocol MenuDelegate
+@protocol PearlCCMenuDelegate
 
 @optional
 /** Occurs after the CCMenu layer was (re)constructed. */
@@ -59,28 +59,28 @@ typedef enum MenuLayout {
     CCMenuItem                                                      *_logo;
     CGPoint                                                         _offset;
 
-    MenuLayout                                                      _layout;
+    PearlCCMenuLayout _layout;
     BOOL                                                            _layoutDirty;
 
-    id<NSObject, MenuDelegate>                                      _delegate;
+    id<NSObject, PearlCCMenuDelegate>                                      _delegate;
 
     NSArray                                                         *_itemCounts;
 }
 
 @property (nonatomic, readonly, retain) CCMenu                      *menu;
-@property (nonatomic, readwrite) MenuLayout                         layout;
+@property (nonatomic, readwrite) PearlCCMenuLayout layout;
 @property (nonatomic, readwrite, copy) NSArray                      *items;
 @property (nonatomic, readwrite, retain) CCMenuItem                 *logo;
 @property (nonatomic, readwrite, assign) CGPoint                    offset;
-@property (nonatomic, readwrite, retain) id<NSObject, MenuDelegate> delegate;
+@property (nonatomic, readwrite, retain) id<NSObject, PearlCCMenuDelegate> delegate;
 @property (nonatomic, readwrite, retain) NSArray                    *itemCounts;
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
++ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                           items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
++ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                  itemsFromArray:(NSArray *)menuItems;
 
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ...;
-- (id)initWithDelegate:(id<NSObject, MenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems;
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ...;
+- (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems;
 
 @end

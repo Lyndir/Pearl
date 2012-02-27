@@ -32,11 +32,11 @@
 
 + (PearlCCDebugLayer *)get {
     
-    static PearlCCDebugLayer *debugLayer = nil;
-    if (debugLayer == nil)
-        debugLayer = [self new];
+    static PearlCCDebugLayer *instance = nil;
+    if (!instance)
+        instance = [self new];
     
-    return debugLayer;
+    return instance;
 }
 
 - (void)draw {

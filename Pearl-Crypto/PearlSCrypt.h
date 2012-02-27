@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface SCrypt : NSObject
+@interface PearlSCrypt : NSObject
 {
     double                      _fractionOfAvailableMemory;
     NSUInteger                  _maximumMemory;

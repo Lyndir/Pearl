@@ -25,14 +25,14 @@
 #import "cocos2d.h"
 
 
-typedef enum ScrollContentDirection {
-    ScrollContentDirectionLeftToRight = 2 << 0,
-    ScrollContentDirectionRightToLeft = 2 << 1,
-    ScrollContentDirectionTopToBottom = 2 << 2,
-    ScrollContentDirectionBottomToTop = 2 << 3,
-} ScrollContentDirection;
+typedef enum {
+    PearlCCScrollContentDirectionLeftToRight = 2 << 0,
+    PearlCCScrollContentDirectionRightToLeft = 2 << 1,
+    PearlCCScrollContentDirectionTopToBottom = 2 << 2,
+    PearlCCScrollContentDirectionBottomToTop = 2 << 3,
+} PearlCCScrollContentDirection;
 
-@protocol ScrollLayerDelegate
+@protocol PearlCCScrollLayerDelegate
 
 -(void)didUpdateScrollWithOrigin:(CGPoint)origin to:(CGPoint)newScroll;
 
@@ -48,26 +48,26 @@ typedef enum ScrollContentDirection {
     CGFloat                                                                 _scrollPerSecond;
     CGPoint                                                                 _scrollRatio;
     CGPoint                                                                 _scrollStep;
-    ScrollContentDirection                                                  _scrollContentDirection;
+    PearlCCScrollContentDirection _scrollContentDirection;
     CGSize                                                                  _scrollContentSize;
 
     CGPoint                                                                 _origin;
     CGPoint                                                                 _scroll;
 
     BOOL                                                                    _isTouching;
-    id<NSObject, ScrollLayerDelegate>                                       _delegate;
+    id<NSObject, PearlCCScrollLayerDelegate>                                       _delegate;
 }
 
 @property (nonatomic, readwrite) CGFloat                                    scrollPerSecond;
 @property (nonatomic, readwrite) CGPoint                                    scrollRatio;
 @property (nonatomic, readwrite) CGPoint                                    scrollStep;
-@property (nonatomic, readwrite) ScrollContentDirection                     scrollContentDirection;
+@property (nonatomic, readwrite) PearlCCScrollContentDirection scrollContentDirection;
 @property (nonatomic, readwrite) CGSize                                     scrollContentSize;
-@property (nonatomic, readwrite, retain) id<NSObject, ScrollLayerDelegate>  delegate;
+@property (nonatomic, readwrite, retain) id<NSObject, PearlCCScrollLayerDelegate>  delegate;
 
-+ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
-+ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(ScrollContentDirection)direction;
-- (id)initWithContentSize:(CGSize)contentSize direction:(ScrollContentDirection)direction;
++ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
++ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction;
+- (id)initWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
 
 - (void)scrollBy:(CGPoint)scrollOffset;
 - (BOOL)isScrollValid:(CGPoint)scrollOffset;

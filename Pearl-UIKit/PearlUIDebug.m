@@ -27,28 +27,28 @@
 
 @implementation PearlUIDebug
 
-static UIView *UIDebug_debugView;
-static CGFloat autoWidth;
+static CGFloat autoWidth = 5;
 
-+ (UIView *)debugView {
++ (UIView *)view {
     
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
 
-    if (!UIDebug_debugView) {
-        [window addSubview:UIDebug_debugView = [[UIView alloc] initWithFrame:window.bounds]];
-        UIDebug_debugView.userInteractionEnabled = NO;
-        UIDebug_debugView.opaque = NO;
-        UIDebug_debugView.alpha = 0.7f;
+    static UIView *instance;
+    if (!instance) {
+        [window addSubview:instance = [[UIView alloc] initWithFrame:window.bounds]];
+        instance.userInteractionEnabled = NO;
+        instance.opaque = NO;
+        instance.alpha = 0.7f;
         [self clear];
     }
 
-    [window bringSubviewToFront:UIDebug_debugView];
-    return UIDebug_debugView;
+    [window bringSubviewToFront:instance];
+    return instance;
 }
 
 + (void)clear {
     
-    [[[self debugView] subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [[[self view] subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj removeFromSuperview];
     }];
     autoWidth = 5;
@@ -64,7 +64,7 @@ static CGFloat autoWidth;
 + (PearlBoxView *)showRect:(CGRect)rect color:(UIColor *)color width:(CGFloat)width {
     
     PearlBoxView *box = [PearlBoxView boxWithFrame:rect color:color width:width];
-    [[self debugView] addSubview:box];
+    [[self view] addSubview:box];
 
     return box;
 }

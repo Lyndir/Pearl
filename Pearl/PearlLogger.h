@@ -35,7 +35,7 @@
 NSString *errstr(void);
 
 /** Levels that determine the importance of logging events. */
-typedef enum LogLevel {
+typedef enum {
     /** Trace internal operations. */
     PearlLogLevelTrace,
     /** Inform the developer of certain events and information. */
@@ -53,14 +53,14 @@ typedef enum LogLevel {
 @interface PearlLogMessage : NSObject
 {
 @private
-    NSString                            *message;
-    NSDate                              *occurance;
-    PearlLogLevel                            level;
+    NSString                                *message;
+    NSDate                                  *occurance;
+    PearlLogLevel                           level;
 }
 
-@property (readwrite, copy) NSString    *message;
-@property (readwrite, copy) NSDate      *occurance;
-@property (readwrite) PearlLogLevel          level;
+@property (readwrite, copy) NSString        *message;
+@property (readwrite, copy) NSDate          *occurance;
+@property (readwrite) PearlLogLevel         level;
 
 + (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel;
 
@@ -79,12 +79,12 @@ typedef enum LogLevel {
 @interface PearlLogger : NSObject {
 
 @private
-    NSMutableArray                      *_messages;
-    NSMutableArray                      *_listeners;
-    PearlLogLevel                            _autoprintLevel;
+    NSMutableArray                          *_messages;
+    NSMutableArray                          *_listeners;
+    PearlLogLevel                           _autoprintLevel;
 }
 
-@property (nonatomic, assign) PearlLogLevel  autoprintLevel;
+@property (nonatomic, assign) PearlLogLevel autoprintLevel;
 
 /** Obtain the shared Logger instance. */
 + (PearlLogger *)get;

@@ -60,47 +60,47 @@ int GLCheck(char *file, int line) {
 }
 
 
-#define INDICATORS 300
-static CGPoint *indicatorPoints     = nil;
-static ccColor4B *indicatorColors   = nil;
-static CCNode* *indicatorSpaces  = nil;
-static NSUInteger indicatorPosition = INDICATORS;
+#define IndicatorCount 300
+static CGPoint *PearlGLIndicatorPoints      = nil;
+static ccColor4B *PearlGLIndicatorColors    = nil;
+static CCNode **PearlGLIndicatorSpaces      = nil;
+static NSUInteger PearlGLndicatorPosition   = IndicatorCount;
 
 void IndicateInSpaceOf(const CGPoint point, const CCNode *node) {
     
-    if (indicatorPoints == nil) {
-        indicatorPoints = calloc(INDICATORS, sizeof(CGPoint));
-        indicatorColors = calloc(INDICATORS, sizeof(ccColor4B));
-        indicatorSpaces = calloc(INDICATORS, sizeof(CCNode*));
+    if (PearlGLIndicatorPoints == nil) {
+        PearlGLIndicatorPoints = calloc(IndicatorCount, sizeof(CGPoint));
+        PearlGLIndicatorColors = calloc(IndicatorCount, sizeof(ccColor4B));
+        PearlGLIndicatorSpaces = calloc(IndicatorCount, sizeof(CCNode*));
     }
     
-    ++indicatorPosition;
-    indicatorPoints[indicatorPosition % INDICATORS] = point;
-    [indicatorSpaces[indicatorPosition % INDICATORS] release];
-    indicatorSpaces[indicatorPosition % INDICATORS] = (CCNode *) [node retain];
-    for (NSUInteger i = 0; i <= indicatorPosition; ++i)
-        if (i < indicatorPosition - INDICATORS)
-            indicatorColors[i % INDICATORS] = ccc4(0x00, 0x00, 0x00, 0xff);
+    ++PearlGLndicatorPosition;
+    PearlGLIndicatorPoints[PearlGLndicatorPosition % IndicatorCount] = point;
+    [PearlGLIndicatorSpaces[PearlGLndicatorPosition % IndicatorCount] release];
+    PearlGLIndicatorSpaces[PearlGLndicatorPosition % IndicatorCount] = (CCNode *) [node retain];
+    for (NSUInteger i = 0; i <= PearlGLndicatorPosition; ++i)
+        if (i < PearlGLndicatorPosition - IndicatorCount)
+            PearlGLIndicatorColors[i % IndicatorCount] = ccc4(0x00, 0x00, 0x00, 0xff);
         else {
-            NSUInteger shade = 0xff - (0xff * (indicatorPosition - i) / INDICATORS);
-            indicatorColors[i % INDICATORS].r = shade;
-            indicatorColors[i % INDICATORS].g = shade;
-            indicatorColors[i % INDICATORS].b = shade;
-            indicatorColors[i % INDICATORS].a = 0xff;
+            NSUInteger shade = 0xff - (0xff * (PearlGLndicatorPosition - i) / IndicatorCount);
+            PearlGLIndicatorColors[i % IndicatorCount].r = shade;
+            PearlGLIndicatorColors[i % IndicatorCount].g = shade;
+            PearlGLIndicatorColors[i % IndicatorCount].b = shade;
+            PearlGLIndicatorColors[i % IndicatorCount].a = 0xff;
         }
 }
 
 
 void DrawIndicators() {
     
-    if (!indicatorPoints)
+    if (!PearlGLIndicatorPoints)
         return;
     
-    CGPoint *points = malloc(sizeof(CGPoint) * INDICATORS);
-    for (NSUInteger i = 0; i < INDICATORS; ++i)
-        points[i] = [indicatorSpaces[i] convertToWorldSpace:indicatorPoints[i]];
+    CGPoint *points = malloc(sizeof(CGPoint) * IndicatorCount);
+    for (NSUInteger i = 0; i < IndicatorCount; ++i)
+        points[i] = [PearlGLIndicatorSpaces[i] convertToWorldSpace:PearlGLIndicatorPoints[i]];
     
-    DrawPoints(points, indicatorColors, INDICATORS);
+    DrawPoints(points, PearlGLIndicatorColors, IndicatorCount);
 }
 
 

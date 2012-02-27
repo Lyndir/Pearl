@@ -23,12 +23,12 @@
 #import <scrypt/crypto_scrypt.h>
 #import <scrypt/scryptenc.h>
 
-@interface SCrypt ()
+@interface PearlSCrypt ()
 
 
 @end
 
-@implementation SCrypt
+@implementation PearlSCrypt
 @synthesize fractionOfAvailableMemory = _fractionOfAvailableMemory, maximumMemory = _maximumMemory, time = _time;
 
 - (id)init {

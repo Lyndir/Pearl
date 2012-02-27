@@ -284,28 +284,29 @@
     
     // Check whether the client is up-to-date enough.
 #ifdef PEARL_UIKIT
-    if ((*response).outdated && !self.suppressOutdatedWarning) {
-        self.suppressOutdatedWarning = YES;
-        
-        if ((*response).code == PearlJSONResultCodeUpdateRequired)
-            // Required upgrade.
-            [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
-                                            message:[PearlWSStrings get].errorWSResponseOutdatedRequired
-                                          viewStyle:UIAlertViewStyleDefault
-                                  tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
-                                      if (buttonIndex == [alert firstOtherButtonIndex])
-                                          [self upgrade];
-                                  } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
-        else
-            // Optional upgrade.
-            [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
-                                            message:[PearlWSStrings get].errorWSResponseOutdatedOptional
-                                          viewStyle:UIAlertViewStyleDefault
-                                  tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
-                                      if (buttonIndex == [alert firstOtherButtonIndex])
-                                          [self upgrade];
-                                  } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
-    }
+    if (popupOnError)
+        if ((*response).outdated && !self.suppressOutdatedWarning) {
+            self.suppressOutdatedWarning = YES;
+            
+            if ((*response).code == PearlJSONResultCodeUpdateRequired)
+                // Required upgrade.
+                [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
+                                                message:[PearlWSStrings get].errorWSResponseOutdatedRequired
+                                              viewStyle:UIAlertViewStyleDefault
+                                      tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                                          if (buttonIndex == [alert firstOtherButtonIndex])
+                                              [self upgrade];
+                                      } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
+            else
+                // Optional upgrade.
+                [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
+                                                message:[PearlWSStrings get].errorWSResponseOutdatedOptional
+                                              viewStyle:UIAlertViewStyleDefault
+                                      tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                                          if (buttonIndex == [alert firstOtherButtonIndex])
+                                              [self upgrade];
+                                      } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
+        }
 #endif
     
     if ((*response).code != PearlJSONResultCodeSuccess) {

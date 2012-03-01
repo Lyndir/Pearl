@@ -42,6 +42,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [PearlConfig get].firstRun = [NSNumber numberWithBool:NO];
+
     // Log application details.
     NSString *name = [[PearlInfoPlist get] CFBundleName];
     NSString *displayName = [[PearlInfoPlist get] CFBundleDisplayName];
@@ -140,7 +142,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     
-    [PearlConfig get].firstRun = [NSNumber numberWithBool:NO];
 }
 
 - (void)applicationSignificantTimeChange:(UIApplication *)application {

@@ -106,7 +106,7 @@
                                      nil]];
 
     self.resetTriggers = [NSMutableDictionary dictionary];
-    
+
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.build = [info objectForKey:@"CFBundleVersion"];
     self.version = [info objectForKey:@"CFBundleShortVersionString"];
@@ -149,11 +149,16 @@
     if(!instance)
         instance = [self new];
 
+    if (![instance isKindOfClass:self])
+        err(@"Tried to use config of type: %@, but the config instance is of the incompatible type: %@.  "
+            @"You should probably add [%@ get] to your application delegate's +initialize.",
+        self, [instance class], self);
+
     return instance;
 }
 
 + (void)flush {
-    
+
     [[self get].defaults synchronize];
 }
 
@@ -201,8 +206,10 @@
             [(id<PearlResettable>) [[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
     }
 
-    else
+    else {
+        trc(@"%@.%@ = %@", [self class], selector, currentValue);
         [anInvocation setReturnValue:&currentValue];
+    }
 }
 
 

@@ -285,9 +285,7 @@
     // Check whether the client is up-to-date enough.
 #ifdef PEARL_UIKIT
     if (popupOnError)
-        if ((*response).outdated && !self.suppressOutdatedWarning) {
-            self.suppressOutdatedWarning = YES;
-            
+        if ((*response).outdated) {
             if ((*response).code == PearlJSONResultCodeUpdateRequired)
                 // Required upgrade.
                 [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
@@ -297,7 +295,7 @@
                                           if (buttonIndex == [alert firstOtherButtonIndex])
                                               [self upgrade];
                                       } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
-            else
+            else if (!self.suppressOutdatedWarning) {
                 // Optional upgrade.
                 [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
                                                 message:[PearlWSStrings get].errorWSResponseOutdatedOptional
@@ -306,6 +304,8 @@
                                           if (buttonIndex == [alert firstOtherButtonIndex])
                                               [self upgrade];
                                       } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
+                self.suppressOutdatedWarning = YES;
+            }
         }
 #endif
     

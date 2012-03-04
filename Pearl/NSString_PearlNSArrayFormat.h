@@ -28,6 +28,6 @@
 @interface NSString (PearlNSArrayFormat)
 
 /** Generate a string from the given printf(3)-style format by using the arguments in the given array as arguments to the format string. */
-+ (id)stringWithFormat:(NSString *)format array:(NSArray*)  _arguments;
++ (id)stringWithFormat:(NSString *)format array:(NSArray *)arguments;
 
 @end

@@ -68,7 +68,7 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     for (NSUInteger i = 0; i < self.length; i += 2) {
         NSString    *hex = [self substringWithRange:NSMakeRange(i, 2)];
         NSScanner   *scanner = [NSScanner scannerWithString:hex];
-        NSUInteger  intValue;
+        unsigned    intValue;
         
         [scanner scanHexInt:&intValue];
         [data appendBytes:&intValue length:1];

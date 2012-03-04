@@ -96,7 +96,7 @@
     NSMutableDictionary *codableObject = [NSMutableDictionary dictionary];
     
     for (Class hierarchyClass = [object class]; [hierarchyClass superclass]; hierarchyClass = [hierarchyClass superclass]) {
-        NSUInteger propertiesCount;
+        unsigned int propertiesCount;
         objc_property_t *properties = class_copyPropertyList(hierarchyClass, &propertiesCount);
         
         for (NSUInteger p = 0; p < propertiesCount; p++) {

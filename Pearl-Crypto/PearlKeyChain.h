@@ -28,6 +28,7 @@
 
 @interface NSString (PearlKeyChain)
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 /** Create a signature for this object using the assymetric key in the given tag.
  *
  * The method checks the amount of bytes in the object to guess at what it is.
@@ -37,11 +38,13 @@
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag;
 /** Create a signature for this object using the given padding strategy and the assymetric key in the given tag. */
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding;
+#endif
 
 @end
 
 @interface NSData (PearlKeyChain)
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 /** Create a signature for this object using the assymetric key in the given tag.
  *
  * The method checks the amount of bytes in the object to guess at what it is.
@@ -51,6 +54,7 @@
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag;
 /** Create a signature for this object using the given padding strategy and the assymetric key in the given tag. */
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding;
+#endif
 
 @end
 
@@ -120,10 +124,12 @@
  */
 + (NSData *)dataOfItemForQuery:(NSDictionary *)query;
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 /** Generate a new key pair in the keychain and tag it with the given tag. */
 + (BOOL)generateKeyPairWithTag:(NSString *)tag;
 
 /** Return the public key of the key pair in the keychain that was generated with the given tag. */
 + (NSData *)publicKeyWithTag:(NSString *)tag;
+#endif
 
 @end

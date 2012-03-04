@@ -24,13 +24,15 @@
 
 #import "PearlConfig.h"
 #import "PearlLogger.h"
-#import "PearlAppDelegate.h"
 #import "PearlResettable.h"
 #import "NSString_PearlSEL.h"
 #import "PearlStringUtils.h"
 #import "PearlStrings.h"
 #ifdef PEARL_MEDIA
 #import "PearlAudioController.h"
+#endif
+#ifdef PEARL_UIKIT
+#import "PearlAppDelegate.h"
 #endif
 
 
@@ -200,10 +202,12 @@
         }
         [self.defaults setValue:newValue forKey:selector];
 
+#ifdef PEARL_UIKIT
         [[PearlAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<PearlResettable>) [[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
+#endif
     }
 
     else {
@@ -264,10 +268,15 @@
     if(currentTrack == nil)
         currentTrack = @"";
 
+#ifdef PEARL_UIKIT
     NSString *oldTrack = [self.defaults objectForKey:NSStringFromSelector(@selector(currentTrack))];
+#endif
+
     [self.defaults setObject:currentTrack forKey:NSStringFromSelector(@selector(currentTrack))];
 
+#ifdef PEARL_UIKIT
     [[PearlAppDelegate get] didUpdateConfigForKey:@selector(currentTrack) fromValue:oldTrack];
+#endif
 }
 -(NSString *) currentTrackName {
 

@@ -29,7 +29,8 @@
 
 + (id)stringWithFormat:(NSString *)format array:(NSArray*) arguments {
 
-    char *argList = (char *)malloc(sizeof(id) * [arguments count]);
+    __va_list_tag *argList = (__va_list_tag *)malloc(sizeof(__va_list_tag) * [arguments count]);
+    assert(sizeof(__va_list_tag) == sizeof(id));
     [arguments getObjects:(id *)argList];
     NSString* result = [[[NSString alloc] initWithFormat:format arguments:argList] autorelease];
     free(argList);

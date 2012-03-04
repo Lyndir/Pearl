@@ -57,16 +57,6 @@ NSString *NSStringFromErrSec(OSStatus status);
  * @return A plain or encrypted object, depending on the operation applied. */
 - (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options;
 
-/** Create a signature for this object using the assymetric key in the given tag.
- *
- * The method checks the amount of bytes in the object to guess at what it is.
- * If the object looks like a known hash (MD5, SHA1), a signature is created using appropriate ASN.1 padding and PKCS1 padding.
- * Otherwise, the object is PKCS1 padded and signed.  This assumes the object is a DER-encoded ASN.1 DigestInfo.
- */
-- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag;
-/** Create a signature for this object using the given padding strategy and the assymetric key in the given tag. */
-- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding;
-
 @end
 
 @interface PearlCryptUtils : NSObject

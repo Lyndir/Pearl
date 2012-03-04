@@ -139,58 +139,6 @@ NSString *NSStringFromErrSec(OSStatus status) {
     }
 }
 
-- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag {
-    
-    switch ([self length]) {
-        case 16:
-            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1MD5];
-        case 20:
-            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1SHA1];
-        default:
-            return [self signWithAssymetricKeyFromTag:tag usePadding:kSecPaddingPKCS1];
-    }
-}
-
-- (NSData *)signWithAssymetricKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding {
-    
-    NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   (id)kSecClassKey,                (id)kSecClass,
-                                   [[NSString stringWithFormat:@"%@-priv", tag] dataUsingEncoding:NSUTF8StringEncoding],
-                                   (id)kSecAttrApplicationTag,
-                                   (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
-                                   (id)kCFBooleanTrue,              (id)kSecReturnRef,
-                                   nil];
-    
-    SecKeyRef privateKey = nil;
-    OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
-    if (status != errSecSuccess || privateKey == nil) {
-        err(@"Problem during key lookup: %@", NSStringFromErrSec(status));
-        return nil;
-    }
-    
-    
-    // Malloc a buffer to hold signature.
-    size_t signedHashBytesSize  = SecKeyGetBlockSize(privateKey);
-    uint8_t *signedHashBytes    = calloc( signedHashBytesSize, sizeof(uint8_t) );
-    
-    // Sign the SHA1 hash.
-    status = SecKeyRawSign(privateKey, padding,
-                           self.bytes, self.length,
-                           signedHashBytes, &signedHashBytesSize);
-    CFRelease(privateKey);
-    if (status != errSecSuccess) {
-        err(@"Problem during data signing: %@", NSStringFromErrSec(status));
-        return nil;
-    }
-    
-    // Build up signed SHA1 blob.
-    NSData *signedData = [NSData dataWithBytes:signedHashBytes length:signedHashBytesSize];
-    if (signedHashBytes)
-        free(signedHashBytes);
-    
-    return signedData;
-}
-
 @end
 
 @implementation PearlCryptUtils

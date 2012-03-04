@@ -22,8 +22,6 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 #define PearlMaxGameRandom          1024
 
 #if DEBUG

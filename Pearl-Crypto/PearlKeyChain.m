@@ -32,6 +32,7 @@
 
 @implementation NSString (PearlKeyChain)
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     return [[self dataUsingEncoding:NSUTF8StringEncoding] signWithAssymetricKeyChainKeyFromTag:tag];
@@ -41,11 +42,13 @@
     
     return [[self dataUsingEncoding:NSUTF8StringEncoding] signWithAssymetricKeyChainKeyFromTag:tag usePadding:padding];
 }
+#endif
 
 @end
 
 @implementation NSData (PearlKeyChain)
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     switch ([self length]) {
@@ -71,7 +74,7 @@
     SecKeyRef privateKey = nil;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
     if (status != errSecSuccess || privateKey == nil) {
-        err(@"During key lookup, error occured: %d: %@", status, NSStringFromErrSec(status));
+        err(@"During key lookup: %@", NSStringFromErrSec(status));
         return nil;
     }
     
@@ -86,7 +89,7 @@
                            signedHashBytes, &signedHashBytesSize);
     CFRelease(privateKey);
     if (status != errSecSuccess) {
-        err(@"During data signing, error occured: %d: %@", status, NSStringFromErrSec(status));
+        err(@"During data signing: %@", NSStringFromErrSec(status));
         return nil;
     }
     
@@ -97,6 +100,7 @@
     
     return signedData;
 }
+#endif
 
 @end
 
@@ -111,11 +115,11 @@
         
         status = SecItemAdd((CFDictionaryRef)newItem, NULL);
         if (status != noErr)
-            err(@"While adding keychain item: %@, error occured: %d: %@",
-                newItem, status, NSStringFromErrSec(status));
+            err(@"While adding keychain item: %@: %@",
+                newItem, NSStringFromErrSec(status));
     } else if (status != noErr)
-        err(@"While updating keychain item: %@ with attributes: %@, error occured: %d: %@",
-            query, attributes, status, NSStringFromErrSec(status));
+        err(@"While updating keychain item: %@ with attributes: %@: %@",
+            query, attributes, NSStringFromErrSec(status));
 
     return status;
 }
@@ -124,8 +128,8 @@
     
     OSStatus status = SecItemDelete((CFDictionaryRef)query);
     if (status != noErr && status != errSecItemNotFound)
-        err(@"While looking for keychain item: %@, error occured: %d: %@",
-            query, status, NSStringFromErrSec(status));
+        err(@"While looking for keychain item: %@: %@",
+            query, NSStringFromErrSec(status));
     
     return status;
 }
@@ -154,8 +158,8 @@
     id result = nil;
     OSStatus status = [self findItemForQuery:dataQuery into:&result];
     if (status != noErr && status != errSecItemNotFound)
-        wrn(@"While querying keychain for: %@, error occured: %d: %@",
-            dataQuery, status, NSStringFromErrSec(status));
+        wrn(@"While querying keychain for: %@: %@",
+            dataQuery, NSStringFromErrSec(status));
     
     return result;
 }
@@ -180,6 +184,7 @@
     return (NSData *)[self runQuery:query returnType:kSecReturnData];
 }
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 + (BOOL)generateKeyPairWithTag:(NSString *)tag {
     
     NSDictionary *privKeyAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -200,7 +205,7 @@
     
     OSStatus status = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, nil, nil);
     if (status != errSecSuccess) {
-        err(@"During key generation, error occured: %d: %@", status, NSStringFromErrSec(status));
+        err(@"During key generation: %@", NSStringFromErrSec(status));
         return NO;
     }
     
@@ -221,12 +226,13 @@
     // Get the key bits.
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *)&publicKeyData);
     if (status != errSecSuccess) {
-        err(@"During public key export, error occured: %d: %@", status, NSStringFromErrSec(status));
+        err(@"During public key export: %@", NSStringFromErrSec(status));
         return nil;
     }
     
     [publicKeyData autorelease];
     return [PearlCryptUtils derEncodeRSAKey:publicKeyData];
 }
+#endif
 
 @end

@@ -5,6 +5,7 @@
 #import "Pearl-UIKit-Dependencies.h"
 #import "Pearl.h"
 #import "PearlAlert.h"
+#import "PearlAppDelegate.h"
 #import "PearlArrayTVC.h"
 #import "PearlBoxView.h"
 #import "PearlGradientView.h"

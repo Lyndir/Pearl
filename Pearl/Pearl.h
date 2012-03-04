@@ -7,7 +7,6 @@
 #import "NSString_PearlNSArrayFormat.h"
 #import "NSString_PearlSEL.h"
 #import "PearlAbstractStrings.h"
-#import "PearlAppDelegate.h"
 #import "PearlCodeUtils.h"
 #import "PearlConfig.h"
 #import "PearlDeviceUtils.h"

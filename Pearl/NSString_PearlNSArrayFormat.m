@@ -26,7 +26,20 @@
 
 @implementation NSString (PearlNSArrayFormat)
 
-+ (id)stringWithFormat:(NSString *)format array:(NSArray *) arguments {
+- (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
+    
+    id *argList = (id *)malloc(sizeof(id) * [arguments count]);
+    @try {
+        [arguments getObjects:argList];
+        
+        return [self initWithFormat:format arguments:(va_list)argList];
+    }
+    @finally {
+        free(argList);
+    }
+}
+
++ (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
 
     id *argList = (id *)malloc(sizeof(id) * [arguments count]);
     @try {

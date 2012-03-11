@@ -24,20 +24,28 @@
 
 #import "NSString_PearlNSArrayFormat.h"
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-typedef char __va_list_tag;
-#endif
-
 @implementation NSString (PearlNSArrayFormat)
 
-+ (id)stringWithFormat:(NSString *)format array:(NSArray *) arguments {
-
-    assert(sizeof(__va_list_tag) == sizeof(id));
-    __va_list_tag *argList = (__va_list_tag *)malloc(sizeof(__va_list_tag) * [arguments count]);
+- (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
+    
+    id *argList = (id *)malloc(sizeof(id) * [arguments count]);
     @try {
-        [arguments getObjects:(id *)argList];
+        [arguments getObjects:argList];
+        
+        return [self initWithFormat:format arguments:(va_list)argList];
+    }
+    @finally {
+        free(argList);
+    }
+}
 
-        return [[[NSString alloc] initWithFormat:format arguments:argList] autorelease];
++ (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
+
+    id *argList = (id *)malloc(sizeof(id) * [arguments count]);
+    @try {
+        [arguments getObjects:argList];
+
+        return [[[NSString alloc] initWithFormat:format arguments:(va_list)argList] autorelease];
     }
     @finally {
         free(argList);

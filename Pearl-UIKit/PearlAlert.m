@@ -77,8 +77,6 @@
     if (!(self = [super init]))
         return self;
     
-    [self setTitle:title];
-    
     tappedButtonBlock               = [aTappedButtonBlock copy];
     alertView                       = [[UIAlertView alloc] initWithTitle:title message:message delegate:[self retain]
                                                        cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];

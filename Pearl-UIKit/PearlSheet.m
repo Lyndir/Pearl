@@ -85,8 +85,6 @@
     if (!(self = [super init]))
         return self;
     
-    [self setTitle:title];
-    
     tappedButtonBlock               = [aTappedButtonBlock copy];
     sheetView                       = [[UIActionSheet alloc] initWithTitle:title delegate:[self retain]
                                                          cancelButtonTitle:nil destructiveButtonTitle:nil
@@ -170,12 +168,6 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    
-    [super didReceiveMemoryWarning];
-}
-
-
 - (void)dealloc {
     
     [sheetView release];
@@ -193,7 +185,7 @@
 
 - (PearlSheet *)showSheet {
     
-    [sheetView showInView:[UIApplication sharedApplication].keyWindow];
+    [sheetView showInView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
     [((NSMutableArray *) [PearlSheet activeSheets]) addObject:self];
     
     return self;

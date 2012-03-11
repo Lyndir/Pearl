@@ -30,7 +30,7 @@
  *
  * The user is presented with a message in an alert dialog and (a) configurable button(s).
  */
-@interface PearlAlert : UIViewController <UIAlertViewDelegate> {
+@interface PearlAlert : NSObject <UIAlertViewDelegate> {
     
 @private
     UIAlertView     *alertView;

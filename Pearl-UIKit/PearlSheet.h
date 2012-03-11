@@ -30,7 +30,7 @@
  *
  * The user is presented with a message in small font at the bottom of the screen along with some buttons that let him choose an action.
  */
-@interface PearlSheet : UIViewController <UIActionSheetDelegate> {
+@interface PearlSheet : NSObject <UIActionSheetDelegate> {
 
 @private
     UIActionSheet           *sheetView;

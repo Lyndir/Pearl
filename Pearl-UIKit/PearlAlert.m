@@ -176,12 +176,6 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
-    
-    [super didReceiveMemoryWarning];
-}
-
-
 - (void)dealloc {
     
     [alertView release];

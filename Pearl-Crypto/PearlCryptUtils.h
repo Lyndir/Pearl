@@ -32,7 +32,7 @@
 #define PearlCryptKeySize       kCCKeySizeAES128
 #endif
 #ifndef PearlCryptBlockSize
-#define PearlCryptBlockSize     8
+#define PearlCryptBlockSize     kCCBlockSizeAES128
 #endif
 
 NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status);
@@ -41,21 +41,30 @@ NSString *NSStringFromErrSec(OSStatus status);
 @interface NSString (PearlCryptUtils)
 
 /** Encrypt this plain-text string object with the given key. */
-- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding;
+
+/** Encrypt this plain-text string object with the given key and options. */
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options;
 
 @end
 
 @interface NSData (PearlCryptUtils)
 
 /** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
-- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding;
+
+/** Encrypt this plain-data object using the given key and options, yielding an encrypted-data object. */
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options;
 
 /** Decrypt this encrypted-data object using the given key, yielding a plain-data object. */
-- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding;
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding;
+
+/** Decrypt this encrypted-data object using the given key and options, yielding a plain-data object. */
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options;
 
 /** Apply a symmetric crypto operation on the data using the given key and options.
  * @return A plain or encrypted object, depending on the operation applied. */
-- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options;
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options;
 
 @end
 

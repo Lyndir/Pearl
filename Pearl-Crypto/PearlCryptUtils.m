@@ -82,50 +82,63 @@ NSString *NSStringFromErrSec(OSStatus status) {
 
 @implementation NSString (PearlCryptUtils)
 
-- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding {
     
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithSymmetricKey:symmetricKey usePadding:usePadding];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithSymmetricKey:symmetricKey padding:padding];
+}
+
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options {
+    
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] encryptWithSymmetricKey:symmetricKey options:options];
 }
 
 @end
 
 @implementation NSData (PearlCryptUtils)
 
-- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding {
     
-    CCOptions options = kCCOptionECBMode;
-    if (usePadding)
+    CCOptions options = 0;
+    if (padding)
         options |= kCCOptionPKCS7Padding;
     
-    return [self doCipher:kCCEncrypt withSymmetricKey:symmetricKey options:&options];
+    return [self encryptWithSymmetricKey:symmetricKey options:options];
 }
 
-- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey usePadding:(BOOL)usePadding {
+- (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options {
     
-    CCOptions options = kCCOptionECBMode;
-    if (usePadding)
+    return [self doCipher:kCCEncrypt withSymmetricKey:symmetricKey options:options];
+}
+
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding {
+    
+    CCOptions options = 0;
+    if (padding)
         options |= kCCOptionPKCS7Padding;
     
-    return [self doCipher:kCCDecrypt withSymmetricKey:symmetricKey options:&options];
+    return [self decryptWithSymmetricKey:symmetricKey options:options];
 }
 
-- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions *)options {
+- (NSData *)decryptWithSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options {
+    
+    return [self doCipher:kCCDecrypt withSymmetricKey:symmetricKey options:options];
+}
+
+- (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options {
     
     if (symmetricKey.length != PearlCryptKeySize) {
         err(@"Key size (%d) doesn't match cipher size (%d).", symmetricKey.length, PearlCryptKeySize);
         return nil;
     }
     
-    // Result buffer. (FIXME)
-    void *buffer = calloc(1000, sizeof(uint8_t));
-    size_t movedBytes;
-    
     // Encrypt / Decrypt
+    void *buffer = malloc(self.length + PearlCryptBlockSize);
     @try {
-        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, PearlCryptAlgorithm, *options,
+        size_t movedBytes;
+        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, PearlCryptAlgorithm, options,
                                            symmetricKey.bytes, symmetricKey.length,
                                            nil, self.bytes, self.length,
-                                           buffer, sizeof(uint8_t) * 1000, &movedBytes);
+                                           buffer, self.length + PearlCryptBlockSize, &movedBytes);
         if (ccStatus != kCCSuccess) {
             err(@"Problem during %@: %@",
                 encryptOrDecrypt == kCCEncrypt? @"encryption": @"decryption", NSStringFromCCCryptorStatus(ccStatus));

@@ -31,8 +31,12 @@
     id *argList = (id *)malloc(sizeof(id) * [arguments count]);
     @try {
         [arguments getObjects:argList];
-        
+
+#ifdef MAC_OS_X_VERSION_MIN_REQUIRED
+        return [self initWithFormat:format arguments:(__va_list_tag *)argList];
+#else
         return [self initWithFormat:format arguments:(va_list)argList];
+#endif
     }
     @finally {
         free(argList);
@@ -45,7 +49,11 @@
     @try {
         [arguments getObjects:argList];
 
+#ifdef MAC_OS_X_VERSION_MIN_REQUIRED
+        return [[[NSString alloc] initWithFormat:format arguments:(__va_list_tag *)argList] autorelease];
+#else
         return [[[NSString alloc] initWithFormat:format arguments:(va_list)argList] autorelease];
+#endif
     }
     @finally {
         free(argList);

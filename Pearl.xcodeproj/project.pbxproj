@@ -37,100 +37,9 @@
 		DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974014F438C300EB000C /* PearlWebUtils.m */; };
 		DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10974514F438C300EB000C /* PearlStringUtils.h */; };
 		DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974614F438C300EB000C /* PearlStringUtils.m */; };
-		DA109BF514F438D600EB000C /* PearlCocos2DAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */; };
-		DA109BF614F438D600EB000C /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
-		DA109BF714F438D600EB000C /* PearlCCAutoTween.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976B14F438D400EB000C /* PearlCCAutoTween.h */; };
-		DA109BF814F438D600EB000C /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
-		DA109BF914F438D600EB000C /* PearlCCRemove.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976D14F438D400EB000C /* PearlCCRemove.h */; };
-		DA109BFA14F438D600EB000C /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
-		DA109BFB14F438D600EB000C /* PearlCCDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976F14F438D400EB000C /* PearlCCDebug.h */; };
-		DA109BFC14F438D600EB000C /* PearlCCDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977014F438D400EB000C /* PearlCCDebug.m */; };
-		DA109BFD14F438D600EB000C /* Pearl-Cocos2D-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */; };
-		DA109BFE14F438D600EB000C /* Pearl-Cocos2D.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977214F438D400EB000C /* Pearl-Cocos2D.h */; };
-		DA109BFF14F438D600EB000C /* PearlCocos2DStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977314F438D400EB000C /* PearlCocos2DStrings.h */; };
-		DA109C0014F438D600EB000C /* PearlCocos2DStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977414F438D400EB000C /* PearlCocos2DStrings.m */; };
-		DA109C0114F438D600EB000C /* PearlCCActivitySprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A414F438D400EB000C /* PearlCCActivitySprite.h */; };
-		DA109C0214F438D600EB000C /* PearlCCActivitySprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A514F438D400EB000C /* PearlCCActivitySprite.m */; };
-		DA109C0314F438D600EB000C /* PearlCCBarLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A614F438D400EB000C /* PearlCCBarLayer.h */; };
-		DA109C0414F438D600EB000C /* PearlCCBarLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A714F438D400EB000C /* PearlCCBarLayer.m */; };
-		DA109C0514F438D600EB000C /* PearlCCBarSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A814F438D400EB000C /* PearlCCBarSprite.h */; };
-		DA109C0614F438D600EB000C /* PearlCCBarSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A914F438D400EB000C /* PearlCCBarSprite.m */; };
-		DA109C0714F438D600EB000C /* PearlCCBoxLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AA14F438D400EB000C /* PearlCCBoxLayer.h */; };
-		DA109C0814F438D600EB000C /* PearlCCBoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AB14F438D400EB000C /* PearlCCBoxLayer.m */; };
-		DA109C0914F438D600EB000C /* PearlCCDebugLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AC14F438D400EB000C /* PearlCCDebugLayer.h */; };
-		DA109C0A14F438D600EB000C /* PearlCCDebugLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AD14F438D400EB000C /* PearlCCDebugLayer.m */; };
-		DA109C0B14F438D600EB000C /* PearlCCFancyLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AE14F438D400EB000C /* PearlCCFancyLayer.h */; };
-		DA109C0C14F438D600EB000C /* PearlCCFancyLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AF14F438D400EB000C /* PearlCCFancyLayer.m */; };
-		DA109C0D14F438D600EB000C /* PearlCCFlickLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B014F438D400EB000C /* PearlCCFlickLayer.h */; };
-		DA109C0E14F438D600EB000C /* PearlCCFlickLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B114F438D400EB000C /* PearlCCFlickLayer.m */; };
-		DA109C0F14F438D600EB000C /* PearlCCHUDLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B214F438D400EB000C /* PearlCCHUDLayer.h */; };
-		DA109C1014F438D600EB000C /* PearlCCHUDLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B314F438D400EB000C /* PearlCCHUDLayer.m */; };
-		DA109C1114F438D600EB000C /* PearlCCConfigMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B514F438D400EB000C /* PearlCCConfigMenuLayer.h */; };
-		DA109C1214F438D600EB000C /* PearlCCConfigMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B614F438D400EB000C /* PearlCCConfigMenuLayer.m */; };
-		DA109C1314F438D600EB000C /* PearlCCMenuItemBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B714F438D400EB000C /* PearlCCMenuItemBlock.h */; };
-		DA109C1414F438D600EB000C /* PearlCCMenuItemBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B814F438D400EB000C /* PearlCCMenuItemBlock.m */; };
-		DA109C1514F438D600EB000C /* PearlCCMenuItemSpacer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B914F438D400EB000C /* PearlCCMenuItemSpacer.h */; };
-		DA109C1614F438D600EB000C /* PearlCCMenuItemSpacer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BA14F438D400EB000C /* PearlCCMenuItemSpacer.m */; };
-		DA109C1714F438D600EB000C /* PearlCCMenuItemSymbolic.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BB14F438D400EB000C /* PearlCCMenuItemSymbolic.h */; };
-		DA109C1814F438D600EB000C /* PearlCCMenuItemSymbolic.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BC14F438D400EB000C /* PearlCCMenuItemSymbolic.m */; };
-		DA109C1914F438D600EB000C /* PearlCCMenuItemTitle.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BD14F438D400EB000C /* PearlCCMenuItemTitle.h */; };
-		DA109C1A14F438D600EB000C /* PearlCCMenuItemTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BE14F438D400EB000C /* PearlCCMenuItemTitle.m */; };
-		DA109C1B14F438D600EB000C /* PearlCCMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BF14F438D400EB000C /* PearlCCMenuLayer.h */; };
-		DA109C1C14F438D600EB000C /* PearlCCMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C014F438D400EB000C /* PearlCCMenuLayer.m */; };
-		DA109C1D14F438D600EB000C /* PearlCCScrollLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C114F438D400EB000C /* PearlCCScrollLayer.h */; };
-		DA109C1E14F438D600EB000C /* PearlCCScrollLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C214F438D400EB000C /* PearlCCScrollLayer.m */; };
-		DA109C1F14F438D600EB000C /* PearlCCShadeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C314F438D400EB000C /* PearlCCShadeLayer.h */; };
-		DA109C2014F438D600EB000C /* PearlCCShadeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C414F438D400EB000C /* PearlCCShadeLayer.m */; };
-		DA109C2114F438D600EB000C /* PearlCCSplash.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C514F438D400EB000C /* PearlCCSplash.h */; };
-		DA109C2214F438D600EB000C /* PearlCCSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C614F438D400EB000C /* PearlCCSplash.m */; };
-		DA109C2314F438D600EB000C /* PearlCCSwipeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C714F438D400EB000C /* PearlCCSwipeLayer.h */; };
-		DA109C2414F438D600EB000C /* PearlCCSwipeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C814F438D400EB000C /* PearlCCSwipeLayer.m */; };
-		DA109C2514F438D600EB000C /* PearlCCUILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C914F438D400EB000C /* PearlCCUILayer.h */; };
-		DA109C2614F438D600EB000C /* PearlCCUILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CA14F438D400EB000C /* PearlCCUILayer.m */; };
-		DA109C2714F438D600EB000C /* PearlGLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CC14F438D400EB000C /* PearlGLUtils.h */; };
-		DA109C2814F438D600EB000C /* PearlGLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CD14F438D400EB000C /* PearlGLUtils.m */; };
-		DA109C2914F438D600EB000C /* PearlCryptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CF14F438D400EB000C /* PearlCryptUtils.h */; };
-		DA109C2A14F438D600EB000C /* PearlCryptUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D014F438D400EB000C /* PearlCryptUtils.m */; };
-		DA109C2B14F438D600EB000C /* PearlKeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D114F438D400EB000C /* PearlKeyChain.h */; };
-		DA109C2C14F438D600EB000C /* PearlKeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D214F438D400EB000C /* PearlKeyChain.m */; };
-		DA109C2D14F438D600EB000C /* Pearl-Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D314F438D400EB000C /* Pearl-Crypto.h */; };
-		DA109C2E14F438D600EB000C /* PearlRSAKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D514F438D400EB000C /* PearlRSAKey.h */; };
-		DA109C2F14F438D600EB000C /* PearlRSAKey.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D614F438D400EB000C /* PearlRSAKey.m */; };
-		DA109C3014F438D600EB000C /* PearlSCrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D714F438D400EB000C /* PearlSCrypt.h */; };
-		DA109C3114F438D600EB000C /* PearlSCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D814F438D400EB000C /* PearlSCrypt.m */; };
 		DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DA14F438D400EB000C /* PearlAudioController.h */; };
 		DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DB14F438D400EB000C /* PearlAudioController.m */; };
 		DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DC14F438D400EB000C /* Pearl-Media.h */; };
-		DA109C3514F438D600EB000C /* PearlAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DE14F438D400EB000C /* PearlAlert.h */; };
-		DA109C3614F438D600EB000C /* PearlAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DF14F438D400EB000C /* PearlAlert.m */; };
-		DA109C3714F438D600EB000C /* PearlArrayTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E014F438D400EB000C /* PearlArrayTVC.h */; };
-		DA109C3814F438D600EB000C /* PearlArrayTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E114F438D400EB000C /* PearlArrayTVC.m */; };
-		DA109C3914F438D600EB000C /* PearlBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E214F438D400EB000C /* PearlBoxView.h */; };
-		DA109C3A14F438D600EB000C /* PearlBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E314F438D400EB000C /* PearlBoxView.m */; };
-		DA109C3D14F438D600EB000C /* PearlGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E614F438D400EB000C /* PearlGradientView.h */; };
-		DA109C3E14F438D600EB000C /* PearlGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E714F438D400EB000C /* PearlGradientView.m */; };
-		DA109C3F14F438D600EB000C /* PearlLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E814F438D400EB000C /* PearlLayout.h */; };
-		DA109C4014F438D600EB000C /* PearlLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E914F438D400EB000C /* PearlLayout.m */; };
-		DA109C4114F438D600EB000C /* PearlLayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EA14F438D400EB000C /* PearlLayoutView.h */; };
-		DA109C4214F438D600EB000C /* PearlLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097EB14F438D400EB000C /* PearlLayoutView.m */; };
-		DA109C4314F438D600EB000C /* PearlMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EC14F438D400EB000C /* PearlMessageView.h */; };
-		DA109C4414F438D600EB000C /* PearlMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097ED14F438D400EB000C /* PearlMessageView.m */; };
-		DA109C4514F438D600EB000C /* Pearl-UIKit-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */; };
-		DA109C4614F438D600EB000C /* Pearl-UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EF14F438D400EB000C /* Pearl-UIKit.h */; };
-		DA109C4714F438D600EB000C /* PearlRootViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDD14F438D500EB000C /* PearlRootViewController.h */; };
-		DA109C4814F438D600EB000C /* PearlRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BDE14F438D500EB000C /* PearlRootViewController.m */; };
-		DA109C4914F438D600EB000C /* PearlSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDF14F438D500EB000C /* PearlSheet.h */; };
-		DA109C4A14F438D600EB000C /* PearlSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE014F438D500EB000C /* PearlSheet.m */; };
-		DA109C4B14F438D600EB000C /* PearlUIDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE114F438D500EB000C /* PearlUIDebug.h */; };
-		DA109C4C14F438D600EB000C /* PearlUIDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE214F438D500EB000C /* PearlUIDebug.m */; };
-		DA109C4D14F438D600EB000C /* UIImage_PearlScaling.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE314F438D500EB000C /* UIImage_PearlScaling.h */; };
-		DA109C4E14F438D600EB000C /* UIImage_PearlScaling.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE414F438D500EB000C /* UIImage_PearlScaling.m */; };
-		DA109C4F14F438D600EB000C /* PearlUIUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE514F438D500EB000C /* PearlUIUtils.h */; };
-		DA109C5014F438D600EB000C /* PearlUIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE614F438D500EB000C /* PearlUIUtils.m */; };
-		DA109C5114F438D600EB000C /* PearlValidatingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE714F438D500EB000C /* PearlValidatingTextField.h */; };
-		DA109C5214F438D600EB000C /* PearlValidatingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE814F438D500EB000C /* PearlValidatingTextField.m */; };
-		DA109C5314F438D600EB000C /* PearlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE914F438D500EB000C /* PearlWebViewController.h */; };
-		DA109C5414F438D600EB000C /* PearlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BEA14F438D500EB000C /* PearlWebViewController.m */; };
 		DA109C5514F438D600EB000C /* PearlWSController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BEC14F438D500EB000C /* PearlWSController.h */; };
 		DA109C5614F438D600EB000C /* PearlWSController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BED14F438D500EB000C /* PearlWSController.m */; };
 		DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BEE14F438D500EB000C /* Pearl-WS.h */; };
@@ -377,11 +286,8 @@
 		DA109F1314F4604000EB000C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E2214F3BE5500413D09 /* Foundation.framework */; };
 		DA109F3214F4605600EB000C /* UIColor-Expanded.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F2A14F4605600EB000C /* UIColor-Expanded.h */; };
 		DA109F3314F4605600EB000C /* UIColor-Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F2B14F4605600EB000C /* UIColor-Expanded.m */; };
-		DA109F3714F4610D00EB000C /* libASIHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109DCC14F45F7200EB000C /* libASIHttpRequest.a */; };
-		DA109F3814F4610D00EB000C /* libcocos2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109C6F14F45EBA00EB000C /* libcocos2d.a */; };
 		DA109F3914F4610D00EB000C /* libjrswizzle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109EB914F45FF500EB000C /* libjrswizzle.a */; };
 		DA109F3A14F4610D00EB000C /* libTouchJSON.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109E7C14F45FAE00EB000C /* libTouchJSON.a */; };
-		DA109F3B14F4610D00EB000C /* libuicolor-utilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109F1214F4604000EB000C /* libuicolor-utilities.a */; };
 		DA109F3F14F464EC00EB000C /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F3D14F464EC00EB000C /* Reachability.h */; };
 		DA109F4014F464EC00EB000C /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F3D14F464EC00EB000C /* Reachability.h */; };
 		DA109F4114F464EC00EB000C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F3E14F464EC00EB000C /* Reachability.m */; };
@@ -408,16 +314,143 @@
 		DA109F6214F4654000EB000C /* ZFont.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F4D14F4654000EB000C /* ZFont.h */; };
 		DA109F6314F4654000EB000C /* ZFont.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F4E14F4654000EB000C /* ZFont.m */; };
 		DA109F6414F4654000EB000C /* ZFont.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F4E14F4654000EB000C /* ZFont.m */; };
-		DA109F8214F4688800EB000C /* libscryptenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109F7614F4686600EB000C /* libscryptenc.a */; };
-		DA600BD3150411D5008E9AB6 /* PearlAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */; };
-		DA600BD4150411D5008E9AB6 /* PearlAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */; };
+		DAAD427C15286E9800AADDBD /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
+		DAAD427D15286E9800AADDBD /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
+		DAAD427E15286E9800AADDBD /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
+		DAAD427F15286E9800AADDBD /* PearlCCDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977014F438D400EB000C /* PearlCCDebug.m */; };
+		DAAD428015286E9800AADDBD /* PearlCocos2DStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10977414F438D400EB000C /* PearlCocos2DStrings.m */; };
+		DAAD428115286E9800AADDBD /* PearlCCActivitySprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A514F438D400EB000C /* PearlCCActivitySprite.m */; };
+		DAAD428215286E9800AADDBD /* PearlCCBarLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A714F438D400EB000C /* PearlCCBarLayer.m */; };
+		DAAD428315286E9800AADDBD /* PearlCCBarSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097A914F438D400EB000C /* PearlCCBarSprite.m */; };
+		DAAD428415286E9800AADDBD /* PearlCCBoxLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AB14F438D400EB000C /* PearlCCBoxLayer.m */; };
+		DAAD428515286E9800AADDBD /* PearlCCDebugLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AD14F438D400EB000C /* PearlCCDebugLayer.m */; };
+		DAAD428615286E9800AADDBD /* PearlCCFancyLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097AF14F438D400EB000C /* PearlCCFancyLayer.m */; };
+		DAAD428715286E9800AADDBD /* PearlCCFlickLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B114F438D400EB000C /* PearlCCFlickLayer.m */; };
+		DAAD428815286E9800AADDBD /* PearlCCHUDLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B314F438D400EB000C /* PearlCCHUDLayer.m */; };
+		DAAD428915286E9800AADDBD /* PearlCCConfigMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B614F438D400EB000C /* PearlCCConfigMenuLayer.m */; };
+		DAAD428A15286E9800AADDBD /* PearlCCMenuItemBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097B814F438D400EB000C /* PearlCCMenuItemBlock.m */; };
+		DAAD428B15286E9800AADDBD /* PearlCCMenuItemSpacer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BA14F438D400EB000C /* PearlCCMenuItemSpacer.m */; };
+		DAAD428C15286E9800AADDBD /* PearlCCMenuItemSymbolic.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BC14F438D400EB000C /* PearlCCMenuItemSymbolic.m */; };
+		DAAD428D15286E9800AADDBD /* PearlCCMenuItemTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097BE14F438D400EB000C /* PearlCCMenuItemTitle.m */; };
+		DAAD428E15286E9800AADDBD /* PearlCCMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C014F438D400EB000C /* PearlCCMenuLayer.m */; };
+		DAAD428F15286E9800AADDBD /* PearlCCScrollLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C214F438D400EB000C /* PearlCCScrollLayer.m */; };
+		DAAD429015286E9800AADDBD /* PearlCCShadeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C414F438D400EB000C /* PearlCCShadeLayer.m */; };
+		DAAD429115286E9800AADDBD /* PearlCCSplash.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C614F438D400EB000C /* PearlCCSplash.m */; };
+		DAAD429215286E9800AADDBD /* PearlCCSwipeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097C814F438D400EB000C /* PearlCCSwipeLayer.m */; };
+		DAAD429315286E9800AADDBD /* PearlCCUILayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CA14F438D400EB000C /* PearlCCUILayer.m */; };
+		DAAD429415286E9800AADDBD /* PearlGLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097CD14F438D400EB000C /* PearlGLUtils.m */; };
+		DAAD429A15286E9800AADDBD /* PearlAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097DF14F438D400EB000C /* PearlAlert.m */; };
+		DAAD429B15286E9800AADDBD /* PearlArrayTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E114F438D400EB000C /* PearlArrayTVC.m */; };
+		DAAD429C15286E9800AADDBD /* PearlBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E314F438D400EB000C /* PearlBoxView.m */; };
+		DAAD429D15286E9800AADDBD /* PearlGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E714F438D400EB000C /* PearlGradientView.m */; };
+		DAAD429E15286E9800AADDBD /* PearlLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E914F438D400EB000C /* PearlLayout.m */; };
+		DAAD429F15286E9800AADDBD /* PearlLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097EB14F438D400EB000C /* PearlLayoutView.m */; };
+		DAAD42A015286E9800AADDBD /* PearlMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097ED14F438D400EB000C /* PearlMessageView.m */; };
+		DAAD42A115286E9800AADDBD /* PearlRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BDE14F438D500EB000C /* PearlRootViewController.m */; };
+		DAAD42A215286E9800AADDBD /* PearlSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE014F438D500EB000C /* PearlSheet.m */; };
+		DAAD42A315286E9800AADDBD /* PearlUIDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE214F438D500EB000C /* PearlUIDebug.m */; };
+		DAAD42A415286E9800AADDBD /* UIImage_PearlScaling.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE414F438D500EB000C /* UIImage_PearlScaling.m */; };
+		DAAD42A515286E9800AADDBD /* PearlUIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE614F438D500EB000C /* PearlUIUtils.m */; };
+		DAAD42A615286E9800AADDBD /* PearlValidatingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE814F438D500EB000C /* PearlValidatingTextField.m */; };
+		DAAD42A715286E9800AADDBD /* PearlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BEA14F438D500EB000C /* PearlWebViewController.m */; };
+		DAAD42AA15286E9800AADDBD /* PearlAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */; };
+		DAAD42AD15286E9800AADDBD /* libASIHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109DCC14F45F7200EB000C /* libASIHttpRequest.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		DAAD42AE15286E9800AADDBD /* libcocos2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109C6F14F45EBA00EB000C /* libcocos2d.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		DAAD42B115286E9800AADDBD /* libuicolor-utilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109F1214F4604000EB000C /* libuicolor-utilities.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		DAAD42C415286E9800AADDBD /* PearlCocos2DAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */; };
+		DAAD42C515286E9800AADDBD /* PearlCCAutoTween.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976B14F438D400EB000C /* PearlCCAutoTween.h */; };
+		DAAD42C615286E9800AADDBD /* PearlCCRemove.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976D14F438D400EB000C /* PearlCCRemove.h */; };
+		DAAD42C715286E9800AADDBD /* PearlCCDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10976F14F438D400EB000C /* PearlCCDebug.h */; };
+		DAAD42C815286E9800AADDBD /* Pearl-Cocos2D-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */; };
+		DAAD42C915286E9800AADDBD /* Pearl-Cocos2D.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977214F438D400EB000C /* Pearl-Cocos2D.h */; };
+		DAAD42CA15286E9800AADDBD /* PearlCocos2DStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10977314F438D400EB000C /* PearlCocos2DStrings.h */; };
+		DAAD42CB15286E9800AADDBD /* PearlCCActivitySprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A414F438D400EB000C /* PearlCCActivitySprite.h */; };
+		DAAD42CC15286E9800AADDBD /* PearlCCBarLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A614F438D400EB000C /* PearlCCBarLayer.h */; };
+		DAAD42CD15286E9800AADDBD /* PearlCCBarSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097A814F438D400EB000C /* PearlCCBarSprite.h */; };
+		DAAD42CE15286E9800AADDBD /* PearlCCBoxLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AA14F438D400EB000C /* PearlCCBoxLayer.h */; };
+		DAAD42CF15286E9800AADDBD /* PearlCCDebugLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AC14F438D400EB000C /* PearlCCDebugLayer.h */; };
+		DAAD42D015286E9800AADDBD /* PearlCCFancyLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097AE14F438D400EB000C /* PearlCCFancyLayer.h */; };
+		DAAD42D115286E9800AADDBD /* PearlCCFlickLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B014F438D400EB000C /* PearlCCFlickLayer.h */; };
+		DAAD42D215286E9800AADDBD /* PearlCCHUDLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B214F438D400EB000C /* PearlCCHUDLayer.h */; };
+		DAAD42D315286E9800AADDBD /* PearlCCConfigMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B514F438D400EB000C /* PearlCCConfigMenuLayer.h */; };
+		DAAD42D415286E9800AADDBD /* PearlCCMenuItemBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B714F438D400EB000C /* PearlCCMenuItemBlock.h */; };
+		DAAD42D515286E9800AADDBD /* PearlCCMenuItemSpacer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097B914F438D400EB000C /* PearlCCMenuItemSpacer.h */; };
+		DAAD42D615286E9800AADDBD /* PearlCCMenuItemSymbolic.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BB14F438D400EB000C /* PearlCCMenuItemSymbolic.h */; };
+		DAAD42D715286E9800AADDBD /* PearlCCMenuItemTitle.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BD14F438D400EB000C /* PearlCCMenuItemTitle.h */; };
+		DAAD42D815286E9800AADDBD /* PearlCCMenuLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097BF14F438D400EB000C /* PearlCCMenuLayer.h */; };
+		DAAD42D915286E9800AADDBD /* PearlCCScrollLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C114F438D400EB000C /* PearlCCScrollLayer.h */; };
+		DAAD42DA15286E9800AADDBD /* PearlCCShadeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C314F438D400EB000C /* PearlCCShadeLayer.h */; };
+		DAAD42DB15286E9800AADDBD /* PearlCCSplash.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C514F438D400EB000C /* PearlCCSplash.h */; };
+		DAAD42DC15286E9800AADDBD /* PearlCCSwipeLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C714F438D400EB000C /* PearlCCSwipeLayer.h */; };
+		DAAD42DD15286E9800AADDBD /* PearlCCUILayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097C914F438D400EB000C /* PearlCCUILayer.h */; };
+		DAAD42DE15286E9800AADDBD /* PearlGLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CC14F438D400EB000C /* PearlGLUtils.h */; };
+		DAAD42E615286E9800AADDBD /* PearlAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DE14F438D400EB000C /* PearlAlert.h */; };
+		DAAD42E715286E9800AADDBD /* PearlArrayTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E014F438D400EB000C /* PearlArrayTVC.h */; };
+		DAAD42E815286E9800AADDBD /* PearlBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E214F438D400EB000C /* PearlBoxView.h */; };
+		DAAD42E915286E9800AADDBD /* PearlGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E614F438D400EB000C /* PearlGradientView.h */; };
+		DAAD42EA15286E9800AADDBD /* PearlLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E814F438D400EB000C /* PearlLayout.h */; };
+		DAAD42EB15286E9800AADDBD /* PearlLayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EA14F438D400EB000C /* PearlLayoutView.h */; };
+		DAAD42EC15286E9800AADDBD /* PearlMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EC14F438D400EB000C /* PearlMessageView.h */; };
+		DAAD42ED15286E9800AADDBD /* Pearl-UIKit-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */; };
+		DAAD42EE15286E9800AADDBD /* Pearl-UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EF14F438D400EB000C /* Pearl-UIKit.h */; };
+		DAAD42EF15286E9800AADDBD /* PearlRootViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDD14F438D500EB000C /* PearlRootViewController.h */; };
+		DAAD42F015286E9800AADDBD /* PearlSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BDF14F438D500EB000C /* PearlSheet.h */; };
+		DAAD42F115286E9800AADDBD /* PearlUIDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE114F438D500EB000C /* PearlUIDebug.h */; };
+		DAAD42F215286E9800AADDBD /* UIImage_PearlScaling.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE314F438D500EB000C /* UIImage_PearlScaling.h */; };
+		DAAD42F315286E9800AADDBD /* PearlUIUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE514F438D500EB000C /* PearlUIUtils.h */; };
+		DAAD42F415286E9800AADDBD /* PearlValidatingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE714F438D500EB000C /* PearlValidatingTextField.h */; };
+		DAAD42F515286E9800AADDBD /* PearlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE914F438D500EB000C /* PearlWebViewController.h */; };
+		DAAD42F915286E9800AADDBD /* PearlAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */; };
+		DAAD430E15286F4500AADDBD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAD430C15286F4500AADDBD /* InfoPlist.strings */; };
+		DAAD431115286F4500AADDBD /* PearliOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAD431015286F4500AADDBD /* PearliOSTests.m */; };
+		DAAD431915286FAF00AADDBD /* libPearl-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD42FF15286E9800AADDBD /* libPearl-iOS.a */; };
+		DAAD436E1529013E00AADDBD /* libscryptenc-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43671529013E00AADDBD /* libscryptenc-ios.a */; };
+		DAAD4383152901A400AADDBD /* libscryptenc-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43681529013E00AADDBD /* libscryptenc-osx.a */; };
+		DAAD43A11529026C00AADDBD /* libPearl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E1F14F3BE5500413D09 /* libPearl.a */; };
+		DAAD43A21529027100AADDBD /* libPearl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E1F14F3BE5500413D09 /* libPearl.a */; };
+		DAAD43A61529962600AADDBD /* PearlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD1E3F14F3BE5500413D09 /* PearlTests.m */; };
+		DAAD43A8152998DE00AADDBD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E2214F3BE5500413D09 /* Foundation.framework */; };
+		DAAD43A91529990700AADDBD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E2214F3BE5500413D09 /* Foundation.framework */; };
+		DAAD43AA1529991000AADDBD /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E3014F3BE5500413D09 /* SenTestingKit.framework */; };
+		DAAD43B11529994B00AADDBD /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E3014F3BE5500413D09 /* SenTestingKit.framework */; };
+		DAAD43B21529994B00AADDBD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD42371528648000AADDBD /* Cocoa.framework */; };
+		DAAD43B81529994B00AADDBD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAD43B61529994B00AADDBD /* InfoPlist.strings */; };
+		DAAD43BB1529994B00AADDBD /* PearlOSXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAD43BA1529994B00AADDBD /* PearlOSXTests.m */; };
+		DAAD43C21529996600AADDBD /* PearlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD1E3F14F3BE5500413D09 /* PearlTests.m */; };
+		DAAD43C315299B6500AADDBD /* libPearl-OSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43751529017E00AADDBD /* libPearl-OSX.a */; };
+		DAAD43C415299C1900AADDBD /* PearlCryptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CF14F438D400EB000C /* PearlCryptUtils.h */; };
+		DAAD43C515299C1900AADDBD /* PearlCryptUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D014F438D400EB000C /* PearlCryptUtils.m */; };
+		DAAD43C615299C1900AADDBD /* PearlKeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D114F438D400EB000C /* PearlKeyChain.h */; };
+		DAAD43C715299C1900AADDBD /* PearlKeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D214F438D400EB000C /* PearlKeyChain.m */; };
+		DAAD43C815299C1900AADDBD /* Pearl-Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D314F438D400EB000C /* Pearl-Crypto.h */; };
+		DAAD43C915299C1900AADDBD /* PearlRSAKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D514F438D400EB000C /* PearlRSAKey.h */; };
+		DAAD43CA15299C1900AADDBD /* PearlRSAKey.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D614F438D400EB000C /* PearlRSAKey.m */; };
+		DAAD43CB15299C1900AADDBD /* PearlSCrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D714F438D400EB000C /* PearlSCrypt.h */; };
+		DAAD43CC15299C1900AADDBD /* PearlSCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D814F438D400EB000C /* PearlSCrypt.m */; };
+		DAAD43CD15299C1A00AADDBD /* PearlCryptUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097CF14F438D400EB000C /* PearlCryptUtils.h */; };
+		DAAD43CE15299C1A00AADDBD /* PearlCryptUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D014F438D400EB000C /* PearlCryptUtils.m */; };
+		DAAD43CF15299C1A00AADDBD /* PearlKeyChain.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D114F438D400EB000C /* PearlKeyChain.h */; };
+		DAAD43D015299C1A00AADDBD /* PearlKeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D214F438D400EB000C /* PearlKeyChain.m */; };
+		DAAD43D115299C1A00AADDBD /* Pearl-Crypto.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D314F438D400EB000C /* Pearl-Crypto.h */; };
+		DAAD43D215299C1A00AADDBD /* PearlRSAKey.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D514F438D400EB000C /* PearlRSAKey.h */; };
+		DAAD43D315299C1A00AADDBD /* PearlRSAKey.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D614F438D400EB000C /* PearlRSAKey.m */; };
+		DAAD43D415299C1A00AADDBD /* PearlSCrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097D714F438D400EB000C /* PearlSCrypt.h */; };
+		DAAD43D515299C1A00AADDBD /* PearlSCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097D814F438D400EB000C /* PearlSCrypt.m */; };
+		DAAD43D715299C3E00AADDBD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43D615299C3E00AADDBD /* Security.framework */; };
+		DAAD43D915299C5500AADDBD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43D815299C5500AADDBD /* Security.framework */; };
+		DAAD43DA15299C6800AADDBD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43D815299C5500AADDBD /* Security.framework */; };
+		DAAD43DB15299C7000AADDBD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43D615299C3E00AADDBD /* Security.framework */; };
+		DAAD44011529C27B00AADDBD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44001529C27B00AADDBD /* UIKit.framework */; };
+		DAAD44031529C2A700AADDBD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44021529C2A700AADDBD /* CoreGraphics.framework */; };
+		DAAD44051529C2B500AADDBD /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44041529C2B500AADDBD /* libz.dylib */; };
+		DAAD44071529C2CB00AADDBD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44061529C2CB00AADDBD /* SystemConfiguration.framework */; };
+		DAAD44091529C2DC00AADDBD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44081529C2DC00AADDBD /* CFNetwork.framework */; };
+		DAAD440D1529C30000AADDBD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD440C1529C30000AADDBD /* AudioToolbox.framework */; };
+		DAAD440F1529C30E00AADDBD /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD440E1529C30E00AADDBD /* QuartzCore.framework */; };
+		DAAD44111529C32000AADDBD /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44101529C32000AADDBD /* OpenGLES.framework */; };
+		DAAD44131529C37700AADDBD /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44121529C37700AADDBD /* MobileCoreServices.framework */; };
+		DAAD44151529C38800AADDBD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD44141529C38800AADDBD /* AVFoundation.framework */; };
 		DADD1E2314F3BE5500413D09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E2214F3BE5500413D09 /* Foundation.framework */; };
-		DADD1E3114F3BE5500413D09 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E3014F3BE5500413D09 /* SenTestingKit.framework */; };
-		DADD1E3314F3BE5500413D09 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E3214F3BE5500413D09 /* UIKit.framework */; };
-		DADD1E3414F3BE5500413D09 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E2214F3BE5500413D09 /* Foundation.framework */; };
-		DADD1E3714F3BE5500413D09 /* libPearl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E1F14F3BE5500413D09 /* libPearl.a */; };
-		DADD1E3D14F3BE5500413D09 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DADD1E3B14F3BE5500413D09 /* InfoPlist.strings */; };
-		DADD1E4014F3BE5500413D09 /* PearlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD1E3F14F3BE5500413D09 /* PearlTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -442,12 +475,19 @@
 			remoteGlobalIDString = DA67FE5D14E4834300DB7CC9;
 			remoteInfo = util;
 		};
-		DADD1E3514F3BE5500413D09 /* PBXContainerItemProxy */ = {
+		DAAD43DC1529AE1400AADDBD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			containerPortal = DA109F6514F4686400EB000C /* scrypt.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = DADD1E1E14F3BE5500413D09;
-			remoteInfo = Pearl;
+			remoteGlobalIDString = A0511DED127788EC00DE46C4;
+			remoteInfo = "Makefile-scrypt";
+		};
+		DAAD43DE1529AE1A00AADDBD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA109F6514F4686400EB000C /* scrypt.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A0511DED127788EC00DE46C4;
+			remoteInfo = "Makefile-scrypt";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1887,14 +1927,46 @@
 		DA109F6514F4686400EB000C /* scrypt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = scrypt.xcodeproj; path = External/iOSPorts/ports/security/scrypt/scrypt.xcodeproj; sourceTree = "<group>"; };
 		DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAppDelegate.h; sourceTree = "<group>"; };
 		DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAppDelegate.m; sourceTree = "<group>"; };
+		DAAD42371528648000AADDBD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		DAAD423A1528648000AADDBD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		DAAD423B1528648000AADDBD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		DAAD423C1528648000AADDBD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		DAAD42FF15286E9800AADDBD /* libPearl-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPearl-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAAD430515286F4400AADDBD /* PearliOSTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearliOSTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAAD430B15286F4500AADDBD /* PearliOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PearliOSTests-Info.plist"; sourceTree = "<group>"; };
+		DAAD430D15286F4500AADDBD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DAAD430F15286F4500AADDBD /* PearliOSTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearliOSTests.h; sourceTree = "<group>"; };
+		DAAD431015286F4500AADDBD /* PearliOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearliOSTests.m; sourceTree = "<group>"; };
+		DAAD431215286F4500AADDBD /* PearliOSTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PearliOSTests-Prefix.pch"; sourceTree = "<group>"; };
+		DAAD43651529013E00AADDBD /* libcrypto-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-ios.a"; sourceTree = "<group>"; };
+		DAAD43661529013E00AADDBD /* libcrypto-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-osx.a"; sourceTree = "<group>"; };
+		DAAD43671529013E00AADDBD /* libscryptenc-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-ios.a"; sourceTree = "<group>"; };
+		DAAD43681529013E00AADDBD /* libscryptenc-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-osx.a"; sourceTree = "<group>"; };
+		DAAD43751529017E00AADDBD /* libPearl-OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPearl-OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAAD43B01529994B00AADDBD /* PearlOSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearlOSXTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAAD43B51529994B00AADDBD /* PearlOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PearlOSXTests-Info.plist"; sourceTree = "<group>"; };
+		DAAD43B71529994B00AADDBD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DAAD43B91529994B00AADDBD /* PearlOSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearlOSXTests.h; sourceTree = "<group>"; };
+		DAAD43BA1529994B00AADDBD /* PearlOSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearlOSXTests.m; sourceTree = "<group>"; };
+		DAAD43BC1529994B00AADDBD /* PearlOSXTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PearlOSXTests-Prefix.pch"; sourceTree = "<group>"; };
+		DAAD43D615299C3E00AADDBD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		DAAD43D815299C5500AADDBD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		DAAD44001529C27B00AADDBD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		DAAD44021529C2A700AADDBD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		DAAD44041529C2B500AADDBD /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		DAAD44061529C2CB00AADDBD /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		DAAD44081529C2DC00AADDBD /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		DAAD440A1529C2EE00AADDBD /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		DAAD440C1529C30000AADDBD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		DAAD440E1529C30E00AADDBD /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		DAAD44101529C32000AADDBD /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		DAAD44121529C37700AADDBD /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		DAAD44141529C38800AADDBD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		DADD1E1F14F3BE5500413D09 /* libPearl.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPearl.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DADD1E2214F3BE5500413D09 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DADD1E2614F3BE5500413D09 /* Pearl-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pearl-Prefix.pch"; sourceTree = "<group>"; };
-		DADD1E2F14F3BE5500413D09 /* PearlTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearlTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DADD1E3014F3BE5500413D09 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		DADD1E3214F3BE5500413D09 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		DADD1E3A14F3BE5500413D09 /* PearlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PearlTests-Info.plist"; sourceTree = "<group>"; };
-		DADD1E3C14F3BE5500413D09 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DADD1E3E14F3BE5500413D09 /* PearlTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearlTests.h; sourceTree = "<group>"; };
 		DADD1E3F14F3BE5500413D09 /* PearlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearlTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1940,28 +2012,69 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAAD42AB15286E9800AADDBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43A11529026C00AADDBD /* libPearl.a in Frameworks */,
+				DAAD42AD15286E9800AADDBD /* libASIHttpRequest.a in Frameworks */,
+				DAAD42AE15286E9800AADDBD /* libcocos2d.a in Frameworks */,
+				DAAD42B115286E9800AADDBD /* libuicolor-utilities.a in Frameworks */,
+				DAAD436E1529013E00AADDBD /* libscryptenc-ios.a in Frameworks */,
+				DAAD43D915299C5500AADDBD /* Security.framework in Frameworks */,
+				DAAD43A8152998DE00AADDBD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD430115286F4400AADDBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD431915286FAF00AADDBD /* libPearl-iOS.a in Frameworks */,
+				DAAD44051529C2B500AADDBD /* libz.dylib in Frameworks */,
+				DAAD43DA15299C6800AADDBD /* Security.framework in Frameworks */,
+				DAAD440D1529C30000AADDBD /* AudioToolbox.framework in Frameworks */,
+				DAAD44151529C38800AADDBD /* AVFoundation.framework in Frameworks */,
+				DAAD44071529C2CB00AADDBD /* SystemConfiguration.framework in Frameworks */,
+				DAAD44131529C37700AADDBD /* MobileCoreServices.framework in Frameworks */,
+				DAAD44091529C2DC00AADDBD /* CFNetwork.framework in Frameworks */,
+				DAAD44111529C32000AADDBD /* OpenGLES.framework in Frameworks */,
+				DAAD440F1529C30E00AADDBD /* QuartzCore.framework in Frameworks */,
+				DAAD44031529C2A700AADDBD /* CoreGraphics.framework in Frameworks */,
+				DAAD44011529C27B00AADDBD /* UIKit.framework in Frameworks */,
+				DAAD43A91529990700AADDBD /* Foundation.framework in Frameworks */,
+				DAAD43AA1529991000AADDBD /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43721529017E00AADDBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43A21529027100AADDBD /* libPearl.a in Frameworks */,
+				DAAD4383152901A400AADDBD /* libscryptenc-osx.a in Frameworks */,
+				DAAD43D715299C3E00AADDBD /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43AC1529994B00AADDBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43C315299B6500AADDBD /* libPearl-OSX.a in Frameworks */,
+				DAAD43DB15299C7000AADDBD /* Security.framework in Frameworks */,
+				DAAD43B21529994B00AADDBD /* Cocoa.framework in Frameworks */,
+				DAAD43B11529994B00AADDBD /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DADD1E1C14F3BE5500413D09 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA109F8214F4688800EB000C /* libscryptenc.a in Frameworks */,
-				DA109F3714F4610D00EB000C /* libASIHttpRequest.a in Frameworks */,
-				DA109F3814F4610D00EB000C /* libcocos2d.a in Frameworks */,
 				DA109F3914F4610D00EB000C /* libjrswizzle.a in Frameworks */,
 				DA109F3A14F4610D00EB000C /* libTouchJSON.a in Frameworks */,
-				DA109F3B14F4610D00EB000C /* libuicolor-utilities.a in Frameworks */,
 				DADD1E2314F3BE5500413D09 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DADD1E2B14F3BE5500413D09 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DADD1E3114F3BE5500413D09 /* SenTestingKit.framework in Frameworks */,
-				DADD1E3314F3BE5500413D09 /* UIKit.framework in Frameworks */,
-				DADD1E3414F3BE5500413D09 /* Foundation.framework in Frameworks */,
-				DADD1E3714F3BE5500413D09 /* libPearl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2108,6 +2221,10 @@
 		DA1097CE14F438D400EB000C /* Pearl-Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				DAAD43651529013E00AADDBD /* libcrypto-ios.a */,
+				DAAD43661529013E00AADDBD /* libcrypto-osx.a */,
+				DAAD43671529013E00AADDBD /* libscryptenc-ios.a */,
+				DAAD43681529013E00AADDBD /* libscryptenc-osx.a */,
 				DA1097CF14F438D400EB000C /* PearlCryptUtils.h */,
 				DA1097D014F438D400EB000C /* PearlCryptUtils.m */,
 				DA1097D114F438D400EB000C /* PearlKeyChain.h */,
@@ -3608,9 +3725,69 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DAAD42391528648000AADDBD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD423A1528648000AADDBD /* AppKit.framework */,
+				DAAD423B1528648000AADDBD /* CoreData.framework */,
+				DAAD423C1528648000AADDBD /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		DAAD430915286F4400AADDBD /* PearliOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD430F15286F4500AADDBD /* PearliOSTests.h */,
+				DAAD431015286F4500AADDBD /* PearliOSTests.m */,
+				DAAD430A15286F4500AADDBD /* Supporting Files */,
+			);
+			path = PearliOSTests;
+			sourceTree = "<group>";
+		};
+		DAAD430A15286F4500AADDBD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD430B15286F4500AADDBD /* PearliOSTests-Info.plist */,
+				DAAD430C15286F4500AADDBD /* InfoPlist.strings */,
+				DAAD431215286F4500AADDBD /* PearliOSTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DAAD43B31529994B00AADDBD /* PearlOSXTests */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD43B91529994B00AADDBD /* PearlOSXTests.h */,
+				DAAD43BA1529994B00AADDBD /* PearlOSXTests.m */,
+				DAAD43B41529994B00AADDBD /* Supporting Files */,
+			);
+			path = PearlOSXTests;
+			sourceTree = "<group>";
+		};
+		DAAD43B41529994B00AADDBD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DAAD43B51529994B00AADDBD /* PearlOSXTests-Info.plist */,
+				DAAD43B61529994B00AADDBD /* InfoPlist.strings */,
+				DAAD43BC1529994B00AADDBD /* PearlOSXTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		DADD1E1414F3BE5500413D09 = {
 			isa = PBXGroup;
 			children = (
+				DAAD44141529C38800AADDBD /* AVFoundation.framework */,
+				DAAD44121529C37700AADDBD /* MobileCoreServices.framework */,
+				DAAD44101529C32000AADDBD /* OpenGLES.framework */,
+				DAAD440E1529C30E00AADDBD /* QuartzCore.framework */,
+				DAAD440C1529C30000AADDBD /* AudioToolbox.framework */,
+				DAAD440A1529C2EE00AADDBD /* MediaPlayer.framework */,
+				DAAD44081529C2DC00AADDBD /* CFNetwork.framework */,
+				DAAD44061529C2CB00AADDBD /* SystemConfiguration.framework */,
+				DAAD44041529C2B500AADDBD /* libz.dylib */,
+				DAAD44021529C2A700AADDBD /* CoreGraphics.framework */,
 				DADD1E2414F3BE5500413D09 /* Pearl */,
 				DA10976714F438D400EB000C /* Pearl-Cocos2D */,
 				DA1097CE14F438D400EB000C /* Pearl-Crypto */,
@@ -3618,13 +3795,15 @@
 				DA1097DD14F438D400EB000C /* Pearl-UIKit */,
 				DA109BEB14F438D500EB000C /* Pearl-WS */,
 				DADD1E2514F3BE5500413D09 /* Supporting Files */,
-				DADD1E3814F3BE5500413D09 /* PearlTests */,
 				DA109DD714F45F8900EB000C /* ASIHttpRequest */,
 				DA109C7B14F45EEB00EB000C /* cocos2d */,
 				DA109E8714F45FCE00EB000C /* TouchJSON */,
 				DA109EC814F4601F00EB000C /* jrswizzle */,
 				DA109F1D14F4605600EB000C /* uicolor-utilities */,
 				DA109F6514F4686400EB000C /* scrypt.xcodeproj */,
+				DADD1E3814F3BE5500413D09 /* PearlTests */,
+				DAAD430915286F4400AADDBD /* PearliOSTests */,
+				DAAD43B31529994B00AADDBD /* PearlOSXTests */,
 				DADD1E2114F3BE5500413D09 /* Frameworks */,
 				DADD1E2014F3BE5500413D09 /* Products */,
 			);
@@ -3634,12 +3813,15 @@
 			isa = PBXGroup;
 			children = (
 				DADD1E1F14F3BE5500413D09 /* libPearl.a */,
-				DADD1E2F14F3BE5500413D09 /* PearlTests.octest */,
 				DA109C6F14F45EBA00EB000C /* libcocos2d.a */,
 				DA109DCC14F45F7200EB000C /* libASIHttpRequest.a */,
 				DA109E7C14F45FAE00EB000C /* libTouchJSON.a */,
 				DA109EB914F45FF500EB000C /* libjrswizzle.a */,
 				DA109F1214F4604000EB000C /* libuicolor-utilities.a */,
+				DAAD42FF15286E9800AADDBD /* libPearl-iOS.a */,
+				DAAD430515286F4400AADDBD /* PearliOSTests.octest */,
+				DAAD43751529017E00AADDBD /* libPearl-OSX.a */,
+				DAAD43B01529994B00AADDBD /* PearlOSXTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3647,9 +3829,14 @@
 		DADD1E2114F3BE5500413D09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DAAD44001529C27B00AADDBD /* UIKit.framework */,
+				DAAD43D815299C5500AADDBD /* Security.framework */,
+				DAAD43D615299C3E00AADDBD /* Security.framework */,
 				DADD1E2214F3BE5500413D09 /* Foundation.framework */,
 				DADD1E3014F3BE5500413D09 /* SenTestingKit.framework */,
 				DADD1E3214F3BE5500413D09 /* UIKit.framework */,
+				DAAD42371528648000AADDBD /* Cocoa.framework */,
+				DAAD42391528648000AADDBD /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3706,18 +3893,8 @@
 			children = (
 				DADD1E3E14F3BE5500413D09 /* PearlTests.h */,
 				DADD1E3F14F3BE5500413D09 /* PearlTests.m */,
-				DADD1E3914F3BE5500413D09 /* Supporting Files */,
 			);
 			path = PearlTests;
-			sourceTree = "<group>";
-		};
-		DADD1E3914F3BE5500413D09 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				DADD1E3A14F3BE5500413D09 /* PearlTests-Info.plist */,
-				DADD1E3B14F3BE5500413D09 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3899,6 +4076,74 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAAD42B315286E9800AADDBD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD42C415286E9800AADDBD /* PearlCocos2DAppDelegate.h in Headers */,
+				DAAD42C515286E9800AADDBD /* PearlCCAutoTween.h in Headers */,
+				DAAD42C615286E9800AADDBD /* PearlCCRemove.h in Headers */,
+				DAAD42C715286E9800AADDBD /* PearlCCDebug.h in Headers */,
+				DAAD42C815286E9800AADDBD /* Pearl-Cocos2D-Dependencies.h in Headers */,
+				DAAD42C915286E9800AADDBD /* Pearl-Cocos2D.h in Headers */,
+				DAAD42CA15286E9800AADDBD /* PearlCocos2DStrings.h in Headers */,
+				DAAD42CB15286E9800AADDBD /* PearlCCActivitySprite.h in Headers */,
+				DAAD42CC15286E9800AADDBD /* PearlCCBarLayer.h in Headers */,
+				DAAD42CD15286E9800AADDBD /* PearlCCBarSprite.h in Headers */,
+				DAAD42CE15286E9800AADDBD /* PearlCCBoxLayer.h in Headers */,
+				DAAD42CF15286E9800AADDBD /* PearlCCDebugLayer.h in Headers */,
+				DAAD42D015286E9800AADDBD /* PearlCCFancyLayer.h in Headers */,
+				DAAD42D115286E9800AADDBD /* PearlCCFlickLayer.h in Headers */,
+				DAAD42D215286E9800AADDBD /* PearlCCHUDLayer.h in Headers */,
+				DAAD42D315286E9800AADDBD /* PearlCCConfigMenuLayer.h in Headers */,
+				DAAD42D415286E9800AADDBD /* PearlCCMenuItemBlock.h in Headers */,
+				DAAD42D515286E9800AADDBD /* PearlCCMenuItemSpacer.h in Headers */,
+				DAAD42D615286E9800AADDBD /* PearlCCMenuItemSymbolic.h in Headers */,
+				DAAD42D715286E9800AADDBD /* PearlCCMenuItemTitle.h in Headers */,
+				DAAD42D815286E9800AADDBD /* PearlCCMenuLayer.h in Headers */,
+				DAAD42D915286E9800AADDBD /* PearlCCScrollLayer.h in Headers */,
+				DAAD42DA15286E9800AADDBD /* PearlCCShadeLayer.h in Headers */,
+				DAAD42DB15286E9800AADDBD /* PearlCCSplash.h in Headers */,
+				DAAD42DC15286E9800AADDBD /* PearlCCSwipeLayer.h in Headers */,
+				DAAD42DD15286E9800AADDBD /* PearlCCUILayer.h in Headers */,
+				DAAD42DE15286E9800AADDBD /* PearlGLUtils.h in Headers */,
+				DAAD42E615286E9800AADDBD /* PearlAlert.h in Headers */,
+				DAAD42E715286E9800AADDBD /* PearlArrayTVC.h in Headers */,
+				DAAD42E815286E9800AADDBD /* PearlBoxView.h in Headers */,
+				DAAD42E915286E9800AADDBD /* PearlGradientView.h in Headers */,
+				DAAD42EA15286E9800AADDBD /* PearlLayout.h in Headers */,
+				DAAD42EB15286E9800AADDBD /* PearlLayoutView.h in Headers */,
+				DAAD42EC15286E9800AADDBD /* PearlMessageView.h in Headers */,
+				DAAD42ED15286E9800AADDBD /* Pearl-UIKit-Dependencies.h in Headers */,
+				DAAD42EE15286E9800AADDBD /* Pearl-UIKit.h in Headers */,
+				DAAD42EF15286E9800AADDBD /* PearlRootViewController.h in Headers */,
+				DAAD42F015286E9800AADDBD /* PearlSheet.h in Headers */,
+				DAAD42F115286E9800AADDBD /* PearlUIDebug.h in Headers */,
+				DAAD42F215286E9800AADDBD /* UIImage_PearlScaling.h in Headers */,
+				DAAD42F315286E9800AADDBD /* PearlUIUtils.h in Headers */,
+				DAAD42F415286E9800AADDBD /* PearlValidatingTextField.h in Headers */,
+				DAAD42F515286E9800AADDBD /* PearlWebViewController.h in Headers */,
+				DAAD42F915286E9800AADDBD /* PearlAppDelegate.h in Headers */,
+				DAAD43CD15299C1A00AADDBD /* PearlCryptUtils.h in Headers */,
+				DAAD43CF15299C1A00AADDBD /* PearlKeyChain.h in Headers */,
+				DAAD43D115299C1A00AADDBD /* Pearl-Crypto.h in Headers */,
+				DAAD43D215299C1A00AADDBD /* PearlRSAKey.h in Headers */,
+				DAAD43D415299C1A00AADDBD /* PearlSCrypt.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43731529017E00AADDBD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43C415299C1900AADDBD /* PearlCryptUtils.h in Headers */,
+				DAAD43C615299C1900AADDBD /* PearlKeyChain.h in Headers */,
+				DAAD43C815299C1900AADDBD /* Pearl-Crypto.h in Headers */,
+				DAAD43C915299C1900AADDBD /* PearlRSAKey.h in Headers */,
+				DAAD43CB15299C1900AADDBD /* PearlSCrypt.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DADD1E1D14F3BE5500413D09 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -3919,60 +4164,11 @@
 				DA10976114F438C300EB000C /* PearlStrings.h in Headers */,
 				DA10976314F438C300EB000C /* PearlWebUtils.h in Headers */,
 				DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */,
-				DA109BF514F438D600EB000C /* PearlCocos2DAppDelegate.h in Headers */,
-				DA109BF714F438D600EB000C /* PearlCCAutoTween.h in Headers */,
-				DA109BF914F438D600EB000C /* PearlCCRemove.h in Headers */,
-				DA109BFB14F438D600EB000C /* PearlCCDebug.h in Headers */,
-				DA109BFD14F438D600EB000C /* Pearl-Cocos2D-Dependencies.h in Headers */,
-				DA109BFE14F438D600EB000C /* Pearl-Cocos2D.h in Headers */,
-				DA109BFF14F438D600EB000C /* PearlCocos2DStrings.h in Headers */,
-				DA109C0114F438D600EB000C /* PearlCCActivitySprite.h in Headers */,
-				DA109C0314F438D600EB000C /* PearlCCBarLayer.h in Headers */,
-				DA109C0514F438D600EB000C /* PearlCCBarSprite.h in Headers */,
-				DA109C0714F438D600EB000C /* PearlCCBoxLayer.h in Headers */,
-				DA109C0914F438D600EB000C /* PearlCCDebugLayer.h in Headers */,
-				DA109C0B14F438D600EB000C /* PearlCCFancyLayer.h in Headers */,
-				DA109C0D14F438D600EB000C /* PearlCCFlickLayer.h in Headers */,
-				DA109C0F14F438D600EB000C /* PearlCCHUDLayer.h in Headers */,
-				DA109C1114F438D600EB000C /* PearlCCConfigMenuLayer.h in Headers */,
-				DA109C1314F438D600EB000C /* PearlCCMenuItemBlock.h in Headers */,
-				DA109C1514F438D600EB000C /* PearlCCMenuItemSpacer.h in Headers */,
-				DA109C1714F438D600EB000C /* PearlCCMenuItemSymbolic.h in Headers */,
-				DA109C1914F438D600EB000C /* PearlCCMenuItemTitle.h in Headers */,
-				DA109C1B14F438D600EB000C /* PearlCCMenuLayer.h in Headers */,
-				DA109C1D14F438D600EB000C /* PearlCCScrollLayer.h in Headers */,
-				DA109C1F14F438D600EB000C /* PearlCCShadeLayer.h in Headers */,
-				DA109C2114F438D600EB000C /* PearlCCSplash.h in Headers */,
-				DA109C2314F438D600EB000C /* PearlCCSwipeLayer.h in Headers */,
-				DA109C2514F438D600EB000C /* PearlCCUILayer.h in Headers */,
-				DA109C2714F438D600EB000C /* PearlGLUtils.h in Headers */,
-				DA109C2914F438D600EB000C /* PearlCryptUtils.h in Headers */,
-				DA109C2B14F438D600EB000C /* PearlKeyChain.h in Headers */,
-				DA109C2D14F438D600EB000C /* Pearl-Crypto.h in Headers */,
-				DA109C2E14F438D600EB000C /* PearlRSAKey.h in Headers */,
-				DA109C3014F438D600EB000C /* PearlSCrypt.h in Headers */,
 				DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */,
 				DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */,
-				DA109C3514F438D600EB000C /* PearlAlert.h in Headers */,
-				DA109C3714F438D600EB000C /* PearlArrayTVC.h in Headers */,
-				DA109C3914F438D600EB000C /* PearlBoxView.h in Headers */,
-				DA109C3D14F438D600EB000C /* PearlGradientView.h in Headers */,
-				DA109C3F14F438D600EB000C /* PearlLayout.h in Headers */,
-				DA109C4114F438D600EB000C /* PearlLayoutView.h in Headers */,
-				DA109C4314F438D600EB000C /* PearlMessageView.h in Headers */,
-				DA109C4514F438D600EB000C /* Pearl-UIKit-Dependencies.h in Headers */,
-				DA109C4614F438D600EB000C /* Pearl-UIKit.h in Headers */,
-				DA109C4714F438D600EB000C /* PearlRootViewController.h in Headers */,
-				DA109C4914F438D600EB000C /* PearlSheet.h in Headers */,
-				DA109C4B14F438D600EB000C /* PearlUIDebug.h in Headers */,
-				DA109C4D14F438D600EB000C /* UIImage_PearlScaling.h in Headers */,
-				DA109C4F14F438D600EB000C /* PearlUIUtils.h in Headers */,
-				DA109C5114F438D600EB000C /* PearlValidatingTextField.h in Headers */,
-				DA109C5314F438D600EB000C /* PearlWebViewController.h in Headers */,
 				DA109C5514F438D600EB000C /* PearlWSController.h in Headers */,
 				DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */,
 				DA109C5814F438D600EB000C /* PearlWSStrings.h in Headers */,
-				DA600BD3150411D5008E9AB6 /* PearlAppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4064,6 +4260,78 @@
 			productReference = DA109F1214F4604000EB000C /* libuicolor-utilities.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		DAAD426615286E9800AADDBD /* Pearl-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAAD42FA15286E9800AADDBD /* Build configuration list for PBXNativeTarget "Pearl-iOS" */;
+			buildPhases = (
+				DAAD426D15286E9800AADDBD /* Sources */,
+				DAAD42AB15286E9800AADDBD /* Frameworks */,
+				DAAD42B315286E9800AADDBD /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAAD43DD1529AE1400AADDBD /* PBXTargetDependency */,
+			);
+			name = "Pearl-iOS";
+			productName = Pearl;
+			productReference = DAAD42FF15286E9800AADDBD /* libPearl-iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		DAAD430415286F4400AADDBD /* PearliOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAAD431315286F4500AADDBD /* Build configuration list for PBXNativeTarget "PearliOSTests" */;
+			buildPhases = (
+				DAAD430015286F4400AADDBD /* Sources */,
+				DAAD430115286F4400AADDBD /* Frameworks */,
+				DAAD430215286F4400AADDBD /* Resources */,
+				DAAD430315286F4400AADDBD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PearliOSTests;
+			productName = PearliOSTests;
+			productReference = DAAD430515286F4400AADDBD /* PearliOSTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+		DAAD43741529017E00AADDBD /* Pearl-OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAAD437D1529017F00AADDBD /* Build configuration list for PBXNativeTarget "Pearl-OSX" */;
+			buildPhases = (
+				DAAD43711529017E00AADDBD /* Sources */,
+				DAAD43721529017E00AADDBD /* Frameworks */,
+				DAAD43731529017E00AADDBD /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAAD43DF1529AE1A00AADDBD /* PBXTargetDependency */,
+			);
+			name = "Pearl-OSX";
+			productName = "Pearl-OSX";
+			productReference = DAAD43751529017E00AADDBD /* libPearl-OSX.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		DAAD43AF1529994B00AADDBD /* PearlOSXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAAD43BD1529994B00AADDBD /* Build configuration list for PBXNativeTarget "PearlOSXTests" */;
+			buildPhases = (
+				DAAD43AB1529994B00AADDBD /* Sources */,
+				DAAD43AC1529994B00AADDBD /* Frameworks */,
+				DAAD43AD1529994B00AADDBD /* Resources */,
+				DAAD43AE1529994B00AADDBD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PearlOSXTests;
+			productName = PearlOSXTests;
+			productReference = DAAD43B01529994B00AADDBD /* PearlOSXTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		DADD1E1E14F3BE5500413D09 /* Pearl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADD1E4314F3BE5500413D09 /* Build configuration list for PBXNativeTarget "Pearl" */;
@@ -4080,25 +4348,6 @@
 			productName = Pearl;
 			productReference = DADD1E1F14F3BE5500413D09 /* libPearl.a */;
 			productType = "com.apple.product-type.library.static";
-		};
-		DADD1E2E14F3BE5500413D09 /* PearlTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DADD1E4614F3BE5500413D09 /* Build configuration list for PBXNativeTarget "PearlTests" */;
-			buildPhases = (
-				DADD1E2A14F3BE5500413D09 /* Sources */,
-				DADD1E2B14F3BE5500413D09 /* Frameworks */,
-				DADD1E2C14F3BE5500413D09 /* Resources */,
-				DADD1E2D14F3BE5500413D09 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DADD1E3614F3BE5500413D09 /* PBXTargetDependency */,
-			);
-			name = PearlTests;
-			productName = PearlTests;
-			productReference = DADD1E2F14F3BE5500413D09 /* PearlTests.octest */;
-			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -4134,7 +4383,10 @@
 			projectRoot = "";
 			targets = (
 				DADD1E1E14F3BE5500413D09 /* Pearl */,
-				DADD1E2E14F3BE5500413D09 /* PearlTests */,
+				DAAD426615286E9800AADDBD /* Pearl-iOS */,
+				DAAD43741529017E00AADDBD /* Pearl-OSX */,
+				DAAD430415286F4400AADDBD /* PearliOSTests */,
+				DAAD43AF1529994B00AADDBD /* PearlOSXTests */,
 				DA109C6E14F45EBA00EB000C /* cocos2d */,
 				DA109DCB14F45F7200EB000C /* ASIHttpRequest */,
 				DA109E7B14F45FAE00EB000C /* TouchJSON */,
@@ -4169,18 +4421,39 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		DADD1E2C14F3BE5500413D09 /* Resources */ = {
+		DAAD430215286F4400AADDBD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DADD1E3D14F3BE5500413D09 /* InfoPlist.strings in Resources */,
+				DAAD430E15286F4500AADDBD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43AD1529994B00AADDBD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43B81529994B00AADDBD /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		DADD1E2D14F3BE5500413D09 /* ShellScript */ = {
+		DAAD430315286F4400AADDBD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		DAAD43AE1529994B00AADDBD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4352,6 +4625,86 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DAAD426D15286E9800AADDBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD427C15286E9800AADDBD /* PearlCocos2DAppDelegate.m in Sources */,
+				DAAD427D15286E9800AADDBD /* PearlCCAutoTween.m in Sources */,
+				DAAD427E15286E9800AADDBD /* PearlCCRemove.m in Sources */,
+				DAAD427F15286E9800AADDBD /* PearlCCDebug.m in Sources */,
+				DAAD428015286E9800AADDBD /* PearlCocos2DStrings.m in Sources */,
+				DAAD428115286E9800AADDBD /* PearlCCActivitySprite.m in Sources */,
+				DAAD428215286E9800AADDBD /* PearlCCBarLayer.m in Sources */,
+				DAAD428315286E9800AADDBD /* PearlCCBarSprite.m in Sources */,
+				DAAD428415286E9800AADDBD /* PearlCCBoxLayer.m in Sources */,
+				DAAD428515286E9800AADDBD /* PearlCCDebugLayer.m in Sources */,
+				DAAD428615286E9800AADDBD /* PearlCCFancyLayer.m in Sources */,
+				DAAD428715286E9800AADDBD /* PearlCCFlickLayer.m in Sources */,
+				DAAD428815286E9800AADDBD /* PearlCCHUDLayer.m in Sources */,
+				DAAD428915286E9800AADDBD /* PearlCCConfigMenuLayer.m in Sources */,
+				DAAD428A15286E9800AADDBD /* PearlCCMenuItemBlock.m in Sources */,
+				DAAD428B15286E9800AADDBD /* PearlCCMenuItemSpacer.m in Sources */,
+				DAAD428C15286E9800AADDBD /* PearlCCMenuItemSymbolic.m in Sources */,
+				DAAD428D15286E9800AADDBD /* PearlCCMenuItemTitle.m in Sources */,
+				DAAD428E15286E9800AADDBD /* PearlCCMenuLayer.m in Sources */,
+				DAAD428F15286E9800AADDBD /* PearlCCScrollLayer.m in Sources */,
+				DAAD429015286E9800AADDBD /* PearlCCShadeLayer.m in Sources */,
+				DAAD429115286E9800AADDBD /* PearlCCSplash.m in Sources */,
+				DAAD429215286E9800AADDBD /* PearlCCSwipeLayer.m in Sources */,
+				DAAD429315286E9800AADDBD /* PearlCCUILayer.m in Sources */,
+				DAAD429415286E9800AADDBD /* PearlGLUtils.m in Sources */,
+				DAAD429A15286E9800AADDBD /* PearlAlert.m in Sources */,
+				DAAD429B15286E9800AADDBD /* PearlArrayTVC.m in Sources */,
+				DAAD429C15286E9800AADDBD /* PearlBoxView.m in Sources */,
+				DAAD429D15286E9800AADDBD /* PearlGradientView.m in Sources */,
+				DAAD429E15286E9800AADDBD /* PearlLayout.m in Sources */,
+				DAAD429F15286E9800AADDBD /* PearlLayoutView.m in Sources */,
+				DAAD42A015286E9800AADDBD /* PearlMessageView.m in Sources */,
+				DAAD42A115286E9800AADDBD /* PearlRootViewController.m in Sources */,
+				DAAD42A215286E9800AADDBD /* PearlSheet.m in Sources */,
+				DAAD42A315286E9800AADDBD /* PearlUIDebug.m in Sources */,
+				DAAD42A415286E9800AADDBD /* UIImage_PearlScaling.m in Sources */,
+				DAAD42A515286E9800AADDBD /* PearlUIUtils.m in Sources */,
+				DAAD42A615286E9800AADDBD /* PearlValidatingTextField.m in Sources */,
+				DAAD42A715286E9800AADDBD /* PearlWebViewController.m in Sources */,
+				DAAD42AA15286E9800AADDBD /* PearlAppDelegate.m in Sources */,
+				DAAD43CE15299C1A00AADDBD /* PearlCryptUtils.m in Sources */,
+				DAAD43D015299C1A00AADDBD /* PearlKeyChain.m in Sources */,
+				DAAD43D315299C1A00AADDBD /* PearlRSAKey.m in Sources */,
+				DAAD43D515299C1A00AADDBD /* PearlSCrypt.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD430015286F4400AADDBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43A61529962600AADDBD /* PearlTests.m in Sources */,
+				DAAD431115286F4500AADDBD /* PearliOSTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43711529017E00AADDBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43C515299C1900AADDBD /* PearlCryptUtils.m in Sources */,
+				DAAD43C715299C1900AADDBD /* PearlKeyChain.m in Sources */,
+				DAAD43CA15299C1900AADDBD /* PearlRSAKey.m in Sources */,
+				DAAD43CC15299C1900AADDBD /* PearlSCrypt.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAAD43AB1529994B00AADDBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAAD43C21529996600AADDBD /* PearlTests.m in Sources */,
+				DAAD43BB1529994B00AADDBD /* PearlOSXTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DADD1E1B14F3BE5500413D09 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4370,71 +4723,24 @@
 				DA10976214F438C300EB000C /* PearlStrings.m in Sources */,
 				DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */,
 				DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */,
-				DA109BF614F438D600EB000C /* PearlCocos2DAppDelegate.m in Sources */,
-				DA109BF814F438D600EB000C /* PearlCCAutoTween.m in Sources */,
-				DA109BFA14F438D600EB000C /* PearlCCRemove.m in Sources */,
-				DA109BFC14F438D600EB000C /* PearlCCDebug.m in Sources */,
-				DA109C0014F438D600EB000C /* PearlCocos2DStrings.m in Sources */,
-				DA109C0214F438D600EB000C /* PearlCCActivitySprite.m in Sources */,
-				DA109C0414F438D600EB000C /* PearlCCBarLayer.m in Sources */,
-				DA109C0614F438D600EB000C /* PearlCCBarSprite.m in Sources */,
-				DA109C0814F438D600EB000C /* PearlCCBoxLayer.m in Sources */,
-				DA109C0A14F438D600EB000C /* PearlCCDebugLayer.m in Sources */,
-				DA109C0C14F438D600EB000C /* PearlCCFancyLayer.m in Sources */,
-				DA109C0E14F438D600EB000C /* PearlCCFlickLayer.m in Sources */,
-				DA109C1014F438D600EB000C /* PearlCCHUDLayer.m in Sources */,
-				DA109C1214F438D600EB000C /* PearlCCConfigMenuLayer.m in Sources */,
-				DA109C1414F438D600EB000C /* PearlCCMenuItemBlock.m in Sources */,
-				DA109C1614F438D600EB000C /* PearlCCMenuItemSpacer.m in Sources */,
-				DA109C1814F438D600EB000C /* PearlCCMenuItemSymbolic.m in Sources */,
-				DA109C1A14F438D600EB000C /* PearlCCMenuItemTitle.m in Sources */,
-				DA109C1C14F438D600EB000C /* PearlCCMenuLayer.m in Sources */,
-				DA109C1E14F438D600EB000C /* PearlCCScrollLayer.m in Sources */,
-				DA109C2014F438D600EB000C /* PearlCCShadeLayer.m in Sources */,
-				DA109C2214F438D600EB000C /* PearlCCSplash.m in Sources */,
-				DA109C2414F438D600EB000C /* PearlCCSwipeLayer.m in Sources */,
-				DA109C2614F438D600EB000C /* PearlCCUILayer.m in Sources */,
-				DA109C2814F438D600EB000C /* PearlGLUtils.m in Sources */,
-				DA109C2A14F438D600EB000C /* PearlCryptUtils.m in Sources */,
-				DA109C2C14F438D600EB000C /* PearlKeyChain.m in Sources */,
-				DA109C2F14F438D600EB000C /* PearlRSAKey.m in Sources */,
-				DA109C3114F438D600EB000C /* PearlSCrypt.m in Sources */,
 				DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */,
-				DA109C3614F438D600EB000C /* PearlAlert.m in Sources */,
-				DA109C3814F438D600EB000C /* PearlArrayTVC.m in Sources */,
-				DA109C3A14F438D600EB000C /* PearlBoxView.m in Sources */,
-				DA109C3E14F438D600EB000C /* PearlGradientView.m in Sources */,
-				DA109C4014F438D600EB000C /* PearlLayout.m in Sources */,
-				DA109C4214F438D600EB000C /* PearlLayoutView.m in Sources */,
-				DA109C4414F438D600EB000C /* PearlMessageView.m in Sources */,
-				DA109C4814F438D600EB000C /* PearlRootViewController.m in Sources */,
-				DA109C4A14F438D600EB000C /* PearlSheet.m in Sources */,
-				DA109C4C14F438D600EB000C /* PearlUIDebug.m in Sources */,
-				DA109C4E14F438D600EB000C /* UIImage_PearlScaling.m in Sources */,
-				DA109C5014F438D600EB000C /* PearlUIUtils.m in Sources */,
-				DA109C5214F438D600EB000C /* PearlValidatingTextField.m in Sources */,
-				DA109C5414F438D600EB000C /* PearlWebViewController.m in Sources */,
 				DA109C5614F438D600EB000C /* PearlWSController.m in Sources */,
 				DA109C5914F438D600EB000C /* PearlWSStrings.m in Sources */,
-				DA600BD4150411D5008E9AB6 /* PearlAppDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DADD1E2A14F3BE5500413D09 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DADD1E4014F3BE5500413D09 /* PearlTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		DADD1E3614F3BE5500413D09 /* PBXTargetDependency */ = {
+		DAAD43DD1529AE1400AADDBD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DADD1E1E14F3BE5500413D09 /* Pearl */;
-			targetProxy = DADD1E3514F3BE5500413D09 /* PBXContainerItemProxy */;
+			name = "Makefile-scrypt";
+			targetProxy = DAAD43DC1529AE1400AADDBD /* PBXContainerItemProxy */;
+		};
+		DAAD43DF1529AE1A00AADDBD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Makefile-scrypt";
+			targetProxy = DAAD43DE1529AE1A00AADDBD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -4491,10 +4797,18 @@
 			name = PearlWS.strings;
 			sourceTree = "<group>";
 		};
-		DADD1E3B14F3BE5500413D09 /* InfoPlist.strings */ = {
+		DAAD430C15286F4500AADDBD /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				DADD1E3C14F3BE5500413D09 /* en */,
+				DAAD430D15286F4500AADDBD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		DAAD43B61529994B00AADDBD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAAD43B71529994B00AADDBD /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -4502,69 +4816,449 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		DA109C7714F45EBA00EB000C /* Debug */ = {
+		DA109C7714F45EBA00EB000C /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DA109C7814F45EBA00EB000C /* Release */ = {
+		DA109C7814F45EBA00EB000C /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Release;
+			name = "Release-iOS";
 		};
-		DA109DD514F45F7300EB000C /* Debug */ = {
+		DA109DD514F45F7300EB000C /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DA109DD614F45F7300EB000C /* Release */ = {
+		DA109DD614F45F7300EB000C /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Release;
+			name = "Release-iOS";
 		};
-		DA109E8514F45FAE00EB000C /* Debug */ = {
+		DA109E8514F45FAE00EB000C /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DA109E8614F45FAE00EB000C /* Release */ = {
+		DA109E8614F45FAE00EB000C /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Release;
+			name = "Release-iOS";
 		};
-		DA109EC214F45FF500EB000C /* Debug */ = {
+		DA109EC214F45FF500EB000C /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DA109EC314F45FF500EB000C /* Release */ = {
+		DA109EC314F45FF500EB000C /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Release;
+			name = "Release-iOS";
 		};
-		DA109F1B14F4604000EB000C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
-			};
-			name = Debug;
-		};
-		DA109F1C14F4604000EB000C /* Release */ = {
+		DA109F1B14F4604000EB000C /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 			};
-			name = Release;
+			name = "Debug-iOS";
 		};
-		DADD1E4114F3BE5500413D09 /* Debug */ = {
+		DA109F1C14F4604000EB000C /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+			};
+			name = "Release-iOS";
+		};
+		DAAD42501528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42511528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42531528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42541528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42551528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42561528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42571528652F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42581528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-OSX";
+		};
+		DAAD42591528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+			};
+			name = "Release-OSX";
+		};
+		DAAD425B1528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Release-OSX";
+		};
+		DAAD425C1528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Release-OSX";
+		};
+		DAAD425D1528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Release-OSX";
+		};
+		DAAD425E1528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = "Release-OSX";
+		};
+		DAAD425F1528653800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
+			};
+			name = "Release-OSX";
+		};
+		DAAD42FB15286E9800AADDBD /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = "Debug-iOS";
+		};
+		DAAD42FC15286E9800AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD42FD15286E9800AADDBD /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = "Release-iOS";
+		};
+		DAAD42FE15286E9800AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = iphoneos;
+			};
+			name = "Release-OSX";
+		};
+		DAAD431415286F4500AADDBD /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Debug-iOS";
+		};
+		DAAD431515286F4500AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD431615286F4500AADDBD /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Release-iOS";
+		};
+		DAAD431715286F4500AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Release-OSX";
+		};
+		DAAD437E1529017F00AADDBD /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = macosx;
+			};
+			name = "Debug-iOS";
+		};
+		DAAD437F1529017F00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = macosx;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD43801529017F00AADDBD /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = macosx;
+			};
+			name = "Release-iOS";
+		};
+		DAAD43811529017F00AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Pearl-Crypto\"",
+				);
+				SDKROOT = macosx;
+			};
+			name = "Release-OSX";
+		};
+		DAAD43BE1529994B00AADDBD /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Debug-iOS";
+		};
+		DAAD43BF1529994B00AADDBD /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Debug-OSX";
+		};
+		DAAD43C01529994B00AADDBD /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Release-iOS";
+		};
+		DAAD43C11529994B00AADDBD /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Release-OSX";
+		};
+		DADD1E4114F3BE5500413D09 /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -4583,78 +5277,52 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DADD1E4214F3BE5500413D09 /* Release */ = {
+		DADD1E4214F3BE5500413D09 /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release-iOS";
 		};
-		DADD1E4414F3BE5500413D09 /* Debug */ = {
+		DADD1E4414F3BE5500413D09 /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
-				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
 			};
-			name = Debug;
+			name = "Debug-iOS";
 		};
-		DADD1E4514F3BE5500413D09 /* Release */ = {
+		DADD1E4514F3BE5500413D09 /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
-				HEADER_SEARCH_PATHS = "External/iOSPorts/include/**";
 			};
-			name = Release;
-		};
-		DADD1E4714F3BE5500413D09 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl/Pearl-Prefix.pch";
-				INFOPLIST_FILE = "PearlTests/PearlTests-Info.plist";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		DADD1E4814F3BE5500413D09 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl/Pearl-Prefix.pch";
-				INFOPLIST_FILE = "PearlTests/PearlTests-Info.plist";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
+			name = "Release-iOS";
 		};
 /* End XCBuildConfiguration section */
 
@@ -4662,74 +5330,123 @@
 		DA109C7914F45EBA00EB000C /* Build configuration list for PBXNativeTarget "cocos2d" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA109C7714F45EBA00EB000C /* Debug */,
-				DA109C7814F45EBA00EB000C /* Release */,
+				DA109C7714F45EBA00EB000C /* Debug-iOS */,
+				DAAD42531528652F00AADDBD /* Debug-OSX */,
+				DA109C7814F45EBA00EB000C /* Release-iOS */,
+				DAAD425B1528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DA109DD414F45F7300EB000C /* Build configuration list for PBXNativeTarget "ASIHttpRequest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA109DD514F45F7300EB000C /* Debug */,
-				DA109DD614F45F7300EB000C /* Release */,
+				DA109DD514F45F7300EB000C /* Debug-iOS */,
+				DAAD42541528652F00AADDBD /* Debug-OSX */,
+				DA109DD614F45F7300EB000C /* Release-iOS */,
+				DAAD425C1528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DA109E8414F45FAE00EB000C /* Build configuration list for PBXNativeTarget "TouchJSON" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA109E8514F45FAE00EB000C /* Debug */,
-				DA109E8614F45FAE00EB000C /* Release */,
+				DA109E8514F45FAE00EB000C /* Debug-iOS */,
+				DAAD42551528652F00AADDBD /* Debug-OSX */,
+				DA109E8614F45FAE00EB000C /* Release-iOS */,
+				DAAD425D1528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DA109EC114F45FF500EB000C /* Build configuration list for PBXNativeTarget "jrswizzle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA109EC214F45FF500EB000C /* Debug */,
-				DA109EC314F45FF500EB000C /* Release */,
+				DA109EC214F45FF500EB000C /* Debug-iOS */,
+				DAAD42561528652F00AADDBD /* Debug-OSX */,
+				DA109EC314F45FF500EB000C /* Release-iOS */,
+				DAAD425E1528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DA109F1A14F4604000EB000C /* Build configuration list for PBXNativeTarget "uicolor-utilities" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA109F1B14F4604000EB000C /* Debug */,
-				DA109F1C14F4604000EB000C /* Release */,
+				DA109F1B14F4604000EB000C /* Debug-iOS */,
+				DAAD42571528652F00AADDBD /* Debug-OSX */,
+				DA109F1C14F4604000EB000C /* Release-iOS */,
+				DAAD425F1528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DAAD42FA15286E9800AADDBD /* Build configuration list for PBXNativeTarget "Pearl-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAAD42FB15286E9800AADDBD /* Debug-iOS */,
+				DAAD42FC15286E9800AADDBD /* Debug-OSX */,
+				DAAD42FD15286E9800AADDBD /* Release-iOS */,
+				DAAD42FE15286E9800AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DAAD431315286F4500AADDBD /* Build configuration list for PBXNativeTarget "PearliOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAAD431415286F4500AADDBD /* Debug-iOS */,
+				DAAD431515286F4500AADDBD /* Debug-OSX */,
+				DAAD431615286F4500AADDBD /* Release-iOS */,
+				DAAD431715286F4500AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DAAD437D1529017F00AADDBD /* Build configuration list for PBXNativeTarget "Pearl-OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAAD437E1529017F00AADDBD /* Debug-iOS */,
+				DAAD437F1529017F00AADDBD /* Debug-OSX */,
+				DAAD43801529017F00AADDBD /* Release-iOS */,
+				DAAD43811529017F00AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DAAD43BD1529994B00AADDBD /* Build configuration list for PBXNativeTarget "PearlOSXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAAD43BE1529994B00AADDBD /* Debug-iOS */,
+				DAAD43BF1529994B00AADDBD /* Debug-OSX */,
+				DAAD43C01529994B00AADDBD /* Release-iOS */,
+				DAAD43C11529994B00AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DADD1E1914F3BE5500413D09 /* Build configuration list for PBXProject "Pearl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DADD1E4114F3BE5500413D09 /* Debug */,
-				DADD1E4214F3BE5500413D09 /* Release */,
+				DADD1E4114F3BE5500413D09 /* Debug-iOS */,
+				DAAD42501528652F00AADDBD /* Debug-OSX */,
+				DADD1E4214F3BE5500413D09 /* Release-iOS */,
+				DAAD42581528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 		DADD1E4314F3BE5500413D09 /* Build configuration list for PBXNativeTarget "Pearl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DADD1E4414F3BE5500413D09 /* Debug */,
-				DADD1E4514F3BE5500413D09 /* Release */,
+				DADD1E4414F3BE5500413D09 /* Debug-iOS */,
+				DAAD42511528652F00AADDBD /* Debug-OSX */,
+				DADD1E4514F3BE5500413D09 /* Release-iOS */,
+				DAAD42591528653800AADDBD /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DADD1E4614F3BE5500413D09 /* Build configuration list for PBXNativeTarget "PearlTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DADD1E4714F3BE5500413D09 /* Debug */,
-				DADD1E4814F3BE5500413D09 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-OSX";
 		};
 /* End XCConfigurationList section */
 	};

@@ -25,6 +25,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 
+#import "PearlObjectUtils.h"
 #import "PearlCodeUtils.h"
 #import "PearlLogger.h"
 
@@ -52,6 +53,25 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
     
     err(@"Can't understand digest string: %@", digest);
     return PearlDigestNone;
+}
+
+uint64_t PearlSecureRandom() {
+    
+    uint64_t random = 0;
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+    SecRandomCopyBytes(kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random);                                                                                                                                         
+#else
+    FILE *fp = fopen("/dev/random", "r");
+    if (!fp) {
+        err(@"Couldn't open /dev/random.");
+        return YES;
+    }
+    
+    for (int i=0; i < sizeof(random); ++i)
+        random |= (fgetc(fp) << (8 * i));
+#endif
+    
+    return random;
 }
 
 

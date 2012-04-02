@@ -119,11 +119,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
     <property name="recentsLimit" value="5" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
     <property name="GoToClass.includeJavaFiles" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager" selected="Application.Pearl">
     <configuration default="true" type="AppleRunConfiguration" factoryName="Application" PROJECT_NAME="Pearl" TARGET_NAME="Pearl" CONFIG_NAME="Debug" DESTINATION_ID="iphoneos_IPHONE_DNPGMFYZDTC0" PASS_PARENT_ENVS="FALSE" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
@@ -325,6 +325,13 @@
     <entry file="file://$PROJECT_DIR$/Pearl-Cocos2D/View/Utility/PearlGLUtils.h">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pearl-Crypto/PearlCryptUtils.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="40" selection-start="5397" selection-end="5397" vertical-scroll-proportion="0.49264705">
           <folding />
         </state>
       </provider>

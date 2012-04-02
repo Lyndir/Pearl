@@ -184,23 +184,29 @@
     return (NSData *)[self runQuery:query returnType:kSecReturnData];
 }
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 + (BOOL)generateKeyPairWithTag:(NSString *)tag {
     
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     NSDictionary *privKeyAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [[NSString stringWithFormat:@"%@-priv",  tag] dataUsingEncoding:NSUTF8StringEncoding],
+                                   [[NSString stringWithFormat:@"%@-priv", tag] dataUsingEncoding:NSUTF8StringEncoding],
                                    (id)kSecAttrApplicationTag,
                                    nil];
     NSDictionary *pubKeyAttr    = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [[NSString stringWithFormat:@"%@-pub",   tag] dataUsingEncoding:NSUTF8StringEncoding],
+                                   [[NSString stringWithFormat:@"%@-pub", tag] dataUsingEncoding:NSUTF8StringEncoding],
                                    (id)kSecAttrApplicationTag,
                                    nil];
+#endif
     NSDictionary *keyPairAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
                                    (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
                                    [NSNumber numberWithInt:1024],   (id)kSecAttrKeySizeInBits,
                                    (id)kCFBooleanTrue,              (id)kSecAttrIsPermanent,
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
                                    privKeyAttr,                     (id)kSecPrivateKeyAttrs,
                                    pubKeyAttr,                      (id)kSecPublicKeyAttrs,
+#else
+                                   [tag dataUsingEncoding:NSUTF8StringEncoding],
+                                   (id)kSecAttrApplicationTag,
+#endif
                                    nil];
     
     OSStatus status = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, nil, nil);
@@ -215,10 +221,14 @@
 + (NSData *)publicKeyWithTag:(NSString *)tag {
     
     NSData *publicKeyData = nil;
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+    NSData *applicationTag = [[NSString stringWithFormat:@"%@-pub", tag] dataUsingEncoding:NSUTF8StringEncoding];
+#else
+    NSData *applicationTag = [tag dataUsingEncoding:NSUTF8StringEncoding];
+#endif
     NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
                                    (id)kSecClassKey,                (id)kSecClass,
-                                   [[NSString stringWithFormat:@"%@-pub",  tag] dataUsingEncoding:NSUTF8StringEncoding],
-                                   (id)kSecAttrApplicationTag,
+                                   applicationTag,                  (id)kSecAttrApplicationTag,
                                    (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
                                    (id)kCFBooleanTrue,              (id)kSecReturnData,
                                    nil];
@@ -233,6 +243,5 @@
     [publicKeyData autorelease];
     return [PearlCryptUtils derEncodeRSAKey:publicKeyData];
 }
-#endif
 
 @end

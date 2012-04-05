@@ -27,7 +27,7 @@
 
 @interface PearlCCBarLayer : CCSprite {
 
-    CCMenuItemFont         *_menuButton;
+    CCMenuItemAtlasFont    *_menuButton;
     CCMenu                 *_menuMenu;
     CCLabelTTF             *_messageLabel;
 
@@ -42,7 +42,7 @@
 + (PearlCCBarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition;
 -(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition;
 
--(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector;
+-(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector;
 -(CGPoint) hidePosition;
 -(void) reveal;
 -(void) dismiss;

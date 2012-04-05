@@ -38,9 +38,9 @@
 
 - (void) menuButton:(id) caller;
 
-@property (nonatomic, readwrite, retain) CCSprite               *scoreSprite;
+@property (nonatomic, readwrite, retain) CCLabelAtlas           *scoreSprite;
 @property (nonatomic, readwrite, retain) CCLabelAtlas           *scoreCount;
-@property (nonatomic, readwrite, retain) PearlCCBarLayer *messageBar;
+@property (nonatomic, readwrite, retain) PearlCCBarLayer        *messageBar;
 
 @end
 
@@ -56,18 +56,19 @@
     if(!(self = [super initWithColor:0xFFFFFFFF position:CGPointZero]))
         return self;
 
-    [super setButtonImage:@"menu.png"
+    [super setButtonTitle:@"Menu"
                  callback:self :@selector(menuButton:)];
     self.messageBar = [PearlCCBarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     [self addChild:self.messageBar z:-1];
     [self.messageBar dismiss];
     
     // Score.
-    self.scoreSprite = [CCSprite spriteWithFile:@"score.png"];
+    self.scoreSprite = [CCLabelAtlas labelWithString:@"Score:"
+                                         charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
     self.scoreCount = [CCLabelAtlas labelWithString:@""
                                         charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    self.scoreSprite.position = ccp(self.contentSize.width / 2, self.contentSize.height / 2);
-    [self.scoreCount setPosition:ccp(90, 0)];
+    self.scoreSprite.position = ccp(5, 0);
+    [self.scoreCount setPosition:ccp(80, 0)];
     [self addChild:self.scoreSprite];
     [self addChild:self.scoreCount];
     
@@ -121,7 +122,7 @@
     // Proxy to messageBar
 
     [self.messageBar dismiss];
-    [self.messageBar setButtonImage:nil callback:nil :nil];
+    [self.messageBar setButtonTitle:nil callback:nil :nil];
     
     if(![self.menuMenu parent])
         [self addChild:self.menuMenu];
@@ -131,7 +132,7 @@
 -(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
     // Proxy to messageBar
 
-    [self.messageBar setButtonImage:aFile callback:target :selector];
+    [self.messageBar setButtonTitle:aFile callback:target :selector];
     [self removeChild:self.menuMenu cleanup:NO];
 }
 

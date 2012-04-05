@@ -126,14 +126,6 @@ ccc3l(const long color)
 
 //! helper function that creates an ccColor4F type
 static inline ccColor4F
-ccc4f(const float r, const float g, const float b, const float a)
-{
-	ccColor4F c = { r, g, b, a };
-	return c;
-}
-
-//! helper function that creates an ccColor4F type
-static inline ccColor4F
 ccc4fl(const long color)
 {
     GLubyte *components = (GLubyte *)&color;

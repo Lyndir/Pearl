@@ -30,7 +30,7 @@
 
 @interface PearlCCBarLayer ()
 
-@property (readwrite, retain) CCMenuItemFont        *menuButton;
+@property (readwrite, retain) CCMenuItemAtlasFont   *menuButton;
 @property (readwrite, retain) CCMenu                *menuMenu;
 @property (readwrite, retain) CCLabelTTF            *messageLabel;
 
@@ -79,7 +79,7 @@
 }
 
 
--(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
+-(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector {
     
     if(self.menuMenu) {
         [self removeChild:self.menuMenu cleanup:NO];
@@ -87,14 +87,14 @@
         self.menuButton  = nil;
     }
     
-    if(!aFile)
+    if(!aTitle)
         // No string means no button.
         return;
-    
-    self.menuButton          = [CCMenuItemImage itemFromNormalImage:aFile selectedImage:aFile
+
+    self.menuButton          = [CCMenuItemAtlasFont itemFromString:aTitle charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '
                                                              target:target selector:selector];
     self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
-    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2, 16);
+    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2 - 5, self.menuButton.contentSize.height / 2);
     
     
     [self.menuMenu alignItemsHorizontally];

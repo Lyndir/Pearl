@@ -79,18 +79,13 @@
 
 -(void) update {
     
-    int barHeight       = 0;
-    if(![[UIApplication sharedApplication] isStatusBarHidden]) {
-        if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft
-           || [CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
-            barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.width;
-        else
-            barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    }
-    
+    CGFloat barHeight       = 0;
+    if(![[UIApplication sharedApplication] isStatusBarHidden])
+        barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
+
     CGSize winSizeInPixels      = [[CCDirector sharedDirector] winSizeInPixels];
     self.contentSizeInPixels = CGSizeMake(winSizeInPixels.width, winSizeInPixels.height - barHeight);
-    int inner           = self.contentSizeInPixels.height * self.innerRatio;
+    CGFloat inner           = self.contentSizeInPixels.height * self.innerRatio;
     
     /*
        pos.x + pad                                pos.x + width - pad - inner
@@ -212,40 +207,48 @@
     
     [super draw];
 
-	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-	//glEnableClientState(GL_VERTEX_ARRAY);
-	//glEnableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCFancyLayer - draw");
+   	CC_NODE_DRAW_SETUP();
+
+//	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+//	//glEnableClientState(GL_VERTEX_ARRAY);
+//	//glEnableClientState(GL_COLOR_ARRAY);
+//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//	glDisable(GL_TEXTURE_2D);
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
 
     // Tell OpenGL about our data.
     glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
+    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
-	
+    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+
     // Draw our background.
-#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
-#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
-    glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
-#endif
-    
-    // Reset data source.
-	//glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
+//#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
+    ccGLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//#endif
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
+//#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
+//    ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+//#endif
+
+//    // Reset data source.
+//    //glDisableClientState(GL_VERTEX_ARRAY);
+//    //glDisableClientState(GL_COLOR_ARRAY);
+//    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//    glEnable(GL_TEXTURE_2D);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCFancyLayer - draw");
 }
 
 
 -(void) dealloc {
-    
+
     [super dealloc];
 }
 

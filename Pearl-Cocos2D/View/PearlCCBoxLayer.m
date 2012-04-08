@@ -53,11 +53,20 @@
 
 - (void)draw {
 
+    [super draw];
+
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
+   	CC_NODE_DRAW_SETUP();
+
     ccColor4B backColor = self.color;
     backColor.a = 0x33;
     
-    DrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), backColor, backColor);
-    DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), self.color, 1.0f);
+    PearlGLDrawBoxFrom(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)), backColor);
+    PearlGLDrawBorderFrom(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)), self.color);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
 }
 
 @end

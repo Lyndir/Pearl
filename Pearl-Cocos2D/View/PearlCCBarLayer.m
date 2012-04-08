@@ -34,8 +34,8 @@
 @property (readwrite, retain) CCMenu                *menuMenu;
 @property (readwrite, retain) CCLabelTTF            *messageLabel;
 
-@property (readwrite, assign) long                  textColor;
-@property (readwrite, assign) long                  renderColor;
+@property (readwrite, assign) NSUInteger            textColor;
+@property (readwrite, assign) NSUInteger            renderColor;
 @property (readwrite, assign) CGPoint               showPosition;
 
 @property (nonatomic, readwrite, assign) BOOL       dismissed;
@@ -52,12 +52,12 @@
 @synthesize showPosition = _showPosition;
 @synthesize dismissed = _dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition {
++ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
     return [[[self alloc] initWithColor:aColor position:aShowPosition] autorelease];
 }
 
--(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition {
+-(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
     if(!(self = [super init]))
         return self;
@@ -191,11 +191,18 @@
 
 
 -(void) draw {
-    
+
     [super draw];
+
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarLayer - draw");
+   	CC_NODE_DRAW_SETUP();
     
-    CGPoint to = ccp(self.contentSizeInPixels.width, self.contentSizeInPixels.height);
-    DrawLinesTo(ccp(0, to.y), &to, 1, ccc4(0xFF, 0xFF, 0xFF, self.opacity), 1);
+    ccDrawColor4B(0xff, 0xff, 0xff, self.opacity);
+    ccDrawLine(ccp(0, self.contentSize.height), CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)));
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarLayer - draw");
 }
 
 -(void) dealloc {

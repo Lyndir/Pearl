@@ -31,7 +31,7 @@
     CCMenu                 *_menuMenu;
     CCLabelTTF             *_messageLabel;
 
-    long                  _textColor, _renderColor;
+    NSUInteger            _textColor, _renderColor;
     CGPoint               _showPosition;
 
     BOOL                 _dismissed;
@@ -39,8 +39,8 @@
 
 @property (nonatomic, readonly) BOOL dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition;
--(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition;
++ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
+-(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
 
 -(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector;
 -(CGPoint) hidePosition;

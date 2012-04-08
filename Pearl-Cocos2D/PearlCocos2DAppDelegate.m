@@ -59,27 +59,25 @@
     [super preSetup];
 
 	// Init the window.
-	if (![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
-		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
-    [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
-    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        // An iPad in iPhone compatibility mode.
-        [CCDirector sharedDirector].contentScaleFactor *= 2;
+//    [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
+//    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+//        // An iPad in iPhone compatibility mode.
+//        [CCDirector sharedDirector].contentScaleFactor *= 2;
 #if DEBUG
-    [CCDirector sharedDirector].displayFPS          = YES;
+    [CCDirector sharedDirector].displayStats          = YES;
 #endif
-	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
-                                                                  pixelFormat:kEAGLColorFormatRGBA8];
+	[CCDirector sharedDirector].view          = [CCGLView viewWithFrame:self.window.rootViewController.view.frame
+                                                                  pixelFormat:kEAGLColorFormatRGB565];
 
     //self.window.rootViewController.view.hidden = YES;
-    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].openGLView];
+    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].view];
 	[self.window makeKeyAndVisible];
 
     // Random seed with timestamp.
-    srandom(time(nil));
+    srandom((unsigned int)time(nil));
 
     // CCMenu items font.
-    [CCMenuItemFont setFontSize:[[PearlConfig get].fontSize intValue]];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].fontSize unsignedIntegerValue]];
     [CCMenuItemFont setFontName:[PearlConfig get].fontName];
     self.menuLayers = [NSMutableArray arrayWithCapacity:3];
 
@@ -133,7 +131,7 @@
 
 - (BOOL)isAnyLayerShowing {
 
-    return [self.menuLayers count];
+    return [self.menuLayers count] > 0;
 }
 
 - (PearlCCShadeLayer *)peekLayer {

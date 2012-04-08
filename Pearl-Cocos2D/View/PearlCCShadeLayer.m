@@ -66,7 +66,7 @@
     self.fadeNextEntry              = YES;
     self.backgroundOffset           = CGPointZero;
     
-    ccColor4B shadeColor            = ccc4l([[PearlConfig get].shadeColor longValue]);
+    ccColor4B shadeColor            = ccc4l([[PearlConfig get].shadeColor unsignedLongValue]);
     self.opacity                    = shadeColor.a;
     self.color                      = ccc4to3(shadeColor);
 
@@ -264,7 +264,7 @@
     
     self.background.position = ccp(self.backgroundOffset.x - newPosition.x, self.backgroundOffset.y - newPosition.y);
     if ([self.background conformsToProtocol:@protocol(CCRGBAProtocol)] && self.fadeNextEntry)
-        [((id<CCRGBAProtocol>)self.background) setOpacity:0xff * (1 - fabs(newPosition.x) / self.contentSize.width)];
+        [((id<CCRGBAProtocol>)self.background) setOpacity:(GLubyte)(0xff * (1 - fabs(newPosition.x) / self.contentSize.width))];
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
         self.fadeNextEntry   = YES;

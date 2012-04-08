@@ -266,12 +266,11 @@
     if (!self.visible)
         return;
     
-    glEnable(GL_SCISSOR_TEST);
-    Scissor(self.parent, CGPointZero, CGPointFromCGSize(self.contentSize));
+    PearlGLScissorOn(self.parent, CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)));
     
     [super visit];
 
-    glDisable(GL_SCISSOR_TEST);
+    PearlGLScissorOff();
 }
 
 
@@ -279,16 +278,22 @@
     
     [super draw];
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCScrollLayer - draw");
+   	CC_NODE_DRAW_SETUP();
 
-    CGPoint scrollBound     = ccp(fmaxf(self.scrollContentSize.width  - self.contentSize.width,  0),
-                                  fmaxf(self.scrollContentSize.height - self.contentSize.height, 0));
-    CGPoint scrollProgress  = ccp(scrollBound.x? self.position.x / scrollBound.x: 0,
-                                  scrollBound.y? self.position.y / scrollBound.y: 0);
+    ccGLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    const CGSize scrollContentSizePx = CC_SIZE_POINTS_TO_PIXELS(self.scrollContentSize);
+    const CGSize contentSizePx = CC_SIZE_POINTS_TO_PIXELS(self.contentSize);
+    const CGPoint positionPx = CC_POINT_POINTS_TO_PIXELS(self.position);
+    const CGPoint scrollBound     = ccp(fmaxf(scrollContentSizePx.width  - contentSizePx.width,  0),
+                                  fmaxf(scrollContentSizePx.height - contentSizePx.height, 0));
+    const CGPoint scrollProgress  = ccp(scrollBound.x? positionPx.x / scrollBound.x: 0,
+                                  scrollBound.y? positionPx.y / scrollBound.y: 0);
     
     if (scrollBound.x) {
-        CGPoint from        = ccpSub(ccp(5, 5), self.position);
-        CGPoint to          = ccpSub(ccp(self.contentSize.width - 10, 5), self.position);
+        CGPoint from        = ccpSub(ccp(5, 5), positionPx);
+        CGPoint to          = ccpSub(ccp(contentSizePx.width - 10, 5), positionPx);
         CGPoint scrollPointFrom, scrollPointTo;
         if (self.scrollContentDirection & PearlCCScrollContentDirectionLeftToRight) {
             scrollPointFrom = ccpSub(from, ccpMult(ccpSub(to, from), scrollProgress.x * 0.95f));
@@ -302,12 +307,13 @@
         scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(0, 2));
         scrollPointTo       = ccpAdd(scrollPointTo, ccp(0, 2));
 
-        DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
-        DrawLinesTo(scrollPointFrom, &scrollPointTo, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 2);
+        ccDrawColor4B(0xff, 0xff, 0xff, 0x88);
+        ccDrawLine(from, to);
+        ccDrawLine(scrollPointFrom, scrollPointTo); // make 2 thick?
     }
     if (scrollBound.y) {
-        CGPoint from        = ccpSub(ccp(self.contentSize.width - 5, 5), self.position);
-        CGPoint to          = ccpSub(ccp(self.contentSize.width - 5, self.contentSize.height - 10), self.position);
+        CGPoint from        = ccpSub(ccp(contentSizePx.width - 5, 5), positionPx);
+        CGPoint to          = ccpSub(ccp(contentSizePx.width - 5, contentSizePx.height - 10), positionPx);
         CGPoint scrollPointFrom, scrollPointTo;
         if (self.scrollContentDirection & PearlCCScrollContentDirectionTopToBottom) {
             scrollPointFrom = ccpAdd(to, ccpMult(ccpSub(from, to), scrollProgress.y * 0.95f));
@@ -321,11 +327,14 @@
         scrollPointFrom     = ccpAdd(scrollPointFrom, ccp(-2, 0));
         scrollPointTo       = ccpAdd(scrollPointTo, ccp(-2, 0));
 
-        DrawLinesTo(from, &to, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 1);
-        DrawLinesTo(scrollPointFrom, &scrollPointTo, 1, ccc4(0xFF, 0xFF, 0xFF, 0x88), 2);
+        ccDrawColor4B(0xff, 0xff, 0xff, 0x88);
+        ccDrawLine(from, to);
+        ccDrawLine(scrollPointFrom, scrollPointTo); // make 2 thick?
     }
-    
-    glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCScrollLayer - draw");
 }
 
 

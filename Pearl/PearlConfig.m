@@ -54,7 +54,7 @@
 @dynamic build, version, copyright, firstRun, supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
-@dynamic soundFx, voice, vibration, visualFx;
+@dynamic soundFx, voice, vibration;
 @dynamic tracks, trackNames, currentTrack, playingTrack;
 
 #pragma mark Internal
@@ -91,7 +91,6 @@
                                      [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(soundFx)),
                                      [NSNumber numberWithBool:       NO],                           NSStringFromSelector(@selector(voice)),
                                      [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(vibration)),
-                                     [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(visualFx)),
 
                                      [NSArray arrayWithObjects:
                                       @"sequential",
@@ -138,7 +137,6 @@
     self.music = nil;
     self.voice = nil;
     self.vibration = nil;
-    self.visualFx = nil;
     self.resetTriggers = nil;
 
     [super dealloc];
@@ -245,7 +243,7 @@
 
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (currentTrackIndex == NSNotFound)
-        currentTrackIndex = -1;
+        currentTrackIndex = -1U;
 
     NSUInteger realTracks = [self.tracks count] - 3;
     return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
@@ -318,12 +316,12 @@
     }
 }
 
-- (NSUInteger)gameRandom {
+- (long)gameRandom {
 
     return [self gameRandom:PearlMaxGameRandom - 1];
 }
 
-- (NSUInteger)gameRandom:(NSUInteger)scope {
+- (long)gameRandom:(NSUInteger)scope {
 
     NSAssert2(scope < PearlMaxGameRandom, @"Scope (%d) must be < %d", scope, PearlMaxGameRandom);
 
@@ -333,9 +331,9 @@
     }
 }
 
-- (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line {
+- (long)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line {
 
-    NSUInteger gr = [self gameRandom:scope];
+    long gr = [self gameRandom:scope];
 //    if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
 //        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr];
 
@@ -343,7 +341,7 @@
 }
 
 
--(NSDate *) today {
+- (NSDate *)today {
 
     long now = (long) [[NSDate date] timeIntervalSince1970];
     return [NSDate dateWithTimeIntervalSince1970:(now / (3600 * 24)) * (3600 * 24)];

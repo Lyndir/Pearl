@@ -16,26 +16,33 @@
 
 
 + (PearlCCMenuItemBlock *)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
-    
+
     return [[[PearlCCMenuItemBlock alloc] initWithSize:size target:target selector:selector] autorelease];
 }
 
 - (id)initWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
-    
+
     if (!(self = [super initWithTarget:target selector:selector]))
         return nil;
-    
+
     self.contentSize = CGSizeMake(size, size);
-    
+
     return self;
 }
 
 - (void)draw {
-    
-    if (!self.isEnabled) {
-        CGPoint to = CGPointFromCGSize(self.contentSizeInPixels);
-        DrawLinesTo(CGPointZero, &to, 1, ccc3to4(ccWHITE), 5);
-    }
+
+    [super draw];
+
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
+   	CC_NODE_DRAW_SETUP();
+
+    if (!self.isEnabled)
+        ccDrawLine(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize))); // make 5 thick?
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
 }
 
 @end

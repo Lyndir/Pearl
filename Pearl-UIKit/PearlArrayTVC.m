@@ -134,23 +134,23 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return [_sections count];
+    return (NSInteger)[_sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section {
     
-    return [(NSArray *) [[[_sections objectAtIndex:section] allValues] lastObject] count];
+    return (NSInteger)[(NSArray *) [[[_sections objectAtIndex:(NSUInteger)section] allValues] lastObject] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
-    return [[[_sections objectAtIndex:section] allKeys] lastObject];
+    return [[[_sections objectAtIndex:(NSUInteger)section] allKeys] lastObject];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSArray *sectionRows = [[[_sections objectAtIndex:indexPath.section] allValues] lastObject];
-    NSDictionary *row = [sectionRows objectAtIndex:indexPath.row];
+    NSArray *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
+    NSDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
     
     UITableViewCellStyle cellStyle = [NSNullToNil([row objectForKey:PearlATVCCellStyle]) unsignedIntValue];
     NSString *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
@@ -198,9 +198,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSString *sectionName = [[[_sections objectAtIndex:indexPath.section] allKeys] lastObject];
-    NSArray *sectionRows = [[[_sections objectAtIndex:indexPath.section] allValues] lastObject];
-    NSMutableDictionary *row = [sectionRows objectAtIndex:indexPath.row];
+    NSString *sectionName = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allKeys] lastObject];
+    NSArray *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
+    NSMutableDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
     
     BOOL newToggled = ![[row objectForKey:PearlATVCRowToggled] boolValue];
     if ([NSNullToNil([row objectForKey:PearlATVCRowDelegate]) shouldActivateRowNamed:NSNullToNil([row objectForKey:PearlATVCRowName])

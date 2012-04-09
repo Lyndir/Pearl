@@ -9,6 +9,7 @@
 #import "PearlCCDebug.h"
 #import "PearlCocos2DAppDelegate.h"
 #import "PearlCocos2DStrings.h"
+#import "PearlGLShaders.h"
 #import "PearlCCConfigMenuLayer.h"
 #import "PearlCCMenuItemBlock.h"
 #import "PearlCCMenuItemSpacer.h"

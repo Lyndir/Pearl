@@ -128,8 +128,7 @@ ccc3l(const unsigned long color)
 static inline ccColor4F
 ccc4fl(const unsigned long color)
 {
-    GLubyte *components = (GLubyte *)&color;
-	return ccc4f(components[3], components[2], components[1], components[0]);
+	return ccc4FFromccc4B(ccc4l(color));
 }
 
 //! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.

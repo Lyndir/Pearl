@@ -70,9 +70,10 @@
 #endif
 	[CCDirector sharedDirector].view          = [CCGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];
-
-    //self.window.rootViewController.view.hidden = YES;
-    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].view];
+//
+//    //self.window.rootViewController.view.hidden = YES;
+//    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].view];
+    self.window.rootViewController = [CCDirector sharedDirector];
 	[self.window makeKeyAndVisible];
 
     // Random seed with timestamp.
@@ -87,8 +88,8 @@
     self.uiLayer = [PearlCCUILayer node];
     [self.uiLayer addChild:[PearlCCDebugLayer get] z:99];
 
-    [self revealHud];
-    [self hideHud];
+//    [self revealHud];
+//    [self hideHud];
 }
 
 - (void)hudMenuPressed {

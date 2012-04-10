@@ -59,13 +59,13 @@
 
 -(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
-    if(!(self = [super init]))
+    if(!(self = [super initWithFile:@"bar.png"]))
         return self;
     
-    self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"bar.png"];
-    self.textureRect        = CGRectFromCGPointAndCGSize(CGPointZero,
-                                                         CGSizeMake([CCDirector sharedDirector].winSize.width,
-                                                                    self.texture.contentSize.height));
+    [self setTextureRect:CGRectFromCGPointAndCGSize(CGPointZero,
+                                CGSizeMake([CCDirector sharedDirector].winSize.width,
+                                           self.texture.contentSize.height))];
+    
     ccTexParams texParams = { GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_CLAMP_TO_EDGE };
 	[self.texture setTexParameters: &texParams];
     

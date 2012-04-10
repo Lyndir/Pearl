@@ -41,6 +41,7 @@
     
     self.contentSize = size;
     self.color = aColor;
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
     
     return self;
 }

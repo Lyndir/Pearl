@@ -39,6 +39,17 @@
     return instance;
 }
 
+- (id)init {
+
+    if (!(self = [super init]))
+        return nil;
+
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
+
+    return self;
+}
+
+
 - (void)draw {
 
     [super draw];

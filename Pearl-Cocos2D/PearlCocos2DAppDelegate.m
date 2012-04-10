@@ -63,11 +63,13 @@
 //    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 //        // An iPad in iPhone compatibility mode.
 //        [CCDirector sharedDirector].contentScaleFactor *= 2;
+    if (![[CCDirector sharedDirector] enableRetinaDisplay:YES])
+        dbg(@"Not a retina device");
 #if DEBUG
     [CCDirector sharedDirector].displayStats          = YES;
 #endif
 	[CCDirector sharedDirector].view          = [CCGLView viewWithFrame:self.window.rootViewController.view.frame
-                                                                  pixelFormat:kEAGLColorFormatRGB565];
+                                                                  pixelFormat:kEAGLColorFormatRGBA8];
 
     //self.window.rootViewController.view.hidden = YES;
     [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].view];

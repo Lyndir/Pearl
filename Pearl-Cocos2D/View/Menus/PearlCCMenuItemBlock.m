@@ -26,6 +26,7 @@
         return nil;
 
     self.contentSize = CGSizeMake(size, size);
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
 
     return self;
 }

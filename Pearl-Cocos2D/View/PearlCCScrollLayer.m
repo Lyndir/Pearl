@@ -80,6 +80,7 @@
     if (!(self = [super init]))
         return nil;
     
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
     self.scrollRatio             = ccp(0.0f, 1.0f);
     self.scrollPerSecond         = ScrollPerSecond;
     self.scrollContentSize       = contentSize;

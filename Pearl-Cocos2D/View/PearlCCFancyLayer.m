@@ -54,6 +54,7 @@
     if(!(self = [super init]))
         return self;
     
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
     self.outerPadding    = PearlMarginMake(5.0f, 5.0f, 5.0f, 5.0f);
     self.padding         = PearlMarginMake(30.0f, 30.0f, 50.0f, 30.0f);
     self.backColor       = ccc4(0x00, 0x00, 0x00, 0xdd);
@@ -222,7 +223,7 @@
     glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
-    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 

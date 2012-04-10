@@ -114,9 +114,11 @@ void PearlGLDrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B
 
 void PearlGLDraw(GLenum mode, const Vertex *vertices, const GLsizei amount) {
 
-    ccGLEnableVertexAttribs(kCCVertexAttrib_Position | kCCVertexAttrib_Color);
-    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), vertices);
-    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(Vertex), vertices + offsetof(Vertex, c));
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
+
+    // Must be cast to void* so compiler stops treating it as a struct; otherwise we can't increment the pointer as a numeric value.
+    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)vertices + offsetof(Vertex, p));
+    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void *)vertices + offsetof(Vertex, c));
     glDrawArrays(mode, 0, amount);
 }
 

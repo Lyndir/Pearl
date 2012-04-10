@@ -68,6 +68,7 @@
     self.anchorPoint        = CGPointZero;
     self.visible            = NO;
     self.animatedTargetting      = anAnimatedTargetting;
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
 
     if (bundleHeadReference)
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
@@ -148,7 +149,7 @@
 //    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 //    //glEnable(GL_TEXTURE_2D);
     ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_TexCoords);
-    
+
     //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
     //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
 
@@ -172,7 +173,7 @@
             1.0f,   0.0f,
         }
     };
-    
+
     GLfloat vertices[3][12] = {
         /* head */ {
             -self.textureSize.width / 2.0f + lengthPx,  -self.textureSize.height / 2.0f, 0.0f,
@@ -202,7 +203,7 @@
     ccGLBindTexture2D(self.body[self.bodyFrame].name);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    
+
     glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, 0, vertices[1]);
     glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates[1]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -219,7 +220,7 @@
     [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].pixelsHigh / -2, halfLength - self.head.pixelsWide / 2, self.body[self.bodyFrame].pixelsHigh / 2)];*/
     //[head drawAtPoint:CGPointMake(halfLength - head.pixelsWide / 2, head.pixelsWide / -2)];
     //[tail drawAtPoint:CGPointMake(-halfLength - tail.pixelsWide / 2,  tail.pixelsWide / -2)];
-    
+
 //    //glDisableClientState(GL_VERTEX_ARRAY);
 //    glEnableClientState(GL_COLOR_ARRAY);
 //    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);

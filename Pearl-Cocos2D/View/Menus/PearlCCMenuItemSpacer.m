@@ -54,17 +54,17 @@
 
 -(id) initSmall {
     
-    return [self initWithHeight:[[PearlConfig get].smallFontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].smallFontSize unsignedIntegerValue]];
 }
 
 -(id) initNormal {
     
-    return [self initWithHeight:[[PearlConfig get].fontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].fontSize unsignedIntegerValue]];
 }
 
 -(id) initLarge {
     
-    return [self initWithHeight:[[PearlConfig get].largeFontSize intValue]];
+    return [self initWithHeight:[[PearlConfig get].largeFontSize unsignedIntegerValue]];
 }
 
 

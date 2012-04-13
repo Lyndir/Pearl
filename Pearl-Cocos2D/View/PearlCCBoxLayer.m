@@ -62,8 +62,8 @@
     ccColor4B backColor = self.color;
     backColor.a = 0x33;
     
-    PearlGLDrawBoxFrom(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)), backColor);
-    PearlGLDrawBorderFrom(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)), self.color);
+    PearlGLDrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSize), backColor);
+    PearlGLDrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color);
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);

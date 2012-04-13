@@ -39,7 +39,10 @@
    	CC_NODE_DRAW_SETUP();
 
     if (!self.isEnabled)
-        ccDrawLine(CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize))); // make 5 thick?
+        ccDrawLine(CGPointZero, CGPointFromCGSize(self.contentSize)); // make 5 thick?
+    else
+        PearlGLDrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize),
+                ccc4(0xff, 0x00, 0x00, 0xff));
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);

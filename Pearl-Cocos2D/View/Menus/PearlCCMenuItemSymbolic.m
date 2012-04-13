@@ -14,32 +14,32 @@
 
 
 
-+ (PearlCCMenuItemSymbolic *)itemFromString:(NSString *)symbol {
++ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol {
 
-    return [self itemFromString:symbol target:nil selector:nil];
+    return [self itemWithString:symbol target:nil selector:nil];
 }
 
-+ (PearlCCMenuItemSymbolic *)itemFromString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
++ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
     
-    return [[[self alloc] initFromString:symbol target:aTarget selector:aSelector] autorelease];
+    return [[[self alloc] initWithString:symbol target:aTarget selector:aSelector] autorelease];
 }
 
 
-- (id)initFromString:(NSString *)symbol {
+- (id)initWithString:(NSString *)symbol {
 
-    return [self initFromString:symbol target:nil selector:nil];
+    return [self initWithString:symbol target:nil selector:nil];
 }
 
 
-- (id)initFromString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
+- (id)initWithString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
     [CCMenuItemFont setFontName:[PearlConfig get].symbolicFontName];
-    [CCMenuItemFont setFontSize:[[PearlConfig get].largeFontSize unsignedIntValue]];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].largeFontSize unsignedIntegerValue]];
 
     @try {
-        self = ([super initFromString:symbol target:aTarget selector:aSelector]);
+        self = ([super initWithString:symbol target:aTarget selector:aSelector]);
     }
     
     @finally {

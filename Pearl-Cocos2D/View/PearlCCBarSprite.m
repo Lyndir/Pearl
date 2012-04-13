@@ -153,7 +153,7 @@
     //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
     //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
 
-    CGFloat lengthPx = self.currentLength * CC_CONTENT_SCALE_FACTOR();
+    CGFloat lengthPx = self.currentLength; // * CC_CONTENT_SCALE_FACTOR();
     GLfloat s = (lengthPx * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
     GLfloat coordinates[3][8] = {
         /* head */ {

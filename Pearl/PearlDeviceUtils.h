@@ -47,4 +47,7 @@
 /** YES when invoked on the iPhone simulator. */
 + (BOOL)isSimulator;
 
+/** The scale difference of the device's user interface in comparison to an iPhone UI. */
++ (float)uiScale;
+
 @end

@@ -267,7 +267,7 @@
     if (!self.visible)
         return;
     
-    PearlGLScissorOn(self.parent, CGPointZero, CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)));
+    PearlGLScissorOn(self.parent, CGPointZero, CGPointFromCGSize(self.contentSize));
     
     [super visit];
 
@@ -284,9 +284,9 @@
 
     ccGLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    const CGSize scrollContentSizePx = CC_SIZE_POINTS_TO_PIXELS(self.scrollContentSize);
-    const CGSize contentSizePx = CC_SIZE_POINTS_TO_PIXELS(self.contentSize);
-    const CGPoint positionPx = CC_POINT_POINTS_TO_PIXELS(self.position);
+    const CGSize scrollContentSizePx = self.scrollContentSize;
+    const CGSize contentSizePx = self.contentSize;
+    const CGPoint positionPx = self.position;
     const CGPoint scrollBound     = ccp(fmaxf(scrollContentSizePx.width  - contentSizePx.width,  0),
                                   fmaxf(scrollContentSizePx.height - contentSizePx.height, 0));
     const CGPoint scrollProgress  = ccp(scrollBound.x? positionPx.x / scrollBound.x: 0,

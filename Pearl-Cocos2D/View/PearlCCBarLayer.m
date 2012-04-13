@@ -91,7 +91,7 @@
         // No string means no button.
         return;
 
-    self.menuButton          = [CCMenuItemAtlasFont itemFromString:aTitle charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '
+    self.menuButton          = [CCMenuItemAtlasFont itemWithString:aTitle charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '
                                                              target:target selector:selector];
     self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
     self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2 - 5, self.menuButton.contentSize.height / 2);
@@ -111,7 +111,7 @@
     if (self.messageLabel)
         [self removeChild:self.messageLabel cleanup:YES];
     
-    CGFloat fontSize = [[PearlConfig get].smallFontSize intValue];
+    CGFloat fontSize = [[PearlConfig get].smallFontSize floatValue];
     self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
                                            fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
     
@@ -198,7 +198,7 @@
    	CC_NODE_DRAW_SETUP();
     
     ccDrawColor4B(0xff, 0xff, 0xff, self.opacity);
-    ccDrawLine(ccp(0, self.contentSize.height), CC_POINT_POINTS_TO_PIXELS(CGPointFromCGSize(self.contentSize)));
+    ccDrawLine(ccp(0, self.contentSize.height), CGPointFromCGSize(self.contentSize));
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);

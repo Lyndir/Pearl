@@ -347,5 +347,19 @@
     return [NSDate dateWithTimeIntervalSince1970:(now / (3600 * 24)) * (3600 * 24)];
 }
 
+- (NSNumber *)fontSize {
+
+    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(fontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+}
+
+- (NSNumber *)largeFontSize {
+
+    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(largeFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+}
+
+- (NSNumber *)smallFontSize {
+
+    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(smallFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+}
 
 @end

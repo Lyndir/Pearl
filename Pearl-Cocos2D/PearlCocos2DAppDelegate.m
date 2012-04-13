@@ -59,20 +59,19 @@
     [super preSetup];
 
 	// Init the window.
-//    [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
-//    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-//        // An iPad in iPhone compatibility mode.
-//        [CCDirector sharedDirector].contentScaleFactor *= 2;
-    if (![[CCDirector sharedDirector] enableRetinaDisplay:YES])
-        dbg(@"Not a retina device");
 #if DEBUG
     [CCDirector sharedDirector].displayStats          = YES;
 #endif
 	[CCDirector sharedDirector].view          = [CCGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];
-//
-//    //self.window.rootViewController.view.hidden = YES;
-//    [self.window.rootViewController.view addSubview:[CCDirector sharedDirector].view];
+    //    [CCDirector sharedDirector].contentScaleFactor = [UIScreen mainScreen].scale;
+    //    if ([PearlDeviceUtils isIPad] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    //        // An iPad in iPhone compatibility mode.
+    //        [CCDirector sharedDirector].contentScaleFactor *= 2;
+    if (![[CCDirector sharedDirector] enableRetinaDisplay:YES])
+        dbg(@"Not a retina device");
+    [CCFileUtils sharedFileUtils].enableFallbackSuffixes = YES;
+
     self.window.rootViewController = [CCDirector sharedDirector];
 	[self.window makeKeyAndVisible];
 

@@ -29,8 +29,8 @@
 
 }
 
-+ (PearlCCMenuItemTitle *)itemFromString:(NSString *)title;
++ (PearlCCMenuItemTitle *)itemWithString:(NSString *)title;
 
-- (id)initFromString:(NSString *)title;
+- (id)initWithString:(NSString *)title;
 
 @end

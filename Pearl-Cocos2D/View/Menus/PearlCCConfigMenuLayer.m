@@ -113,13 +113,13 @@
                 if ([settingItem isKindOfClass:[CCMenuItem class]])
                     [subItems addObject:settingItem];
                 else
-                    [subItems addObject:[CCMenuItemFont itemFromString:[settingItem description]]];
+                    [subItems addObject:[CCMenuItemFont itemWithString:[settingItem description]]];
             menuItem.subItems = subItems;
         }
         if (![menuItem.subItems count])
             menuItem.subItems = [NSMutableArray arrayWithObjects:
-                                 [CCMenuItemFont itemFromString:[PearlCocos2DStrings get].menuConfigOff],
-                                 [CCMenuItemFont itemFromString:[PearlCocos2DStrings get].menuConfigOn],
+                                 [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOff],
+                                 [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOn],
                                  nil];
 
         // Force update.
@@ -134,7 +134,7 @@
 
         // Add the setting to the menu.
         [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
-        [menuItems addObject:[PearlCCMenuItemTitle itemFromString:label]];
+        [menuItems addObject:[PearlCCMenuItemTitle itemWithString:label]];
         [menuItems addObject:menuItem];
     }
 

@@ -41,10 +41,12 @@
     CGFloat                                         _currentLength;
 
     CGSize                                          _textureSize;
+    NSUInteger                                      _uniformColor;
 }
 
 @property (nonatomic, readwrite, assign) CGPoint    target;
 @property (nonatomic, readwrite, assign) CGSize     textureSize;
+@property (nonatomic, readwrite, assign) NSUInteger uniformColor;
 
 
 #pragma mark ###############################

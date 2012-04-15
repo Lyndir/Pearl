@@ -57,7 +57,7 @@
 @synthesize smoothTimeElapsed = _smoothTimeElapsed;
 @synthesize current = _current;
 @synthesize currentLength = _currentLength;
-@synthesize textureSize = _textureSize;
+@synthesize textureSize = _textureSize ,uniformColor = _uniformColor;
 
 
 - (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting {
@@ -68,7 +68,8 @@
     self.anchorPoint        = CGPointZero;
     self.visible            = NO;
     self.animatedTargetting      = anAnimatedTargetting;
-    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionTexture_uColor];
+    self.uniformColor = glGetUniformLocation( shaderProgram_->program_, "u_color");
 
     if (bundleHeadReference)
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
@@ -192,6 +193,9 @@
              self.textureSize.width / 2.0f,              self.textureSize.height / 2.0f, 0.0f,
         }
     };
+
+    GLfloat colors[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    [self.shaderProgram setUniformLocation:self.uniformColor with4fv:colors count:1];
 
     /* head */
     ccGLBindTexture2D(self.head.name);

@@ -92,9 +92,9 @@
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
     [CCMenuItemFont setFontName:[PearlConfig get].symbolicFontName];
     [CCMenuItemFont setFontSize:[[PearlConfig get].largeFontSize unsignedIntValue]];
-    self.right                   = [CCMenuItemFont itemFromString:@" ▹ "
+    self.right                   = [CCMenuItemFont itemWithString:@" ▹ "
                                                          target:self selector:@selector(right:)];
-    self.left                    = [CCMenuItemFont itemFromString:@" ◃ "
+    self.left                    = [CCMenuItemFont itemWithString:@" ◃ "
                                                          target:self selector:@selector(left:)];
     [CCMenuItemFont setFontName:oldFontName];
     [CCMenuItemFont setFontSize:oldFontSize];

@@ -70,8 +70,8 @@
     self.opacity                    = shadeColor.a;
     self.color                      = ccc4to3(shadeColor);
 
-    self.defaultBackButton = [PearlCCMenuItemSymbolic itemFromString:@"   ◃   " target:self selector:@selector(_back:)];
-    self.defaultNextButton = [PearlCCMenuItemSymbolic itemFromString:@"   ▹   " target:self selector:@selector(_next:)];
+    self.defaultBackButton = [PearlCCMenuItemSymbolic itemWithString:@"   ◃   " target:self selector:@selector(_back:)];
+    self.defaultNextButton = [PearlCCMenuItemSymbolic itemWithString:@"   ▹   " target:self selector:@selector(_next:)];
 
     [self setBackButton:nil];
     [self setNextButton:nil];

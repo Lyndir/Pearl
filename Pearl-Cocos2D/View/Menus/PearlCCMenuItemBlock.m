@@ -38,11 +38,10 @@
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
    	CC_NODE_DRAW_SETUP();
 
-    if (!self.isEnabled)
+    if (!self.isEnabled) {
+        ccDrawColor4B(0xff, 0xff, 0xff, 0xff);
         ccDrawLine(CGPointZero, CGPointFromCGSize(self.contentSize)); // make 5 thick?
-    else
-        PearlGLDrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize),
-                ccc4(0xff, 0x00, 0x00, 0xff));
+    }
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);

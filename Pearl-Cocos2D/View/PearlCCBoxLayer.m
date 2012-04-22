@@ -22,23 +22,24 @@
 + (id)boxed:(CCNode *)node color:(ccColor4B)color {
 
     dbg(@"Showing bounding box for node: %@", node);
-    PearlCCBoxLayer *box = [PearlCCBoxLayer boxWithSize:node.contentSize color:color];
+    PearlCCBoxLayer *box = [PearlCCBoxLayer boxWithSize:node.contentSize at:CGPointZero color:color];
     [node addChild:box];
     [node addObserver:box forKeyPath:@"contentSize" options:0 context:nil];
     
     return node;
 }
 
-+ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame color:(ccColor4B)aColor {
++ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
     
-    return [[[self alloc] initWithSize:aFrame color:aColor] autorelease];
+    return [[[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor] autorelease];
 }
 
-- (id)initWithSize:(CGSize)size color:(ccColor4B)aColor {
+- (id)initWithSize:(CGSize)size at:(CGPoint)aLocation color:(ccColor4B)aColor {
     
     if (!(self = [super init]))
         return self;
     
+    self.position = aLocation;
     self.contentSize = size;
     self.color = aColor;
     self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];

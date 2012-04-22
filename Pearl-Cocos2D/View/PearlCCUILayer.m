@@ -79,6 +79,13 @@
     return self;
 }
 
+- (void)onEnter {
+    
+    [self setContentSize:[CCDirector sharedDirector].winSize];
+
+    [super onEnter];
+}
+
 - (void)debug:(ccTime)delta {
     
     id sceneCandidate = self;

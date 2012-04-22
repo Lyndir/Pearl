@@ -83,7 +83,7 @@
             self.body[0] = [[[CCTextureCache sharedTextureCache] addImage:bundleBodyReference] retain];
         
         self.bodyFrame = 0;
-        self.textureSize = CGSizeMake(self.body[self.bodyFrame].pixelsWide, self.body[self.bodyFrame].pixelsHigh);
+        self.textureSize = CGSizeMake(self.body[self.bodyFrame].contentSize.width, self.body[self.bodyFrame].contentSize.height);
     }
     if (bundleTailReference)
         self.tail = [[CCTextureCache sharedTextureCache] addImage:bundleTailReference];
@@ -99,7 +99,7 @@
 - (void)updateBodyFrame:(ccTime)dt {
     
     self.age                 += dt;
-    self.bodyFrame           = ((NSUInteger) (self.age * 50 * self.body[0].pixelsWide / self.textureSize.width)) % self.bodyFrames;
+    self.bodyFrame           = ((NSUInteger) (self.age * 50 * self.body[0].contentSize.width / self.textureSize.width)) % self.bodyFrames;
 }
 
 
@@ -151,11 +151,11 @@
 //    //glEnable(GL_TEXTURE_2D);
     ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_TexCoords);
 
-    //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
-    //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
+    //GLfloat width = (GLfloat)body[bodyFrame]..contentSize.width * body[bodyFrame].maxS;
+    //GLfloat height = (GLfloat)body[bodyFrame]..contentSize.height * body[bodyFrame].maxT;
 
     CGFloat lengthPx = self.currentLength; // * CC_CONTENT_SCALE_FACTOR();
-    GLfloat s = (lengthPx * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
+    GLfloat s = (lengthPx * 2 - self.tail.contentSize.width / 2 - self.head.contentSize.width / 2) / self.textureSize.width;
     GLfloat coordinates[3][8] = {
         /* head */ {
             0.0f,   1.0f,
@@ -218,12 +218,12 @@
     glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates[2]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    /*CGFloat x, step = self.body[self.bodyFrame].pixelsWide / 2 + 2;
-    for (x = -halfLength + self.tail.pixelsWide / 2; x < halfLength - self.head.pixelsWide / 2; x += step)
+    /*CGFloat x, step = self.body[self.bodyFrame].contentSize.width / 2 + 2;
+    for (x = -halfLength + self.tail.contentSize.width / 2; x < halfLength - self.head.contentSize.width / 2; x += step)
         [self.body[self.bodyFrame] drawAtPoint:CGPointMake(x, 0)];
-    [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].pixelsHigh / -2, halfLength - self.head.pixelsWide / 2, self.body[self.bodyFrame].pixelsHigh / 2)];*/
-    //[head drawAtPoint:CGPointMake(halfLength - head.pixelsWide / 2, head.pixelsWide / -2)];
-    //[tail drawAtPoint:CGPointMake(-halfLength - tail.pixelsWide / 2,  tail.pixelsWide / -2)];
+    [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].contentSize.height / -2, halfLength - self.head.contentSize.width / 2, self.body[self.bodyFrame].contentSize.height / 2)];*/
+    //[head drawAtPoint:CGPointMake(halfLength - head.contentSize.width / 2, head.contentSize.width / -2)];
+    //[tail drawAtPoint:CGPointMake(-halfLength - tail.contentSize.width / 2,  tail.contentSize.width / -2)];
 
 //    //glDisableClientState(GL_VERTEX_ARRAY);
 //    glEnableClientState(GL_COLOR_ARRAY);

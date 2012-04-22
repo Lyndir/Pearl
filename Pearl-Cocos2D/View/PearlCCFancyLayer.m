@@ -28,7 +28,7 @@
 
 @interface PearlCCFancyLayer ()
 
-@property (nonatomic, readwrite, assign) CGSize                        contentSizeInPixels;
+@property (nonatomic, readwrite, assign) CGSize                        contentSize;
 @property (readwrite, assign) ccColor4B                                backColor;
 
 @property (readwrite, assign) GLuint                                   vertexBuffer;
@@ -39,7 +39,7 @@
 
 @implementation PearlCCFancyLayer
 
-@synthesize contentSizeInPixels = _contentSizeInPixels;
+@synthesize contentSize = _contentSize;
 @synthesize outerPadding = _outerPadding;
 @synthesize padding = _padding;
 @synthesize innerRatio = _innerRatio;
@@ -84,9 +84,9 @@
     if(![[UIApplication sharedApplication] isStatusBarHidden])
         barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
 
-    CGSize winSizeInPixels      = [[CCDirector sharedDirector] winSizeInPixels];
-    self.contentSizeInPixels = CGSizeMake(winSizeInPixels.width, winSizeInPixels.height - barHeight);
-    CGFloat inner           = self.contentSizeInPixels.height * self.innerRatio;
+    CGSize winSize          = [CCDirector sharedDirector].winSize;
+    self.contentSize        = CGSizeMake(winSize.width, winSize.height - barHeight);
+    CGFloat inner           = self.contentSize.height * self.innerRatio;
     
     /*
        pos.x + pad                                pos.x + width - pad - inner
@@ -111,21 +111,21 @@
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = self.contentSizeInPixels.width / 2;                            // 0
-    vertices[1]     = self.contentSizeInPixels.height / 2;
+    vertices[0]     = self.contentSize.width / 2;                            // 0
+    vertices[1]     = self.contentSize.height / 2;
     vertices[2]     = self.outerPadding.left + inner;                        // 1
     vertices[3]     = self.outerPadding.bottom;
     vertices[4]     = self.outerPadding.left;                                // 2
     vertices[5]     = self.outerPadding.bottom + inner;
     vertices[6]     = self.outerPadding.left;                                // 3
-    vertices[7]     = self.contentSizeInPixels.height - self.outerPadding.top - inner;
+    vertices[7]     = self.contentSize.height - self.outerPadding.top - inner;
     vertices[8]     = self.outerPadding.left + inner;                        // 4
-    vertices[9]     = self.contentSizeInPixels.height - self.outerPadding.top;
-    vertices[10]    = self.contentSizeInPixels.width - self.outerPadding.right - inner;   // 5
-    vertices[11]    = self.contentSizeInPixels.height - self.outerPadding.top;
-    vertices[12]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 6
-    vertices[13]    = self.contentSizeInPixels.height - self.outerPadding.top - inner;
-    vertices[14]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 7
+    vertices[9]     = self.contentSize.height - self.outerPadding.top;
+    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 5
+    vertices[11]    = self.contentSize.height - self.outerPadding.top;
+    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 6
+    vertices[13]    = self.contentSize.height - self.outerPadding.top - inner;
+    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 7
     vertices[15]    = self.outerPadding.bottom + inner;
     vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 8
     vertices[17]    = self.outerPadding.bottom;

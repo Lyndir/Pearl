@@ -65,7 +65,7 @@
     // Score.
     self.scoreSprite = [CCLabelAtlas labelWithString:@"Score:"
                                          charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    self.scoreCount = [CCLabelAtlas labelWithString:@""
+    self.scoreCount = [CCLabelAtlas labelWithString:@"0000"
                                         charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
     self.scoreSprite.position = ccp(5, 0);
     [self.scoreCount setPosition:ccp(80, 0)];
@@ -124,15 +124,15 @@
     [self.messageBar dismiss];
     [self.messageBar setButtonTitle:nil callback:nil :nil];
     
-    if(![self.menuMenu parent])
+    if(self.menuMenu && ![self.menuMenu parent])
         [self addChild:self.menuMenu];
 }
 
 
--(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
+-(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector {
     // Proxy to messageBar
 
-    [self.messageBar setButtonTitle:aFile callback:target :selector];
+    [self.messageBar setButtonTitle:aTitle callback:target :selector];
     [self removeChild:self.menuMenu cleanup:NO];
 }
 

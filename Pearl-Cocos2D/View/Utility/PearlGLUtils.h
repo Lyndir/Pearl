@@ -133,12 +133,12 @@ ccc4fl(const unsigned long color)
 
 //! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
 static inline ccColor3B
-ccc3lighten(const ccColor3B color, float lightRatio)
+ccc3lighten(const ccColor3B color, float ratio)
 {
 	ccColor3B c = {
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + (UCHAR_MAX - (int)color.r) * MAX(0, ratio) - (int)color.r * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + (UCHAR_MAX - (int)color.g) * MAX(0, ratio) - (int)color.g * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + (UCHAR_MAX - (int)color.b) * MAX(0, ratio) - (int)color.b * MIN(0, ratio))),
     };
 
 	return c;
@@ -146,39 +146,39 @@ ccc3lighten(const ccColor3B color, float lightRatio)
 
 //! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
 static inline ccColor4B
-ccc4lighten(const ccColor4B color, float lightRatio)
+ccc4lighten(const ccColor4B color, float ratio)
 {
 	ccColor4B c = {
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
-            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + (UCHAR_MAX - (int)color.r) * MAX(0, ratio) + (int)color.r * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + (UCHAR_MAX - (int)color.g) * MAX(0, ratio) + (int)color.g * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + (UCHAR_MAX - (int)color.b) * MAX(0, ratio) + (int)color.b * MIN(0, ratio))),
             color.a
     };
 
 	return c;
 }
 
-//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+//! transition a color to another by a ratio, 0 being no change, 1 being the other color.
 static inline ccColor3B
-ccc3shade(const ccColor3B color, const ccColor3B shade, float lightRatio)
+ccc3shade(const ccColor3B color, const ccColor3B shade, float ratio)
 {
 	ccColor3B c = {
-        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
-        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
-        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - ratio) + shade.r * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - ratio) + shade.g * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - ratio) + shade.b * ratio),
     };
     
 	return c;
 }
 
-//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+//! transition a color to another by a ratio, 0 being no change, 1 being the other color.
 static inline ccColor4B
-ccc4shade(const ccColor4B color, const ccColor4B shade, float lightRatio)
+ccc4shade(const ccColor4B color, const ccColor4B shade, float ratio)
 {
 	ccColor4B c = {
-        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
-        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
-        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - ratio) + shade.r * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - ratio) + shade.g * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - ratio) + shade.b * ratio),
         color.a
     };
     

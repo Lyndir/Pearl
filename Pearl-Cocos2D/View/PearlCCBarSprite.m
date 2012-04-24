@@ -57,7 +57,7 @@
 @synthesize smoothTimeElapsed = _smoothTimeElapsed;
 @synthesize current = _current;
 @synthesize currentLength = _currentLength;
-@synthesize textureSize = _textureSize ,uniformColor = _uniformColor;
+@synthesize textureSize = _textureSize, uniformColor = _uniformColor;
 
 
 - (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting {

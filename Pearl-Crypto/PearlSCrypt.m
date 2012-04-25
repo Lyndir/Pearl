@@ -56,7 +56,7 @@
     [super dealloc];
 }
 
-static BOOL checkResult(NSUInteger resultCode) {
+static BOOL checkResult(int resultCode) {
     
     if (resultCode == 0)
         return YES;

@@ -23,7 +23,7 @@
 @interface PearlSCrypt : NSObject
 {
     double                      _fractionOfAvailableMemory;
-    NSUInteger                  _maximumMemory;
+    size_t                      _maximumMemory;
     double                      _time;
 }
 
@@ -39,7 +39,7 @@
  * Limits the memory selected by fractionOfAvailableMemory, if lower.
  * Defaults to unlimited if 0.
  */
-@property (assign) NSUInteger   maximumMemory;
+@property (assign) size_t       maximumMemory;
 /**
  * The time (in seconds) that the operation should run for.  This is a multiplier for the amount of operations per second the CPU can compute.
  * 

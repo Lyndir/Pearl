@@ -91,6 +91,11 @@
 //    [self hideHud];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
 - (void)hudMenuPressed {
 
     [NSException raise:NSInternalInconsistencyException format:@"Override me!"];

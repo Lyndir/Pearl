@@ -58,7 +58,7 @@
 
 -(id) init {
 #if DEBUG
-	if (!(self = [super initWithColor:ccc4(0xff, 0x00, 0x00, 0xff)]))
+	if (!(self = [super initWithColor:ccc4(0xff, 0x77, 0x88, 0x99)]))
 		return self;
 #else
 	if (!(self = [super initWithColor:ccc4(0x00, 0x00, 0x00, 0xff)]))
@@ -77,6 +77,13 @@
     //self.isAccelerometerEnabled = YES;
 
     return self;
+}
+
+- (void)onEnter {
+    
+    [self setContentSize:[CCDirector sharedDirector].winSize];
+
+    [super onEnter];
 }
 
 - (void)debug:(ccTime)delta {

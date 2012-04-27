@@ -24,11 +24,12 @@
 
 #import <Foundation/Foundation.h>
 
+#define str(format, ...) \
+    [NSString stringWithFormat:(format), ##__VA_ARGS__]
 #define l(key, ...) \
-    [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil] , ##__VA_ARGS__, nil]
-
+    str([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil], ##__VA_ARGS__)
 #define lt(tableName, key, ...) \
-    [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:tableName] , ##__VA_ARGS__, nil]
+    str([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:tableName], ##__VA_ARGS__)
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 NSString *RPad(const NSString* string, NSUInteger l);

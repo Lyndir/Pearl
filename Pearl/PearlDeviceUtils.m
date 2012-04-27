@@ -89,4 +89,16 @@
 #endif
 }
 
++ (float)uiScale {
+
+    switch ([UIDevice currentDevice].userInterfaceIdiom) {
+        case UIUserInterfaceIdiomPad:
+            return 1024.0f / 480.0f;
+        case UIUserInterfaceIdiomPhone:
+            break;
+    }
+
+    return 1;
+}
+
 @end

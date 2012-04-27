@@ -39,11 +39,29 @@
     return instance;
 }
 
+- (id)init {
+
+    if (!(self = [super init]))
+        return nil;
+
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
+
+    return self;
+}
+
+
 - (void)draw {
-    
+
     [super draw];
 
-    DrawIndicators();
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCDebugLayer - draw");
+   	CC_NODE_DRAW_SETUP();
+
+    PearlGLDrawIndicators();
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCDebugLayer - draw");
 }
 
 @end

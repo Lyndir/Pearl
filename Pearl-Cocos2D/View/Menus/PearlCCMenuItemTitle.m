@@ -14,19 +14,19 @@
 
 
 
-+ (PearlCCMenuItemTitle *)itemFromString:(NSString *)title {
++ (PearlCCMenuItemTitle *)itemWithString:(NSString *)title {
     
-    return [[[self alloc] initFromString:title] autorelease];
+    return [[[self alloc] initWithString:title] autorelease];
 }
 
-- (id)initFromString:(NSString *)title {
+- (id)initWithString:(NSString *)title {
     
     NSString *oldFontName   = [CCMenuItemFont fontName];
     NSUInteger oldFontSize  = [CCMenuItemFont fontSize];
     [CCMenuItemFont setFontName:[PearlConfig get].fixedFontName];
-    [CCMenuItemFont setFontSize:[[PearlConfig get].smallFontSize intValue]];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].smallFontSize unsignedIntegerValue]];
     
-    self = ([super initFromString:title target:nil selector:nil]);
+    self = ([super initWithString:title target:nil selector:nil]);
     
     [CCMenuItemFont setFontName:oldFontName];
     [CCMenuItemFont setFontSize:oldFontSize];

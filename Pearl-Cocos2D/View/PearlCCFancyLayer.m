@@ -28,7 +28,7 @@
 
 @interface PearlCCFancyLayer ()
 
-@property (nonatomic, readwrite, assign) CGSize                        contentSizeInPixels;
+@property (nonatomic, readwrite, assign) CGSize                        contentSize;
 @property (readwrite, assign) ccColor4B                                backColor;
 
 @property (readwrite, assign) GLuint                                   vertexBuffer;
@@ -39,7 +39,7 @@
 
 @implementation PearlCCFancyLayer
 
-@synthesize contentSizeInPixels = _contentSizeInPixels;
+@synthesize contentSize = _contentSize;
 @synthesize outerPadding = _outerPadding;
 @synthesize padding = _padding;
 @synthesize innerRatio = _innerRatio;
@@ -54,6 +54,7 @@
     if(!(self = [super init]))
         return self;
     
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
     self.outerPadding    = PearlMarginMake(5.0f, 5.0f, 5.0f, 5.0f);
     self.padding         = PearlMarginMake(30.0f, 30.0f, 50.0f, 30.0f);
     self.backColor       = ccc4(0x00, 0x00, 0x00, 0xdd);
@@ -79,18 +80,13 @@
 
 -(void) update {
     
-    int barHeight       = 0;
-    if(![[UIApplication sharedApplication] isStatusBarHidden]) {
-        if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft
-           || [CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
-            barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.width;
-        else
-            barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    }
-    
-    CGSize winSizeInPixels      = [[CCDirector sharedDirector] winSizeInPixels];
-    self.contentSizeInPixels = CGSizeMake(winSizeInPixels.width, winSizeInPixels.height - barHeight);
-    int inner           = self.contentSizeInPixels.height * self.innerRatio;
+    CGFloat barHeight       = 0;
+    if(![[UIApplication sharedApplication] isStatusBarHidden])
+        barHeight   = [[UIApplication sharedApplication] statusBarFrame].size.height;
+
+    CGSize winSize          = [CCDirector sharedDirector].winSize;
+    self.contentSize        = CGSizeMake(winSize.width, winSize.height - barHeight);
+    CGFloat inner           = self.contentSize.height * self.innerRatio;
     
     /*
        pos.x + pad                                pos.x + width - pad - inner
@@ -115,21 +111,21 @@
      */
     
     GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
-    vertices[0]     = self.contentSizeInPixels.width / 2;                            // 0
-    vertices[1]     = self.contentSizeInPixels.height / 2;
+    vertices[0]     = self.contentSize.width / 2;                            // 0
+    vertices[1]     = self.contentSize.height / 2;
     vertices[2]     = self.outerPadding.left + inner;                        // 1
     vertices[3]     = self.outerPadding.bottom;
     vertices[4]     = self.outerPadding.left;                                // 2
     vertices[5]     = self.outerPadding.bottom + inner;
     vertices[6]     = self.outerPadding.left;                                // 3
-    vertices[7]     = self.contentSizeInPixels.height - self.outerPadding.top - inner;
+    vertices[7]     = self.contentSize.height - self.outerPadding.top - inner;
     vertices[8]     = self.outerPadding.left + inner;                        // 4
-    vertices[9]     = self.contentSizeInPixels.height - self.outerPadding.top;
-    vertices[10]    = self.contentSizeInPixels.width - self.outerPadding.right - inner;   // 5
-    vertices[11]    = self.contentSizeInPixels.height - self.outerPadding.top;
-    vertices[12]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 6
-    vertices[13]    = self.contentSizeInPixels.height - self.outerPadding.top - inner;
-    vertices[14]    = self.contentSizeInPixels.width - self.outerPadding.right;           // 7
+    vertices[9]     = self.contentSize.height - self.outerPadding.top;
+    vertices[10]    = self.contentSize.width - self.outerPadding.right - inner;   // 5
+    vertices[11]    = self.contentSize.height - self.outerPadding.top;
+    vertices[12]    = self.contentSize.width - self.outerPadding.right;           // 6
+    vertices[13]    = self.contentSize.height - self.outerPadding.top - inner;
+    vertices[14]    = self.contentSize.width - self.outerPadding.right;           // 7
     vertices[15]    = self.outerPadding.bottom + inner;
     vertices[16]    = self.contentSize.width - self.outerPadding.right - inner;   // 8
     vertices[17]    = self.outerPadding.bottom;
@@ -212,40 +208,48 @@
     
     [super draw];
 
-	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-	//glEnableClientState(GL_VERTEX_ARRAY);
-	//glEnableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCFancyLayer - draw");
+   	CC_NODE_DRAW_SETUP();
+
+//	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+//	//glEnableClientState(GL_VERTEX_ARRAY);
+//	//glEnableClientState(GL_COLOR_ARRAY);
+//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//	glDisable(GL_TEXTURE_2D);
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
 
     // Tell OpenGL about our data.
     glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
-	glVertexPointer(2, GL_FLOAT, 0, 0);
+    glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, 0);
-	
+    glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
+
     // Draw our background.
-#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
-#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
-    glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
-#endif
-    
-    // Reset data source.
-	//glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
+//#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
+    ccGLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//#endif
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 10);
+//#if (CC_BLEND_SRC != GL_SRC_ALPHA || CC_BLEND_DST != GL_ONE_MINUS_SRC_ALPHA)
+//    ccGLBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+//#endif
+
+//    // Reset data source.
+//    //glDisableClientState(GL_VERTEX_ARRAY);
+//    //glDisableClientState(GL_COLOR_ARRAY);
+//    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//    glEnable(GL_TEXTURE_2D);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCFancyLayer - draw");
 }
 
 
 -(void) dealloc {
-    
+
     [super dealloc];
 }
 

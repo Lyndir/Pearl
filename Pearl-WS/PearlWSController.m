@@ -297,7 +297,7 @@
                                       } cancelTitle:[PearlStrings get].commonButtonBack otherTitles:[PearlStrings get].commonButtonUpgrade, nil];
             else if (!self.suppressOutdatedWarning) {
                 // Optional upgrade.
-                [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleNotice
+                [PearlAlert showAlertWithTitle:[PearlStrings get].commonTitleError
                                                 message:[PearlWSStrings get].errorWSResponseOutdatedOptional
                                               viewStyle:UIAlertViewStyleDefault
                                       tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {

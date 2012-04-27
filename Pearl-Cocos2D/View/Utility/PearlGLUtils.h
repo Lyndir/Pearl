@@ -80,7 +80,7 @@
 */
 
 
-int GLCheck(char *file, int line);
+int PearlGLCheck(char *file, int line);
 
 /**
  * GL types
@@ -108,7 +108,7 @@ ccc4to3(const ccColor4B color)
 
 //! helper function that creates an ccColor4B type from a long
 static inline ccColor4B
-ccc4l(const long color)
+ccc4l(const unsigned long color)
 {
     GLubyte *components = (GLubyte *)&color;
 	ccColor4B c = { components[3], components[2], components[1], components[0] };
@@ -117,7 +117,7 @@ ccc4l(const long color)
 
 //! helper function that creates an ccColor3B type from a long
 static inline ccColor3B
-ccc3l(const long color)
+ccc3l(const unsigned long color)
 {
     GLubyte *components = (GLubyte *)&color;
 	ccColor3B c = { components[2], components[1], components[0] };
@@ -126,28 +126,19 @@ ccc3l(const long color)
 
 //! helper function that creates an ccColor4F type
 static inline ccColor4F
-ccc4f(const float r, const float g, const float b, const float a)
+ccc4fl(const unsigned long color)
 {
-	ccColor4F c = { r, g, b, a };
-	return c;
-}
-
-//! helper function that creates an ccColor4F type
-static inline ccColor4F
-ccc4fl(const long color)
-{
-    GLubyte *components = (GLubyte *)&color;
-	return ccc4f(components[3], components[2], components[1], components[0]);
+	return ccc4FFromccc4B(ccc4l(color));
 }
 
 //! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
 static inline ccColor3B
-ccc3lighten(const ccColor3B color, float lightRatio)
+ccc3lighten(const ccColor3B color, float ratio)
 {
 	ccColor3B c = {
-            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
-            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
-            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + (UCHAR_MAX - (int)color.r) * MAX(0, ratio) - (int)color.r * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + (UCHAR_MAX - (int)color.g) * MAX(0, ratio) - (int)color.g * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + (UCHAR_MAX - (int)color.b) * MAX(0, ratio) - (int)color.b * MIN(0, ratio))),
     };
 
 	return c;
@@ -155,57 +146,53 @@ ccc3lighten(const ccColor3B color, float lightRatio)
 
 //! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
 static inline ccColor4B
-ccc4lighten(const ccColor4B color, float lightRatio)
+ccc4lighten(const ccColor4B color, float ratio)
 {
 	ccColor4B c = {
-            MAX(0, MIN(UCHAR_MAX, color.r + UCHAR_MAX * lightRatio)),
-            MAX(0, MIN(UCHAR_MAX, color.g + UCHAR_MAX * lightRatio)),
-            MAX(0, MIN(UCHAR_MAX, color.b + UCHAR_MAX * lightRatio)),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.r + (UCHAR_MAX - (int)color.r) * MAX(0, ratio) + (int)color.r * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.g + (UCHAR_MAX - (int)color.g) * MAX(0, ratio) + (int)color.g * MIN(0, ratio))),
+            (GLubyte)MAX(0, (GLubyte)MIN(UCHAR_MAX, color.b + (UCHAR_MAX - (int)color.b) * MAX(0, ratio) + (int)color.b * MIN(0, ratio))),
             color.a
     };
 
 	return c;
 }
 
-//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+//! transition a color to another by a ratio, 0 being no change, 1 being the other color.
 static inline ccColor3B
-ccc3shade(const ccColor3B color, const ccColor3B shade, float lightRatio)
+ccc3shade(const ccColor3B color, const ccColor3B shade, float ratio)
 {
 	ccColor3B c = {
-        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
-        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
-        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - ratio) + shade.r * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - ratio) + shade.g * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - ratio) + shade.b * ratio),
     };
     
 	return c;
 }
 
-//! lighten the color by a ratio, 0 being no change, 1 turning it white and -1 turning it black.
+//! transition a color to another by a ratio, 0 being no change, 1 being the other color.
 static inline ccColor4B
-ccc4shade(const ccColor4B color, const ccColor4B shade, float lightRatio)
+ccc4shade(const ccColor4B color, const ccColor4B shade, float ratio)
 {
 	ccColor4B c = {
-        MIN(UCHAR_MAX, color.r * (1 - lightRatio) + shade.r * lightRatio),
-        MIN(UCHAR_MAX, color.g * (1 - lightRatio) + shade.g * lightRatio),
-        MIN(UCHAR_MAX, color.b * (1 - lightRatio) + shade.b * lightRatio),
+        (GLubyte)MIN(UCHAR_MAX, color.r * (1 - ratio) + shade.r * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.g * (1 - ratio) + shade.g * ratio),
+        (GLubyte)MIN(UCHAR_MAX, color.b * (1 - ratio) + shade.b * ratio),
         color.a
     };
     
 	return c;
 }
 
-void IndicateInSpaceOf(const CGPoint point, const CCNode* node);
-void DrawIndicators(void);
+void PearlGLIndicateInSpaceOf(const CGPoint point, const CCNode* node);
+void PearlGLDrawIndicators(void);
 
-void DrawPointsAt(const CGPoint* points, const NSUInteger count, const ccColor4B color);
-void DrawPoints(const CGPoint* points, const ccColor4B* colors, const NSUInteger n);
+void PearlGLDrawBoxFrom(const CGPoint from, const CGPoint to, const ccColor4B color);
+void PearlGLDrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color);
 
-void DrawLinesTo(const CGPoint from, const CGPoint* to, const NSUInteger count, const ccColor4B color, const CGFloat width);
-void DrawLines(const CGPoint* points, const ccColor4B* colors, const NSUInteger n, const CGFloat width);
-
-void DrawBoxFrom(const CGPoint from, const CGPoint to, const ccColor4B fromColor, const ccColor4B toColor);
-
-void DrawBorderFrom(const CGPoint from, const CGPoint to, const ccColor4B color, const CGFloat width);
+void PearlGLDraw(GLenum mode, const Vertex *vertices, const GLsizei amount);
 
 /** Apply glScissor for the given coordinates in the given node's space. */
-void Scissor(const CCNode* inNode, const CGPoint from, const CGPoint to);
+void PearlGLScissorOn(const CCNode* inNode, const CGPoint from, const CGPoint to);
+void PearlGLScissorOff(void);

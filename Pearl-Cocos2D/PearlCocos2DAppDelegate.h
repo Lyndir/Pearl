@@ -28,7 +28,7 @@
 #import "PearlCCShadeLayer.h"
 
 
-@interface PearlCocos2DAppDelegate : PearlAppDelegate {
+@interface PearlCocos2DAppDelegate : PearlAppDelegate <CCDirectorDelegate> {
 
     PearlCCUILayer *_uiLayer;
     PearlCCHUDLayer *_hudLayer;

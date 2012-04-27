@@ -39,7 +39,7 @@ static inline PearlMargin PearlMarginMake(CGFloat top, CGFloat right, CGFloat bo
 
 @interface PearlCCFancyLayer : CCLayer <CCRGBAProtocol> {
 
-    CGSize                                   _contentSizeInPixels;
+    CGSize                                   _contentSize;
     PearlMargin _outerPadding;
     PearlMargin _padding;
     float                                    _innerRatio;
@@ -49,7 +49,7 @@ static inline PearlMargin PearlMarginMake(CGFloat top, CGFloat right, CGFloat bo
     GLuint                                   _colorBuffer;
 }
 
-@property (nonatomic, readonly) CGSize      contentSizeInPixels;
+@property (nonatomic, readonly) CGSize      contentSize;
 @property (nonatomic, readwrite) ccColor4B  colorGradient;
 @property (nonatomic, readwrite) PearlMargin outerPadding;
 @property (nonatomic, readwrite) PearlMargin padding;

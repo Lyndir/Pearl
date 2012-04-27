@@ -24,8 +24,9 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testKeys
 {
+    [PearlKeyChain generateKeyPairWithTag:@"Test"];
     STFail(@"Unit tests are not implemented yet in PearlTests");
 }
 

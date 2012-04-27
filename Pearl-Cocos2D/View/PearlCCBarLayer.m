@@ -30,12 +30,12 @@
 
 @interface PearlCCBarLayer ()
 
-@property (readwrite, retain) CCMenuItemFont        *menuButton;
+@property (readwrite, retain) CCMenuItemAtlasFont   *menuButton;
 @property (readwrite, retain) CCMenu                *menuMenu;
 @property (readwrite, retain) CCLabelTTF            *messageLabel;
 
-@property (readwrite, assign) long                  textColor;
-@property (readwrite, assign) long                  renderColor;
+@property (readwrite, assign) NSUInteger            textColor;
+@property (readwrite, assign) NSUInteger            renderColor;
 @property (readwrite, assign) CGPoint               showPosition;
 
 @property (nonatomic, readwrite, assign) BOOL       dismissed;
@@ -52,20 +52,20 @@
 @synthesize showPosition = _showPosition;
 @synthesize dismissed = _dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(long)aColor position:(CGPoint)aShowPosition {
++ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
     return [[[self alloc] initWithColor:aColor position:aShowPosition] autorelease];
 }
 
--(id) initWithColor:(long)aColor position:(CGPoint)aShowPosition {
+-(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
-    if(!(self = [super init]))
+    if(!(self = [super initWithFile:@"bar.png"]))
         return self;
     
-    self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"bar.png"];
-    self.textureRect        = CGRectFromCGPointAndCGSize(CGPointZero,
-                                                         CGSizeMake([CCDirector sharedDirector].winSize.width,
-                                                                    self.texture.contentSize.height));
+    [self setTextureRect:CGRectFromCGPointAndCGSize(CGPointZero,
+                                CGSizeMake([CCDirector sharedDirector].winSize.width,
+                                           self.texture.contentSize.height))];
+    
     ccTexParams texParams = { GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_CLAMP_TO_EDGE };
 	[self.texture setTexParameters: &texParams];
     
@@ -79,7 +79,7 @@
 }
 
 
--(void) setButtonImage:(NSString *)aFile callback:(id)target :(SEL)selector {
+-(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector {
     
     if(self.menuMenu) {
         [self removeChild:self.menuMenu cleanup:NO];
@@ -87,14 +87,14 @@
         self.menuButton  = nil;
     }
     
-    if(!aFile)
+    if(!aTitle)
         // No string means no button.
         return;
-    
-    self.menuButton          = [CCMenuItemImage itemFromNormalImage:aFile selectedImage:aFile
+
+    self.menuButton          = [CCMenuItemAtlasFont itemWithString:aTitle charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '
                                                              target:target selector:selector];
     self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
-    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2, 16);
+    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2 - 5, self.menuButton.contentSize.height / 2);
     
     
     [self.menuMenu alignItemsHorizontally];
@@ -111,7 +111,7 @@
     if (self.messageLabel)
         [self removeChild:self.messageLabel cleanup:YES];
     
-    CGFloat fontSize = [[PearlConfig get].smallFontSize intValue];
+    CGFloat fontSize = [[PearlConfig get].smallFontSize floatValue];
     self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
                                            fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
     
@@ -191,11 +191,18 @@
 
 
 -(void) draw {
-    
+
     [super draw];
+
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarLayer - draw");
+   	CC_NODE_DRAW_SETUP();
     
-    CGPoint to = ccp(self.contentSizeInPixels.width, self.contentSizeInPixels.height);
-    DrawLinesTo(ccp(0, to.y), &to, 1, ccc4(0xFF, 0xFF, 0xFF, self.opacity), 1);
+    ccDrawColor4B(0xff, 0xff, 0xff, self.opacity);
+    ccDrawLine(ccp(0, self.contentSize.height), CGPointFromCGSize(self.contentSize));
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarLayer - draw");
 }
 
 -(void) dealloc {

@@ -22,25 +22,27 @@
 + (id)boxed:(CCNode *)node color:(ccColor4B)color {
 
     dbg(@"Showing bounding box for node: %@", node);
-    PearlCCBoxLayer *box = [PearlCCBoxLayer boxWithSize:node.contentSize color:color];
+    PearlCCBoxLayer *box = [PearlCCBoxLayer boxWithSize:node.contentSize at:CGPointZero color:color];
     [node addChild:box];
     [node addObserver:box forKeyPath:@"contentSize" options:0 context:nil];
     
     return node;
 }
 
-+ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame color:(ccColor4B)aColor {
++ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
     
-    return [[[self alloc] initWithSize:aFrame color:aColor] autorelease];
+    return [[[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor] autorelease];
 }
 
-- (id)initWithSize:(CGSize)size color:(ccColor4B)aColor {
+- (id)initWithSize:(CGSize)size at:(CGPoint)aLocation color:(ccColor4B)aColor {
     
     if (!(self = [super init]))
         return self;
     
+    self.position = aLocation;
     self.contentSize = size;
     self.color = aColor;
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
     
     return self;
 }
@@ -53,11 +55,20 @@
 
 - (void)draw {
 
+    [super draw];
+
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
+   	CC_NODE_DRAW_SETUP();
+
     ccColor4B backColor = self.color;
     backColor.a = 0x33;
     
-    DrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), backColor, backColor);
-    DrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSizeInPixels), self.color, 1.0f);
+    PearlGLDrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSize), backColor);
+    PearlGLDrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
 }
 
 @end

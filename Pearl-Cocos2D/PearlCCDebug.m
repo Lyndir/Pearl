@@ -15,7 +15,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 
 @interface PearlCCDebugActivity : NSObject {
 @private
-    NSInteger                               index;
+    long                                    index;
     NSString                                *lastDescription;
 }
 
@@ -99,7 +99,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
     
     static char activityStates[4] = "-\\|/";
     if (![lastDescription isEqualToString:description]) {
-        index = (index + 1) % (sizeof(activityStates) / sizeof(char));
+        index = (index + 1) % (signed)(sizeof(activityStates) / sizeof(char));
         self.lastDescription = description;
     }
 

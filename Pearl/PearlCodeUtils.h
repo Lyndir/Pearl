@@ -38,6 +38,7 @@ typedef enum {
 } PearlDigest;
 
 PearlDigest PearlDigestFromNSString(NSString *digest);
+uint64_t PearlSecureRandom(void);
 
 @interface NSString (PearlCodeUtils)
 

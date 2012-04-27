@@ -57,7 +57,7 @@
 @synthesize smoothTimeElapsed = _smoothTimeElapsed;
 @synthesize current = _current;
 @synthesize currentLength = _currentLength;
-@synthesize textureSize = _textureSize;
+@synthesize textureSize = _textureSize, uniformColor = _uniformColor;
 
 
 - (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting {
@@ -68,6 +68,8 @@
     self.anchorPoint        = CGPointZero;
     self.visible            = NO;
     self.animatedTargetting      = anAnimatedTargetting;
+    self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionTexture_uColor];
+    self.uniformColor = glGetUniformLocation( shaderProgram_->program_, "u_color");
 
     if (bundleHeadReference)
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
@@ -81,7 +83,7 @@
             self.body[0] = [[[CCTextureCache sharedTextureCache] addImage:bundleBodyReference] retain];
         
         self.bodyFrame = 0;
-        self.textureSize = CGSizeMake(self.body[self.bodyFrame].pixelsWide, self.body[self.bodyFrame].pixelsHigh);
+        self.textureSize = CGSizeMake(self.body[self.bodyFrame].contentSize.width, self.body[self.bodyFrame].contentSize.height);
     }
     if (bundleTailReference)
         self.tail = [[CCTextureCache sharedTextureCache] addImage:bundleTailReference];
@@ -97,7 +99,7 @@
 - (void)updateBodyFrame:(ccTime)dt {
     
     self.age                 += dt;
-    self.bodyFrame           = ((NSUInteger) (self.age * 50 * self.body[0].pixelsWide / self.textureSize.width)) % self.bodyFrames;
+    self.bodyFrame           = ((NSUInteger) (self.age * 50 * self.body[0].contentSize.width / self.textureSize.width)) % self.bodyFrames;
 }
 
 
@@ -139,17 +141,21 @@
 {
     [super draw];
 
-	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    //glEnable(GL_TEXTURE_2D);
-    
-    //GLfloat width = (GLfloat)body[bodyFrame].pixelsWide * body[bodyFrame].maxS;
-    //GLfloat height = (GLfloat)body[bodyFrame].pixelsHigh * body[bodyFrame].maxT;
+    CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarSprite - draw");
+   	CC_NODE_DRAW_SETUP();
 
-    CGFloat lengthPx = self.currentLength * CC_CONTENT_SCALE_FACTOR();
-    GLfloat s = (lengthPx * 2 - self.tail.pixelsWide / 2 - self.head.pixelsWide / 2) / self.textureSize.width;
+//	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+//    //glEnableClientState(GL_VERTEX_ARRAY);
+//    glDisableClientState(GL_COLOR_ARRAY);
+//    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//    //glEnable(GL_TEXTURE_2D);
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_TexCoords);
+
+    //GLfloat width = (GLfloat)body[bodyFrame]..contentSize.width * body[bodyFrame].maxS;
+    //GLfloat height = (GLfloat)body[bodyFrame]..contentSize.height * body[bodyFrame].maxT;
+
+    CGFloat lengthPx = self.currentLength; // * CC_CONTENT_SCALE_FACTOR();
+    GLfloat s = (lengthPx * 2 - self.tail.contentSize.width / 2 - self.head.contentSize.width / 2) / self.textureSize.width;
     GLfloat coordinates[3][8] = {
         /* head */ {
             0.0f,   1.0f,
@@ -168,7 +174,7 @@
             1.0f,   0.0f,
         }
     };
-    
+
     GLfloat vertices[3][12] = {
         /* head */ {
             -self.textureSize.width / 2.0f + lengthPx,  -self.textureSize.height / 2.0f, 0.0f,
@@ -188,38 +194,45 @@
         }
     };
 
+    GLfloat colors[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+    [self.shaderProgram setUniformLocation:self.uniformColor with4fv:colors count:1];
+
     /* head */
-    glBindTexture(GL_TEXTURE_2D, self.head.name);
-    glVertexPointer(3, GL_FLOAT, 0, vertices[0]);
-    glTexCoordPointer(2, GL_FLOAT, 0, coordinates[0]);
+    ccGLBindTexture2D(self.head.name);
+    glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, 0, vertices[0]);
+    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates[0]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
+
     /* body */
-    glBindTexture(GL_TEXTURE_2D, self.body[self.bodyFrame].name);
+    ccGLBindTexture2D(self.body[self.bodyFrame].name);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    
-    glVertexPointer(3, GL_FLOAT, 0, vertices[1]);
-    glTexCoordPointer(2, GL_FLOAT, 0, coordinates[1]);
+
+    glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, 0, vertices[1]);
+    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates[1]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
+
     /* tail */
-    glBindTexture(GL_TEXTURE_2D, self.tail.name);
-    glVertexPointer(3, GL_FLOAT, 0, vertices[2]);
-    glTexCoordPointer(2, GL_FLOAT, 0, coordinates[2]);
+    ccGLBindTexture2D(self.tail.name);
+    glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, 0, vertices[2]);
+    glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, 0, coordinates[2]);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
-    /*CGFloat x, step = self.body[self.bodyFrame].pixelsWide / 2 + 2;
-    for (x = -halfLength + self.tail.pixelsWide / 2; x < halfLength - self.head.pixelsWide / 2; x += step)
+
+    /*CGFloat x, step = self.body[self.bodyFrame].contentSize.width / 2 + 2;
+    for (x = -halfLength + self.tail.contentSize.width / 2; x < halfLength - self.head.contentSize.width / 2; x += step)
         [self.body[self.bodyFrame] drawAtPoint:CGPointMake(x, 0)];
-    [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].pixelsHigh / -2, halfLength - self.head.pixelsWide / 2, self.body[self.bodyFrame].pixelsHigh / 2)];*/
-    //[head drawAtPoint:CGPointMake(halfLength - head.pixelsWide / 2, head.pixelsWide / -2)];
-    //[tail drawAtPoint:CGPointMake(-halfLength - tail.pixelsWide / 2,  tail.pixelsWide / -2)];
-    
-    //glDisableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    //glDisable(GL_TEXTURE_2D);
+    [self.body[self.bodyFrame] drawInRect:CGRectMake(x, self.body[self.bodyFrame].contentSize.height / -2, halfLength - self.head.contentSize.width / 2, self.body[self.bodyFrame].contentSize.height / 2)];*/
+    //[head drawAtPoint:CGPointMake(halfLength - head.contentSize.width / 2, head.contentSize.width / -2)];
+    //[tail drawAtPoint:CGPointMake(-halfLength - tail.contentSize.width / 2,  tail.contentSize.width / -2)];
+
+//    //glDisableClientState(GL_VERTEX_ARRAY);
+//    glEnableClientState(GL_COLOR_ARRAY);
+//    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//    //glDisable(GL_TEXTURE_2D);
+
+    CHECK_GL_ERROR_DEBUG();
+    CC_INCREMENT_GL_DRAWS(1);
+   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarSprite - draw");
 }
 
 

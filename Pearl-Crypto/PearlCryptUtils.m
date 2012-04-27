@@ -185,12 +185,12 @@ static size_t DEREncodeLength(unsigned char* buf, size_t length) {
     
     // encode length in ASN.1 DER format
     if (length < 128) {
-        buf[0] = (char)length;
+        buf[0] = (unsigned char)length;
         return 1;
     }
     
     size_t i = (length / 256) + 1;
-    buf[0] = (char)(i + 0x80);
+    buf[0] = (unsigned char)(i + 0x80);
     for (size_t j = 0 ; j < i; ++j) {
         buf[i - j] = length & 0xFF;
         length = length >> 8;
@@ -209,7 +209,7 @@ static size_t DEREncodeLength(unsigned char* buf, size_t length) {
     
     NSMutableData *encKey = [NSMutableData data];
     unsigned char builder[15];
-    int bitstringEncLength;
+    unsigned long bitstringEncLength;
     
     // When we get to the bitstring - how will we encode it?
     if  (key.length + 1 < 128)

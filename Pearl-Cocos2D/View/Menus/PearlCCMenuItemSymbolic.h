@@ -29,10 +29,10 @@
 
 }
 
-+ (PearlCCMenuItemSymbolic *)itemFromString:(NSString *)symbol;
-+ (PearlCCMenuItemSymbolic *)itemFromString:(NSString *)symbol target:(id)target selector:(SEL)selector;
++ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol;
++ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol target:(id)target selector:(SEL)selector;
 
-- (id)initFromString:(NSString *)symbol;
-- (id)initFromString:(NSString *)symbol target:(id)target selector:(SEL)selector;
+- (id)initWithString:(NSString *)symbol;
+- (id)initWithString:(NSString *)symbol target:(id)target selector:(SEL)selector;
 
 @end

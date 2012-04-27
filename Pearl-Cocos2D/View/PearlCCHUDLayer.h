@@ -27,12 +27,12 @@
 
 @interface PearlCCHUDLayer : PearlCCBarLayer <PearlResettable> {
 
-    CCSprite                                            *_scoreSprite;
+    CCLabelAtlas                                        *_scoreSprite;
     CCLabelAtlas                                        *_scoreCount;
     PearlCCBarLayer *_messageBar;
 }
 
-@property (nonatomic, readonly, retain) CCSprite        *scoreSprite;
+@property (nonatomic, readonly, retain) CCLabelAtlas    *scoreSprite;
 @property (nonatomic, readonly, retain) CCLabelAtlas    *scoreCount;
 @property (nonatomic, readonly, retain) PearlCCBarLayer *messageBar;
 

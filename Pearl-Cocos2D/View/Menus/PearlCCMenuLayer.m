@@ -190,7 +190,7 @@
 - (void)reset {
     
     if(self.menu) {
-        [self.menu removeAllChildrenWithCleanup:YES];
+        [self.menu removeAllChildrenWithCleanup:NO];
         [self removeChild:self.menu cleanup:YES];
         self.menu = nil;
     }

@@ -54,9 +54,9 @@ static NSString *NSStringFromOpenSSLErrors() {
     BIO *bio = BIO_new(BIO_s_mem());
     ERR_print_errors(bio);
     
-    NSUInteger length = BIO_ctrl_pending(bio);
+    size_t length = BIO_ctrl_pending(bio);
     unsigned char *buffer = malloc(length);
-    BIO_read(bio, buffer, length);
+    BIO_read(bio, buffer, (int)length);
     
     return [[[NSString alloc] initWithBytes:buffer length:length encoding:NSUTF8StringEncoding] autorelease];
 }
@@ -74,9 +74,9 @@ static NSString *toHexString(id object) {
     err(@"Cannot convert to hex: %@", object);
     return nil;
 }
-static int pem_password_callback(char *buf, int bufsiz, int verify, char *keyPhrase) {
+static size_t pem_password_callback(char *buf, size_t bufsiz, int verify, char *keyPhrase) {
     
-    int length = strlen(keyPhrase);
+    size_t length = strlen(keyPhrase);
     if (length > bufsiz)
         length = bufsiz;
     
@@ -122,7 +122,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     self.isPublicKey = NO;
     
-    _key = RSA_generate_key(keyBitLength, RSA_F4, NULL, NULL);
+    _key = RSA_generate_key((int)keyBitLength, RSA_F4, NULL, NULL);
     
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
@@ -181,9 +181,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     }
     
-    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
+    rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
     BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
-    rsaKey->d = BN_bin2bn(exponent.bytes, exponent.length, NULL);
+    rsaKey->d = BN_bin2bn(exponent.bytes, (int)exponent.length, NULL);
     
     if (![self isValid]) {
         [self release];
@@ -237,11 +237,11 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     }
     
-    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
+    rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
     BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
-    rsaKey->d = BN_bin2bn(exponent.bytes, exponent.length, NULL);
-    rsaKey->p = BN_bin2bn(primeP.bytes, primeP.length, NULL);
-    rsaKey->q = BN_bin2bn(primeQ.bytes, primeQ.length, NULL);
+    rsaKey->d = BN_bin2bn(exponent.bytes, (int)exponent.length, NULL);
+    rsaKey->p = BN_bin2bn(primeP.bytes, (int)primeP.length, NULL);
+    rsaKey->q = BN_bin2bn(primeQ.bytes, (int)primeQ.length, NULL);
     
     if (![self isValid]) {
         [self release];
@@ -290,8 +290,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     }
     
-    rsaKey->n = BN_bin2bn(modulus.bytes, modulus.length, NULL);
-    rsaKey->e = BN_bin2bn(exponent.bytes, exponent.length, NULL);
+    rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
+    rsaKey->e = BN_bin2bn(exponent.bytes, (int)exponent.length, NULL);
     
     if (![self isValid]) {
         [self release];
@@ -308,9 +308,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
     if ((self.isPublicKey = isPublicKey))
-        _key = d2i_RSA_PUBKEY(NULL, &derEncodedBytes, derEncodedKey.length);
+        _key = d2i_RSA_PUBKEY(NULL, &derEncodedBytes, (int)derEncodedKey.length);
     else
-        _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, derEncodedKey.length);
+        _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, (int)derEncodedKey.length);
     
     if (!rsaKey || ![self isValid]) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
@@ -329,7 +329,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     self.isPublicKey = isPublicKey;
     
     const unsigned char *derEncodedBytes = (const unsigned char *)derEncodedKey.bytes;
-    PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, derEncodedKey.length);
+    PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, (int)derEncodedKey.length);
     if (!pkcs12) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
@@ -360,7 +360,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     EVP_PKEY *pkey;
     BIO *bio = BIO_new(BIO_s_mem());
-    BIO_write(bio, pemEncodedKey.bytes, pemEncodedKey.length);
+    BIO_write(bio, pemEncodedKey.bytes, (int)pemEncodedKey.length);
     if ((self.isPublicKey = isPublicKey))
         pkey = PEM_read_bio_PUBKEY(bio, NULL, (pem_password_cb *)pem_password_callback,
                                    (void *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -496,15 +496,15 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 
 - (NSData *)derExportASN1 {
     
-    NSUInteger length;
+    size_t length;
 	unsigned char *bufferOut, *bufferIn;
     
     if (self.isPublicKey) {
-        length = i2d_RSA_PUBKEY(rsaKey, NULL);
+        length = (size_t)i2d_RSA_PUBKEY(rsaKey, NULL);
         bufferIn = bufferOut = (unsigned char *) malloc(length);
         i2d_RSA_PUBKEY(rsaKey, &bufferIn);
     } else {
-        length = i2d_RSAPrivateKey(rsaKey, NULL);
+        length = (size_t)i2d_RSAPrivateKey(rsaKey, NULL);
         bufferIn = bufferOut = (unsigned char *) malloc(length);
         i2d_RSAPrivateKey(rsaKey, &bufferIn);
     }
@@ -533,7 +533,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     }
     
     // Export to DER
-    NSUInteger length = i2d_PKCS12(pkcs12, NULL);
+    size_t length = (size_t)i2d_PKCS12(pkcs12, NULL);
 	unsigned char *bufferOut, *bufferIn;
     bufferOut = bufferIn = malloc(length);
     if (!i2d_PKCS12(pkcs12, &bufferIn)) {
@@ -550,7 +550,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     BIO *bio = BIO_new(BIO_s_mem());
     if (keyPhrase) {
         if (!PEM_write_bio_RSAPrivateKey(bio, rsaKey, EVP_des_ede3_cbc(),
-                                         (unsigned char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], [keyPhrase length],
+                                         (unsigned char *)[keyPhrase cStringUsingEncoding:NSUTF8StringEncoding], (int)[keyPhrase length],
                                          NULL, NULL)) {
             err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
             return nil;
@@ -563,9 +563,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     }
     
     // Read into buffer
-    NSUInteger length = BIO_ctrl_pending(bio);
+    size_t length = (size_t)BIO_ctrl_pending(bio);
 	unsigned char *buffer = malloc(length);
-    BIO_read(bio, buffer, length);
+    BIO_read(bio, buffer, (int)length);
     BIO_free(bio);
     
 	return [NSData dataWithBytes:buffer length:length];
@@ -573,13 +573,13 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 
 - (NSData *)encryptPlainData:(NSData *)data {
     
-    NSUInteger length;
-    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
+    size_t length;
+    unsigned char *buffer = (unsigned char *) malloc((size_t)RSA_size(rsaKey));
     
     if (self.isPublicKey)
-        length = RSA_public_encrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = (size_t)RSA_public_encrypt((int)data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     else
-        length = RSA_private_encrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = (size_t)RSA_private_encrypt((int)data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
@@ -590,13 +590,13 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 
 - (NSData *)decryptCipherData:(NSData *)data {
     
-    int length;
-    unsigned char *buffer = (unsigned char *) malloc(RSA_size(rsaKey));
+    size_t length;
+    unsigned char *buffer = (unsigned char *) malloc((size_t)RSA_size(rsaKey));
     
     if (self.isPublicKey)
-        length = RSA_public_decrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = (size_t)RSA_public_decrypt((int)data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     else
-        length = RSA_private_decrypt(data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
+        length = (size_t)RSA_private_decrypt((int)data.length, data.bytes, buffer, rsaKey, RSA_PKCS1_PADDING);
     
     if (length > 0)
         return [NSData dataWithBytes:buffer length:length];
@@ -755,7 +755,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         
         if (!X509_NAME_add_entry_by_txt(dn, [[subjectKey description] UTF8String], MBSTRING_ASC,
                                         (unsigned char *)[subjectValue UTF8String],
-                                        [subjectValue length], -1, 0)) {
+                                        (int)[subjectValue length], -1, 0)) {
             err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
             return nil;
         }
@@ -799,7 +799,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     // Export
 	unsigned char *bufferOut, *bufferIn;
-    NSUInteger length = i2d_X509_REQ(csr, NULL);
+    size_t length = (size_t)i2d_X509_REQ(csr, NULL);
     bufferIn = bufferOut = (unsigned char *) malloc(length);
     i2d_X509_REQ(csr, &bufferIn);
     
@@ -820,9 +820,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
-    NSUInteger length = BIO_ctrl_pending(bio);
+    size_t length = BIO_ctrl_pending(bio);
 	unsigned char *buffer = malloc(length);
-    BIO_read(bio, buffer, length);
+    BIO_read(bio, buffer, (int)length);
     
     // Free
     BIO_free(bio);

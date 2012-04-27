@@ -40,11 +40,12 @@
     if (!(self = [super initWithFile:@"wheel.png" capacity:32]))
         return nil;
 
-    CCAnimation *spinAnimation = [CCAnimation animationWithFrames:nil delay:0.03f];
+    CCAnimation *spinAnimation = [CCAnimation animationWithSpriteFrames:nil delay:0.03f];
     for (NSUInteger f = 0; f < 31; ++f)
-        [spinAnimation addFrameWithTexture:self.texture rect:CGRectMake(f * 32, 0, 32, 32)];
+        [spinAnimation addSpriteFrameWithTexture:self.texture rect:CGRectMake(f * 32, 0, 32, 32)];
     
-    self.sprite = [CCSprite spriteWithBatchNode:self rect:((CCSpriteFrame *) [[spinAnimation frames] lastObject]).rect];
+    self.sprite = [CCSprite spriteWithTexture:self.texture rect:((CCSpriteFrame *) [[spinAnimation frames] lastObject]).rect];
+    [self.sprite setBatchNode:self];
     [self addChild:self.sprite];
     [self.sprite runAction:[CCRepeatForever actionWithAction:[CCAnimate actionWithAnimation:spinAnimation]]];
     

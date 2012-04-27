@@ -1,5 +1,13 @@
-#ifndef PEARLTESTS
-#error PEARLTESTS used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARLTESTS) in your Pearl prefix file.
-#endif
+//
+//  PearlTests.h
+//  PearlTests
+//
+//  Created by Maarten Billemont on 01/04/12.
+//  Copyright (c) 2012 Lyndir. All rights reserved.
+//
 
-#import "Pearl.h"
+#import <SenTestingKit/SenTestingKit.h>
+
+@interface PearlTests : SenTestCase
+
+@end

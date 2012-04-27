@@ -84,7 +84,6 @@
 @property (nonatomic, readwrite, retain) NSNumber           *music;
 @property (nonatomic, readwrite, retain) NSNumber           *voice;
 @property (nonatomic, readwrite, retain) NSNumber           *vibration;
-@property (nonatomic, readwrite, retain) NSNumber           *visualFx;
 
 - (NSDate *)today;
 
@@ -96,13 +95,13 @@
  * otherwise race conditions WILL desync your games.
  * Split time-dependant code up into linearly constant scopes and use gameRandom: for them.
  */
-- (NSUInteger)gameRandom;
+- (long)gameRandom;
 
 /**
  * Return a game random from within the given scope.
  */
-- (NSUInteger)gameRandom:(NSUInteger)scope;
-- (NSUInteger)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
+- (long)gameRandom:(NSUInteger)scope;
+- (long)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line;
 
 + (PearlConfig *)                                           get;
 + (void)                                                    flush;

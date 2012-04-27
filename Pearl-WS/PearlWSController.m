@@ -116,7 +116,7 @@
 }
 
 - (ASIHTTPRequest *)requestWithDictionary:(NSDictionary *)parameters method:(PearlWSRequestMethod)method
-                               completion:(void (^)(NSData *responseData))completion {
+                               completion:(void (^)(NSData *responseData, NSError *connectionError))completion {
     
     trc(@"Out to %@, method: %d:\n%@", [self serverURL], method, parameters);
     ASIHTTPRequest *request = nil;
@@ -201,7 +201,7 @@
         NSData *responseData = loadRequest();
         if ([request isCancelled]) {
             dbg(@"Cancelled: %@", request.url);
-            completion(nil);
+            completion(nil, nil);
         }
         
         if (request.error)
@@ -210,10 +210,10 @@
             trc(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
         
         if ([self isSynchronous])
-            completion(responseData);
+            completion(responseData, request.error);
         else
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(responseData);
+                completion(responseData, request.error);
             });
     } copy] autorelease];
     
@@ -229,14 +229,14 @@
 }
 
 - (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
-             completion:(void (^)(BOOL success, PearlJSONResult *response))completion {
+             completion:(void (^)(BOOL success, PearlJSONResult *response, NSError *connectionError))completion {
     
-    return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData) {
-        PearlJSONResult *response;
-        BOOL valid = [self validateAndParseResponse:responseData into:&response
+    return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData, NSError *connectionError) {
+        PearlJSONResult *response = nil;
+        BOOL valid = !connectionError && [self validateAndParseResponse:responseData into:&response
                                        popupOnError:popupOnError requires:nil];
         
-        completion(valid, response);
+        completion(valid, response, connectionError);
     }];
 }
 

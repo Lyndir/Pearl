@@ -86,12 +86,13 @@ typedef enum {
  * @param method
  *        The method to use for encoding and submitting the request to the server.
  * @param completion
- *        The block of code to execute on completion of the operation. The block takes one parameter: the body data of the server's response
- *        or nil if the request or reading of the response failed.
+ *        The block of code to execute on completion of the operation. The block takes two parameters: the body data of the server's response
+ *        or nil if the request or reading of the response failed, and the error object if an error occurred.  When the request is cancelled,
+ *        both the response and the error are nil.
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithDictionary:(NSDictionary *)parameters method:(PearlWSRequestMethod)method
-                 completion:(void (^)(NSData *responseData))completion;
+                 completion:(void (^)(NSData *responseData, NSError *connectionError))completion;
 
 
 /** Invoke a WS request, serializing the given object according to the given method.
@@ -103,12 +104,13 @@ typedef enum {
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
  * @param completion
- *        The block of code to execute on completion of the operation. The block takes two parameters:  A boolean indicating whether the
- *        response was successfully parsed in and indicates a successful result, and the JSON response object if it was parsed successfully.
+ *        The block of code to execute on completion of the operation. The block takes three parameters:  A boolean indicating whether the
+ *        response was successfully parsed in and indicates a successful result, the JSON response object if it was parsed successfully,
+ *        and the error in case an error occurred. When the request is cancelled, both the response and the error are nil.
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
-             completion:(void (^)(BOOL success, PearlJSONResult *response))completion;
+             completion:(void (^)(BOOL success, PearlJSONResult *response, NSError *connectionError))completion;
 
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.

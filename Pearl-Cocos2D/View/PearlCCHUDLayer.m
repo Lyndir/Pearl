@@ -56,19 +56,16 @@
     if(!(self = [super initWithColor:0xFFFFFFFF position:CGPointZero]))
         return self;
 
-    [super setButtonTitle:@"Menu"
-                 callback:self :@selector(menuButton:)];
+    [super setButtonTitle:@"Menu" callback:self :@selector(menuButton:)];
     self.messageBar = [PearlCCBarLayer barWithColor:0xAAAAAAFF position:ccp(0, self.contentSize.height)];
     [self addChild:self.messageBar z:-1];
     [self.messageBar dismiss];
     
     // Score.
-    self.scoreSprite = [CCLabelAtlas labelWithString:@"Score:"
-                                         charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    self.scoreCount = [CCLabelAtlas labelWithString:@"0000"
-                                        charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '];
-    self.scoreSprite.position = ccp(5, 0);
-    [self.scoreCount setPosition:ccp(80, 0)];
+    self.scoreSprite = [CCLabelTTF labelWithString:@"Score:" fontName:@"Bonk" fontSize:[[PearlConfig get].smallFontSize floatValue]];
+    self.scoreCount = [CCLabelTTF labelWithString:@"0000" fontName:@"Bonk" fontSize:[[PearlConfig get].smallFontSize floatValue]];
+    self.scoreSprite.position = ccp(5 + self.scoreSprite.contentSize.width / 2, self.contentSize.height / 2);
+    [self.scoreCount setPosition:ccp(5 + self.scoreSprite.contentSize.width + 5 + self.scoreCount.contentSize.width / 2, self.contentSize.height / 2)];
     [self addChild:self.scoreSprite];
     [self addChild:self.scoreCount];
     

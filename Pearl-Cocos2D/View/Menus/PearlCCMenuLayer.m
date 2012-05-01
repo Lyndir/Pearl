@@ -205,7 +205,7 @@
         return;
     
     self.menu = [PearlCCClickMenu menuWithItems:nil];
-    self.menu.isRelativeAnchorPoint = YES;
+    self.menu.ignoreAnchorPointForPosition = NO;
     self.menu.anchorPoint = ccp(-0.5f, -0.5f);
     self.menu.position = self.offset;
     

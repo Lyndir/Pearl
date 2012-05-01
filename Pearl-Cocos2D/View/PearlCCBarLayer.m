@@ -91,11 +91,16 @@
         // No string means no button.
         return;
 
-    self.menuButton          = [CCMenuItemAtlasFont itemWithString:aTitle charMapFile:@"bonk.png" itemWidth:13 itemHeight:26 startCharMap:' '
-                                                             target:target selector:selector];
+    NSString *oldFontName = [CCMenuItemFont fontName];
+    NSUInteger oldFontSize = [CCMenuItemFont fontSize];
+    [CCMenuItemFont setFontName:@"Bonk"];
+    [CCMenuItemFont setFontSize:[[PearlConfig get].smallFontSize unsignedIntValue]];
+    self.menuButton          = [CCMenuItemFont itemWithString:aTitle target:target selector:selector];
+    [CCMenuItemFont setFontName:oldFontName];
+    [CCMenuItemFont setFontSize:oldFontSize];
+
     self.menuMenu            = [CCMenu menuWithItems:self.menuButton, nil];
-    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2 - 5, self.menuButton.contentSize.height / 2);
-    
+    self.menuMenu.position   = ccp(self.contentSize.width - self.menuButton.contentSize.width / 2 - 5, self.contentSize.height / 2);
     
     [self.menuMenu alignItemsHorizontally];
     [self addChild:self.menuMenu];
@@ -112,7 +117,7 @@
         [self removeChild:self.messageLabel cleanup:YES];
     
     CGFloat fontSize = [[PearlConfig get].smallFontSize floatValue];
-    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize alignment:UITextAlignmentCenter
+    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize hAlignment:UITextAlignmentCenter
                                            fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
     
     if(important) {

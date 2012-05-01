@@ -95,7 +95,7 @@ void PearlGLDrawBoxFrom(const CGPoint from, const CGPoint to, const ccColor4B co
             ccp(from.x, to.y),
             ccp(to.x,   to.y),
     };
-    ccDrawFilledPoly(vertices, 4, ccc4FFromccc4B(color));
+    ccDrawSolidPoly(vertices, 4, ccc4FFromccc4B(color));
 }
 
 

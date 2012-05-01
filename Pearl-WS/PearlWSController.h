@@ -1,17 +1,11 @@
-/*
- *   Copyright 2009, Maarten Billemont
+/**
+ * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ * See the enclosed file LICENSE for license information (LGPLv3). If you did
+ * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * @author   Maarten Billemont <lhunath@lyndir.com>
+ * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
 
 //
@@ -86,12 +80,13 @@ typedef enum {
  * @param method
  *        The method to use for encoding and submitting the request to the server.
  * @param completion
- *        The block of code to execute on completion of the operation. The block takes one parameter: the body data of the server's response
- *        or nil if the request or reading of the response failed.
+ *        The block of code to execute on completion of the operation. The block takes two parameters: the body data of the server's response
+ *        or nil if the request or reading of the response failed, and the error object if an error occurred.  When the request is cancelled,
+ *        both the response and the error are nil.
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithDictionary:(NSDictionary *)parameters method:(PearlWSRequestMethod)method
-                 completion:(void (^)(NSData *responseData))completion;
+                 completion:(void (^)(NSData *responseData, NSError *connectionError))completion;
 
 
 /** Invoke a WS request, serializing the given object according to the given method.
@@ -103,12 +98,13 @@ typedef enum {
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
  * @param completion
- *        The block of code to execute on completion of the operation. The block takes two parameters:  A boolean indicating whether the
- *        response was successfully parsed in and indicates a successful result, and the JSON response object if it was parsed successfully.
+ *        The block of code to execute on completion of the operation. The block takes three parameters:  A boolean indicating whether the
+ *        response was successfully parsed in and indicates a successful result, the JSON response object if it was parsed successfully,
+ *        and the error in case an error occurred. When the request is cancelled, both the response and the error are nil.
  * @return The object responsible for handling this request while it's in progress.
  */
 - (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
-             completion:(void (^)(BOOL success, PearlJSONResult *response))completion;
+             completion:(void (^)(BOOL success, PearlJSONResult *response, NSError *connectionError))completion;
 
 /**
  * Check whether the given response data is valid and parse its JSON datastructure.

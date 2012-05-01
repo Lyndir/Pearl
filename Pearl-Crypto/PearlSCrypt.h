@@ -1,19 +1,11 @@
-/*!
- @file RSAKey.h
- @copyright Copyright (c) 2011 Radtastical, Inc.
- @copyright Copyright (c) 2011 Lhunath, Pearl
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- 
- http://www.apache.org/licenses/LICENSE-2.0
- 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+/**
+ * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+ *
+ * See the enclosed file LICENSE for license information (LGPLv3). If you did
+ * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * @author   Maarten Billemont <lhunath@lyndir.com>
+ * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
 
 #ifdef PEARL_WITH_SCRYPT
@@ -23,7 +15,7 @@
 @interface PearlSCrypt : NSObject
 {
     double                      _fractionOfAvailableMemory;
-    NSUInteger                  _maximumMemory;
+    size_t                      _maximumMemory;
     double                      _time;
 }
 
@@ -39,7 +31,7 @@
  * Limits the memory selected by fractionOfAvailableMemory, if lower.
  * Defaults to unlimited if 0.
  */
-@property (assign) NSUInteger   maximumMemory;
+@property (assign) size_t       maximumMemory;
 /**
  * The time (in seconds) that the operation should run for.  This is a multiplier for the amount of operations per second the CPU can compute.
  * 

@@ -1,17 +1,11 @@
-/*
- *   Copyright 2009, Maarten Billemont
+/**
+ * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ * See the enclosed file LICENSE for license information (LGPLv3). If you did
+ * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * @author   Maarten Billemont <lhunath@lyndir.com>
+ * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
 
 //
@@ -185,12 +179,12 @@ static size_t DEREncodeLength(unsigned char* buf, size_t length) {
     
     // encode length in ASN.1 DER format
     if (length < 128) {
-        buf[0] = (char)length;
+        buf[0] = (unsigned char)length;
         return 1;
     }
     
     size_t i = (length / 256) + 1;
-    buf[0] = (char)(i + 0x80);
+    buf[0] = (unsigned char)(i + 0x80);
     for (size_t j = 0 ; j < i; ++j) {
         buf[i - j] = length & 0xFF;
         length = length >> 8;
@@ -209,7 +203,7 @@ static size_t DEREncodeLength(unsigned char* buf, size_t length) {
     
     NSMutableData *encKey = [NSMutableData data];
     unsigned char builder[15];
-    int bitstringEncLength;
+    unsigned long bitstringEncLength;
     
     // When we get to the bitstring - how will we encode it?
     if  (key.length + 1 < 128)

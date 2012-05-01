@@ -1,17 +1,11 @@
-/*
- *   Copyright 2009, Maarten Billemont
+/**
+ * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ * See the enclosed file LICENSE for license information (LGPLv3). If you did
+ * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * @author   Maarten Billemont <lhunath@lyndir.com>
+ * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
 
 //
@@ -19,7 +13,7 @@
 //  Pearl
 //
 //  Created by Maarten Billemont on 08/11/10.
-//  Copyright 2010 Lin.K. All rights reserved.
+//  Copyright 2010 Lyndir. All rights reserved.
 //
 
 #import "PearlMathUtils.h"

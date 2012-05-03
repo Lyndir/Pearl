@@ -53,7 +53,7 @@
     [super preSetup];
     
 	// Init the window.
-#if DEBUG
+#ifdef DEBUG
     [CCDirector sharedDirector].displayStats = YES;
 #endif
 	[CCDirector sharedDirector].view = [CCGLView viewWithFrame:self.window.rootViewController.view.frame
@@ -76,10 +76,9 @@
     
     // Build the game scene.
     self.uiLayer = [PearlCCUILayer node];
+#ifdef DEBUG
     [self.uiLayer addChild:[PearlCCDebugLayer get] z:99];
-    
-    //    [self revealHud];
-    //    [self hideHud];
+#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

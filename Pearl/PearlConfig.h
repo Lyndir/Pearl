@@ -18,13 +18,13 @@
 
 #define PearlMaxGameRandom          1024
 
-#if DEBUG
+#ifdef DEBUG
 #define PearlGameRandom()           [[PearlConfig get] gameRandom:PearlMaxGameRandom-1 from:basename(__FILE__) :__LINE__]
 #else
 #define PearlGameRandom()           [[PearlConfig get] gameRandom:PearlMaxGameRandom-1]
 #endif
 
-#if DEBUG
+#ifdef DEBUG
 #define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope from:basename(__FILE__) :__LINE__]
 #else
 #define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope]

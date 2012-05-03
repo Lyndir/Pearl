@@ -51,7 +51,7 @@
 
 
 -(id) init {
-#if DEBUG
+#ifdef DEBUG
 	if (!(self = [super initWithColor:ccc4(0xff, 0x77, 0x88, 0x99)]))
 		return self;
 #else
@@ -63,12 +63,7 @@
     self.messageQueue = [NSMutableArray arrayWithCapacity:3];
     self.callbackQueue = [NSMutableArray arrayWithCapacity:3];
     
-    //UIAccelerometer*  theAccelerometer = [UIAccelerometer sharedAccelerometer];
-    //theAccelerometer.updateInterval = 1 / AccelerometerFrequency;
-    
     //[self schedule:@selector(debug:) interval:1];
-
-    //self.isAccelerometerEnabled = YES;
 
     return self;
 }
@@ -93,57 +88,6 @@
     
     [PearlCCDebug printStateForScene:sceneCandidate];
 }
-
-/*
--(void) setRotation:(float)aRotation {
-    
-    [super setRotation:aRotation];
-    
-    NSUInteger barSide = (int)self.rotation / 90;
-    if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeLeft)
-        ++barSide;
-    else if([CCDirector sharedDirector].deviceOrientation == CCDeviceOrientationLandscapeRight)
-        --barSide;
-    
-    switch (barSide % 4) {
-        case 0:
-            //[[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
-            //break;
-        case 1:
-            [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-            break;
-        case 2:
-            //[[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortraitUpsideDown animated:YES];
-            //break;
-        case 3:
-            [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft animated:YES];
-            break;
-    }
-}
-
-
--(void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
-    
-    // Use a basic low-pass filter to keep only the gravity component of each axis.
-    self.accelX = (acceleration.x * AccelerometerFilteringFactor) + (self.accelX * (1.0f - AccelerometerFilteringFactor));
-    self.accelY = (acceleration.y * AccelerometerFilteringFactor) + (self.accelY * (1.0f - AccelerometerFilteringFactor));
-    self.accelZ = (acceleration.z * AccelerometerFilteringFactor) + (self.accelZ * (1.0f - AccelerometerFilteringFactor));
-    
-    // Use the acceleration data.
-    if(self.accelX > 0.5)
-        [self rotateTo:180];
-    else if(self.accelX < -0.5)
-        [self rotateTo:0];
-}
-
-
--(void) rotateTo:(float)aRotation {
-    
-    if(self.rotateAction)
-        [self stopAction:self.rotateAction];
-    
-    [self runAction:self.rotateAction = [CCRotateTo actionWithDuration:0.2f angle:aRotation]];
-}*/
 
 
 -(void) message:(NSString *)msg {

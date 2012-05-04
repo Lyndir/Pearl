@@ -85,13 +85,15 @@
 
 + (float)uiScale {
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     switch ([UIDevice currentDevice].userInterfaceIdiom) {
         case UIUserInterfaceIdiomPad:
             return 1024.0f / 480.0f;
         case UIUserInterfaceIdiomPhone:
             break;
     }
-
+#endif
+    
     return 1;
 }
 

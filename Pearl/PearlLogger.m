@@ -29,8 +29,8 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     
     if (!PearlLogDateFormatter) {
         PearlLogDateFormatter = [NSDateFormatter new];
-        [PearlLogDateFormatter setDateStyle:NSDateFormatterNoStyle];
-        [PearlLogDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+        [PearlLogDateFormatter setDateFormat:@"DDD'-'HH':'mm':'ss"];
+//        [PearlLogDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     }
 }
 
@@ -63,19 +63,19 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
             return @"[TRACE]  ";
             break;
         case PearlLogLevelDebug:
-            return  @"[DEBUG]  ";
+            return  @"DEBUG-  ";
             break;
         case PearlLogLevelInfo:
-            return  @"[INFO]   ";
+            return  @"INFO-   ";
             break;
         case PearlLogLevelWarn:
-            return  @"[WARNING]";
+            return  @"WARNING-";
             break;
         case PearlLogLevelError:
-            return  @"[ERROR]  ";
+            return  @"ERROR-  ";
             break;
         case PearlLogLevelFatal:
-            return  @"[FATAL]  ";
+            return  @"FATAL-  ";
             break;
         default:
             [NSException raise:NSInternalInconsistencyException
@@ -85,13 +85,13 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
 
 - (NSString *)description {
     
-    return [NSString stringWithFormat:@"%@ %@\n",
+    return [NSString stringWithFormat:@"%@ %@",
             [PearlLogDateFormatter stringFromDate:self.occurance], [self messageDescription]];
 }
 
 - (NSString *)messageDescription {
     
-    return [NSString stringWithFormat:@"%@ %@\n",
+    return [NSString stringWithFormat:@"%@ %@",
             [self levelDescription], self.message];
 }
 
@@ -168,7 +168,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
             return self;
     
     if (aLevel >= self.autoprintLevel)
-        NSLog(@"%@", [message messageDescription]);
+        CFShow((__bridge CFTypeRef)message);
     if (message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
     

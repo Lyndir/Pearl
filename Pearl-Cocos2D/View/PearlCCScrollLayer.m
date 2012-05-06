@@ -56,7 +56,7 @@
 
 + (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
 
-    return [[[self alloc] initWithContentSize:contentSize direction:direction] autorelease];
+    return [[self alloc] initWithContentSize:contentSize direction:direction];
 }
 
 
@@ -330,14 +330,6 @@
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);
    	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCScrollLayer - draw");
-}
-
-
-- (void)dealloc {
-
-    self.delegate = nil;
-
-    [super dealloc];
 }
 
 @end

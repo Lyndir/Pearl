@@ -48,7 +48,7 @@
 
 + (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
     
-    return [[[self alloc] initWithColor:aColor position:aShowPosition] autorelease];
+    return [[self alloc] initWithColor:aColor position:aShowPosition];
 }
 
 -(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
@@ -202,15 +202,6 @@
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);
    	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarLayer - draw");
-}
-
--(void) dealloc {
-    
-    self.messageLabel = nil;
-    self.menuButton = nil;
-    self.menuMenu = nil;
-    
-    [super dealloc];
 }
 
 @end

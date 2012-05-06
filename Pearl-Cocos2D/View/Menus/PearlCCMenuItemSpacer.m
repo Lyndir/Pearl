@@ -33,17 +33,17 @@
 
 +(id) spacerSmall {
     
-    return [[[self alloc] initSmall] autorelease];
+    return [[self alloc] initSmall];
 }
 
 +(id) spacerNormal {
     
-    return [[[self alloc] initNormal] autorelease];
+    return [[self alloc] initNormal];
 }
 
 +(id) spacerLarge {
     
-    return [[[self alloc] initLarge] autorelease];
+    return [[self alloc] initLarge];
 }
 
 -(id) initSmall {

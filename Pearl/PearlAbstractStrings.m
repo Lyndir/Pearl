@@ -53,16 +53,9 @@
                                                           withTemplate:@"$1."];
     key                 = [key lowercaseString];
     id tableValue       = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:self.tableName];
-    id value            = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
+    __unsafe_unretained id value = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
     
     [anInvocation setReturnValue:&value];
-}
-
-- (void)dealloc {
-    
-    self.tableName = nil;
-    
-    [super dealloc];
 }
 
 @end

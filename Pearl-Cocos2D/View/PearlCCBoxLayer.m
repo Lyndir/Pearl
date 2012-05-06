@@ -40,7 +40,7 @@
 
 + (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
     
-    return [[[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor] autorelease];
+    return [[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor];
 }
 
 - (id)initWithSize:(CGSize)size at:(CGPoint)aLocation color:(ccColor4B)aColor {

@@ -118,12 +118,10 @@
  */
 + (NSData *)dataOfItemForQuery:(NSDictionary *)query;
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 /** Generate a new key pair in the keychain and tag it with the given tag. */
 + (BOOL)generateKeyPairWithTag:(NSString *)tag;
 
 /** Return the public key of the key pair in the keychain that was generated with the given tag. */
 + (NSData *)publicKeyWithTag:(NSString *)tag;
-#endif
 
 @end

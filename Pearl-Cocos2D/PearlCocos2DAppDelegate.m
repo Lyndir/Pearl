@@ -165,7 +165,9 @@
         return;
     
     id last = [self.menuLayers lastObject];
-    [self.menuLayers makeObjectsPerformSelector:@selector(dismissAsPush:) withObject:NO];
+    [self.menuLayers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj dismissAsPush:NO];
+    }];
     [self.menuLayers removeAllObjects];
     [self.menuLayers addObject:last];
     
@@ -209,7 +211,6 @@
 - (void)shutdown:(id)caller {
     
     [[CCDirector sharedDirector] end];
-    [[CCDirector sharedDirector] release];
 }
 
 -(void) applicationWillResignActive:(UIApplication *)application {
@@ -264,15 +265,6 @@
     [super applicationSignificantTimeChange:application];
     
 	[[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
-}
-
-- (void)dealloc {
-    
-    self.uiLayer = nil;
-    self.menuLayers = nil;
-    self.hudLayer = nil;
-    
-    [super dealloc];
 }
 
 

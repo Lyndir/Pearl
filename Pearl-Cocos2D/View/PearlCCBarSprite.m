@@ -25,19 +25,19 @@
 
 - (void)updateBodyFrame:(ccTime)dt;
 
-@property (readwrite, retain) CCTexture2D            *head;
-@property (readwrite, assign) CCTexture2D            **body;
-@property (readwrite, retain) CCTexture2D            *tail;
+@property (readwrite, retain) CCTexture2D           *head;
+@property (readwrite, assign) CCTexture2D __strong  **body;
+@property (readwrite, retain) CCTexture2D           *tail;
 
-@property (readwrite, assign) CGFloat              age;
-@property (readwrite, assign) NSUInteger           bodyFrame;
-@property (readwrite, assign) NSUInteger           bodyFrames;
+@property (readwrite, assign) CGFloat               age;
+@property (readwrite, assign) NSUInteger            bodyFrame;
+@property (readwrite, assign) NSUInteger            bodyFrames;
 
-@property (readwrite, assign) BOOL                 animatedTargetting;
-@property (readwrite, assign) ccTime               smoothTimeElapsed;
+@property (readwrite, assign) BOOL                  animatedTargetting;
+@property (readwrite, assign) ccTime                smoothTimeElapsed;
 
-@property (readwrite, assign) CGPoint              current;
-@property (readwrite, assign) CGFloat              currentLength;
+@property (readwrite, assign) CGPoint               current;
+@property (readwrite, assign) CGFloat               currentLength;
 
 @end
 
@@ -69,12 +69,12 @@
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
     if (bundleBodyReference) {
         self.bodyFrames = bodyFrameCount;
-        self.body = malloc(sizeof(CCTexture2D *) * self.bodyFrames);
+        self.body = (__strong CCTexture2D **)malloc(sizeof(CCTexture2D *) * self.bodyFrames);
         if (self.bodyFrames > 1) {
             for (NSUInteger f = 0; f < self.bodyFrames; ++f)
-                self.body[f] = [[[CCTextureCache sharedTextureCache] addImage:[NSString stringWithFormat:bundleBodyReference, f]] retain];
+                self.body[f] = [[CCTextureCache sharedTextureCache] addImage:[NSString stringWithFormat:bundleBodyReference, f]];
         } else
-            self.body[0] = [[[CCTextureCache sharedTextureCache] addImage:bundleBodyReference] retain];
+            self.body[0] = [[CCTextureCache sharedTextureCache] addImage:bundleBodyReference];
         
         self.bodyFrame = 0;
         self.textureSize = CGSizeMake(self.body[self.bodyFrame].contentSize.width, self.body[self.bodyFrame].contentSize.height);
@@ -231,18 +231,8 @@
 
 
 - (void)dealloc {
-
-    self.head = nil;
-    self.tail = nil;
     
-    for (NSUInteger f = 0; f < self.bodyFrames; ++f) {
-        [self.body[f] release];
-        self.body[f] = nil;
-    }
     free(self.body);
-    self.body = nil;
-    
-    [super dealloc];
 }
 
 

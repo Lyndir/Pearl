@@ -1,17 +1,11 @@
-/**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
 #ifndef PEARL
-#error PEARL used but not enabled.  If you want to use this library, first enable it with PEARL_USE(PEARL) in your Pearl prefix file.
+#error PEARL used but not enabled.  If you want to use this library, first enable it with #define PEARL in your Pearl prefix file.
 #endif
 
-#import "Pearl.h"
+#if ! __has_feature(objc_arc)
+#error PEARL requires ARC.  Change your build settings to enable ARC support in your compiler and try again.
+#endif
+
 #import "NSObject_PearlExport.h"
 #import "NSString_PearlNSArrayFormat.h"
 #import "NSString_PearlSEL.h"
@@ -26,4 +20,3 @@
 #import "PearlResettable.h"
 #import "PearlStrings.h"
 #import "PearlStringUtils.h"
-#import "PearlWebUtils.h"

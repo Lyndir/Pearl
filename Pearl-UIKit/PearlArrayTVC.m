@@ -150,7 +150,7 @@
     NSString *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil)
-        cell = [[[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:identifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:identifier];
     
     
     cell.textLabel.text = NSNullToNil([row objectForKey:PearlATVCRowName]);
@@ -177,7 +177,7 @@
             break;
         }
         case PearlArrayTVCRowStyleToggle: {
-            UISwitch *switchView = [[[UISwitch alloc] init] autorelease];
+            UISwitch *switchView = [[UISwitch alloc] init];
             switchView.on = [[row objectForKey:PearlATVCRowToggled] boolValue];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
             cell.accessoryView = switchView;

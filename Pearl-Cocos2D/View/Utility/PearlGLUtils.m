@@ -49,21 +49,20 @@ int PearlGLCheck(char *file, int line) {
 
 
 #define IndicatorCount 300
-static CGPoint *PearlGLIndicatorPoints      = nil;
-static CCNode **PearlGLIndicatorSpaces      = nil;
-static NSUInteger PearlGLndicatorPosition   = IndicatorCount;
+static CGPoint *PearlGLIndicatorPoints          = nil;
+static __strong CCNode **PearlGLIndicatorSpaces = nil;
+static NSUInteger PearlGLndicatorPosition       = IndicatorCount;
 
-void PearlGLIndicateInSpaceOf(const CGPoint point, const CCNode *node) {
+void PearlGLIndicateInSpaceOf(const CGPoint point, CCNode *node) {
     
     if (PearlGLIndicatorPoints == nil) {
         PearlGLIndicatorPoints = calloc(IndicatorCount, sizeof(CGPoint));
-        PearlGLIndicatorSpaces = calloc(IndicatorCount, sizeof(CCNode*));
+        PearlGLIndicatorSpaces = (__strong CCNode **)calloc(IndicatorCount, sizeof(CCNode*));
     }
     
     ++PearlGLndicatorPosition;
     PearlGLIndicatorPoints[PearlGLndicatorPosition % IndicatorCount] = point;
-    [PearlGLIndicatorSpaces[PearlGLndicatorPosition % IndicatorCount] release];
-    PearlGLIndicatorSpaces[PearlGLndicatorPosition % IndicatorCount] = (CCNode *) [node retain];
+    PearlGLIndicatorSpaces[PearlGLndicatorPosition % IndicatorCount] = node;
 }
 
 

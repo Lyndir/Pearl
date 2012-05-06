@@ -29,7 +29,7 @@
 
 + (PearlCCAutoTween *)actionWithDuration:(ccTime)duration {
 
-    return [[[self alloc] initWithDuration:(ccTime) duration] autorelease];
+    return [[self alloc] initWithDuration:(ccTime) duration];
 }
 
 - (id)initWithDuration:(ccTime)duration {
@@ -45,8 +45,6 @@
 - (void)dealloc {
     
     free(_tweens);
-    
-    [super dealloc];
 }
 
 -(void) startWithTarget:(id)aTarget
@@ -71,6 +69,7 @@
            valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset
             duration:(ccTime)t {
     
+    const char *keyPathString = [keyPath cStringUsingEncoding:NSUTF8StringEncoding];
     float from = [self valueForKeyPath:keyPath
                              valueSize:valueSize valueOffset:valueOffset];
     NSUInteger tw;
@@ -82,7 +81,7 @@
             // Inactive tween, reactivate it.
             reuseTween = YES;
             break;
-        } else if ([tween.keyPath isEqual:keyPath] && tween.valueSize == valueSize && tween.valueOffset == valueOffset) {
+        } else if (tween.keyPath == keyPathString && tween.valueSize == valueSize && tween.valueOffset == valueOffset) {
             // Active tween for the key, update it.
             reuseTween = YES;
             resetTween = NO;
@@ -121,8 +120,8 @@
     _tweens[tw] = (PropertyTween) {
 //        BOOL active;
             YES,
-//        NSString *keyPath;
-            keyPath,
+//        char *keyPath;
+            keyPathString,
 //        ccTime elapsed;
             0,
 //        ccTime duration;
@@ -185,7 +184,8 @@
             tween.active = NO;
         }
 
-        [self setValue:tween.current = new forKeyPath:tween.keyPath valueSize:tween.valueSize valueOffset:tween.valueOffset];
+        [self setValue:tween.current = new forKeyPath:[NSString stringWithCString:tween.keyPath encoding:NSUTF8StringEncoding]
+             valueSize:tween.valueSize valueOffset:tween.valueOffset];
         _tweens[tw] = tween;
     }
 }

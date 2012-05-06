@@ -36,12 +36,11 @@
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
                         gravity:(PearlLayoutGravity)gravity {
     
-    return [[[self alloc]
+    return [[self alloc]
              initWithContent:contentView
              width:contentView.frame.size.width + padWidth
              height:contentView.frame.size.height + padHeight
-             gravity:gravity]
-            autorelease];
+             gravity:gravity];
 }
 
 - (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity {
@@ -68,11 +67,6 @@
     contentView.frame = (CGRect){CGPointMake(x, y), size};
 
     return self;
-}
-
-- (void)dealloc {
-    
-    [super dealloc];
 }
 
 @end

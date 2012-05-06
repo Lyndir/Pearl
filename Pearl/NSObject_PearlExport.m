@@ -95,7 +95,7 @@
         
         for (NSUInteger p = 0; p < propertiesCount; p++) {
             objc_property_t property = properties[p];
-            NSString *propertyName = [[[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding] autorelease];
+            NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
             
             id propertyValue = [self exportToCodable:[object valueForKey:propertyName]];
             [codableObject setObject:propertyValue forKey:propertyName];

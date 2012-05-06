@@ -111,32 +111,6 @@
 }
 
 
-- (void)dealloc {
-
-    self.defaults = nil;
-
-    self.firstRun = nil;
-    self.fontSize = nil;
-    self.largeFontSize = nil;
-    self.smallFontSize = nil;
-    self.fontName = nil;
-    self.fixedFontName = nil;
-    self.symbolicFontName = nil;
-    self.shadeColor = nil;
-    self.transitionDuration = nil;
-    self.tracks = nil;
-    self.trackNames = nil;
-    self.currentTrack = nil;
-    self.soundFx = nil;
-    self.music = nil;
-    self.voice = nil;
-    self.vibration = nil;
-    self.resetTriggers = nil;
-
-    [super dealloc];
-}
-
-
 + (PearlConfig *)get {
 
     static PearlConfig *instance = nil;
@@ -179,9 +153,10 @@
     }
 
     if (isSetter) {
-        id newValue = nil;
+        __unsafe_unretained id newValue = nil;
         [anInvocation getArgument:&newValue atIndex:2];
-        newValue = NSNullToNil(newValue);
+        if (newValue == [NSNull null])
+            newValue = nil;
         dbg(@"%@.%@ = [%@ ->] %@", [self class], selector, currentValue, newValue);
 
         if (newValue && ![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
@@ -204,7 +179,8 @@
 
     else {
         trc(@"%@.%@ = %@", [self class], selector, currentValue);
-        [anInvocation setReturnValue:&currentValue];
+        __unsafe_unretained id returnValue = currentValue;
+        [anInvocation setReturnValue:&returnValue];
     }
 }
 
@@ -218,6 +194,7 @@
 
     return [self.tracks objectAtIndex:0];
 }
+
 - (NSString *)randomTrack {
 
     if ([self.tracks count] <= 3)
@@ -226,6 +203,7 @@
     NSUInteger realTracks = ([self.tracks count] - 3);
     return [self.tracks objectAtIndex:arc4random() % realTracks];
 }
+
 - (NSString *)nextTrack {
 
     if ([self.tracks count] <= 3)
@@ -242,10 +220,12 @@
     NSUInteger realTracks = [self.tracks count] - 3;
     return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
+
 - (NSNumber *)music {
 
     return [NSNumber numberWithBool:[self.currentTrack length] > 0];
 }
+
 - (void)setMusic:(NSNumber *)aMusic {
 
 #ifdef PEARL_MEDIA
@@ -255,6 +235,7 @@
         [[PearlAudioController get] playTrack:nil];
 #endif
 }
+
 - (void)setCurrentTrack: (NSString *)currentTrack {
 
     if(currentTrack == nil)
@@ -270,6 +251,7 @@
     [[PearlAppDelegate get] didUpdateConfigForKey:@selector(currentTrack) fromValue:oldTrack];
 #endif
 }
+
 -(NSString *) currentTrackName {
 
     id currentTrack = self.currentTrack;
@@ -279,6 +261,7 @@
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:currentTrack];
     return [[self trackNames] objectAtIndex:currentTrackIndex];
 }
+
 -(NSString *) playingTrackName {
 
     id playingTrack = self.playingTrack;
@@ -295,7 +278,7 @@
 
 #pragma mark Game Configuration
 
-- (void)setGameRandomSeed:(NSUInteger)aSeed {
+- (void)setGameRandomSeed:(unsigned)aSeed {
 
     @synchronized(self) {
         srandom(aSeed);
@@ -304,7 +287,7 @@
         _gameRandomSeeds            = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
         _gameRandomCounters         = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
         for (NSUInteger s = 0; s < PearlMaxGameRandom; ++s){
-            _gameRandomSeeds[s]     = (NSUInteger) random();
+            _gameRandomSeeds[s]     = (unsigned)random();
             _gameRandomCounters[s]  = 0;
         }
     }
@@ -343,17 +326,17 @@
 
 - (NSNumber *)fontSize {
 
-    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(fontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(fontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 
 - (NSNumber *)largeFontSize {
 
-    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(largeFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(largeFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 
 - (NSNumber *)smallFontSize {
 
-    return [NSNumber numberWithUnsignedInt:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(smallFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(smallFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 
 @end

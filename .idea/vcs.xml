@@ -2,6 +2,12 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/ASIHttpRequest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/TouchJSON" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/cocos2d-iphone" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/iOSPorts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/jrswizzle" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/External/uicolor-utilities" vcs="Git" />
   </component>
 </project>
 

@@ -37,7 +37,7 @@
 
 - (id)init {
     
-    if(!(self = [self initWithView:[[[UIScrollView alloc] init] autorelease]]))
+    if(!(self = [self initWithView:[[UIScrollView alloc] init]]))
         return nil;
 
     return self;
@@ -53,7 +53,7 @@
     CGRect contentFrame         = applicationFrame;
     contentFrame.origin         = CGPointZero;
 
-    self.scrollView                  = [[[UIScrollView alloc] initWithFrame:applicationFrame] autorelease];
+    self.scrollView                  = [[UIScrollView alloc] initWithFrame:applicationFrame];
     self.contentView                 = aView;
     self.contentView.frame           = contentFrame;
     self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -72,7 +72,7 @@
 
 - (PearlLayout *)addLogo:(UIImage *)logoImage {
 
-    UIImageView *logo   = [[[UIImageView alloc] initWithImage:logoImage] autorelease];
+    UIImageView *logo   = [[UIImageView alloc] initWithImage:logoImage];
     [logo setCenter:CGPointMake(self.contentView.frame.size.width / 2, logo.frame.size.height / 2)];
     [logo setAutoresizingMask:
      UIViewAutoresizingFlexibleLeftMargin |
@@ -121,7 +121,7 @@
 
 - (PearlLayout *)addSpace:(CGFloat)space {
     
-    UIView *spaceView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, space)] autorelease];
+    UIView *spaceView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, space)];
     return [self add: spaceView];
 }
 
@@ -158,16 +158,6 @@
     self.lastChild = newView;
     
     return self;
-}
-
-
-- (void)dealloc {
-    
-    self.scrollView = nil;
-    self.contentView = nil;
-    self.lastChild = nil;
-    
-    [super dealloc];
 }
 
 @end

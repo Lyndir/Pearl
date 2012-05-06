@@ -68,7 +68,6 @@
     loadingBar.position     = ccp(self.contentSize.width / 2 - 50, 40);
     loadingBar.target       = ccpAdd(loadingBar.position, ccp(100, 0));
     [self addChild:loadingBar];
-    [loadingBar release];
     
     self.switching = NO;
     
@@ -98,11 +97,8 @@
         // Build a transition scene from the splash scene to the game scene.
         CCTransitionScene *transitionScene = [[PearlCCSplashTransition alloc] initWithGameScene:uiScene];
         
-        [uiScene release];
-        
         // Start the scene and bring up the menu.
         [[CCDirector sharedDirector] replaceScene:transitionScene];
-        [transitionScene release];
     }
 }
 

@@ -72,7 +72,7 @@
         return self;
     
     tappedButtonBlock               = [aTappedButtonBlock copy];
-    alertView                       = [[UIAlertView alloc] initWithTitle:title message:message delegate:[self retain]
+    alertView                       = [[UIAlertView alloc] initWithTitle:title message:message delegate:self
                                                        cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
     
     if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
@@ -92,7 +92,7 @@
         alertLabel.text = message;
         self.alertView.message = @"\n\n\n";
         
-        self.alertField = [[[UITextField alloc] initWithFrame:CGRectMake(16, 83, 252, 25)] autorelease];
+        self.alertField = [[UITextField alloc] initWithFrame:CGRectMake(16, 83, 252, 25)];
         alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
         alertField.borderStyle = UITextBorderStyleRoundedRect;
         if (viewStyle == UIAlertViewStyleSecureTextInput)
@@ -101,7 +101,6 @@
         [self.alertView addSubview:alertLabel];
         [self.alertView addSubview:self.alertField];
         [alertField becomeFirstResponder];
-        [alertLabel release];
     }
     
     if (firstOtherTitle && otherTitlesList) {
@@ -155,8 +154,8 @@
                           tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                                 cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
-    return [[[[PearlAlert alloc] initWithTitle:title message:message viewStyle:viewStyle
-                                      tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] autorelease] showAlert];
+    return [[[PearlAlert alloc] initWithTitle:title message:message viewStyle:viewStyle
+                                      tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] showAlert];
 }
 
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
@@ -167,18 +166,6 @@
     va_start(otherTitlesList, otherTitles);
     
     return [self showAlertWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
-}
-
-
-- (void)dealloc {
-    
-    [alertView release];
-    alertView = nil;
-    
-    [tappedButtonBlock release];
-    tappedButtonBlock = nil;
-    
-    [super dealloc];
 }
 
 
@@ -211,9 +198,6 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
     [((NSMutableArray *) [PearlAlert activeAlerts]) removeObject:self];
-    
-    [tappedButtonBlock release];
-    tappedButtonBlock = nil;
 }
 
 

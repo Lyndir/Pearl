@@ -56,16 +56,6 @@
     return self;
 }
 
-- (void)dealloc {
-    
-    self.userDescription            = nil;
-    self.userDescriptionArguments   = nil;
-    self.technicalDescription       = nil;
-    self.result                     = nil;
-    
-    [super dealloc];
-}
-
 @end
 
 @implementation PearlWSController
@@ -118,7 +108,7 @@
     
     switch (method) {
         case PearlWSRequestMethodGET_REST: {
-            ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
+            ASIFormDataRequest *formRequest = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
             request = formRequest;
             
             NSMutableString *urlString = [[[self serverURL] absoluteString] mutableCopy];
@@ -137,7 +127,7 @@
              [formRequest encodeURL:REQUEST_KEY_VERSION],
              [formRequest encodeURL:[PearlConfig get].build]];
             
-            loadRequest = [[^{
+            loadRequest = [^{
                 NSError *error = nil;
                 NSURLResponse *response = nil;
                 NSData *responseData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]
@@ -145,13 +135,13 @@
                 request.error = error;
                 
                 return responseData;
-            } copy] autorelease];
+            } copy];
             break;
         }
             
         case PearlWSRequestMethodPOST_REST: {
             // Build the request.
-            ASIFormDataRequest *formRequest = [[[ASIFormDataRequest alloc] initWithURL:[self serverURL]] autorelease];
+            ASIFormDataRequest *formRequest = [[ASIFormDataRequest alloc] initWithURL:[self serverURL]];
             request = formRequest;
             
             [formRequest setPostFormat:ASIURLEncodedPostFormat];
@@ -163,35 +153,35 @@
             }
             [formRequest setPostValue:[PearlConfig get].build forKey:REQUEST_KEY_VERSION];
             
-            loadRequest = [[^{
+            loadRequest = [^{
                 [request startSynchronous];
                 
-                return [[request.responseData retain] autorelease];
-            } copy] autorelease];
+                return request.responseData;
+            } copy];
             break;
         }
             
         case PearlWSRequestMethodPOST_JSON: {
             // Build the request.
-            request = [[[ASIHTTPRequest alloc] initWithURL:[self serverURL]] autorelease];
+            request = [[ASIHTTPRequest alloc] initWithURL:[self serverURL]];
             
             NSError *jsonError = nil;
-            [request setPostBody:[[[[CJSONSerializer serializer] serializeDictionary:parameters error:&jsonError] mutableCopy] autorelease]];
+            [request setPostBody:[[[CJSONSerializer serializer] serializeDictionary:parameters error:&jsonError] mutableCopy]];
             if (jsonError != nil) {
                 err(@"JSON: %@, for request:\n%@", jsonError, request.url);
                 return nil;
             }
             
-            loadRequest = [[^{
+            loadRequest = [^{
                 [request startSynchronous];
                 
-                return [[request.responseData retain] autorelease];
-            } copy] autorelease];
+                return request.responseData;
+            } copy];
             break;
         }
     }
     
-    dispatch_block_t handleRequest = [[^{
+    dispatch_block_t handleRequest = [^{
         NSData *responseData = loadRequest();
         if ([request isCancelled]) {
             dbg(@"Cancelled: %@", request.url);
@@ -201,7 +191,7 @@
         if (request.error)
             err(@"Failed from: %@, error: %@", request.url, request.error);
         else
-            trc(@"In from: %@, data:\n%@", request.url, [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+            trc(@"In from: %@, data:\n%@", request.url, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
         
         if ([self isSynchronous])
             completion(responseData, request.error);
@@ -209,7 +199,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(responseData, request.error);
             });
-    } copy] autorelease];
+    } copy];
     
     if (request) {
         if ([self isSynchronous])
@@ -250,8 +240,8 @@
     // Trim off non-executable-JSON prefix.
     if (responseData.length >= [JSON_NON_EXECUTABLE_PREFIX length] &&
         [JSON_NON_EXECUTABLE_PREFIX isEqualToString:
-         [[[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
-                                encoding:NSUTF8StringEncoding] autorelease]])
+         [[NSString alloc] initWithData:[responseData subdataWithRange:NSMakeRange(0, [JSON_NON_EXECUTABLE_PREFIX length])]
+                                encoding:NSUTF8StringEncoding]])
         responseData = [responseData subdataWithRange:
                         NSMakeRange([JSON_NON_EXECUTABLE_PREFIX length], [responseData length] - [JSON_NON_EXECUTABLE_PREFIX length])];
     
@@ -259,8 +249,7 @@
     id jsonError = nil;
     NSDictionary *resultDictionary = [NSDictionary dictionaryWithJSONData:responseData error:&jsonError];
     if (jsonError != nil) {
-        err(@"JSON: %@, for response:\n%@", jsonError,
-            [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease]);
+        err(@"JSON: %@, for response:\n%@", jsonError, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
 #ifdef PEARL_UIKIT
         if (popupOnError)
             [PearlAlert showError:[PearlWSStrings get].errorWSResponseInvalid];

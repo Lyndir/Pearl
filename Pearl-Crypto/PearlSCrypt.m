@@ -43,11 +43,6 @@
     return self;
 }
 
-- (void)dealloc {
-    
-    [super dealloc];
-}
-
 static BOOL checkResult(int resultCode) {
     
     if (resultCode == 0)

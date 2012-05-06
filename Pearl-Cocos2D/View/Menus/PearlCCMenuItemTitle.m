@@ -25,7 +25,7 @@
 
 + (PearlCCMenuItemTitle *)itemWithString:(NSString *)title {
     
-    return [[[self alloc] initWithString:title] autorelease];
+    return [[self alloc] initWithString:title];
 }
 
 - (id)initWithString:(NSString *)title {

@@ -58,15 +58,14 @@
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding {
     
     NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   (id)kSecClassKey,                (id)kSecClass,
-                                   [[NSString stringWithFormat:@"%@-priv", tag] dataUsingEncoding:NSUTF8StringEncoding],
-                                   (id)kSecAttrApplicationTag,
-                                   (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
-                                   (id)kCFBooleanTrue,              (id)kSecReturnRef,
+                                   (__bridge id)kSecClassKey,                                                       (__bridge id)kSecClass,
+                                   [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
+                                   (__bridge id)kSecAttrKeyTypeRSA,                                                 (__bridge id)kSecAttrKeyType,
+                                   (id)kCFBooleanTrue,                                                              (__bridge id)kSecReturnRef,
                                    nil];
     
     SecKeyRef privateKey = nil;
-    OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)queryAttr, (CFTypeRef *) &privateKey);
     if (status != errSecSuccess || privateKey == nil) {
         err(@"During key lookup: %@", NSStringFromErrSec(status));
         return nil;
@@ -102,25 +101,25 @@
 
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
     
-    OSStatus status = SecItemUpdate((CFDictionaryRef)query, (CFDictionaryRef)attributes);
+    OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
     if (status == errSecItemNotFound) {
-        NSMutableDictionary *newItem = [[query mutableCopy] autorelease];
+        NSMutableDictionary *newItem = [query mutableCopy];
         [newItem addEntriesFromDictionary:attributes];
         
-        status = SecItemAdd((CFDictionaryRef)newItem, NULL);
+        status = SecItemAdd((__bridge CFDictionaryRef)newItem, NULL);
         if (status != noErr)
             err(@"While adding keychain item: %@: %@",
                 newItem, NSStringFromErrSec(status));
     } else if (status != noErr)
         err(@"While updating keychain item: %@ with attributes: %@: %@",
             query, attributes, NSStringFromErrSec(status));
-
+    
     return status;
 }
 
 + (OSStatus)deleteItemForQuery:(NSDictionary *)query {
     
-    OSStatus status = SecItemDelete((CFDictionaryRef)query);
+    OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
     if (status != noErr && status != errSecItemNotFound)
         err(@"While looking for keychain item: %@: %@",
             query, NSStringFromErrSec(status));
@@ -130,14 +129,18 @@
 
 + (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result {
     
-    return SecItemCopyMatching((CFDictionaryRef)query, (CFTypeRef *)result);
+    CFTypeRef cfResult = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &cfResult);
+    *result = (__bridge_transfer id)cfResult;
+    
+    return status;
 }
 
 + (NSDictionary *)createQueryForClass:(CFTypeRef)kSecClassValue
                            attributes:(NSDictionary *)kSecAttrDictionary
                               matches:(NSDictionary *)kSecMatchDictionary {
     
-    NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:kSecClassValue forKey:kSecClass];
+    NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:(__bridge id)kSecClassValue forKey:(__bridge id)kSecClass];
     [query addEntriesFromDictionary:kSecAttrDictionary];
     [query addEntriesFromDictionary:kSecMatchDictionary];
     
@@ -146,8 +149,8 @@
 
 + (id)runQuery:(NSDictionary *)query returnType:(CFTypeRef)kSecReturn {
     
-    NSMutableDictionary *dataQuery = [[query mutableCopy] autorelease];
-    [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:kSecReturn];
+    NSMutableDictionary *dataQuery = [query mutableCopy];
+    [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturn];
     
     id result = nil;
     OSStatus status = [self findItemForQuery:dataQuery into:&result];
@@ -182,28 +185,26 @@
     
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     NSDictionary *privKeyAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [[NSString stringWithFormat:@"%@-priv", tag] dataUsingEncoding:NSUTF8StringEncoding],
-                                   (id)kSecAttrApplicationTag,
+                                   [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
                                    nil];
     NSDictionary *pubKeyAttr    = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   [[NSString stringWithFormat:@"%@-pub", tag] dataUsingEncoding:NSUTF8StringEncoding],
-                                   (id)kSecAttrApplicationTag,
+                                   [[tag stringByAppendingString:@"-pub"] dataUsingEncoding:NSUTF8StringEncoding],  (__bridge id)kSecAttrApplicationTag,
                                    nil];
 #endif
     NSDictionary *keyPairAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
-                                   [NSNumber numberWithInt:1024],   (id)kSecAttrKeySizeInBits,
-                                   (id)kCFBooleanTrue,              (id)kSecAttrIsPermanent,
+                                   (__bridge id)kSecAttrKeyTypeRSA,     (__bridge id)kSecAttrKeyType,
+                                   [NSNumber numberWithInt:1024],       (__bridge id)kSecAttrKeySizeInBits,
+                                   (id)kCFBooleanTrue,                  (__bridge id)kSecAttrIsPermanent,
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-                                   privKeyAttr,                     (id)kSecPrivateKeyAttrs,
-                                   pubKeyAttr,                      (id)kSecPublicKeyAttrs,
+                                   privKeyAttr,                         (__bridge id)kSecPrivateKeyAttrs,
+                                   pubKeyAttr,                          (__bridge id)kSecPublicKeyAttrs,
 #else
                                    [tag dataUsingEncoding:NSUTF8StringEncoding],
                                    (id)kSecAttrApplicationTag,
 #endif
                                    nil];
     
-    OSStatus status = SecKeyGeneratePair((CFDictionaryRef)keyPairAttr, nil, nil);
+    OSStatus status = SecKeyGeneratePair((__bridge CFDictionaryRef)keyPairAttr, nil, nil);
     if (status != errSecSuccess) {
         err(@"During key generation: %@", NSStringFromErrSec(status));
         return NO;
@@ -220,21 +221,22 @@
 #else
     NSData *applicationTag = [tag dataUsingEncoding:NSUTF8StringEncoding];
 #endif
-    NSDictionary *queryAttr     = [NSDictionary dictionaryWithObjectsAndKeys:
-                                   (id)kSecClassKey,                (id)kSecClass,
-                                   applicationTag,                  (id)kSecAttrApplicationTag,
-                                   (id)kSecAttrKeyTypeRSA,          (id)kSecAttrKeyType,
-                                   (id)kCFBooleanTrue,              (id)kSecReturnData,
-                                   nil];
+    NSDictionary *query     = [NSDictionary dictionaryWithObjectsAndKeys:
+                               (__bridge id)kSecClassKey,       (__bridge id)kSecClass,
+                               applicationTag,                  (__bridge id)kSecAttrApplicationTag,
+                               (__bridge id)kSecAttrKeyTypeRSA, (__bridge id)kSecAttrKeyType,
+                               (__bridge id)kCFBooleanTrue,     (__bridge id)kSecReturnData,
+                               nil];
     
     // Get the key bits.
-    OSStatus status = SecItemCopyMatching((CFDictionaryRef)queryAttr, (CFTypeRef *)&publicKeyData);
+    CFTypeRef cfResult = NULL;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, &cfResult);
+    publicKeyData = (__bridge_transfer id)cfResult;
     if (status != errSecSuccess) {
         err(@"During public key export: %@", NSStringFromErrSec(status));
         return nil;
     }
     
-    [publicKeyData autorelease];
     return [PearlCryptUtils derEncodeRSAKey:publicKeyData];
 }
 

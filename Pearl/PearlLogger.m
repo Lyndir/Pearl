@@ -37,7 +37,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
 
 + (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
     
-    return [[[self alloc] initWithMessage:aMessage at:anOccurance withLevel:aLevel] autorelease];
+    return [[self alloc] initWithMessage:aMessage at:anOccurance withLevel:aLevel];
 }
 
 
@@ -95,14 +95,6 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
             [self levelDescription], self.message];
 }
 
-- (void)dealloc {
-    
-    self.message = nil;
-    self.occurance = nil;
-    
-    [super dealloc];
-}
-
 @end
 
 
@@ -151,9 +143,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     for (PearlLogMessage *message in self.messages)
         [formattedLog appendString:[message description]];
     
-    [dateFormatter release];
-    
-    return [formattedLog autorelease];
+    return formattedLog;
 }
 
 
@@ -170,7 +160,6 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     
     NSString *messageString = [[NSString alloc] initWithFormat:format arguments:argList];
     PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
-    [messageString release];
     
     va_end(argList);
     
@@ -202,7 +191,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelTrace andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelTrace andMessage:message];
 }
 
 
@@ -213,7 +202,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelDebug andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelDebug andMessage:message];
 }
 
 
@@ -224,7 +213,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelInfo andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelInfo andMessage:message];
 }
 
 
@@ -235,7 +224,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelWarn andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelWarn andMessage:message];
 }
 
 
@@ -246,7 +235,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelError andMessage:[message autorelease]];
+    return [self logWithLevel:PearlLogLevelError andMessage:message];
 }
 
 
@@ -257,15 +246,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
     
-    return [self logWithLevel:PearlLogLevelFatal andMessage:[message autorelease]];
-}
-
-
-- (void)dealloc {
-    
-    self.messages = nil;
-    
-    [super dealloc];
+    return [self logWithLevel:PearlLogLevelFatal andMessage:message];
 }
 
 @end

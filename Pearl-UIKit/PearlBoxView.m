@@ -37,7 +37,7 @@
 
 + (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
     
-    return [[[self alloc] initWithFrame:aFrame color:aColor width:aWidth] autorelease];
+    return [[self alloc] initWithFrame:aFrame color:aColor width:aWidth];
 }
 
 - (id)init {

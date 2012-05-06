@@ -94,7 +94,7 @@
         }
         
         if(self.audioPlayer == nil)
-            self.audioPlayer = [[[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil] autorelease];
+            self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:nextUrl error:nil];
         
         [self.audioPlayer setDelegate:self];
         [self.audioPlayer play];
@@ -120,16 +120,6 @@
 }
 
 
--(void) dealloc {
-    
-    self.audioPlayer = nil;
-    self.nextTrack = nil;
-    self.effects = nil;
-
-    [super dealloc];
-}
-
-
 +(void) vibrate {
     
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
@@ -147,16 +137,14 @@
 }
 
 
-+(const SystemSoundID) loadEffectWithName:(NSString *)bundleRef {
++(const SystemSoundID) loadEffectWithName:(NSString *)resource {
     
     // Get the URL to the sound file to play
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(mainBundle, (CFStringRef) bundleRef, NULL, NULL);
+    NSURL *url = [[NSBundle mainBundle] URLForResource:resource withExtension:nil];
     
     // Create a system sound object representing the sound file
     SystemSoundID soundFileObject;
-    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundFileObject);
-    CFRelease(soundFileURLRef);
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundFileObject);
     
     return soundFileObject;
 }

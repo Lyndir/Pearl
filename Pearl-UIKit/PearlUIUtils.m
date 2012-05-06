@@ -109,7 +109,7 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
 - (UIImage *)highlightedImage {
     
     const CGRect    bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
-    UIColor         *color = [[[UIColor alloc] initWithWhite:1 alpha:0.7f] autorelease];
+    UIColor         *color = [[UIColor alloc] initWithWhite:1 alpha:0.7f];
     
     UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
     CGContextRef    context = UIGraphicsGetCurrentContext();
@@ -209,8 +209,7 @@ static NSMutableSet     *dismissableResponders;
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:scrollView.window];
-    [keyboardScrollView_current release];
-    keyboardScrollView_current = [scrollView retain];
+    keyboardScrollView_current = scrollView;
 }
 
 + (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
@@ -319,8 +318,7 @@ static NSMutableSet     *dismissableResponders;
     assert(!keyboardScrollView_resized);
     
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
-    [keyboardScrollView_resized release];
-    keyboardScrollView_resized = [keyboardScrollView_current retain];
+    keyboardScrollView_resized = keyboardScrollView_current;
     
     NSDictionary* userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
@@ -463,12 +461,12 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"background"];
         [properties addObject:@"disabledBackground"];
         [properties addObject:@"clearButtonMode"];
-        [view setLeftView:[[self copyOf:[view leftView]] autorelease]];
+        [view setLeftView:[self copyOf:[view leftView]]];
         [properties addObject:@"leftViewMode"];
-        [view setRightView:[[self copyOf:[view rightView]] autorelease]];
+        [view setRightView:[self copyOf:[view rightView]]];
         [properties addObject:@"rightViewMode"];
-        [view setInputView:[[self copyOf:[view inputView]] autorelease]];
-        [view setInputAccessoryView:[[self copyOf:[view inputAccessoryView]] autorelease]];
+        [view setInputView:[self copyOf:[view inputView]]];
+        [view setInputAccessoryView:[self copyOf:[view inputAccessoryView]]];
     }
     
     // UIButton
@@ -501,7 +499,7 @@ static NSMutableSet     *dismissableResponders;
     // Add copy to view's hierarchy and copy on recursively.
     [superView addSubview:copy];
     for (UIView *subView in [view subviews])
-        [[self copyOf:subView addTo:copy] release];
+        [self copyOf:subView addTo:copy];
     
     return copy;
 }

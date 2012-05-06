@@ -15,6 +15,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "cocos2d.h"
 
 #define kPearlGLAttributeNameSize @"a_size"
 

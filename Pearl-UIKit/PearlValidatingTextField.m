@@ -28,7 +28,7 @@
 
 
 @implementation PearlValidatingTextField
-@synthesize validationDelegate = _validationDelegate;
+@synthesize validationDelegate;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     

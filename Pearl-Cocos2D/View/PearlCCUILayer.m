@@ -128,10 +128,10 @@
         [self schedule:@selector(popMessageQueue:) interval:1.5f];
     }
     
-    NSString *msg = [[self.messageQueue lastObject] retain];
+    NSString *msg = [self.messageQueue lastObject];
     [self.messageQueue removeLastObject];
     
-    NSInvocation *callback = [[self.callbackQueue lastObject] retain];
+    NSInvocation *callback = [self.callbackQueue lastObject];
     [self.callbackQueue removeLastObject];
     
     [self resetMessage:msg];
@@ -142,9 +142,6 @@
     
     if(callback != (id)[NSNull null])
         [callback invoke];
-    
-    [callback release];
-    [msg release];
 }
 
 
@@ -174,17 +171,6 @@
     [self.messageLabel setPosition:ccp([self.messageLabel contentSize].width / 2 + [[PearlConfig get].fontSize intValue],
                                   winSize.height + [[PearlConfig get].fontSize intValue])];
     [self.messageLabel setOpacity:0xff];
-}
-
-
--(void) dealloc {
-    
-    self.rotateAction = nil;
-    self.messageQueue = nil;
-    self.callbackQueue = nil;
-    self.messageLabel = nil;
-    
-    [super dealloc];
 }
 
 

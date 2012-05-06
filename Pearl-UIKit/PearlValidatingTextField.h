@@ -30,9 +30,8 @@
 
     BOOL                            (^_isValid)(void);
     UIView                          *_validView, *_invalidView;
-    id<PearlValidatingTextFieldDelegate> _validationDelegate;
 }
 
-@property (nonatomic, assign) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
+@property (nonatomic, weak) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
 
 @end

@@ -56,14 +56,14 @@
         [settings addObject:NSStringFromSelector(item)];
     va_end(list);
 
-    return [self menuWithDelegate:aDelegate logo:aLogo settingsFromArray:[settings autorelease]];
+    return [self menuWithDelegate:aDelegate logo:aLogo settingsFromArray:settings];
 }
 
 
 + (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
                     settingsFromArray:(NSArray *)settings {
 
-    return [[[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings] autorelease];
+    return [[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings];
 }
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
@@ -83,7 +83,7 @@
         [settings addObject:NSStringFromSelector(item)];
     va_end(list);
 
-    return [self initWithDelegate:aDelegate logo:aLogo settingsFromArray:[settings autorelease]];
+    return [self initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings];
 }
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
@@ -127,12 +127,12 @@
             label = setting;
 
         // Add the setting to the menu.
-        [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:menuItem]];
+        [mutableItemConfigs setObject:setting forKey:[NSValue valueWithPointer:(void *)menuItem]];
         [menuItems addObject:[PearlCCMenuItemTitle itemWithString:label]];
         [menuItems addObject:menuItem];
     }
 
-    return [super initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+    return [super initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }
 
 
@@ -153,7 +153,7 @@
             [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
 
         // Build an invocation for the signature & invoke it.
-        id ret;
+        __unsafe_unretained id ret;
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
         [invocation setSelector:s];
         [invocation invokeWithTarget:t];
@@ -197,14 +197,15 @@
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
     [invocation setTarget:t];
     [invocation setSelector:setterS];
-    [invocation setArgument:&toggledValue atIndex:2];
+    __unsafe_unretained id argument = toggledValue;
+    [invocation setArgument:&argument atIndex:2];
     [invocation invoke];
 }
 
 
 - (SEL)configForItem:(CCMenuItemToggle *)item {
     
-    return NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:item]]);
+    return NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:(void *)item]]);
 }
 
 
@@ -216,15 +217,6 @@
             return [itemValue pointerValue];
     
     return nil;
-}
-
-
-- (void)dealloc {
-
-    self.configDelegate = nil;
-    self.itemConfigs = nil;
-
-    [super dealloc];
 }
 
 @end

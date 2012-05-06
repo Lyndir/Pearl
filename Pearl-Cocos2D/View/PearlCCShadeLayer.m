@@ -94,8 +94,7 @@
     if (self.backButton)
         [self.backMenu removeChild:self.backButton cleanup:YES];
     
-    [_backButton release];
-    _backButton = [aBackButton retain];
+    _backButton = aBackButton;
     if (!self.backButton) {
         _backButton = self.defaultBackButton;
         self.backMenu.visible = self.backInvocation != nil;
@@ -128,8 +127,7 @@
     if (self.nextButton)
         [self.nextMenu removeChild:self.nextButton cleanup:YES];
 
-    [_nextButton release];
-    _nextButton = [aNextButton retain];
+    _nextButton = aNextButton;
     if (!self.nextButton) {
         _nextButton = self.defaultNextButton;
         self.nextMenu.visible = self.nextInvocation != nil;
@@ -238,8 +236,7 @@
     
     [self removeChild:self.background cleanup:YES];
     
-    [_background release];
-    _background = [aBackground retain];
+    _background = aBackground;
     if (!self.background)
         return;
     
@@ -262,22 +259,6 @@
     
     if (CGPointEqualToPoint(newPosition, CGPointZero))
         self.fadeNextEntry   = YES;
-}
-
-
-- (void)dealloc {
-
-    self.background = nil;
-    [_backButton release];
-    _backButton = nil;
-    [_nextButton release];
-    _nextButton = nil;
-    self.backMenu = nil;
-    self.nextMenu = nil;
-    self.backInvocation = nil;
-    self.nextInvocation = nil;
-
-    [super dealloc];
 }
 
 @end

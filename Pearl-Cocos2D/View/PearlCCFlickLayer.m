@@ -49,13 +49,13 @@
     }
     va_end(list);
     
-    return [self flickSpritesFromArray:[sprites autorelease]];
+    return [self flickSpritesFromArray:sprites];
 }
 
 
 + (PearlCCFlickLayer *)flickSpritesFromArray:(NSArray *)sprites {
     
-    return [[[self alloc] initWithSpritesFromArray:sprites] autorelease];
+    return [[self alloc] initWithSpritesFromArray:sprites];
 }
 
 
@@ -70,7 +70,7 @@
     }
     va_end(list);
 
-    return [self initWithSpritesFromArray:[sprites autorelease]];
+    return [self initWithSpritesFromArray:sprites];
 }
 
 - (id)initWithSpritesFromArray:(NSArray *)sprites {
@@ -130,16 +130,6 @@
 - (void)left:(id)sender {
     
     [self.content scrollBy:self.content.scrollStep];
-}
-
-
-- (void)dealloc {
-
-    self.content = nil;
-    self.right = nil;
-    self.left = nil;
-
-    [super dealloc];
 }
 
 @end

@@ -30,7 +30,7 @@
 
 + (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
     
-    return [[[self alloc] initWithString:symbol target:aTarget selector:aSelector] autorelease];
+    return [[self alloc] initWithString:symbol target:aTarget selector:aSelector];
 }
 
 

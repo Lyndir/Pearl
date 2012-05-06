@@ -26,7 +26,7 @@
 
 + (PearlCCMenuItemBlock *)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
 
-    return [[[PearlCCMenuItemBlock alloc] initWithSize:size target:target selector:selector] autorelease];
+    return [[PearlCCMenuItemBlock alloc] initWithSize:size target:target selector:selector];
 }
 
 - (id)initWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {

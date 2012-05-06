@@ -50,7 +50,7 @@
 
 +(id) nodeWithTarget:(id)t selector:(SEL)s {
     
-    return [[[PearlCCSwipeLayer alloc] initWithTarget:t selector:s] autorelease];
+    return [[PearlCCSwipeLayer alloc] initWithTarget:t selector:s];
 }
 
 
@@ -201,15 +201,6 @@
 
     [self.invocation setArgument:&_swipeForward atIndex:2];
     [self.invocation invoke];
-}
-
-
--(void) dealloc {
-    
-    self.invocation = nil;
-    self.swipeAction = nil;
-    
-    [super dealloc];
 }
 
 

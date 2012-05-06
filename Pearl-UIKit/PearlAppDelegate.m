@@ -79,9 +79,9 @@
 #endif
     
     if (!self.window) {
-        self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
+        self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef PEARL_UIKIT
-        self.window.rootViewController = [[PearlRootViewController new] autorelease];
+        self.window.rootViewController = [PearlRootViewController new];
 #endif
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
@@ -200,13 +200,6 @@
 
 - (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application {
     
-}
-
-- (void)dealloc {
-    
-    self.window = nil;
-    
-    [super dealloc];
 }
 
 +(PearlAppDelegate *) get {

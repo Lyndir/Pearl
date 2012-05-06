@@ -36,7 +36,7 @@
 
     NSMutableDictionary                                     *_resetTriggers;
 
-    NSUInteger                                              *_gameRandomSeeds;
+    unsigned                                                *_gameRandomSeeds;
     NSUInteger                                              *_gameRandomCounters;
     
     BOOL                                                    _notificationsChecked;
@@ -81,7 +81,7 @@
 
 - (NSDate *)today;
 
-- (void)setGameRandomSeed:(NSUInteger)aSeed;
+- (void)setGameRandomSeed:(unsigned)aSeed;
 
 /**
  * Return a default game random.  This is a special type of random value which is unaffected by external calls to srandom() or random().

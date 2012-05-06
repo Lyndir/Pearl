@@ -91,13 +91,13 @@
         [menuItems addObject:item];
     va_end(list);
     
-    return [self menuWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+    return [self menuWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }
 
 
 + (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems {
     
-    return [[[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems] autorelease];
+    return [[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }
 
 
@@ -113,7 +113,7 @@
         [menuItems addObject:item];
     va_end(list);
     
-    return [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:[menuItems autorelease]];
+    return [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }
 
 
@@ -133,7 +133,6 @@
 
 - (void)setItems:(NSArray *)newItems {
     
-    [_items release];
     _items = [newItems copy];
     
     [self reset];
@@ -142,8 +141,7 @@
 
 - (void)setLogo:(CCMenuItem *)aLogo {
 
-    [_logo release];
-    _logo = [aLogo retain];
+    _logo = aLogo;
     
     [self reset];
 }
@@ -290,18 +288,6 @@
         default:
             [NSException raise:NSInternalInconsistencyException format:@"Unsupported layout format."];
     }
-}
-
-
-- (void)dealloc {
-    
-    self.menu = nil;
-    
-    self.items = nil;
-    self.logo = nil;
-    self.delegate = nil;
-
-    [super dealloc];
 }
 
 @end

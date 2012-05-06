@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+shopt -s extglob
 
 cd "${BASH_SOURCE%/*}/.."
 main=Pearl
-for module in "$main"*/; do
+for module in "$main"!(*Tests*)/; do
     module=${module%/}
     printf "$module.."
 
@@ -12,14 +13,22 @@ for module in "$main"*/; do
             define=${module^^} define=${define//-/_}
 
             # Check wether the user has enabled the module from the Pearl prefix file (allowing all other modules to see its availability).
-            printf '#ifndef %s\n' "$define"
-            printf '#error %s used but not enabled.  If you want to use this library, first enable it with PEARL_USE(%s) in your Pearl prefix file.\n' "$define" "$define"
-            printf '#endif\n\n'
+            cat <<.
+#ifndef $define
+#error $define used but not enabled.  If you want to use this library, first enable it with #define $define in your Pearl prefix file.
+#endif
+
+#if ! __has_feature(objc_arc)
+#error $define requires ARC.  Change your build settings to enable ARC support in your compiler and try again.
+#endif
+
+.
 
             # All modules depend on Pearl.h
             [[ -e "$module-Dependencies.h" ]] && \
                 printf '#import "%s.h"\n' "$module-Dependencies"
-            printf '#import "%s.h"\n' "$main"
+            [[ $module != $main ]] && \
+                printf '#import "%s.h"\n' "$main"
 
             # Enumerate the module's headers.
             while read f; do

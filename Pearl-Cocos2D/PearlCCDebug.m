@@ -30,8 +30,6 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 
 @property (nonatomic, retain) NSString      *lastDescription;
 
-+ (PearlCCDebugActivity *)activity;
-
 - (char)activityStateWithDescription:(NSString *)description;
 
 @end
@@ -63,10 +61,10 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
     if (nodeActivity == nil)
         nodeActivity = [[NSMutableDictionary alloc] init];
 
-    NSValue *nodeValue = [NSValue valueWithPointer:node];
+    NSValue *nodeValue = [NSValue valueWithPointer:(void *)node];
     PearlCCDebugActivity *activity = [nodeActivity objectForKey:nodeValue];
     if (activity == nil)
-        [nodeActivity setObject:activity = [PearlCCDebugActivity activity] forKey:nodeValue];
+        [nodeActivity setObject:activity = [PearlCCDebugActivity new] forKey:nodeValue];
     
     NSString *nodeDescription = [self describe:node];
     char activityState = [activity activityStateWithDescription:nodeDescription];
@@ -88,11 +86,6 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 @implementation PearlCCDebugActivity
 
 @synthesize lastDescription;
-
-+ (PearlCCDebugActivity *)activity {
-    
-    return [[self new] autorelease];
-}
 
 - (id)init {
     
@@ -128,7 +121,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
     if ([self isKindOfClass:[CCScene class]])
         order = 0;
 
-    [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInt:order++] forKey:[NSValue valueWithPointer:self]];
+    [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInt:order++] forKey:[NSValue valueWithPointer:(void *)self]];
     
     [self draw_PearlCCDebug];
 }

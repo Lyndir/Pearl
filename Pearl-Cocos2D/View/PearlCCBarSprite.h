@@ -22,7 +22,7 @@
 @interface PearlCCBarSprite : CCLayer {
 
 @private
-    CCTexture2D                                     *_head, **_body, *_tail;
+    CCTexture2D                                     *_head, __strong **_body, *_tail;
 
     CGFloat                                         _age;
     NSUInteger                                      _bodyFrame, _bodyFrames;

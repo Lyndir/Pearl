@@ -61,8 +61,8 @@ uint64_t PearlSecureRandom() {
         return YES;
     }
     
-    for (int i=0; i < sizeof(random); ++i)
-        random |= (fgetc(fp) << (8 * i));
+    for (size_t i=0; i < sizeof(random); ++i)
+        random |= ((uint64_t)fgetc(fp) << (8 * i));
 #endif
     
     return random;
@@ -156,14 +156,14 @@ uint64_t PearlSecureRandom() {
 
 - (NSString *)encodeURL {
     
-    return [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL,
-                                                                      CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), kCFStringEncodingUTF8))
-            autorelease];
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)self, NULL,
+                                                                                 CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
+                                                                                 kCFStringEncodingUTF8);
 }
 
 - (NSString *)inject:(NSString *)injection interval:(NSUInteger)interval {
     
-    NSMutableString *injectedString = [[self mutableCopy] autorelease];
+    NSMutableString *injectedString = [self mutableCopy];
     for (NSUInteger i = interval; i < [injectedString length]; i += interval + 1)
         [injectedString insertString:injection atIndex:i];
     
@@ -242,7 +242,7 @@ uint64_t PearlSecureRandom() {
 		else characters[length++] = '=';	
 	}
 	
-	return [[[NSString alloc] initWithBytesNoCopy:characters length:length encoding:NSASCIIStringEncoding freeWhenDone:YES] autorelease];
+	return [[NSString alloc] initWithBytesNoCopy:characters length:length encoding:NSASCIIStringEncoding freeWhenDone:YES];
 }
 
 - (NSData *)hashWith:(PearlDigest)digest {
@@ -252,43 +252,43 @@ uint64_t PearlSecureRandom() {
             return self;
         case PearlDigestMD4: {
             unsigned char result[CC_MD4_DIGEST_LENGTH];
-            CC_MD4(self.bytes, self.length, result);
+            CC_MD4(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
-            CC_MD5(self.bytes, self.length, result);
+            CC_MD5(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestSHA1: {
             unsigned char result[CC_SHA1_DIGEST_LENGTH];
-            CC_SHA1(self.bytes, self.length, result);
+            CC_SHA1(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestSHA224: {
             unsigned char result[CC_SHA224_DIGEST_LENGTH];
-            CC_SHA224(self.bytes, self.length, result);
+            CC_SHA224(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestSHA256: {
             unsigned char result[CC_SHA256_DIGEST_LENGTH];
-            CC_SHA256(self.bytes, self.length, result);
+            CC_SHA256(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestSHA384: {
             unsigned char result[CC_SHA384_DIGEST_LENGTH];
-            CC_SHA384(self.bytes, self.length, result);
+            CC_SHA384(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlDigestSHA512: {
             unsigned char result[CC_SHA512_DIGEST_LENGTH];
-            CC_SHA512(self.bytes, self.length, result);
+            CC_SHA512(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
@@ -306,7 +306,7 @@ uint64_t PearlSecureRandom() {
     [saltedData appendBytes:&delimitor length:1];
     [saltedData appendData:salt];
     
-    return [saltedData autorelease];
+    return saltedData;
 }
 
 - (NSData *)xorWith:(NSData *)otherData {
@@ -320,7 +320,7 @@ uint64_t PearlSecureRandom() {
     for (NSUInteger b = 0; b < xorData.length; ++b)
         ((char *)xorData.bytes)[b] ^= ((char *)otherData.bytes)[b];
     
-    return [xorData autorelease];
+    return xorData;
 }
 
 @end
@@ -331,7 +331,7 @@ uint64_t PearlSecureRandom() {
     
     CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
     @try {
-        return [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid) autorelease];
+        return (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
     }
     @finally {
         CFRelease(uuid);

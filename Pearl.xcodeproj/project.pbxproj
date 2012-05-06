@@ -33,8 +33,6 @@
 		DA10976014F438C300EB000C /* PearlResettable.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10973C14F438C300EB000C /* PearlResettable.h */; };
 		DA10976114F438C300EB000C /* PearlStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10973D14F438C300EB000C /* PearlStrings.h */; };
 		DA10976214F438C300EB000C /* PearlStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10973E14F438C300EB000C /* PearlStrings.m */; };
-		DA10976314F438C300EB000C /* PearlWebUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10973F14F438C300EB000C /* PearlWebUtils.h */; };
-		DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974014F438C300EB000C /* PearlWebUtils.m */; };
 		DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10974514F438C300EB000C /* PearlStringUtils.h */; };
 		DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10974614F438C300EB000C /* PearlStringUtils.m */; };
 		DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097DA14F438D400EB000C /* PearlAudioController.h */; };
@@ -126,6 +124,20 @@
 		DA109F4014F464EC00EB000C /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F3D14F464EC00EB000C /* Reachability.h */; };
 		DA109F4114F464EC00EB000C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F3E14F464EC00EB000C /* Reachability.m */; };
 		DA109F4214F464EC00EB000C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F3E14F464EC00EB000C /* Reachability.m */; };
+		DA4425871555727B0052177D /* CCActionCatmullRom.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4425851555727B0052177D /* CCActionCatmullRom.h */; };
+		DA4425881555727C0052177D /* CCActionCatmullRom.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4425861555727B0052177D /* CCActionCatmullRom.m */; };
+		DA4425901555734A0052177D /* PearlGLShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = DA442589155573490052177D /* PearlGLShaders.h */; };
+		DA4425911555734A0052177D /* PearlGLShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = DA442589155573490052177D /* PearlGLShaders.h */; };
+		DA4425921555734A0052177D /* PearlGLShaders.m in Sources */ = {isa = PBXBuildFile; fileRef = DA44258A155573490052177D /* PearlGLShaders.m */; };
+		DA4425931555734A0052177D /* PearlGLShaders.m in Sources */ = {isa = PBXBuildFile; fileRef = DA44258A155573490052177D /* PearlGLShaders.m */; };
+		DA4425941555734A0052177D /* PearlGLShaderPointSize_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258C1555734A0052177D /* PearlGLShaderPointSize_frag.h */; };
+		DA4425951555734A0052177D /* PearlGLShaderPointSize_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258C1555734A0052177D /* PearlGLShaderPointSize_frag.h */; };
+		DA4425961555734A0052177D /* PearlGLShaderPointSize_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258D1555734A0052177D /* PearlGLShaderPointSize_vert.h */; };
+		DA4425971555734A0052177D /* PearlGLShaderPointSize_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258D1555734A0052177D /* PearlGLShaderPointSize_vert.h */; };
+		DA4425981555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */; };
+		DA4425991555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */; };
+		DA44259A1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
+		DA44259B1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
 		DAAD427C15286E9800AADDBD /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
 		DAAD427D15286E9800AADDBD /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
 		DAAD427E15286E9800AADDBD /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
@@ -548,8 +560,6 @@
 		DA10973C14F438C300EB000C /* PearlResettable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlResettable.h; sourceTree = "<group>"; };
 		DA10973D14F438C300EB000C /* PearlStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlStrings.h; sourceTree = "<group>"; };
 		DA10973E14F438C300EB000C /* PearlStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlStrings.m; sourceTree = "<group>"; };
-		DA10973F14F438C300EB000C /* PearlWebUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlWebUtils.h; sourceTree = "<group>"; };
-		DA10974014F438C300EB000C /* PearlWebUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlWebUtils.m; sourceTree = "<group>"; };
 		DA10974114F438C300EB000C /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		DA10974414F438C300EB000C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Pearl.strings; sourceTree = "<group>"; };
 		DA10974514F438C300EB000C /* PearlStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlStringUtils.h; sourceTree = "<group>"; };
@@ -1778,6 +1788,14 @@
 		DA109F3D14F464EC00EB000C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		DA109F3E14F464EC00EB000C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		DA109F6514F4686400EB000C /* scrypt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = scrypt.xcodeproj; path = External/iOSPorts/ports/security/scrypt/scrypt.xcodeproj; sourceTree = "<group>"; };
+		DA4425851555727B0052177D /* CCActionCatmullRom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionCatmullRom.h; sourceTree = "<group>"; };
+		DA4425861555727B0052177D /* CCActionCatmullRom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionCatmullRom.m; sourceTree = "<group>"; };
+		DA442589155573490052177D /* PearlGLShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaders.h; sourceTree = "<group>"; };
+		DA44258A155573490052177D /* PearlGLShaders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlGLShaders.m; sourceTree = "<group>"; };
+		DA44258C1555734A0052177D /* PearlGLShaderPointSize_frag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSize_frag.h; sourceTree = "<group>"; };
+		DA44258D1555734A0052177D /* PearlGLShaderPointSize_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSize_vert.h; sourceTree = "<group>"; };
+		DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_frag.h; sourceTree = "<group>"; };
+		DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_vert.h; sourceTree = "<group>"; };
 		DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAppDelegate.h; sourceTree = "<group>"; };
 		DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAppDelegate.m; sourceTree = "<group>"; };
 		DAAD42371528648000AADDBD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -2173,6 +2191,9 @@
 		DA10976714F438D400EB000C /* Pearl-Cocos2D */ = {
 			isa = PBXGroup;
 			children = (
+				DA442589155573490052177D /* PearlGLShaders.h */,
+				DA44258A155573490052177D /* PearlGLShaders.m */,
+				DA44258B1555734A0052177D /* private */,
 				DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */,
 				DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */,
 				DA10976A14F438D400EB000C /* Actions */,
@@ -3420,6 +3441,8 @@
 		DA109C7B14F45EEB00EB000C /* cocos2d */ = {
 			isa = PBXGroup;
 			children = (
+				DA4425851555727B0052177D /* CCActionCatmullRom.h */,
+				DA4425861555727B0052177D /* CCActionCatmullRom.m */,
 				DAE2A5851548A8A200589827 /* kazmath */,
 				DAE2A3C01548A70500589827 /* CCAction.h */,
 				DAE2A3C11548A70500589827 /* CCAction.m */,
@@ -3732,6 +3755,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DA44258B1555734A0052177D /* private */ = {
+			isa = PBXGroup;
+			children = (
+				DA44258C1555734A0052177D /* PearlGLShaderPointSize_frag.h */,
+				DA44258D1555734A0052177D /* PearlGLShaderPointSize_vert.h */,
+				DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */,
+				DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
 		DAAD42391528648000AADDBD /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -3878,8 +3912,6 @@
 				DA10973C14F438C300EB000C /* PearlResettable.h */,
 				DA10973D14F438C300EB000C /* PearlStrings.h */,
 				DA10973E14F438C300EB000C /* PearlStrings.m */,
-				DA10973F14F438C300EB000C /* PearlWebUtils.h */,
-				DA10974014F438C300EB000C /* PearlWebUtils.m */,
 				DA10974114F438C300EB000C /* README */,
 				DA10974214F438C300EB000C /* Resources */,
 				DA10974514F438C300EB000C /* PearlStringUtils.h */,
@@ -4172,6 +4204,12 @@
 				DAE2A5321548A70500589827 /* uthash.h in Headers */,
 				DAE2A5331548A70500589827 /* utlist.h in Headers */,
 				DAE2A5341548A70500589827 /* ZipUtils.h in Headers */,
+				DA4425871555727B0052177D /* CCActionCatmullRom.h in Headers */,
+				DA4425911555734A0052177D /* PearlGLShaders.h in Headers */,
+				DA4425951555734A0052177D /* PearlGLShaderPointSize_frag.h in Headers */,
+				DA4425971555734A0052177D /* PearlGLShaderPointSize_vert.h in Headers */,
+				DA4425991555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */,
+				DA44259B1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4298,6 +4336,11 @@
 				DAAD43D115299C1A00AADDBD /* Pearl-Crypto.h in Headers */,
 				DAAD43D215299C1A00AADDBD /* PearlRSAKey.h in Headers */,
 				DAAD43D415299C1A00AADDBD /* PearlSCrypt.h in Headers */,
+				DA4425901555734A0052177D /* PearlGLShaders.h in Headers */,
+				DA4425941555734A0052177D /* PearlGLShaderPointSize_frag.h in Headers */,
+				DA4425961555734A0052177D /* PearlGLShaderPointSize_vert.h in Headers */,
+				DA4425981555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */,
+				DA44259A1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4331,7 +4374,6 @@
 				DA10975E14F438C300EB000C /* PearlObjectUtils.h in Headers */,
 				DA10976014F438C300EB000C /* PearlResettable.h in Headers */,
 				DA10976114F438C300EB000C /* PearlStrings.h in Headers */,
-				DA10976314F438C300EB000C /* PearlWebUtils.h in Headers */,
 				DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */,
 				DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */,
 				DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */,
@@ -4562,6 +4604,7 @@
 		DADD1E1614F3BE5500413D09 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = Pearl;
 				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = Lyndir;
 			};
@@ -4761,6 +4804,8 @@
 				DAE2A52F1548A70500589827 /* TGAlib.m in Sources */,
 				DAE2A5311548A70500589827 /* TransformUtils.m in Sources */,
 				DAE2A5351548A70500589827 /* ZipUtils.m in Sources */,
+				DA4425881555727C0052177D /* CCActionCatmullRom.m in Sources */,
+				DA4425931555734A0052177D /* PearlGLShaders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4876,6 +4921,7 @@
 				DAAD43D015299C1A00AADDBD /* PearlKeyChain.m in Sources */,
 				DAAD43D315299C1A00AADDBD /* PearlRSAKey.m in Sources */,
 				DAAD43D515299C1A00AADDBD /* PearlSCrypt.m in Sources */,
+				DA4425921555734A0052177D /* PearlGLShaders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4924,7 +4970,6 @@
 				DA10975D14F438C300EB000C /* PearlMathUtils.m in Sources */,
 				DA10975F14F438C300EB000C /* PearlObjectUtils.m in Sources */,
 				DA10976214F438C300EB000C /* PearlStrings.m in Sources */,
-				DA10976414F438C300EB000C /* PearlWebUtils.m in Sources */,
 				DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */,
 				DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */,
 				DA109C5614F438D600EB000C /* PearlWSController.m in Sources */,
@@ -5117,6 +5162,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
@@ -5170,6 +5216,8 @@
 		DAAD42511528652F00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 			};
@@ -5218,6 +5266,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = YES;
@@ -5266,6 +5315,8 @@
 		DAAD42591528653800AADDBD /* Release-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 			};
@@ -5310,6 +5361,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5328,6 +5380,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5346,6 +5399,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5364,6 +5418,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5383,6 +5438,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -5401,6 +5457,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -5419,6 +5476,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -5437,6 +5495,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -5454,6 +5513,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5472,6 +5532,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5490,6 +5551,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5508,6 +5570,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5527,6 +5590,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5543,6 +5607,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5559,6 +5624,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5575,6 +5641,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5594,6 +5661,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
@@ -5653,6 +5721,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = YES;
@@ -5702,6 +5771,8 @@
 		DADD1E4414F3BE5500413D09 /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 			};
@@ -5710,6 +5781,8 @@
 		DADD1E4514F3BE5500413D09 /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
 			};
@@ -5876,6 +5949,7 @@
 				DAE2A5841548A75E00589827 /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
 		};
 /* End XCConfigurationList section */
 	};

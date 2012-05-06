@@ -51,7 +51,7 @@ static NSString *NSStringFromOpenSSLErrors() {
     unsigned char *buffer = malloc(length);
     BIO_read(bio, buffer, (int)length);
     
-    return [[[NSString alloc] initWithBytes:buffer length:length encoding:NSUTF8StringEncoding] autorelease];
+    return [[NSString alloc] initWithBytes:buffer length:length encoding:NSUTF8StringEncoding];
 }
 static NSString *toHexString(id object) {
     
@@ -117,11 +117,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = RSA_generate_key((int)keyBitLength, RSA_F4, NULL, NULL);
     
-    if (!rsaKey) {
-        err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -130,8 +127,6 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     if (rsaKey)
         RSA_free(rsaKey);
-    
-    [super dealloc];
 }
 
 - (id)initWithHexModulus:(NSString *)hexModulus privateExponent:(NSString *)hexExponent {
@@ -144,18 +139,15 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
     BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
     BN_hex2bn(&(rsaKey->d), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -170,18 +162,15 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
     BN_hex2bn(&(rsaKey->e), [@"10001" cStringUsingEncoding:NSUTF8StringEncoding]);
     rsaKey->d = BN_bin2bn(exponent.bytes, (int)exponent.length, NULL);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -197,8 +186,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -207,10 +195,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     BN_hex2bn(&(rsaKey->p), [hexPrimeP cStringUsingEncoding:NSUTF8StringEncoding]);
     BN_hex2bn(&(rsaKey->q), [hexPrimeQ cStringUsingEncoding:NSUTF8StringEncoding]);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -226,8 +212,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
@@ -236,10 +221,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     rsaKey->p = BN_bin2bn(primeP.bytes, (int)primeP.length, NULL);
     rsaKey->q = BN_bin2bn(primeQ.bytes, (int)primeQ.length, NULL);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -254,17 +237,14 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     BN_hex2bn(&(rsaKey->n), [hexModulus cStringUsingEncoding:NSUTF8StringEncoding]);
     BN_hex2bn(&(rsaKey->e), [hexExponent cStringUsingEncoding:NSUTF8StringEncoding]);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -279,17 +259,14 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     rsaKey->n = BN_bin2bn(modulus.bytes, (int)modulus.length, NULL);
     rsaKey->e = BN_bin2bn(exponent.bytes, (int)exponent.length, NULL);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -304,13 +281,10 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         _key = d2i_RSA_PUBKEY(NULL, &derEncodedBytes, (int)derEncodedKey.length);
     else
         _key = d2i_RSAPrivateKey(NULL, &derEncodedBytes, (int)derEncodedKey.length);
-    
-    if (!rsaKey || ![self isValid]) {
-        err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
-    }
-    
+
+    if (![self isValid])
+        return self = nil;
+
 	return self;
 }
 
@@ -325,7 +299,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     PKCS12 *pkcs12 = d2i_PKCS12(NULL, &derEncodedBytes, (int)derEncodedKey.length);
     if (!pkcs12) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        return nil;
+        return self = nil;
     }
     
     X509 *cert;
@@ -337,11 +311,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     
     _key = pkey->pkey.rsa;
     
-    if (!rsaKey || ![self isValid]) {
-        err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
 	return self;
 }
@@ -363,11 +334,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     BIO_free(bio);
     _key = pkey->pkey.rsa;
     
-    if (!rsaKey || ![self isValid]) {
-        err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
 	return self;
 }
@@ -380,8 +348,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     _key = RSA_new();
     if (!rsaKey) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-        [self release];
-        return nil;
+        return self = nil;
     }
     
     NSString *n, *e, *d, *p, *q;
@@ -397,10 +364,8 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         BN_hex2bn(&(rsaKey->q), [q cStringUsingEncoding:NSUTF8StringEncoding]);
     self.isPublicKey = (d == nil);
     
-    if (![self isValid]) {
-        [self release];
-        return nil;
-    }
+    if (![self isValid])
+        return self = nil;
     
     return self;
 }
@@ -410,7 +375,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     if (self.isPublicKey)
         return self;
     
-    return [[[PearlRSAKey alloc] initWithHexModulus:[self modulus] publicExponent:[self publicExponent]] autorelease];
+    return [[PearlRSAKey alloc] initWithHexModulus:[self modulus] publicExponent:[self publicExponent]];
 }
 
 - (int)maxSize {
@@ -419,7 +384,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 }
 
 - (BOOL)isValid {
-    
+
+    if (!rsaKey)
+        return NO;
     if (self.isPublicKey || !rsaKey->p)
         // Cannot use check_key on public keys or private keys without known p & q.
         return [[self modulus] length] && [[self privateExponent] length];
@@ -720,7 +687,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return [NSData dataWithBytes:buffer length:length];
     
     err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
-    return NO;
+    return nil;
 }
 
 - (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {

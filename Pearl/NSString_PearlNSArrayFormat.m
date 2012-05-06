@@ -22,14 +22,14 @@
 
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
     
-    id *argList = (id *)malloc(sizeof(id) * [arguments count]);
+    __unsafe_unretained id *argList = (__unsafe_unretained id *)malloc(sizeof(id) * [arguments count]);
     @try {
         [arguments getObjects:argList];
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-        return [self initWithFormat:format arguments:(va_list)argList];
+        return [self initWithFormat:format arguments:(va_list)(void *)argList];
 #else
-        return [self initWithFormat:format arguments:(__va_list_tag *)argList];
+        return [self initWithFormat:format arguments:(__va_list_tag *)(void *)argList];
 #endif
     }
     @finally {
@@ -39,14 +39,14 @@
 
 + (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
 
-    id *argList = (id *)malloc(sizeof(id) * [arguments count]);
+    __unsafe_unretained id *argList = (__unsafe_unretained id *)malloc(sizeof(id) * [arguments count]);
     @try {
         [arguments getObjects:argList];
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-        return [[[NSString alloc] initWithFormat:format arguments:(va_list)argList] autorelease];
+        return [[NSString alloc] initWithFormat:format arguments:(va_list)(void *)argList];
 #else
-        return [[[NSString alloc] initWithFormat:format arguments:(__va_list_tag *)argList] autorelease];
+        return [[NSString alloc] initWithFormat:format arguments:(__va_list_tag *)(void *)argList];
 #endif
     }
     @finally {

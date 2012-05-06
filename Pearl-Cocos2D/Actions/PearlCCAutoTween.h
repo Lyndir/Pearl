@@ -18,7 +18,7 @@
 
 typedef struct {
     BOOL active;
-    NSString *keyPath;
+    const char *keyPath;
     ccTime elapsed;
     ccTime duration;
     float ai;

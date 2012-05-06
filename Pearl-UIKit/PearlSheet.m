@@ -80,7 +80,7 @@
         return self;
     
     tappedButtonBlock               = [aTappedButtonBlock copy];
-    sheetView                       = [[UIActionSheet alloc] initWithTitle:title delegate:[self retain]
+    sheetView                       = [[UIActionSheet alloc] initWithTitle:title delegate:self
                                                          cancelButtonTitle:nil destructiveButtonTitle:nil
                                                          otherButtonTitles:firstOtherTitle, nil];
     sheetView.actionSheetStyle = viewStyle;
@@ -143,9 +143,9 @@
                                 cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
                                  otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
-    return [[[[PearlSheet alloc] initWithTitle:title message:message viewStyle:viewStyle
+    return [[[PearlSheet alloc] initWithTitle:title message:message viewStyle:viewStyle
                                       tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle destructiveTitle:destructiveTitle
-                                             otherTitle:firstOtherTitle :otherTitlesList] autorelease] showSheet];
+                                             otherTitle:firstOtherTitle :otherTitlesList] showSheet];
 }
 
 + (PearlSheet *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
@@ -160,19 +160,6 @@
                         cancelTitle:cancelTitle destructiveTitle:destructiveTitle
                          otherTitle:otherTitles :otherTitlesList];
 }
-
-
-- (void)dealloc {
-    
-    [sheetView release];
-    sheetView = nil;
-    
-    [tappedButtonBlock release];
-    tappedButtonBlock = nil;
-    
-    [super dealloc];
-}
-
 
 #pragma mark ###############################
 #pragma mark Behaviors
@@ -203,9 +190,6 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
     [((NSMutableArray *) [PearlSheet activeSheets]) removeObject:self];
-    
-    [tappedButtonBlock release];
-    tappedButtonBlock = nil;
 }
 
 

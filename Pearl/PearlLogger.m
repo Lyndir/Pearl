@@ -21,19 +21,6 @@
 
 @synthesize message, occurance, level;
 
-static NSDateFormatter *PearlLogDateFormatter = nil;
-
-+ (void)initialize {
-    
-    [super initialize];
-    
-    if (!PearlLogDateFormatter) {
-        PearlLogDateFormatter = [NSDateFormatter new];
-        [PearlLogDateFormatter setDateFormat:@"DDD'-'HH':'mm':'ss"];
-//        [PearlLogDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-    }
-}
-
 
 + (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
     
@@ -60,7 +47,7 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
     
     switch (self.level) {
         case PearlLogLevelTrace:
-            return @"[TRACE]  ";
+            return @"TRACE-   ";
             break;
         case PearlLogLevelDebug:
             return  @"DEBUG-  ";
@@ -85,8 +72,14 @@ static NSDateFormatter *PearlLogDateFormatter = nil;
 
 - (NSString *)description {
     
+    static NSDateFormatter *dateFormatter = nil;
+    if (!dateFormatter) {
+        dateFormatter = [NSDateFormatter new];
+        [dateFormatter setDateFormat:@"DDD'-'HH':'mm':'ss"];
+    }
+
     return [NSString stringWithFormat:@"%@ %@",
-            [PearlLogDateFormatter stringFromDate:self.occurance], [self messageDescription]];
+            [dateFormatter stringFromDate:self.occurance], [self messageDescription]];
 }
 
 - (NSString *)messageDescription {

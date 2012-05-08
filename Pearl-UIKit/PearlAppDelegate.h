@@ -19,7 +19,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface PearlAppDelegate : UIResponder <UIApplicationDelegate> {
+@interface PearlAppDelegate : UIResponder <UIApplicationDelegate, PearlConfigDelegate> {
 
     UIWindow                                                                *_window;
     UINavigationController                                                  *_navigationController;

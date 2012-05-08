@@ -28,6 +28,11 @@
 #ifdef PEARL_UIKIT
 #import "PearlAppDelegate.h"
 #endif
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#else
+#import <Cocoa/Cocoa.h>
+#endif
 
 
 @interface PearlConfig ()
@@ -42,7 +47,7 @@
 @implementation PearlConfig
 
 @synthesize defaults = _defaults;
-@synthesize resetTriggers = _resetTriggers;
+@synthesize delegate = _delegate, resetTriggers = _resetTriggers;
 @synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
 
 @dynamic build, version, copyright, firstRun, supportedNotifications, deviceToken;
@@ -56,7 +61,7 @@
 - (id)init {
 
     if(!(self = [super init]))
-        return self;
+        return nil;
 
     _gameRandomSeeds = 0;
     _gameRandomCounters = 0;
@@ -101,11 +106,25 @@
                                      nil]];
 
     self.resetTriggers = [NSMutableDictionary dictionary];
+    
+#ifdef PEARL_UIKIT
+    self.delegate = [PearlAppDelegate get];
+#endif
 
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.build = [info objectForKey:@"CFBundleVersion"];
     self.version = [info objectForKey:@"CFBundleShortVersionString"];
     self.copyright = [info objectForKey:@"NSHumanReadableCopyright"];
+
+#if TARGET_OS_IPHONE
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil
+#else
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSApplicationWillTerminateNotification object:nil queue:nil
+#endif
+                                                  usingBlock:^(NSNotification *note) {
+                                                      self.firstRun = [NSNumber numberWithBool:NO];
+                                                      [self.defaults synchronize];
+                                                  }];
 
     return self;
 }
@@ -168,9 +187,9 @@
                 err(@"Cannot update %@: Value type is not supported by plists and is not codable: %@", selector, newValue);
         }
         [self.defaults setValue:newValue forKey:selector];
-
+        [self.delegate didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
+        
 #ifdef PEARL_UIKIT
-        [[PearlAppDelegate get] didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
         if (resetTriggerKey)
             [(id<PearlResettable>) [[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];

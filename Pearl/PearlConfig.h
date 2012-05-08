@@ -30,10 +30,17 @@
 #define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope]
 #endif
 
+@protocol PearlConfigDelegate <NSObject>
+
+- (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)oldValue;
+
+@end
+
 @interface PearlConfig : NSObject {
 
     NSUserDefaults                                          *_defaults;
 
+    id<PearlConfigDelegate>                                 delegate;
     NSMutableDictionary                                     *_resetTriggers;
 
     unsigned                                                *_gameRandomSeeds;
@@ -44,6 +51,7 @@
 }
 
 @property (nonatomic, readonly, retain) NSUserDefaults      *defaults;
+@property (nonatomic, weak) id<PearlConfigDelegate>         delegate;
 @property (nonatomic, readonly, retain) NSMutableDictionary *resetTriggers;
 
 @property (nonatomic, readwrite, retain) NSString           *build;

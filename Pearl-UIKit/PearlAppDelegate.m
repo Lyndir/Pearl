@@ -37,8 +37,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     // Log application details.
-    NSString *name = [[PearlInfoPlist get] CFBundleName];
-    NSString *displayName = [[PearlInfoPlist get] CFBundleDisplayName];
+    NSString *name = [PearlInfoPlist get].CFBundleName;
+    NSString *displayName = [PearlInfoPlist get].CFBundleDisplayName;
     NSString *build = [PearlConfig get].build;
     NSString *version = [PearlConfig get].version;
     

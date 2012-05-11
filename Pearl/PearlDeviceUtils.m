@@ -85,7 +85,7 @@
 
 + (float)uiScale {
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
     switch ([UIDevice currentDevice].userInterfaceIdiom) {
         case UIUserInterfaceIdiomPad:
             return 1024.0f / 480.0f;

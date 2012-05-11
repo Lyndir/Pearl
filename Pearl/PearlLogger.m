@@ -161,7 +161,7 @@
             return self;
     
     if (aLevel >= self.autoprintLevel)
-        CFShow((__bridge CFTypeRef)message);
+        fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
     if (message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
     
@@ -173,7 +173,7 @@
     
     for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
-            NSLog(@"%@", message);
+            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 

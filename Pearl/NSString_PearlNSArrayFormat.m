@@ -26,7 +26,7 @@
     @try {
         [arguments getObjects:argList];
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
         return [self initWithFormat:format arguments:(va_list)(void *)argList];
 #else
         return [self initWithFormat:format arguments:(__va_list_tag *)(void *)argList];
@@ -43,7 +43,7 @@
     @try {
         [arguments getObjects:argList];
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
         return [[NSString alloc] initWithFormat:format arguments:(va_list)(void *)argList];
 #else
         return [[NSString alloc] initWithFormat:format arguments:(__va_list_tag *)(void *)argList];

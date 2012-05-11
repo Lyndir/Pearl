@@ -122,7 +122,7 @@
 
 +(void) vibrate {
     
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 #else
     err(@"Vibration not supported on this platform.");

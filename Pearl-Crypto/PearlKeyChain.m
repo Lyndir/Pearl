@@ -26,7 +26,7 @@
 
 @implementation NSString (PearlKeyChain)
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     return [[self dataUsingEncoding:NSUTF8StringEncoding] signWithAssymetricKeyChainKeyFromTag:tag];
@@ -42,7 +42,7 @@
 
 @implementation NSData (PearlKeyChain)
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag {
     
     switch ([self length]) {
@@ -183,7 +183,7 @@
 
 + (BOOL)generateKeyPairWithTag:(NSString *)tag {
     
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
     NSDictionary *privKeyAttr   = [NSDictionary dictionaryWithObjectsAndKeys:
                                    [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
                                    nil];
@@ -195,7 +195,7 @@
                                    (__bridge id)kSecAttrKeyTypeRSA,     (__bridge id)kSecAttrKeyType,
                                    [NSNumber numberWithInt:1024],       (__bridge id)kSecAttrKeySizeInBits,
                                    (id)kCFBooleanTrue,                  (__bridge id)kSecAttrIsPermanent,
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
                                    privKeyAttr,                         (__bridge id)kSecPrivateKeyAttrs,
                                    pubKeyAttr,                          (__bridge id)kSecPublicKeyAttrs,
 #else
@@ -216,7 +216,7 @@
 + (NSData *)publicKeyWithTag:(NSString *)tag {
     
     NSData *publicKeyData = nil;
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
     NSData *applicationTag = [[NSString stringWithFormat:@"%@-pub", tag] dataUsingEncoding:NSUTF8StringEncoding];
 #else
     NSData *applicationTag = [tag dataUsingEncoding:NSUTF8StringEncoding];

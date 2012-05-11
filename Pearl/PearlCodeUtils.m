@@ -52,7 +52,7 @@ PearlDigest PearlDigestFromNSString(NSString *digest) {
 uint64_t PearlSecureRandom() {
     
     uint64_t random = 0;
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
     SecRandomCopyBytes(kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random);                                                                                                                                         
 #else
     FILE *fp = fopen("/dev/random", "r");

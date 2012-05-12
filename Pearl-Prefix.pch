@@ -18,14 +18,17 @@
 // Prefix header for all source files of the 'Pearl' target in the 'Pearl' project
 //
 
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+
 // Pearl Configuration
 #define PEARL
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
 #define PEARL_COCOS2D
 #endif
 #define PEARL_CRYPTO
 #define PEARL_MEDIA
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+#if TARGET_OS_IPHONE
 #define PEARL_UIKIT
 #endif
 #define PEARL_WS
@@ -34,19 +37,15 @@
 #define PEARL_WITH_OPENSSL
 #define PEARL_WITH_SCRYPT
 
-#ifdef __OBJC__
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-    #import <Foundation/Foundation.h>
+#import "Pearl.h"
+#if TARGET_OS_IPHONE
+#import "Pearl-Cocos2D.h"
 #endif
+#import "Pearl-Crypto.h"
+#import "Pearl-Media.h"
+#if TARGET_OS_IPHONE
+#import "Pearl-UIKit.h"
+#endif
+#import "Pearl-WS.h"
 
-    #import "Pearl.h"
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-    #import "Pearl-Cocos2D.h"
-#endif
-    #import "Pearl-Crypto.h"
-    #import "Pearl-Media.h"
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-    #import "Pearl-UIKit.h"
-#endif
-    #import "Pearl-WS.h"
 #endif

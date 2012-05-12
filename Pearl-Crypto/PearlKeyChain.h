@@ -57,6 +57,13 @@
 
 }
 
+/** Update an item in the keychain.
+ * 
+ * @param query A query dictionary to use for searching an existing keychain item to update.  Should contain a kSecClass and one or more of kSecAttr and kSecMatch.
+ * @param attributes A dictionary mapping the attributes (kSecAttr) and values (kSecValue) to their new content.
+ */
++ (OSStatus)updateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes;
+
 /** Add or update an item in the keychain.
  * 
  * @param query A query dictionary to use for searching an existing keychain item to update.  Should contain a kSecClass and one or more of kSecAttr and kSecMatch.

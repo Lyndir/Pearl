@@ -99,6 +99,16 @@
 
 @implementation PearlKeyChain
 
++ (OSStatus)updateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
+
+    OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
+    if (status != noErr && status != errSecItemNotFound)
+        err(@"While updating keychain item: %@: %@",
+            query, NSStringFromErrSec(status));
+    
+    return status;
+}
+
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
     
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
@@ -109,10 +119,10 @@
         status = SecItemAdd((__bridge CFDictionaryRef)newItem, NULL);
         if (status != noErr)
             err(@"While adding keychain item: %@: %@",
-                newItem, NSStringFromErrSec(status));
+                query, NSStringFromErrSec(status));
     } else if (status != noErr)
-        err(@"While updating keychain item: %@ with attributes: %@: %@",
-            query, attributes, NSStringFromErrSec(status));
+        err(@"While updating keychain item: %@: %@",
+            query, NSStringFromErrSec(status));
     
     return status;
 }
@@ -121,7 +131,7 @@
     
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
     if (status != noErr && status != errSecItemNotFound)
-        err(@"While looking for keychain item: %@: %@",
+        err(@"While deleting keychain item: %@: %@",
             query, NSStringFromErrSec(status));
     
     return status;

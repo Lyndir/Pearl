@@ -517,6 +517,76 @@
 			remoteGlobalIDString = DA67FE5D14E4834300DB7CC9;
 			remoteInfo = util;
 		};
+		DA6E4A1F155E53C500CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAAD426615286E9800AADDBD;
+			remoteInfo = "Pearl-iOS";
+		};
+		DA6E4A21155E53D000CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAAD43741529017E00AADDBD;
+			remoteInfo = "Pearl-OSX";
+		};
+		DA6E4A23155E53D600CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DADD1E1E14F3BE5500413D09;
+			remoteInfo = Pearl;
+		};
+		DA6E4A25155E53E800CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA109C6E14F45EBA00EB000C;
+			remoteInfo = cocos2d;
+		};
+		DA6E4A27155E53E800CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA109DCB14F45F7200EB000C;
+			remoteInfo = ASIHttpRequest;
+		};
+		DA6E4A29155E53E800CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA109F1114F4604000EB000C;
+			remoteInfo = "uicolor-utilities";
+		};
+		DA6E4A2B155E53F400CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA109E7B14F45FAE00EB000C;
+			remoteInfo = TouchJSON;
+		};
+		DA6E4A2D155E53F400CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA109EB814F45FF500EB000C;
+			remoteInfo = jrswizzle;
+		};
+		DA6E4A2F155E53FC00CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DADD1E1E14F3BE5500413D09;
+			remoteInfo = Pearl;
+		};
+		DA6E4A31155E545D00CFF2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DADD1E1614F3BE5500413D09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAE2A5771548A75E00589827;
+			remoteInfo = kazmath;
+		};
 		DAAD43DC1529AE1400AADDBD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DA109F6514F4686400EB000C /* scrypt.xcodeproj */;
@@ -4418,6 +4488,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A32155E545D00CFF2D5 /* PBXTargetDependency */,
 			);
 			name = cocos2d;
 			productName = "cocos2d-iphone";
@@ -4503,6 +4574,10 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A26155E53E800CFF2D5 /* PBXTargetDependency */,
+				DA6E4A28155E53E800CFF2D5 /* PBXTargetDependency */,
+				DA6E4A2A155E53E800CFF2D5 /* PBXTargetDependency */,
+				DA6E4A24155E53D600CFF2D5 /* PBXTargetDependency */,
 				DAAD43DD1529AE1400AADDBD /* PBXTargetDependency */,
 			);
 			name = "Pearl-iOS";
@@ -4522,6 +4597,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A20155E53C500CFF2D5 /* PBXTargetDependency */,
 			);
 			name = PearliOSTests;
 			productName = PearliOSTests;
@@ -4539,6 +4615,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A30155E53FC00CFF2D5 /* PBXTargetDependency */,
 				DAAD43DF1529AE1A00AADDBD /* PBXTargetDependency */,
 			);
 			name = "Pearl-OSX";
@@ -4558,6 +4635,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A22155E53D000CFF2D5 /* PBXTargetDependency */,
 			);
 			name = PearlOSXTests;
 			productName = PearlOSXTests;
@@ -4575,6 +4653,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA6E4A2C155E53F400CFF2D5 /* PBXTargetDependency */,
+				DA6E4A2E155E53F400CFF2D5 /* PBXTargetDependency */,
 			);
 			name = Pearl;
 			productName = Pearl;
@@ -5000,6 +5080,56 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DA6E4A20155E53C500CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAAD426615286E9800AADDBD /* Pearl-iOS */;
+			targetProxy = DA6E4A1F155E53C500CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A22155E53D000CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAAD43741529017E00AADDBD /* Pearl-OSX */;
+			targetProxy = DA6E4A21155E53D000CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A24155E53D600CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DADD1E1E14F3BE5500413D09 /* Pearl */;
+			targetProxy = DA6E4A23155E53D600CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A26155E53E800CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA109C6E14F45EBA00EB000C /* cocos2d */;
+			targetProxy = DA6E4A25155E53E800CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A28155E53E800CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA109DCB14F45F7200EB000C /* ASIHttpRequest */;
+			targetProxy = DA6E4A27155E53E800CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A2A155E53E800CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA109F1114F4604000EB000C /* uicolor-utilities */;
+			targetProxy = DA6E4A29155E53E800CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A2C155E53F400CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA109E7B14F45FAE00EB000C /* TouchJSON */;
+			targetProxy = DA6E4A2B155E53F400CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A2E155E53F400CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA109EB814F45FF500EB000C /* jrswizzle */;
+			targetProxy = DA6E4A2D155E53F400CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A30155E53FC00CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DADD1E1E14F3BE5500413D09 /* Pearl */;
+			targetProxy = DA6E4A2F155E53FC00CFF2D5 /* PBXContainerItemProxy */;
+		};
+		DA6E4A32155E545D00CFF2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAE2A5771548A75E00589827 /* kazmath */;
+			targetProxy = DA6E4A31155E545D00CFF2D5 /* PBXContainerItemProxy */;
+		};
 		DAAD43DD1529AE1400AADDBD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Makefile-scrypt";
@@ -5216,7 +5346,6 @@
 		DAAD42511528652F00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5315,7 +5444,6 @@
 		DAAD42591528653800AADDBD /* Release-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5771,7 +5899,6 @@
 		DADD1E4414F3BE5500413D09 /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
@@ -5781,7 +5908,6 @@
 		DADD1E4514F3BE5500413D09 /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";

@@ -146,15 +146,9 @@
 }
 
 
-- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)format, ... {
+- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString {
     
-    va_list argList;
-    va_start(argList, format);
-    
-    NSString *messageString = [[NSString alloc] initWithFormat:format arguments:argList];
     PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
-    
-    va_end(argList);
     
     for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
         if (!listener(message))

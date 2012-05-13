@@ -96,7 +96,7 @@ typedef enum {
  * @andMessage  First argument is a printf(3)-style format string.
  *              Subsequent nil-terminated arguments are arguments to the format string.
  */
-- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)format, ...;
+- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString;
 /** Print all log messages of the given level or above to the console. */
 - (void)printAllWithLevel:(PearlLogLevel)level;
 /** Log a new TRACE-level event. */

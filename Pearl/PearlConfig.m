@@ -187,7 +187,8 @@
                 err(@"Cannot update %@: Value type is not supported by plists and is not codable: %@", selector, newValue);
         }
         [self.defaults setValue:newValue forKey:selector];
-        [self.delegate didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
+        if ([self.delegate respondsToSelector:@selector(didUpdateConfigForKey:fromValue:)])
+            [self.delegate didUpdateConfigForKey:NSSelectorFromString(selector) fromValue:currentValue];
         
 #ifdef PEARL_UIKIT
         NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];

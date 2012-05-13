@@ -32,6 +32,7 @@
 
 @protocol PearlConfigDelegate <NSObject>
 
+@optional
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)oldValue;
 
 @end

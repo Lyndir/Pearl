@@ -46,12 +46,12 @@
     if (!(aDictionary == nil || (self = [super init])))
         return nil;
     
-    self.code                       = [NSNullToNil([aDictionary valueForKeyPath:@"code"]) intValue];
-    self.outdated                   = [NSNullToNil([aDictionary valueForKeyPath:@"outdated"]) boolValue];
-    self.userDescription            = NSNullToNil([aDictionary valueForKeyPath:@"userDescription"]);
-    self.userDescriptionArguments   = NSNullToNil([aDictionary valueForKeyPath:@"userDescriptionArguments"]);
-    self.technicalDescription       = NSNullToNil([aDictionary valueForKeyPath:@"technicalDescription"]);
-    self.result                     = NSNullToNil([aDictionary valueForKeyPath:@"result"]);
+    self.code                       = [NullToNil([aDictionary valueForKeyPath:@"code"]) intValue];
+    self.outdated                   = [NullToNil([aDictionary valueForKeyPath:@"outdated"]) boolValue];
+    self.userDescription            = NullToNil([aDictionary valueForKeyPath:@"userDescription"]);
+    self.userDescriptionArguments   = NullToNil([aDictionary valueForKeyPath:@"userDescriptionArguments"]);
+    self.technicalDescription       = NullToNil([aDictionary valueForKeyPath:@"technicalDescription"]);
+    self.result                     = NullToNil([aDictionary valueForKeyPath:@"result"]);
     
     return self;
 }
@@ -299,7 +299,7 @@
         if (popupOnError && (*response).code != PearlJSONResultCodeUpdateRequired) {
             NSString *errorMessage = (*response).userDescription;
             if (errorMessage && errorMessage.length) {
-                [PearlAlert showError:[NSString stringWithFormat:l(errorMessage) array:(*response).userDescriptionArguments]];
+                [PearlAlert showError:[NSString stringWithFormat:PearlLocalize(errorMessage) array:(*response).userDescriptionArguments]];
             }
             else
                 [PearlAlert showError:[PearlWSStrings get].errorWSResponseFailed];
@@ -315,7 +315,7 @@
     for(NSString *nextKey = key; nextKey; nextKey = va_arg(args, NSString*)) {
         id value = nil;
         @try {
-            value = NSNullToNil([(*response) valueForKeyPath:nextKey]);
+            value = NullToNil([(*response) valueForKeyPath:nextKey]);
         } @catch (NSException *e) {
         }
         

@@ -112,14 +112,14 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
 
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
-        dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
+        dbg(PearlString(@"%%%ds - %%@", indent), "", [view debugDescription]);
         indent += 4;
     }
 }
 
 - (void)printChildHierarchy {
 
-    [self printChildHierarchyWithIndentLevel:0];
+    [self printChildHierarchyWithIndent:0];
 }
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {

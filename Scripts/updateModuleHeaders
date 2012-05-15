@@ -18,10 +18,11 @@ for module in "$main"!(*Tests*)/; do
 #error $define used but not enabled.  If you want to use this library, first enable it with #define $define in your Pearl prefix file.
 #endif
 
+.
+            cat > "$module.m" <<.
 #if ! __has_feature(objc_arc)
 #error $define requires ARC.  Change your build settings to enable ARC support in your compiler and try again.
 #endif
-
 .
 
             # All modules depend on Pearl.h
@@ -35,6 +36,6 @@ for module in "$main"!(*Tests*)/; do
                 (( headers++ ))
                 printf '#import "%s"\n' "${f##*/}"
             done < <(find . -name private -prune -o '(' ! -name "$module.h" ! -name "$module-*.h" -name '*.h' -print ')')
-        } > "$module".h
+        } > "$module.h"
         echo "$headers")"
 done

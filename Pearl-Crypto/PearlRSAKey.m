@@ -55,7 +55,7 @@ static NSString *NSStringFromOpenSSLErrors() {
 }
 static NSString *toHexString(id object) {
     
-    if (NSNullToNil(object) == nil)
+    if (NullToNil(object) == nil)
         return nil;
     
     if ([object isKindOfClass:[NSData class]])

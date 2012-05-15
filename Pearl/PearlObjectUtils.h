@@ -18,24 +18,33 @@
 
 #import <Foundation/Foundation.h>
 
-#define va_into(__array, __firstParameter)                                                  \
-            va_list __list;                                                                 \
-            va_start(__list, __firstParameter);                                             \
-            for (id __object = __firstParameter; __object; __object = va_arg(__list, id))   \
-                [__array addObject:__object];                                               \
-            va_end(__list);
+#define va_array(__firstParameter)                                                              \
+            ({                                                                                  \
+                NSMutableArray *__array = [NSMutableArray array];                               \
+                va_list __list;                                                                 \
+                va_start(__list, __firstParameter);                                             \
+                for (id __object = __firstParameter; __object; __object = va_arg(__list, id))   \
+                    [__array addObject:__object];                                               \
+                va_end(__list);                                                                 \
+                __array;                                                                        \
+            })
 
-#define NilToNSNull(O)                                                                  \
-            ({ __typeof__(O) __o = O; __o == nil? (id)[NSNull null]: __o; })
 
-#define NSNullToNil(O)                                                                  \
-            ({ __typeof__(O) __o = O; __o == (id)[NSNull null]? nil: __o; })
+#define NilToNull(__O)                                                                          \
+            ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
+#define NullToNil(__O)                                                                          \
+            ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 
-#define throw(__format, ...)                                                            \
-            @throw [NSException                                                         \
-                    exceptionWithName:NSInternalInconsistencyException                  \
-                    reason:[NSString stringWithFormat:__format , ##__VA_ARGS__]         \
+#define Throw(__reason)                                                                         \
+            @throw [NSException                                                                 \
+                    exceptionWithName:NSInternalInconsistencyException                          \
+                    reason:__reason                                                             \
                     userInfo:nil]
+#define ThrowInfo(__reason, __userInfo)                                                         \
+            @throw [NSException                                                                 \
+                    exceptionWithName:NSInternalInconsistencyException                          \
+                    reason:__reason                                                             \
+                    userInfo:__userInfo]
 
 @interface PearlObjectUtils : NSObject {
 

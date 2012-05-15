@@ -31,16 +31,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DADD1E2E14F3BE5500413D09"
-               BuildableName = "PearlTests.octest"
-               BlueprintName = "PearlTests"
-               ReferencedContainer = "container:Pearl.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "DAAD430415286F4400AADDBD"
                BuildableName = "PearliOSTests.octest"
                BlueprintName = "PearliOSTests"
@@ -48,6 +38,15 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "DAAD426615286E9800AADDBD"
+            BuildableName = "libPearl-iOS.a"
+            BlueprintName = "Pearl-iOS"
+            ReferencedContainer = "container:Pearl.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"

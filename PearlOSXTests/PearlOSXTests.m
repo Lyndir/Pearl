@@ -33,9 +33,16 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)moo:(NSString *)args, ... {
+    
+    NSMutableArray *array = va_array(args);
+    
+    inf(@"%@", array);
+}
+
+- (void)testDefines
 {
-    STFail(@"Unit tests are not implemented yet in PearlOSXTests");
+    [self moo:@"1", @"2", nil];
 }
 
 @end

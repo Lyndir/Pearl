@@ -192,9 +192,7 @@ uint64_t PearlSecureRandom() {
 
 + (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... {
     
-    NSMutableArray *datasArray = [NSMutableArray arrayWithCapacity:3];
-    va_into(datasArray, datas);
-    
+    NSArray *datasArray = va_array(datas);
     NSUInteger capacity = [datasArray count] - 1;
     for (NSData *data in datasArray)
         capacity += data.length;

@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define str(format, ...) \
+#define PearlString(format, ...) \
     [NSString stringWithFormat:(format), ##__VA_ARGS__]
-#define l(key, ...) \
-    str([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil], ##__VA_ARGS__)
-#define lt(tableName, key, ...) \
-    str([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:tableName], ##__VA_ARGS__)
+#define PearlLocalize(key, ...) \
+    PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil], ##__VA_ARGS__)
+#define PearlLocalizeTable(tableName, key, ...) \
+    PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:tableName], ##__VA_ARGS__)
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 NSString *RPad(const NSString* string, NSUInteger l);

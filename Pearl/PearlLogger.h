@@ -19,12 +19,12 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define trc(format, ...)    [[PearlLogger get] trc:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define dbg(format, ...)    [[PearlLogger get] dbg:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define inf(format, ...)    [[PearlLogger get] inf:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define wrn(format, ...)    [[PearlLogger get] wrn:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define err(format, ...)    [[PearlLogger get] err:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define ftl(format, ...)    [[PearlLogger get] ftl:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define trc(format, ...)    [[PearlLogger get] trc:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define dbg(format, ...)    [[PearlLogger get] dbg:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define inf(format, ...)    [[PearlLogger get] inf:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define wrn(format, ...)    [[PearlLogger get] wrn:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define err(format, ...)    [[PearlLogger get] err:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define ftl(format, ...)    [[PearlLogger get] ftl:[@"%25s:%-3d | " stringByAppendingString:(format)], basename(__FILE__), __LINE__ , ##__VA_ARGS__]
 
 NSString *errstr(void);
 

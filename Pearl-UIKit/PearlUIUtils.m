@@ -93,6 +93,12 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
 
+@interface UIView (PearlUIUtils_Private)
+
+- (void)printChildHierarchyWithIndentLevel:(NSUInteger)level;
+
+@end
+
 @implementation UIView (PearlUIUtils)
 
 - (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *))continueAfter {
@@ -100,6 +106,28 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     for (UIView *subview in self.subviews)
         if (continueAfter(subview))
             [subview iterateSubviewsContinueAfter:continueAfter];
+}
+
+- (void)printSuperHierarchy {
+
+    NSUInteger indent = 0;
+    for (UIView *view = self; view; view = view.superview) {
+        dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
+        indent += 4;
+    }
+}
+
+- (void)printChildHierarchy {
+
+    [self printChildHierarchyWithIndentLevel:0];
+}
+
+- (void)printChildHierarchyWithIndent:(NSUInteger)indent {
+    
+    dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
+    
+    for (UIView *child in self.subviews)
+        [child printChildHierarchyWithIndent:indent + 4];
 }
 
 @end

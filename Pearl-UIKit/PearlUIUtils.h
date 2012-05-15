@@ -42,6 +42,8 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 @interface UIView (PearlUIUtils)
 
 - (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *subview))continueAfter;
+- (void)printSuperHierarchy;
+- (void)printChildHierarchy;
 
 @end
 

@@ -50,43 +50,43 @@ static BOOL checkResult(int resultCode) {
     
     switch (resultCode) {
         case 1:
-            err("Error determining amount of available memory: getrlimit or sysctl(hw.usermem) failed");                                                                                                                                               
+            err(@"Error determining amount of available memory: getrlimit or sysctl(hw.usermem) failed");                                                                                                                                               
             break;
         case 2:
-            err("Error reading clocks: clock_getres or clock_gettime failed");
+            err(@"Error reading clocks: clock_getres or clock_gettime failed");
             break;
         case 3:
-            err("Error computing derived key");
+            err(@"Error computing derived key");
             break;
         case 4:
-            err("Error reading salt: could not read salt from /dev/urandom");
+            err(@"Error reading salt: could not read salt from /dev/urandom");
             break;
         case 5:
-            err("OpenSSL error");
+            err(@"OpenSSL error");
             break;
         case 6:
-            err("Error allocating memory: malloc failed");
+            err(@"Error allocating memory: malloc failed");
             break;
         case 7:
-            err("Input is not valid scrypt-encrypted block");
+            err(@"Input is not valid scrypt-encrypted block");
             break;
         case 8:
-            err("Unrecognized scrypt format version");
+            err(@"Unrecognized scrypt format version");
             break;
         case 9:
-            err("Decrypting file would require too much memory");
+            err(@"Decrypting file would require too much memory");
             break;
         case 10:
-            err("Decrypting file would take too much CPU time");
+            err(@"Decrypting file would take too much CPU time");
             break;
         case 11:
-            err("Passphrase is incorrect");
+            err(@"Passphrase is incorrect");
             break;
         case 12:
-            err("Error writing output");
+            err(@"Error writing output");
             break;
         case 13:
-            err("Error reading input");
+            err(@"Error reading input");
             break;
     }
     

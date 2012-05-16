@@ -50,7 +50,8 @@
 @synthesize delegate = _delegate, resetTriggers = _resetTriggers;
 @synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
 
-@dynamic build, version, copyright, firstRun, supportedNotifications, deviceToken;
+@dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewedVersion, iTunesID;
+@dynamic supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
 @dynamic soundFx, voice, vibration;
@@ -73,6 +74,9 @@
                                      @"",                                                           NSStringFromSelector(@selector(version)),
                                      @"",                                                           NSStringFromSelector(@selector(copyright)),
                                      [NSNumber numberWithBool:YES],                                 NSStringFromSelector(@selector(firstRun)),
+                                     [NSNumber numberWithInt:0],                                    NSStringFromSelector(@selector(launchCount)),
+                                     [NSNumber numberWithBool:NO],                                  NSStringFromSelector(@selector(askForReviews)),
+                                     [NSNumber numberWithInt:5],                                    NSStringFromSelector(@selector(reviewAfterLaunches)),
 
                                      [NSNumber numberWithInt:
                                       [[PearlStrings get].fontSizeNormal intValue]],                NSStringFromSelector(@selector(fontSize)),

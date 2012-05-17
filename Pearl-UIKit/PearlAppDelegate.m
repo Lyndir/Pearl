@@ -77,7 +77,7 @@
                                      if (NullToNil([PearlConfig get].iTunesID))
                                          [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
                                      else
-                                         [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleDisplayName)];
+                                         [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
                                  }
                              }
                                    cancelTitle:[PearlStrings get].reviewLater

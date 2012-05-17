@@ -79,7 +79,7 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     
     NSString *selector = NSStringFromSelector(anInvocation.selector);
-    __unsafe_unretained NSString *value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+    __unsafe_unretained NSString *value = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:selector];
     [anInvocation setReturnValue:&value];
 }
 

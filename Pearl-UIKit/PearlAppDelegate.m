@@ -47,8 +47,9 @@
     // Log application details.
     NSString *name = [PearlInfoPlist get].CFBundleName;
     NSString *displayName = [PearlInfoPlist get].CFBundleDisplayName;
-    NSString *build = [PearlConfig get].build;
-    NSString *version = [PearlConfig get].version;
+    NSString *build = [PearlInfoPlist get].CFBundleVersion;
+    NSString *version = [PearlInfoPlist get].CFBundleShortVersionString;
+    NSString *description = [PearlInfoPlist get].GITDescription;
     
     if (!name)
         name = displayName;
@@ -58,6 +59,8 @@
         version = build;
     if (build && ![build isEqualToString:version])
         version = [NSString stringWithFormat:@"%@ (%@)", version, build];
+    if (description)
+        version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
     
     inf(@"%@ %@", name, version);
     

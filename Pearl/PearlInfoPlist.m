@@ -19,6 +19,7 @@
 
 @implementation PearlInfoPlist
 
+@dynamic GITDescription;
 @dynamic CFBundleAllowMixedLocalizations;
 @dynamic CFBundleDevelopmentRegion;
 @dynamic CFBundleDisplayName;

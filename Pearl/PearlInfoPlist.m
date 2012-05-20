@@ -80,6 +80,9 @@
     
     NSString *selector = NSStringFromSelector(anInvocation.selector);
     __unsafe_unretained NSString *value = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:selector];
+    if (!value)
+        value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+    
     [anInvocation setReturnValue:&value];
 }
 

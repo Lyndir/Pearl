@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-
+__BEGIN_DECLS
 CGRect CGRectSetX(CGRect rect, CGFloat x);
 CGRect CGRectSetY(CGRect rect, CGFloat y);
 CGRect CGRectSetWidth(CGRect rect, CGFloat width);
@@ -38,6 +38,11 @@ CGPoint CGPointFromCGSize(const CGSize size);
 CGPoint CGPointFromCGSizeCenter(const CGSize size);
 CGSize CGSizeFromCGPoint(const CGPoint point);
 CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
+
+CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
+CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
+CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
+__END_DECLS
 
 @interface UIView (PearlUIUtils)
 

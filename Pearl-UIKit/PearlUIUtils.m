@@ -92,6 +92,18 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
+CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
+    
+    return CGPointMake(to.x - from.x, to.y - from.y);
+}
+CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
+    
+    return powf(to.x - from.x, 2) + powf(to.y - from.y, 2);
+}
+CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
+    
+    return sqrtf(DistanceBetweenCGPointsSq(from, to));
+}
 
 @interface UIView (PearlUIUtils_Private)
 

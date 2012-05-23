@@ -47,22 +47,22 @@
     
     switch (self.level) {
         case PearlLogLevelTrace:
-            return @"TRACE-   ";
+            return @"TRACE-  ";
             break;
         case PearlLogLevelDebug:
-            return  @"DEBUG-  ";
+            return @"DEBUG-  ";
             break;
         case PearlLogLevelInfo:
-            return  @"INFO-   ";
+            return @"INFO-   ";
             break;
         case PearlLogLevelWarn:
-            return  @"WARNING-";
+            return @"WARNING-";
             break;
         case PearlLogLevelError:
-            return  @"ERROR-  ";
+            return @"ERROR-  ";
             break;
         case PearlLogLevelFatal:
-            return  @"FATAL-  ";
+            return @"FATAL-  ";
             break;
         default:
             [NSException raise:NSInternalInconsistencyException

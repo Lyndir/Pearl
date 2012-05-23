@@ -275,8 +275,14 @@ static NSMutableSet     *dismissableResponders;
 }
 
 + (UIView *)findFirstResonder {
-    
-    return [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
+
+    UIView *firstResponder = [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
+    if (!firstResponder)
+    for (UIWindow *window in [UIApplication sharedApplication].windows)
+        if ((firstResponder = [self findFirstResonderIn:window]))
+            break;
+
+    return firstResponder;
 }
 
 + (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {

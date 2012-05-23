@@ -64,5 +64,10 @@
 @dynamic commonButtonSave;
 @dynamic commonButtonSure;
 @dynamic commonButtonThanks;
+@dynamic reviewTitle;
+@dynamic reviewMessage;
+@dynamic reviewLater;
+@dynamic reviewNow;
+@dynamic reviewNever;
 
 @end

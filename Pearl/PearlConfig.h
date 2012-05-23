@@ -30,6 +30,12 @@
 #define PearlGameRandomFor(scope)   [[PearlConfig get] gameRandom:scope]
 #endif
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0
+#define WEAK_OR_UNRETAINED          weak
+#else
+#define WEAK_OR_UNRETAINED          unsafe_unretained
+#endif
+
 @protocol PearlConfigDelegate <NSObject>
 
 @optional
@@ -52,13 +58,18 @@
 }
 
 @property (nonatomic, readonly, retain) NSUserDefaults      *defaults;
-@property (nonatomic, weak) id<PearlConfigDelegate>         delegate;
+@property (nonatomic, WEAK_OR_UNRETAINED) id<PearlConfigDelegate> delegate;
 @property (nonatomic, readonly, retain) NSMutableDictionary *resetTriggers;
 
 @property (nonatomic, readwrite, retain) NSString           *build;
 @property (nonatomic, readwrite, retain) NSString           *version;
 @property (nonatomic, readwrite, retain) NSString           *copyright;
 @property (nonatomic, readwrite, retain) NSNumber           *firstRun;
+@property (nonatomic, readwrite, retain) NSNumber           *launchCount;
+@property (nonatomic, readwrite, retain) NSNumber           *askForReviews;
+@property (nonatomic, readwrite, retain) NSNumber           *reviewAfterLaunches;
+@property (nonatomic, readwrite, retain) NSString           *reviewedVersion;
+@property (nonatomic, readwrite, retain) NSString           *iTunesID;
 @property (nonatomic, readwrite, retain) NSNumber           *supportedNotifications;
 @property (nonatomic, readwrite, assign) BOOL               notificationsChecked;
 @property (nonatomic, readwrite, assign) BOOL               notificationsSupported;

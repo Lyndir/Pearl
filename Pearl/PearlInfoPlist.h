@@ -19,6 +19,8 @@
 
 @interface PearlInfoPlist : NSObject
 
+/** A custom key that can be used to record the description of the GIT commit that the application was built from. */
+@property (nonatomic, readonly) NSString    *GITDescription;
 /** specifies whether the bundle supports the retrieval of localized strings from frameworks. This key is used primarily by Foundation tools that link to other system frameworks and want to retrieve localized resources from those frameworks. */
 @property (nonatomic, readonly) NSNumber    *CFBundleAllowMixedLocalizations;
 /** specifies the native region for the bundle. This key contains a string value that usually corresponds to the native language of the person who wrote the bundle. The language specified by this value is used as the default language if a resource cannot be located for the user’s preferred region or language. */

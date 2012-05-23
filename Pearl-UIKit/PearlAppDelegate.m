@@ -29,18 +29,27 @@
 #endif
 #import "PearlCodeUtils.h"
 
+#ifndef ITMS_REVIEW_URL
+#define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat:\
+                                @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@", __id]]
+#endif
+#ifndef ITMS_APP_URL
+#define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
+                                @"itms://itunes.com/apps/%@", __app]]
+#endif
 
 @implementation PearlAppDelegate
 @synthesize window = _window, navigationController = _navigationController;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
+    
     // Log application details.
     NSString *name = [PearlInfoPlist get].CFBundleName;
     NSString *displayName = [PearlInfoPlist get].CFBundleDisplayName;
-    NSString *build = [PearlConfig get].build;
-    NSString *version = [PearlConfig get].version;
+    NSString *build = [PearlInfoPlist get].CFBundleVersion;
+    NSString *version = [PearlInfoPlist get].CFBundleShortVersionString;
+    NSString *description = [PearlInfoPlist get].GITDescription;
     
     if (!name)
         name = displayName;
@@ -50,8 +59,32 @@
         version = build;
     if (build && ![build isEqualToString:version])
         version = [NSString stringWithFormat:@"%@ (%@)", version, build];
+    if (description)
+        version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
     
     inf(@"%@ %@", name, version);
+    
+    [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
+    if ([[PearlConfig get].askForReviews boolValue])
+        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion])
+            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue]))
+                [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
+                                       message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
+                                     viewStyle:UIAlertViewStyleDefault
+                             tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                                 if (buttonIndex == [alert cancelButtonIndex])
+                                     return;
+                                 
+                                 [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+                                 if (buttonIndex == [alert firstOtherButtonIndex]) {
+                                     if (NullToNil([PearlConfig get].iTunesID))
+                                         [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+                                     else
+                                         [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+                                 }
+                             }
+                                   cancelTitle:[PearlStrings get].reviewLater
+                                   otherTitles:[PearlStrings get].reviewNow, [PearlStrings get].reviewNever, nil];
     
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])

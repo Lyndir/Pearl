@@ -19,6 +19,7 @@
 
 @implementation PearlInfoPlist
 
+@dynamic GITDescription;
 @dynamic CFBundleAllowMixedLocalizations;
 @dynamic CFBundleDevelopmentRegion;
 @dynamic CFBundleDisplayName;
@@ -79,7 +80,10 @@
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     
     NSString *selector = NSStringFromSelector(anInvocation.selector);
-    __unsafe_unretained NSString *value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+    __unsafe_unretained NSString *value = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:selector];
+    if (!value)
+        value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+    
     [anInvocation setReturnValue:&value];
 }
 

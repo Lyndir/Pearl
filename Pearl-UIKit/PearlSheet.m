@@ -166,7 +166,10 @@
 
 - (PearlSheet *)showSheet {
     
-    [sheetView showInView:[UIApplication sharedApplication].keyWindow.rootViewController.view];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    if (!window)
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    [sheetView showInView:window.rootViewController.view];
     [((NSMutableArray *) [PearlSheet activeSheets]) addObject:self];
     
     return self;

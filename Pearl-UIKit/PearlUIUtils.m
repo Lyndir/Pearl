@@ -92,6 +92,18 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
+CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
+    
+    return CGPointMake(to.x - from.x, to.y - from.y);
+}
+CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
+    
+    return powf(to.x - from.x, 2) + powf(to.y - from.y, 2);
+}
+CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
+    
+    return sqrtf(DistanceBetweenCGPointsSq(from, to));
+}
 
 @interface UIView (PearlUIUtils_Private)
 
@@ -275,8 +287,14 @@ static NSMutableSet     *dismissableResponders;
 }
 
 + (UIView *)findFirstResonder {
-    
-    return [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
+
+    UIView *firstResponder = [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
+    if (!firstResponder)
+    for (UIWindow *window in [UIApplication sharedApplication].windows)
+        if ((firstResponder = [self findFirstResonderIn:window]))
+            break;
+
+    return firstResponder;
 }
 
 + (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {

@@ -102,7 +102,7 @@
 + (OSStatus)updateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
 
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
-    if (status != noErr && status != errSecItemNotFound)
+    if (status != noErr)
         err(@"While updating keychain item: %@: %@",
             query, NSStringFromErrSec(status));
     

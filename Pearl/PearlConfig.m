@@ -203,8 +203,8 @@
 
     else {
         trc(@"%@.%@ = %@", [self class], selector, currentValue);
-        __unsafe_unretained id returnValue = currentValue;
-        [anInvocation setReturnValue:&returnValue];
+//        __unsafe_unretained id returnValue = currentValue;
+        [anInvocation setReturnValue:&currentValue];
     }
 }
 

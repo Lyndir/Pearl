@@ -53,7 +53,7 @@
                                                           withTemplate:@"$1."];
     key                 = [key lowercaseString];
     id tableValue       = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:self.tableName];
-    __unsafe_unretained id value = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
+    id value            = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
     
     [anInvocation setReturnValue:&value];
 }

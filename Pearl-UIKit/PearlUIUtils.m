@@ -40,6 +40,14 @@ CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
     
     return (CGRect){rect.origin, {rect.size.width, height}};
 }
+CGRect CGRectSetOrigin(CGRect rect, CGPoint origin) {
+    
+    return (CGRect){origin, rect.size};
+}
+CGRect CGRectSetSize(CGRect rect, CGSize size) {
+    
+    return (CGRect){rect.origin, size};
+}
 CGPoint CGPointFromCGRectCenter(CGRect rect) {
     
     return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2);

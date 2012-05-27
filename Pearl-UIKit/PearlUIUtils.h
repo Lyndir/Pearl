@@ -19,29 +19,31 @@
 #import <UIKit/UIKit.h>
 
 __BEGIN_DECLS
-CGRect CGRectSetX(CGRect rect, CGFloat x);
-CGRect CGRectSetY(CGRect rect, CGFloat y);
-CGRect CGRectSetWidth(CGRect rect, CGFloat width);
-CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+extern CGRect CGRectSetX(CGRect rect, CGFloat x);
+extern CGRect CGRectSetY(CGRect rect, CGFloat y);
+extern CGRect CGRectSetWidth(CGRect rect, CGFloat width);
+extern CGRect CGRectSetHeight(CGRect rect, CGFloat height);
+extern CGRect CGRectSetOrigin(CGRect rect, CGPoint origin);
+extern CGRect CGRectSetSize(CGRect rect, CGSize size);
 
-CGPoint CGPointFromCGRectCenter(CGRect rect);
-CGPoint CGPointFromCGRectTop(CGRect rect);
-CGPoint CGPointFromCGRectRight(CGRect rect);
-CGPoint CGPointFromCGRectBottom(CGRect rect);
-CGPoint CGPointFromCGRectLeft(CGRect rect);
-CGPoint CGPointFromCGRectTopLeft(CGRect rect);
-CGPoint CGPointFromCGRectTopRight(CGRect rect);
-CGPoint CGPointFromCGRectBottomRight(CGRect rect);
-CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
+extern CGPoint CGPointFromCGRectCenter(CGRect rect);
+extern CGPoint CGPointFromCGRectTop(CGRect rect);
+extern CGPoint CGPointFromCGRectRight(CGRect rect);
+extern CGPoint CGPointFromCGRectBottom(CGRect rect);
+extern CGPoint CGPointFromCGRectLeft(CGRect rect);
+extern CGPoint CGPointFromCGRectTopLeft(CGRect rect);
+extern CGPoint CGPointFromCGRectTopRight(CGRect rect);
+extern CGPoint CGPointFromCGRectBottomRight(CGRect rect);
+extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
-CGPoint CGPointFromCGSize(const CGSize size);
-CGPoint CGPointFromCGSizeCenter(const CGSize size);
-CGSize CGSizeFromCGPoint(const CGPoint point);
-CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
+extern CGPoint CGPointFromCGSize(const CGSize size);
+extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
+extern CGSize CGSizeFromCGPoint(const CGPoint point);
+extern CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
-CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
-CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
-CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
+extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
+extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
+extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
 __END_DECLS
 
 @interface UIView (PearlUIUtils)

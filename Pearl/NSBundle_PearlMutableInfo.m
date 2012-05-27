@@ -25,49 +25,67 @@
 static BOOL infoSwizzled = NO, localizedInfoSwizzled = NO;
 + (void)initialize {
     
-//    if ([self instancesRespondToSelector:@selector(jr_swizzleMethod:withMethod:error:)]) {
-        NSError *error = nil;
-        if (!(infoSwizzled = [self jr_swizzleMethod:@selector(infoDictionary)
-                                         withMethod:@selector(mutableInfoDictionary)
-                                              error:&error]))
-            dbg(@"Failed to swizzle -infoDictionary: %@", error);
-        if (!(localizedInfoSwizzled = [self jr_swizzleMethod:@selector(localizedInfoDictionary)
-                                                  withMethod:@selector(mutableLocalizedInfoDictionary)
-                                                       error:&error]))
-            dbg(@"Failed to swizzle -localizedInfoDictionary: %@", error);
-//    }
+    NSError *error = nil;
+    if (!(infoSwizzled = [self jr_swizzleMethod:@selector(infoDictionary)
+                                     withMethod:@selector(infoDictionary_PearlMutableInfo)
+                                          error:&error]))
+        dbg(@"Failed to swizzle -infoDictionary: %@", error);
+    if (!(localizedInfoSwizzled = [self jr_swizzleMethod:@selector(localizedInfoDictionary)
+                                              withMethod:@selector(localizedInfoDictionary_PearlMutableInfo)
+                                                   error:&error]))
+        dbg(@"Failed to swizzle -localizedInfoDictionary: %@", error);
+}
+
+- (NSDictionary *)infoDictionary_PearlMutableInfo {
+    
+    static NSMutableDictionary *bundleInfos = nil;
+    if (!bundleInfos)
+        bundleInfos = [NSMutableDictionary dictionary];
+    
+    NSMutableDictionary *bundleInfo;
+    NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
+    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
+        NSDictionary *originalInfo = infoSwizzled? [self infoDictionary_PearlMutableInfo]: [self infoDictionary];
+        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+    }
+    
+    return bundleInfo;
+}
+
+- (NSDictionary *)localizedInfoDictionary_PearlMutableInfo {
+    
+    static NSMutableDictionary *bundleInfos = nil;
+    if (!bundleInfos)
+        bundleInfos = [NSMutableDictionary dictionary];
+    
+    NSMutableDictionary *bundleInfo;
+    NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
+    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
+        NSDictionary *originalInfo = localizedInfoSwizzled? [self localizedInfoDictionary_PearlMutableInfo]: [self localizedInfoDictionary];
+        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+    }
+    
+    return bundleInfo;
 }
 
 - (NSMutableDictionary *)mutableInfoDictionary {
     
-    static NSMutableDictionary *bundleInfos = nil;
-    if (!bundleInfos)
-        bundleInfos = [NSMutableDictionary dictionary];
-    
-    NSMutableDictionary *bundleInfo;
-    NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
-        NSDictionary *originalInfo = infoSwizzled? [self mutableInfoDictionary]: [self infoDictionary];
-        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+    if (!infoSwizzled) {
+        err(@"The info dictionary hasn't been swizzled!");
+        return nil;
     }
     
-    return bundleInfo;
+    return (NSMutableDictionary *)[self infoDictionary];
 }
 
 - (NSMutableDictionary *)mutableLocalizedInfoDictionary {
     
-    static NSMutableDictionary *bundleInfos = nil;
-    if (!bundleInfos)
-        bundleInfos = [NSMutableDictionary dictionary];
-    
-    NSMutableDictionary *bundleInfo;
-    NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
-        NSDictionary *originalInfo = localizedInfoSwizzled? [self mutableLocalizedInfoDictionary]: [self localizedInfoDictionary];
-        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+    if (!localizedInfoSwizzled) {
+        err(@"The localized info dictionary hasn't been swizzled!");
+        return nil;
     }
     
-    return bundleInfo;
+    return (NSMutableDictionary *)[self localizedInfoDictionary];
 }
 
 @end

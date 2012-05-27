@@ -76,7 +76,7 @@
                                      [NSNumber numberWithBool:YES],                                 NSStringFromSelector(@selector(firstRun)),
                                      [NSNumber numberWithInt:0],                                    NSStringFromSelector(@selector(launchCount)),
                                      [NSNumber numberWithBool:NO],                                  NSStringFromSelector(@selector(askForReviews)),
-                                     [NSNumber numberWithInt:5],                                    NSStringFromSelector(@selector(reviewAfterLaunches)),
+                                     [NSNumber numberWithInt:10],                                   NSStringFromSelector(@selector(reviewAfterLaunches)),
 
                                      [NSNumber numberWithInt:
                                       [[PearlStrings get].fontSizeNormal intValue]],                NSStringFromSelector(@selector(fontSize)),

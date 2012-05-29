@@ -60,14 +60,14 @@
 #pragma mark Internal
 
 - (id)init {
-
+    
     if(!(self = [super init]))
         return nil;
-
+    
     _gameRandomSeeds = 0;
     _gameRandomCounters = 0;
     [self setGameRandomSeed:arc4random()];
-
+    
     self.defaults = [NSUserDefaults standardUserDefaults];
     [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                      @"",                                                           NSStringFromSelector(@selector(build)),
@@ -76,8 +76,8 @@
                                      [NSNumber numberWithBool:YES],                                 NSStringFromSelector(@selector(firstRun)),
                                      [NSNumber numberWithInt:0],                                    NSStringFromSelector(@selector(launchCount)),
                                      [NSNumber numberWithBool:NO],                                  NSStringFromSelector(@selector(askForReviews)),
-                                     [NSNumber numberWithInt:5],                                    NSStringFromSelector(@selector(reviewAfterLaunches)),
-
+                                     [NSNumber numberWithInt:10],                                   NSStringFromSelector(@selector(reviewAfterLaunches)),
+                                     
                                      [NSNumber numberWithInt:
                                       [[PearlStrings get].fontSizeNormal intValue]],                NSStringFromSelector(@selector(fontSize)),
                                      [NSNumber numberWithInt:
@@ -87,14 +87,14 @@
                                      [PearlStrings get].fontFamilyDefault,                          NSStringFromSelector(@selector(fontName)),
                                      [PearlStrings get].fontFamilyFixed,                            NSStringFromSelector(@selector(fixedFontName)),
                                      [PearlStrings get].fontFamilySymbolic,                         NSStringFromSelector(@selector(symbolicFontName)),
-
+                                     
                                      [NSNumber numberWithLong:       0x332222cc],                   NSStringFromSelector(@selector(shadeColor)),
                                      [NSNumber numberWithFloat:      0.4f],                         NSStringFromSelector(@selector(transitionDuration)),
-
+                                     
                                      [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(soundFx)),
                                      [NSNumber numberWithBool:       NO],                           NSStringFromSelector(@selector(voice)),
                                      [NSNumber numberWithBool:       YES],                          NSStringFromSelector(@selector(vibration)),
-
+                                     
                                      [NSArray arrayWithObjects:
                                       @"sequential",
                                       @"random",
@@ -106,82 +106,94 @@
                                       [PearlStrings get].songOff,
                                       nil],                                                         NSStringFromSelector(@selector(trackNames)),
                                      @"sequential",                                                 NSStringFromSelector(@selector(currentTrack)),
-
+                                     
                                      nil]];
-
+    
     self.resetTriggers = [NSMutableDictionary dictionary];
     
 #ifdef PEARL_UIKIT
     self.delegate = [PearlAppDelegate get];
 #endif
-
+    
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.build = [info objectForKey:@"CFBundleVersion"];
     self.version = [info objectForKey:@"CFBundleShortVersionString"];
     self.copyright = [info objectForKey:@"NSHumanReadableCopyright"];
-
+    
+    NSString *notification;
 #if TARGET_OS_IPHONE
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil
+    notification = UIApplicationWillTerminateNotification;
 #else
-    [[NSNotificationCenter defaultCenter] addObserverForName:NSApplicationWillTerminateNotification object:nil queue:nil
+    notification = NSApplicationWillTerminateNotification;
 #endif
+    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil
                                                   usingBlock:^(NSNotification *note) {
                                                       self.firstRun = [NSNumber numberWithBool:NO];
                                                       [self.defaults synchronize];
                                                   }];
-
+#if TARGET_OS_IPHONE
+    notification = UIApplicationDidEnterBackgroundNotification;
+#else
+    notification = NSApplicationDidHideNotification;
+#endif
+    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      self.firstRun = [NSNumber numberWithBool:NO];
+                                                      [self.defaults synchronize];
+                                                  }];
+    
     return self;
 }
 
 
 + (PearlConfig *)get {
-
+    
     static PearlConfig *instance = nil;
     if(!instance)
         instance = [self new];
-
+    
     if (![instance isKindOfClass:self])
         err(@"Tried to use config of type: %@, but the config instance is of the incompatible type: %@.  "
             @"You should probably add [%@ get] to your application delegate's +initialize.",
-        self, [instance class], self);
-
+            self, [instance class], self);
+    
     return instance;
 }
 
 + (void)flush {
-
+    
     [[self get].defaults synchronize];
 }
 
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-
+    
     if ([NSStringFromSelector(aSelector) isSetter])
         return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
-
+    
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];
 }
 
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-
+    
     NSString *selector = NSStringFromSelector(anInvocation.selector);
     BOOL isSetter = [selector isSetter];
     selector = [selector setterToGetter];
-
+    
     id currentValue = [self.defaults valueForKey:selector];
     if ([currentValue isKindOfClass:[NSData class]]) {
         trc(@"Unarchiving %@.%@", [self class], selector);
         currentValue = [NSKeyedUnarchiver unarchiveObjectWithData:currentValue];
     }
-
+    
     if (isSetter) {
         __unsafe_unretained id newValue = nil;
         [anInvocation getArgument:&newValue atIndex:2];
         if (newValue == [NSNull null])
             newValue = nil;
         dbg(@"%@.%@ = [%@ ->] %@", [self class], selector, currentValue, newValue);
-
+        
         if (newValue && ![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]] && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]] && ![newValue isKindOfClass:[NSDictionary class]]) {
             // TODO: This doesn't yet check arrays and dictionaries recursively to see if they need coding.
             if ([newValue conformsToProtocol:@protocol(NSCoding)]) {
@@ -200,10 +212,10 @@
             [(id<PearlResettable>) [[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
 #endif
     }
-
+    
     else {
         trc(@"%@.%@ = %@", [self class], selector, currentValue);
-//        __unsafe_unretained id returnValue = currentValue;
+        //        __unsafe_unretained id returnValue = currentValue;
         [anInvocation setReturnValue:&currentValue];
     }
 }
@@ -212,46 +224,46 @@
 #pragma mark Audio
 
 - (NSString *)firstTrack {
-
+    
     if ([self.tracks count] <= 3)
         return @"";
-
+    
     return [self.tracks objectAtIndex:0];
 }
 
 - (NSString *)randomTrack {
-
+    
     if ([self.tracks count] <= 3)
         return @"";
-
+    
     NSUInteger realTracks = ([self.tracks count] - 3);
     return [self.tracks objectAtIndex:arc4random() % realTracks];
 }
 
 - (NSString *)nextTrack {
-
+    
     if ([self.tracks count] <= 3)
         return @"";
-
+    
     id playingTrack = self.playingTrack;
     if(!playingTrack)
         playingTrack = @"";
-
+    
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (currentTrackIndex == NSNotFound)
         currentTrackIndex = -1U;
-
+    
     NSUInteger realTracks = [self.tracks count] - 3;
     return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
 
 - (NSNumber *)music {
-
+    
     return [NSNumber numberWithBool:[self.currentTrack length] > 0];
 }
 
 - (void)setMusic:(NSNumber *)aMusic {
-
+    
 #ifdef PEARL_MEDIA
     if ([aMusic boolValue] && ![self.music boolValue])
         [[PearlAudioController get] playTrack:@"random"];
@@ -261,41 +273,41 @@
 }
 
 - (void)setCurrentTrack: (NSString *)currentTrack {
-
+    
     if(currentTrack == nil)
         currentTrack = @"";
-
+    
 #ifdef PEARL_UIKIT
     NSString *oldTrack = [self.defaults objectForKey:NSStringFromSelector(@selector(currentTrack))];
 #endif
-
+    
     [self.defaults setObject:currentTrack forKey:NSStringFromSelector(@selector(currentTrack))];
-
+    
 #ifdef PEARL_UIKIT
     [[PearlAppDelegate get] didUpdateConfigForKey:@selector(currentTrack) fromValue:oldTrack];
 #endif
 }
 
 -(NSString *) currentTrackName {
-
+    
     id currentTrack = self.currentTrack;
     if(!currentTrack)
         currentTrack = @"";
-
+    
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:currentTrack];
     return [[self trackNames] objectAtIndex:currentTrackIndex];
 }
 
 -(NSString *) playingTrackName {
-
+    
     id playingTrack = self.playingTrack;
     if(!playingTrack)
         playingTrack = @"";
-
+    
     NSUInteger playingTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (playingTrackIndex == NSNotFound || ![[[self tracks] objectAtIndex:playingTrackIndex] length])
         return nil;
-
+    
     return [[self trackNames] objectAtIndex:playingTrackIndex];
 }
 
@@ -303,7 +315,7 @@
 #pragma mark Game Configuration
 
 - (void)setGameRandomSeed:(unsigned)aSeed {
-
+    
     @synchronized(self) {
         srandom(aSeed);
         free(_gameRandomSeeds);
@@ -318,14 +330,14 @@
 }
 
 - (long)gameRandom {
-
+    
     return [self gameRandom:PearlMaxGameRandom - 1];
 }
 
 - (long)gameRandom:(NSUInteger)scope {
-
+    
     NSAssert2(scope < PearlMaxGameRandom, @"Scope (%d) must be < %d", scope, PearlMaxGameRandom);
-
+    
     @synchronized(self) {
         srandom(_gameRandomSeeds[scope]++);
         return random();
@@ -333,33 +345,33 @@
 }
 
 - (long)gameRandom:(NSUInteger)scope from:(char*)file :(NSUInteger)line {
-
+    
     long gr = [self gameRandom:scope];
-//    if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
-//        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr];
-
+    //    if (scope == cMaxGameScope - 1 && _gameRandomSeeds[scope] % 5 == 0)
+    //        [[Logger get] dbg:@"%30s:%-5d\t" @"gameRandom(scope=%d, #%d)=%d", file, line, scope, ++_gameRandomCounters[scope], gr];
+    
     return gr;
 }
 
 
 - (NSDate *)today {
-
+    
     long now = (long) [[NSDate date] timeIntervalSince1970];
     return [NSDate dateWithTimeIntervalSince1970:(now / (3600 * 24)) * (3600 * 24)];
 }
 
 - (NSNumber *)fontSize {
-
+    
     return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(fontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 
 - (NSNumber *)largeFontSize {
-
+    
     return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(largeFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 
 - (NSNumber *)smallFontSize {
-
+    
     return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(@selector(smallFontSize))] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
 }
 

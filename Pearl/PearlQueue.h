@@ -19,17 +19,26 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    NSMutableArrayPearlQueueOverflowFails,
-    NSMutableArrayPearlQueueOverflowBlocks,
-    NSMutableArrayPearlQueueOverflowPopsFirst,
-} NSMutableArrayPearlQueueOverflow;
+    PearlQueueOverflowFails,
+    PearlQueueOverflowBlocks,
+    PearlQueueOverflowPopsFirst,
+} PearlQueueOverflow;
 
-@interface NSMutableArray (PearlQueue)
+@interface PearlQueue : NSObject
 
-- (void)setMaximumCapacity:(NSUInteger)maximumCapacity usingOverflowStrategy:(NSMutableArrayPearlQueueOverflow)overflowStrategy;
+@property (nonatomic, strong) NSMutableArray        *array;
+@property (nonatomic, assign) NSUInteger            maximumCapacity;
+@property (nonatomic, assign) PearlQueueOverflow    overflowStrategy;
+
+- (id)initWithMaximumCapacity:(NSUInteger)maximumCapacity
+        usingOverflowStrategy:(PearlQueueOverflow)overflowStrategy;
 
 - (BOOL)pushObject:(id)object;
+
 - (id)popObject;
+- (BOOL)popObject:(id)object;
 - (id)peekObject;
+
+- (void)clear;
 
 @end

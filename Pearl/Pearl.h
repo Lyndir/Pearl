@@ -3,7 +3,6 @@
 #endif
 
 #import "NSBundle_PearlMutableInfo.h"
-#import "NSMutableArray_PearlQueue.h"
 #import "NSObject_PearlExport.h"
 #import "NSString_PearlNSArrayFormat.h"
 #import "NSString_PearlSEL.h"
@@ -16,6 +15,7 @@
 #import "PearlLogger.h"
 #import "PearlMathUtils.h"
 #import "PearlObjectUtils.h"
+#import "PearlQueue.h"
 #import "PearlResettable.h"
 #import "PearlStrings.h"
 #import "PearlStringUtils.h"

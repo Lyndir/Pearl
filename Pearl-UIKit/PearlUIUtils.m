@@ -506,12 +506,12 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"background"];
         [properties addObject:@"disabledBackground"];
         [properties addObject:@"clearButtonMode"];
-        [view setLeftView:[self copyOf:[view leftView]]];
+        [copy setLeftView:[self copyOf:[view leftView]]];
         [properties addObject:@"leftViewMode"];
-        [view setRightView:[self copyOf:[view rightView]]];
+        [copy setRightView:[self copyOf:[view rightView]]];
         [properties addObject:@"rightViewMode"];
-        [view setInputView:[self copyOf:[view inputView]]];
-        [view setInputAccessoryView:[self copyOf:[view inputAccessoryView]]];
+        [copy setInputView:[self copyOf:[view inputView]]];
+        [copy setInputAccessoryView:[self copyOf:[view inputAccessoryView]]];
     }
     
     // UIButton
@@ -523,7 +523,22 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"adjustsImageWhenHighlighted"];
         [properties addObject:@"adjustsImageWhenDisabled"];
         [properties addObject:@"showsTouchWhenHighlighted"];
-        // TODO: Copy all properties from titleLabel, imageView.
+        for (NSNumber *state in [NSArray arrayWithObjects:
+                                 PearlUnsignedInteger(UIControlStateNormal),
+                                 PearlUnsignedInteger(UIControlStateHighlighted),
+                                 PearlUnsignedInteger(UIControlStateDisabled),
+                                 PearlUnsignedInteger(UIControlStateSelected),
+                                 PearlUnsignedInteger(UIControlStateApplication),
+                                 PearlUnsignedInteger(UIControlStateReserved),
+                                 nil]) {
+            UIControlState controlState = [state unsignedIntegerValue];
+            
+            [copy setTitle:[view titleForState:controlState] forState:controlState];
+            [copy setTitleColor:[view titleColorForState:controlState] forState:controlState];
+            [copy setTitleShadowColor:[view titleShadowColorForState:controlState] forState:controlState];
+            [copy setBackgroundImage:[view backgroundImageForState:controlState] forState:controlState];
+            [copy setImage:[view imageForState:controlState] forState:controlState];
+        }
     }
     
     // UIImageView

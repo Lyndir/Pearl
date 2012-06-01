@@ -46,6 +46,19 @@
                     reason:__reason                                                             \
                     userInfo:__userInfo]
 
+#define PearlInteger(__number) \
+            [NSNumber numberWithInteger:__number]
+#define PearlUnsignedInteger(__number) \
+            [NSNumber numberWithUnsignedInteger:__number]
+#define PearlFloat(__number) \
+            [NSNumber numberWithFloat:__number]
+#define PearlIntegerOp(__number, __operation) \
+            PearlInteger([__number integerValue] __operation)
+#define PearlUnsignedIntegerOp(__number, __operation) \
+            PearlUnsignedInteger([__number unsignedIntegerValue] __operation)
+#define PearlFloatOp(__number, __operation) \
+            PearlFloat([__number floatValue] __operation)
+
 @interface PearlObjectUtils : NSObject {
 
 }

@@ -15,6 +15,7 @@
 #import "PearlLogger.h"
 #import "PearlMathUtils.h"
 #import "PearlObjectUtils.h"
+#import "PearlQueue.h"
 #import "PearlResettable.h"
 #import "PearlStrings.h"
 #import "PearlStringUtils.h"

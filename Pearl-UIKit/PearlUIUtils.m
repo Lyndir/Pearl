@@ -121,15 +121,20 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
 @implementation UIView (PearlUIUtils)
 
-- (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *))continueAfter {
+- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
     
-    for (UIView *subview in self.subviews)
-        if (continueAfter(subview))
-            [subview iterateSubviewsContinueAfter:continueAfter];
+    for (UIView *subview in self.subviews) {
+        BOOL stop = NO, recurse = recurseDefault;
+        block(subview, &stop, &recurse);
+        if (recurse)
+            [subview enumerateSubviews:block recurse:recurseDefault];
+        if (stop)
+            break;
+    }
 }
 
 - (void)printSuperHierarchy {
-
+    
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
         dbg(PearlString(@"%%%ds - %%@", indent), "", [view debugDescription]);
@@ -138,7 +143,7 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 }
 
 - (void)printChildHierarchy {
-
+    
     [self printChildHierarchyWithIndent:0];
 }
 
@@ -208,38 +213,53 @@ static NSMutableSet     *dismissableResponders;
 
 + (void)autoSizeContent:(UIScrollView *)scrollView {
     
-    [self autoSizeContent:scrollView ignoreSubviews:nil];
+    [self autoSizeContent:scrollView ignoreHidden:YES ignoreInvisible:YES limitPadding:YES ignoreSubviewsArray:nil];
 }
 
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... {
++ (void)autoSizeContent:(UIScrollView *)scrollView
+           ignoreHidden:(BOOL)ignoreHidden
+        ignoreInvisible:(BOOL)ignoreInvisible
+           limitPadding:(BOOL)limitPadding
+         ignoreSubviews:(UIView *)ignoredSubviews, ... {
     
-    [self autoSizeContent:scrollView ignoreSubviewsArray:va_array(ignoredSubviews)];
+    [self autoSizeContent:scrollView ignoreHidden:ignoreHidden ignoreInvisible:ignoreInvisible limitPadding:limitPadding
+      ignoreSubviewsArray:va_array(ignoredSubviews)];
 }
 
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
++ (void)autoSizeContent:(UIScrollView *)scrollView
+           ignoreHidden:(BOOL)ignoreHidden
+        ignoreInvisible:(BOOL)ignoreInvisible
+           limitPadding:(BOOL)limitPadding
+    ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
     
     // === Step 1: Calculate the UIScrollView's contentSize.
     // Determine content frame.
     CGRect contentRect = CGRectNull;
-    for (UIView *subview in scrollView.subviews)
-        if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview]) {
-            CGRect subviewContent = [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray];
-            subviewContent = [scrollView convertRect:subviewContent fromView:subview];
-            
-            if (CGRectIsNull(contentRect))
-                contentRect = subviewContent;
-            else
-                contentRect = CGRectUnion(contentRect, subviewContent);
-        }
+    for (UIView *subview in scrollView.subviews) {
+        if (ignoreHidden && subview.hidden)
+            continue;
+        if (ignoreInvisible && !subview.alpha)
+            continue;
+        if ([ignoredSubviewsArray containsObject:subview])
+            continue;
+        
+        CGRect subviewContent = [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray];
+        subviewContent = [scrollView convertRect:subviewContent fromView:subview];
+        
+        if (CGRectIsNull(contentRect))
+            contentRect = subviewContent;
+        else
+            contentRect = CGRectUnion(contentRect, subviewContent);
+    }
     if (CGRectEqualToRect(contentRect, CGRectNull))
         // No subviews inside the scroll area.
         contentRect = CGRectZero;
     
-    // Add right/bottom padding by adding left/top offset to the size (but no more than 20px).
-    CGSize originPadding = CGSizeMake(fmaxf(0, contentRect.origin.x), fmaxf(0, contentRect.origin.y));
+    // Add right/bottom padding by adding left/top offset to the size (but no more than 20pt if limitPadding).
+    CGSize originPadding = CGSizeMake(MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y));
     CGRect paddedRect = (CGRect){CGPointZero,
-        CGSizeMake(contentRect.size.width   + originPadding.width + fminf(originPadding.width, 20),
-                   contentRect.size.height  + originPadding.height + fminf(originPadding.height, 20))};
+        CGSizeMake(contentRect.size.width   + originPadding.width   + (limitPadding? MIN(20, originPadding.width): originPadding.width),
+                   contentRect.size.height  + originPadding.height  + (limitPadding? MIN(20, originPadding.height): originPadding.height))};
     
     // Apply rect to scrollView's content definition.
     scrollView.contentOffset = CGPointZero;
@@ -256,6 +276,30 @@ static NSMutableSet     *dismissableResponders;
                                                object:scrollView.window];
     keyboardScrollView_current = scrollView;
 }
+
++ (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... {
+    
+    return [self viewClosestTo:point ofArray:va_array(views)];
+}
+
++ (UIView *)viewClosestTo:(CGPoint)point ofArray:(NSArray *)views {
+    
+    UIView *closestView = nil;
+    CGFloat closestDistance = 0;
+    for (UIView *view in views) {
+        if (view.hidden || !view.alpha)
+            continue;
+        
+        CGFloat distance = DistanceBetweenCGPointsSq(view.center, point);
+        if (!closestDistance || distance < closestDistance) {
+            closestDistance = distance;
+            closestView = view;
+        }
+    }
+    
+    return closestView;
+}
+
 
 + (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
     
@@ -295,13 +339,13 @@ static NSMutableSet     *dismissableResponders;
 }
 
 + (UIView *)findFirstResonder {
-
+    
     UIView *firstResponder = [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
     if (!firstResponder)
-    for (UIWindow *window in [UIApplication sharedApplication].windows)
-        if ((firstResponder = [self findFirstResonderIn:window]))
-            break;
-
+        for (UIWindow *window in [UIApplication sharedApplication].windows)
+            if ((firstResponder = [self findFirstResonderIn:window]))
+                break;
+    
     return firstResponder;
 }
 
@@ -349,14 +393,15 @@ static NSMutableSet     *dismissableResponders;
         // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
         // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
+    if (!keyboardScrollView_current || ![responder isDescendantOfView:keyboardScrollView_current]) {
+        // Make sure the responder is a descendant of the current view.
+        keyboardScrollView_shouldHide = NO;
+        return;
+    }
     
     // Make sure no old view is still resized and a current view is set.
-    if (keyboardScrollView_resized || !keyboardScrollView_current) {
-        if (keyboardScrollView_resized && keyboardScrollView_resized != keyboardScrollView_current)
-            err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
-        else
-            keyboardScrollView_shouldHide = NO;
-        
+    if (keyboardScrollView_resized && keyboardScrollView_resized != keyboardScrollView_current) {
+        err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
         return;
     }
     assert(keyboardScrollView_current);
@@ -384,13 +429,18 @@ static NSMutableSet     *dismissableResponders;
     else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
         keyboardScrollNewOffset.y = responderRect.origin.y;
     
+    if (CGRectEqualToRect(keyboardScrollView_resized.frame, keyboardScrollNewFrame))
+        // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
+        keyboardScrollNewFrame = CGRectNull;
+    
     UIScrollView *animatingScrollView = keyboardScrollView_resized;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
                           delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                      animations:^{
                          animatingScrollView.contentOffset  = keyboardScrollNewOffset;
-                     } completion:^(BOOL finished){
-                         animatingScrollView.frame          = keyboardScrollNewFrame;
+                     } completion:^(BOOL finished) {
+                         if (!CGRectIsNull(keyboardScrollNewFrame))
+                             animatingScrollView.frame      = keyboardScrollNewFrame;
                      }];
 }
 
@@ -523,6 +573,7 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"adjustsImageWhenHighlighted"];
         [properties addObject:@"adjustsImageWhenDisabled"];
         [properties addObject:@"showsTouchWhenHighlighted"];
+        [properties addObject:@"tintColor"];
         for (NSNumber *state in [NSArray arrayWithObjects:
                                  PearlUnsignedInteger(UIControlStateNormal),
                                  PearlUnsignedInteger(UIControlStateHighlighted),

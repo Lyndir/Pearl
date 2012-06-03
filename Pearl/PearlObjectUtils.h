@@ -59,8 +59,19 @@
 #define PearlFloatOp(__number, __operation) \
             PearlFloat([__number floatValue] __operation)
 
-@interface PearlObjectUtils : NSObject {
+#define PearlMainThread(__block)                                                                \
+            ({                                                                                  \
+                if ([NSThread isMainThread])                                                    \
+                    __block();                                                                  \
+                else                                                                            \
+                    dispatch_async(dispatch_get_main_queue(), __block);                         \
+            })
 
-}
+@interface PearlBlockObject : NSObject
+
++ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)facadeFor:(id)facadeObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
+
+- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock facadeObject:(id)facade;
 
 @end

@@ -3,6 +3,7 @@
 #endif
 
 #import "NSBundle_PearlMutableInfo.h"
+#import "NSObject+PearlKVO.h"
 #import "NSObject_PearlExport.h"
 #import "NSString_PearlNSArrayFormat.h"
 #import "NSString_PearlSEL.h"

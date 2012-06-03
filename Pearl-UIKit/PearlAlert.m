@@ -25,6 +25,7 @@
 @interface PearlAlert (Private)
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
@@ -51,20 +52,23 @@
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle {
     
-    return [self initWithTitle:title message:message viewStyle:UIAlertViewStyleDefault tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
+    return [self initWithTitle:title message:message viewStyle:UIAlertViewStyleDefault
+                     initAlert:nil tappedButtonBlock:nil cancelTitle:cancelTitle otherTitles:nil];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self initWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+    return [self initWithTitle:title message:message viewStyle:viewStyle initAlert:initBlock tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
@@ -109,13 +113,16 @@
         va_end(otherTitlesList);
     }
     
+    if (initBlock)
+        initBlock(alertView, alertField);
+    
     return self;
 }
 
 + (PearlAlert *)showError:(NSString *)message {
     
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
-                  tappedButtonBlock:nil
+                          initAlert:nil tappedButtonBlock:nil
                         cancelTitle:[PearlStrings get].commonButtonOkay otherTitles:nil];
 }
 
@@ -134,7 +141,7 @@
 + (PearlAlert *)showNotice:(NSString *)message {
     
     return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
-                  tappedButtonBlock:nil
+                          initAlert:nil tappedButtonBlock:nil
                         cancelTitle:[PearlStrings get].commonButtonThanks otherTitles:nil];
 }
 
@@ -151,21 +158,23 @@
 }
 
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                         initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
     
     return [[[PearlAlert alloc] initWithTitle:title message:message viewStyle:viewStyle
-                            tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] showAlert];
+                                    initAlert:initBlock tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:firstOtherTitle :otherTitlesList] showAlert];
 }
 
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
+                         initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
     
     va_list(otherTitlesList);
     va_start(otherTitlesList, otherTitles);
     
-    return [self showAlertWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+    return [self showAlertWithTitle:title message:message viewStyle:viewStyle initAlert:initBlock tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
 

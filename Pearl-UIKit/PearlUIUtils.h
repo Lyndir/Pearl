@@ -48,7 +48,7 @@ __END_DECLS
 
 @interface UIView (PearlUIUtils)
 
-- (void)iterateSubviewsContinueAfter:(BOOL (^)(UIView *subview))continueAfter;
+- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
 
@@ -79,7 +79,11 @@ __END_DECLS
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
  * @see -autoSizeContent:ignoreSubviewsArray:
  */
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
++ (void)autoSizeContent:(UIScrollView *)scrollView
+           ignoreHidden:(BOOL)ignoreHidden
+        ignoreInvisible:(BOOL)ignoreInvisible
+           limitPadding:(BOOL)limitPadding
+         ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Automatically determines and sets the content size of the given scroll view.
@@ -89,7 +93,22 @@ __END_DECLS
  *
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
  */
-+ (void)autoSizeContent:(UIScrollView *)scrollView ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
++ (void)autoSizeContent:(UIScrollView *)scrollView
+           ignoreHidden:(BOOL)ignoreHidden
+        ignoreInvisible:(BOOL)ignoreInvisible
+           limitPadding:(BOOL)limitPadding
+    ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
+
+/**
+ * Calculate which of the given views' center is closest to the given point.
+ */
++ (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... NS_REQUIRES_NIL_TERMINATION;
+
+/**
+ * Calculate which of the given views' center is closest to the given point.
+ */
++ (UIView *)viewClosestTo:(CGPoint)point ofArray:(NSArray *)views;
+
 
 /**
  * Calculate the bounds of the content of the given view by recursively iterating and checking the content bounds

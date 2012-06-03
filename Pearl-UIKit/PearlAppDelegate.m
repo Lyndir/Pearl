@@ -31,11 +31,11 @@
 
 #ifndef ITMS_REVIEW_URL
 #define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat:\
-                                @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@", __id]]
+@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@", __id]]
 #endif
 #ifndef ITMS_APP_URL
 #define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
-                                @"itms://itunes.com/apps/%@", __app]]
+@"itms://itunes.com/apps/%@", __app]]
 #endif
 
 @implementation PearlAppDelegate
@@ -71,6 +71,7 @@
                 [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
                                        message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
                                      viewStyle:UIAlertViewStyleDefault
+                                     initAlert:nil
                              tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
                                  if (buttonIndex == [alert cancelButtonIndex])
                                      return;

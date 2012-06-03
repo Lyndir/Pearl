@@ -18,4 +18,6 @@
 #import "PearlUIUtils.h"
 #import "PearlValidatingTextField.h"
 #import "PearlWebViewController.h"
+#import "UIControl+PearlSelect.h"
+#import "UIControl_PearlBlocks.h"
 #import "UIImage_PearlScaling.h"

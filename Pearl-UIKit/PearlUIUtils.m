@@ -113,47 +113,16 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
     return sqrtf(DistanceBetweenCGPointsSq(from, to));
 }
 
-@interface UIView (PearlUIUtils_Private)
+static UIScrollView     *keyboardScrollView_current, *keyboardScrollView_resized;
+static CGPoint          keyboardScrollView_originalOffset;
+static CGRect           keyboardScrollView_originalFrame;
+static BOOL             keyboardScrollView_shouldHide;
+static NSMutableSet     *dismissableResponders;
 
-- (void)printChildHierarchyWithIndentLevel:(NSUInteger)level;
+@interface PearlUIUtils ()
 
-@end
-
-@implementation UIView (PearlUIUtils)
-
-- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
-    
-    for (UIView *subview in self.subviews) {
-        BOOL stop = NO, recurse = recurseDefault;
-        block(subview, &stop, &recurse);
-        if (recurse)
-            [subview enumerateSubviews:block recurse:recurseDefault];
-        if (stop)
-            break;
-    }
-}
-
-- (void)printSuperHierarchy {
-    
-    NSUInteger indent = 0;
-    for (UIView *view = self; view; view = view.superview) {
-        dbg(PearlString(@"%%%ds - %%@", indent), "", [view debugDescription]);
-        indent += 4;
-    }
-}
-
-- (void)printChildHierarchy {
-    
-    [self printChildHierarchyWithIndent:0];
-}
-
-- (void)printChildHierarchyWithIndent:(NSUInteger)indent {
-    
-    dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
-    
-    for (UIView *child in self.subviews)
-        [child printChildHierarchyWithIndent:indent + 4];
-}
++ (void)keyboardWillHide:(NSNotification *)n;
++ (void)keyboardWillShow:(NSNotification *)n;
 
 @end
 
@@ -189,63 +158,51 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
 @end
 
-@interface PearlUIUtils ()
+@implementation UILabel (PearlUIUtils)
 
-+ (void)keyboardWillHide:(NSNotification *)n;
-+ (void)keyboardWillShow:(NSNotification *)n;
+- (void)autoSize {
+
+    self.frame = CGRectSetHeight(self.frame, [self textRectForBounds:CGRectSetHeight(self.frame, CGFLOAT_MAX)
+                                                 limitedToNumberOfLines:self.numberOfLines].size.height);
+}
 
 @end
 
+@implementation UIScrollView (PearlUIUtils)
 
-@implementation PearlUIUtils
+- (void)autoSizeContent {
 
-static UIScrollView     *keyboardScrollView_current, *keyboardScrollView_resized;
-static CGPoint          keyboardScrollView_originalOffset;
-static CGRect           keyboardScrollView_originalFrame;
-static BOOL             keyboardScrollView_shouldHide;
-static NSMutableSet     *dismissableResponders;
-
-+ (void)autoSize:(UILabel *)label {
-    
-    label.frame = CGRectSetHeight(label.frame, [label textRectForBounds:CGRectSetHeight(label.frame, CGFLOAT_MAX)
-                                                 limitedToNumberOfLines:label.numberOfLines].size.height);
+    [self autoSizeContentIgnoreHidden:YES ignoreInvisible:YES limitPadding:YES ignoreSubviewsArray:nil];
 }
 
-+ (void)autoSizeContent:(UIScrollView *)scrollView {
-    
-    [self autoSizeContent:scrollView ignoreHidden:YES ignoreInvisible:YES limitPadding:YES ignoreSubviewsArray:nil];
-}
-
-+ (void)autoSizeContent:(UIScrollView *)scrollView
-           ignoreHidden:(BOOL)ignoreHidden
+- (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
         ignoreInvisible:(BOOL)ignoreInvisible
            limitPadding:(BOOL)limitPadding
          ignoreSubviews:(UIView *)ignoredSubviews, ... {
-    
-    [self autoSizeContent:scrollView ignoreHidden:ignoreHidden ignoreInvisible:ignoreInvisible limitPadding:limitPadding
+
+    [self autoSizeContentIgnoreHidden:ignoreHidden ignoreInvisible:ignoreInvisible limitPadding:limitPadding
       ignoreSubviewsArray:va_array(ignoredSubviews)];
 }
 
-+ (void)autoSizeContent:(UIScrollView *)scrollView
-           ignoreHidden:(BOOL)ignoreHidden
-        ignoreInvisible:(BOOL)ignoreInvisible
-           limitPadding:(BOOL)limitPadding
-    ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
-    
+- (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
+                    ignoreInvisible:(BOOL)ignoreInvisible
+                       limitPadding:(BOOL)limitPadding
+                ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
+
     // === Step 1: Calculate the UIScrollView's contentSize.
     // Determine content frame.
     CGRect contentRect = CGRectNull;
-    for (UIView *subview in scrollView.subviews) {
+    for (UIView *subview in self.subviews) {
         if (ignoreHidden && subview.hidden)
             continue;
         if (ignoreInvisible && !subview.alpha)
             continue;
         if ([ignoredSubviewsArray containsObject:subview])
             continue;
-        
-        CGRect subviewContent = [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray];
-        subviewContent = [scrollView convertRect:subviewContent fromView:subview];
-        
+
+        CGRect subviewContent = [self contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray];
+        subviewContent = [self convertRect:subviewContent fromView:subview];
+
         if (CGRectIsNull(contentRect))
             contentRect = subviewContent;
         else
@@ -254,28 +211,317 @@ static NSMutableSet     *dismissableResponders;
     if (CGRectEqualToRect(contentRect, CGRectNull))
         // No subviews inside the scroll area.
         contentRect = CGRectZero;
-    
+
     // Add right/bottom padding by adding left/top offset to the size (but no more than 20pt if limitPadding).
     CGSize originPadding = CGSizeMake(MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y));
     CGRect paddedRect = (CGRect){CGPointZero,
         CGSizeMake(contentRect.size.width   + originPadding.width   + (limitPadding? MIN(20, originPadding.width): originPadding.width),
                    contentRect.size.height  + originPadding.height  + (limitPadding? MIN(20, originPadding.height): originPadding.height))};
-    
+
     // Apply rect to scrollView's content definition.
-    scrollView.contentOffset = CGPointZero;
-    scrollView.contentSize = paddedRect.size;
-    
+    self.contentOffset = CGPointZero;
+    self.contentSize = paddedRect.size;
+
     // === Step 2: Manage the scroll view on keyboard notifications.
-    [[NSNotificationCenter defaultCenter] addObserver:self
+    [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
-                                               object:scrollView.window];
-    [[NSNotificationCenter defaultCenter] addObserver:self
+                                               object:self.window];
+    [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
-                                               object:scrollView.window];
-    keyboardScrollView_current = scrollView;
+                                               object:self.window];
+    keyboardScrollView_current = self;
 }
+
+@end
+
+@implementation UIView (PearlUIUtils)
+
+- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
+
+    for (UIView *subview in self.subviews) {
+        BOOL stop = NO, recurse = recurseDefault;
+        block(subview, &stop, &recurse);
+        if (recurse)
+            [subview enumerateSubviews:block recurse:recurseDefault];
+        if (stop)
+            break;
+    }
+}
+
+- (void)printSuperHierarchy {
+
+    NSUInteger indent = 0;
+    for (UIView *view = self; view; view = view.superview) {
+        dbg(PearlString(@"%%%ds - %%@", indent), "", [view debugDescription]);
+        indent += 4;
+    }
+}
+
+- (void)printChildHierarchy {
+
+    [self printChildHierarchyWithIndent:0];
+}
+
+- (void)printChildHierarchyWithIndent:(NSUInteger)indent {
+
+    dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
+
+    for (UIView *child in self.subviews)
+        [child printChildHierarchyWithIndent:indent + 4];
+}
+
+- (UIView *)subviewClosestTo:(CGPoint)point {
+
+    return [PearlUIUtils viewClosestTo:point ofArray:self.subviews];
+}
+
+- (CGRect)contentBoundsIgnoringSubviews:(UIView *)ignoredSubviews, ... {
+
+    return [self contentBoundsIgnoringSubviewsArray:va_array(ignoredSubviews)];
+}
+
+- (CGRect)contentBoundsIgnoringSubviewsArray:(NSArray *)ignoredSubviewsArray {
+
+    CGRect contentRect = self.bounds;
+    if (!self.clipsToBounds)
+        for (UIView *subview in self.subviews)
+            if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
+                contentRect = CGRectUnion(contentRect,
+                                          [self convertRect:
+                                           [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
+                                                   fromView:subview]);
+
+    return contentRect;
+}
+
+- (void)showBoundingBox {
+
+    [self showBoundingBoxOfColor:[UIColor redColor]];
+}
+
+- (void)showBoundingBoxOfColor:(UIColor *)color {
+
+    dbg(@"Showing bounding box for view: %@", self);
+    PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){CGPointZero, self.bounds.size} color:color];
+    [self addSubview:box];
+    [self addObserver:box forKeyPath:@"bounds" options:0 context:nil];
+}
+
+- (CGRect)frameInWindow {
+
+    return [self.window convertRect:self.bounds fromView:self];
+}
+
+- (UIView *)findFirstResponderInHierarchy {
+
+    if (self.isFirstResponder)
+        return self;
+
+    UIView *firstResponder = nil;
+    for (UIView *subView in self.subviews)
+        if ((firstResponder = [subView findFirstResponderInHierarchy]))
+            break;
+
+    return firstResponder;
+}
+
+- (id)clone {
+
+    return [self cloneAddedTo:self.superview];
+}
+
+- (id)cloneAddedTo:(UIView *)superView {
+
+    id copy = [[[self class] alloc] initWithFrame:self.frame];
+
+    NSMutableArray *properties = [NSMutableArray array];
+
+    // UIView
+    if ([self isKindOfClass:[UIView class]]) {
+        [properties addObject:@"userInteractionEnabled"];
+        [properties addObject:@"tag"];
+        [properties addObject:@"bounds"];
+        [properties addObject:@"center"];
+        [properties addObject:@"transform"];
+        [properties addObject:@"contentScaleFactor"];
+        [properties addObject:@"multipleTouchEnabled"];
+        [properties addObject:@"exclusiveTouch"];
+        [properties addObject:@"autoresizesSubviews"];
+        [properties addObject:@"autoresizingMask"];
+        [properties addObject:@"clipsToBounds"];
+        [properties addObject:@"backgroundColor"];
+        [properties addObject:@"alpha"];
+        [properties addObject:@"opaque"];
+        [properties addObject:@"clearsContextBeforeDrawing"];
+        [properties addObject:@"hidden"];
+        [properties addObject:@"contentMode"];
+        [properties addObject:@"contentStretch"];
+    }
+
+    // UILabel
+    if ([self isKindOfClass:[UILabel class]]) {
+        [properties addObject:@"text"];
+        [properties addObject:@"font"];
+        [properties addObject:@"textColor"];
+        [properties addObject:@"shadowColor"];
+        [properties addObject:@"shadowOffset"];
+        [properties addObject:@"textAlignment"];
+        [properties addObject:@"lineBreakMode"];
+        [properties addObject:@"highlightedTextColor"];
+        [properties addObject:@"highlighted"];
+        [properties addObject:@"enabled"];
+        [properties addObject:@"numberOfLines"];
+        [properties addObject:@"adjustsFontSizeToFitWidth"];
+        [properties addObject:@"minimumFontSize"];
+        [properties addObject:@"baselineAdjustment"];
+    }
+
+    // UIControl
+    if ([self isKindOfClass:[UIControl class]]) {
+        [properties addObject:@"enabled"];
+        [properties addObject:@"selected"];
+        [properties addObject:@"highlighted"];
+        [properties addObject:@"contentVerticalAlignment"];
+        [properties addObject:@"contentHorizontalAlignment"];
+
+        // Copy actions.
+        for (id target in [(UIControl *)self allTargets])
+            if (target != [NSNull null])
+                for (NSUInteger c = 0; c < 32; ++c)
+                    for (NSString *action in [(UIControl *)self actionsForTarget:target forControlEvent:1 << c])
+                        [copy addTarget:target action:NSSelectorFromString(action) forControlEvents:1 << c];
+    }
+
+    // UITextField
+    if ([self isKindOfClass:[UITextField class]]) {
+        [properties addObject:@"text"];
+        [properties addObject:@"textColor"];
+        [properties addObject:@"font"];
+        [properties addObject:@"textAlignment"];
+        [properties addObject:@"borderStyle"];
+        [properties addObject:@"placeholder"];
+        [properties addObject:@"clearsOnBeginEditing"];
+        [properties addObject:@"adjustsFontSizeToFitWidth"];
+        [properties addObject:@"minimumFontSize"];
+        [properties addObject:@"delegate"];
+        [properties addObject:@"background"];
+        [properties addObject:@"disabledBackground"];
+        [properties addObject:@"clearButtonMode"];
+        [copy setLeftView:[[(UITextField *)self leftView] cloneAddedTo:copy]];
+        [properties addObject:@"leftViewMode"];
+        [copy setRightView:[[(UITextField *)self rightView] cloneAddedTo:copy]];
+        [properties addObject:@"rightViewMode"];
+        [copy setInputView:[[(UITextField *)self inputView] cloneAddedTo:copy]];
+        [copy setInputAccessoryView:[[(UITextField *)self inputAccessoryView] cloneAddedTo:copy]];
+    }
+
+    // UIButton
+    if ([self isKindOfClass:[UIButton class]]) {
+        [properties addObject:@"contentEdgeInsets"];
+        [properties addObject:@"titleEdgeInsets"];
+        [properties addObject:@"reversesTitleShadowWhenHighlighted"];
+        [properties addObject:@"imageEdgeInsets"];
+        [properties addObject:@"adjustsImageWhenHighlighted"];
+        [properties addObject:@"adjustsImageWhenDisabled"];
+        [properties addObject:@"showsTouchWhenHighlighted"];
+        [properties addObject:@"tintColor"];
+        for (NSNumber *state in [NSArray arrayWithObjects:
+                                 PearlUnsignedInteger(UIControlStateNormal),
+                                 PearlUnsignedInteger(UIControlStateHighlighted),
+                                 PearlUnsignedInteger(UIControlStateDisabled),
+                                 PearlUnsignedInteger(UIControlStateSelected),
+                                 PearlUnsignedInteger(UIControlStateApplication),
+                                 PearlUnsignedInteger(UIControlStateReserved),
+                                 nil]) {
+            UIControlState controlState = [state unsignedIntegerValue];
+
+            [copy setTitle:[(UIButton *)self titleForState:controlState] forState:controlState];
+            [copy setTitleColor:[(UIButton *)self titleColorForState:controlState] forState:controlState];
+            [copy setTitleShadowColor:[(UIButton *)self titleShadowColorForState:controlState] forState:controlState];
+            [copy setBackgroundImage:[(UIButton *)self backgroundImageForState:controlState] forState:controlState];
+            [copy setImage:[(UIButton *)self imageForState:controlState] forState:controlState];
+        }
+    }
+
+    // UIImageView
+    if ([self isKindOfClass:[UIImageView class]]) {
+        [properties addObject:@"image"];
+        [properties addObject:@"highlightedImage"];
+        [properties addObject:@"userInteractionEnabled"];
+        [properties addObject:@"highlighted"];
+        [properties addObject:@"animationImages"];
+        [properties addObject:@"highlightedAnimationImages"];
+        [properties addObject:@"animationDuration"];
+        [properties addObject:@"animationRepeatCount"];
+    }
+
+    // Copy properties.
+    [copy setValuesForKeysWithDictionary:[self dictionaryWithValuesForKeys:properties]];
+
+    // Add copy to view's hierarchy and copy on recursively.
+    [superView addSubview:copy];
+    for (UIView *subView in self.subviews)
+        [subView cloneAddedTo:copy];
+
+    return copy;
+}
+
+- (void)localizeProperties {
+
+    static NSArray *localizableProperties = nil;
+    if (localizableProperties == nil)
+        localizableProperties = [[NSArray alloc] initWithObjects:@"text", @"placeholder", nil];
+
+    // Load localization for each of the view's supported properties.
+    for (NSString *localizableProperty in localizableProperties) {
+        if ([self respondsToSelector:NSSelectorFromString(localizableProperty)]) {
+            id value = [self valueForKey:localizableProperty];
+            if ([value isKindOfClass:[NSString class]])
+                [self setValue:[PearlUIUtils applyLocalization:value] forKey:localizableProperty];
+        }
+    }
+
+    // Handle certain types of view specially.
+    if ([self isKindOfClass:[UISegmentedControl class]]) {
+        UISegmentedControl *segmentView = (UISegmentedControl *)self;
+
+        // Localize titles of segments.
+        for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
+            [segmentView setTitle:[PearlUIUtils applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
+                forSegmentAtIndex:segment];
+    }
+    if ([self isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)self;
+
+        // Localize titles of segments.
+        UIControlState states[] = { UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication };
+        for (NSUInteger s = 0; s < 5; ++s) {
+            UIControlState state = states[s];
+            NSString *title = [button titleForState:state];
+            if (title)
+                [button setTitle:[PearlUIUtils applyLocalization:title] forState:state];
+        }
+    }
+    if ([self isKindOfClass:[UITabBar class]]) {
+        UITabBar *tabBar = (UITabBar *)self;
+
+        for (UITabBarItem *item in tabBar.items)
+            item.title = [PearlUIUtils applyLocalization:item.title];
+    }
+
+    // Load localization for all children, too.
+    for (UIView *childView in self.subviews)
+        [childView localizeProperties];
+}
+
+
+@end
+
+
+@implementation PearlUIUtils
+
 
 + (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... {
     
@@ -300,55 +546,6 @@ static NSMutableSet     *dismissableResponders;
     return closestView;
 }
 
-
-+ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviews:(UIView *)ignoredSubviews, ... {
-    
-    return [self contentBoundsFor:view ignoreSubviewsArray:va_array(ignoredSubviews)];
-}
-
-+ (CGRect)contentBoundsFor:(UIView *)view ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray {
-    
-    CGRect contentRect = view.bounds;
-    if (!view.clipsToBounds)
-        for (UIView *subview in view.subviews)
-            if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
-                contentRect = CGRectUnion(contentRect,
-                                          [view convertRect:
-                                           [self contentBoundsFor:subview ignoreSubviewsArray:ignoredSubviewsArray]
-                                                   fromView:subview]);
-    
-    return contentRect;
-}
-
-+ (void)showBoundingBoxForView:(UIView *)view {
-    
-    [self showBoundingBoxForView:view color:[UIColor redColor]];
-}
-
-+ (void)showBoundingBoxForView:(UIView *)view color:(UIColor *)color {
-    
-    dbg(@"Showing bounding box for view: %@", view);
-    PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){CGPointZero, view.bounds.size} color:color];
-    [view addSubview:box];
-    [view addObserver:box forKeyPath:@"bounds" options:0 context:nil];
-}
-
-+ (CGRect)frameInWindow:(UIView *)view {
-    
-    return [view.window convertRect:view.bounds fromView:view];
-}
-
-+ (UIView *)findFirstResonder {
-    
-    UIView *firstResponder = [self findFirstResonderIn:[UIApplication sharedApplication].keyWindow];
-    if (!firstResponder)
-        for (UIWindow *window in [UIApplication sharedApplication].windows)
-            if ((firstResponder = [self findFirstResonderIn:window]))
-                break;
-    
-    return firstResponder;
-}
-
 + (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {
     
     CGFloat tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
@@ -357,20 +554,6 @@ static NSMutableSet     *dismissableResponders;
         return CGRectNull;
     
     return CGRectMake(tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height);
-}
-
-+ (UIView *)findFirstResonderIn:(UIView *)view {
-    
-    if (view.isFirstResponder)
-        return view;
-    
-    for (UIView *subView in view.subviews) {
-        UIView *firstResponder = [self findFirstResonderIn:subView];
-        if (firstResponder != nil)
-            return firstResponder;
-    }
-    
-    return nil;
 }
 
 + (void)makeDismissable:(UIView *)views, ... {
@@ -386,9 +569,24 @@ static NSMutableSet     *dismissableResponders;
     [dismissableResponders addObjectsFromArray:viewsArray];
 }
 
++ (UIWindow *)findWindow {
+
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    if (!window)
+        for (UIWindow *aWindow in [UIApplication sharedApplication].windows)
+            if ([aWindow findFirstResponderInHierarchy]) {
+                window = aWindow;
+                break;
+            }
+    if (!window)
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+
+    return window;
+}
+
 + (void)keyboardWillShow:(NSNotification *)n {
     
-    UIView *responder = [self findFirstResonder];
+    UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
     if (!responder)
         // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
         // Don't know why but since no keyboard actually appears in this case, ignore them.
@@ -412,7 +610,7 @@ static NSMutableSet     *dismissableResponders;
     
     NSDictionary* userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect scrollRect   = [self frameInWindow:keyboardScrollView_resized];
+    CGRect scrollRect   = [keyboardScrollView_resized frameInWindow];
     CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
     
     keyboardScrollView_originalOffset       = keyboardScrollView_resized.contentOffset;
@@ -472,195 +670,6 @@ static NSMutableSet     *dismissableResponders;
         
         keyboardScrollView_resized = nil;
     });
-}
-
-+ (id)copyOf:(id)view {
-    
-    return [self copyOf:view addTo:[view superview]];
-}
-
-+ (id)copyOf:(id)view addTo:(UIView *)superView {
-    
-    id copy = [[[view class] alloc] initWithFrame:[view frame]];
-    
-    NSMutableArray *properties = [NSMutableArray array];
-    
-    // UIView
-    if ([view isKindOfClass:[UIView class]]) {
-        [properties addObject:@"userInteractionEnabled"];
-        [properties addObject:@"tag"];
-        [properties addObject:@"bounds"];
-        [properties addObject:@"center"];
-        [properties addObject:@"transform"];
-        [properties addObject:@"contentScaleFactor"];
-        [properties addObject:@"multipleTouchEnabled"];
-        [properties addObject:@"exclusiveTouch"];
-        [properties addObject:@"autoresizesSubviews"];
-        [properties addObject:@"autoresizingMask"];
-        [properties addObject:@"clipsToBounds"];
-        [properties addObject:@"backgroundColor"];
-        [properties addObject:@"alpha"];
-        [properties addObject:@"opaque"];
-        [properties addObject:@"clearsContextBeforeDrawing"];
-        [properties addObject:@"hidden"];
-        [properties addObject:@"contentMode"];
-        [properties addObject:@"contentStretch"];
-    }
-    
-    // UILabel
-    if ([view isKindOfClass:[UILabel class]]) {
-        [properties addObject:@"text"];
-        [properties addObject:@"font"];
-        [properties addObject:@"textColor"];
-        [properties addObject:@"shadowColor"];
-        [properties addObject:@"shadowOffset"];
-        [properties addObject:@"textAlignment"];
-        [properties addObject:@"lineBreakMode"];
-        [properties addObject:@"highlightedTextColor"];
-        [properties addObject:@"highlighted"];
-        [properties addObject:@"enabled"];
-        [properties addObject:@"numberOfLines"];
-        [properties addObject:@"adjustsFontSizeToFitWidth"];
-        [properties addObject:@"minimumFontSize"];
-        [properties addObject:@"baselineAdjustment"];
-    }
-    
-    // UIControl
-    if ([view isKindOfClass:[UIControl class]]) {
-        [properties addObject:@"enabled"];
-        [properties addObject:@"selected"];
-        [properties addObject:@"highlighted"];
-        [properties addObject:@"contentVerticalAlignment"];
-        [properties addObject:@"contentHorizontalAlignment"];
-        
-        // Copy actions.
-        for (id target in [view allTargets])
-            if (target != [NSNull null])
-                for (NSUInteger c = 0; c < 32; ++c)
-                    for (NSString *action in [view actionsForTarget:target forControlEvent:1 << c])
-                        [copy addTarget:target action:NSSelectorFromString(action) forControlEvents:1 << c];
-    }
-    
-    // UITextField
-    if ([view isKindOfClass:[UITextField class]]) {
-        [properties addObject:@"text"];
-        [properties addObject:@"textColor"];
-        [properties addObject:@"font"];
-        [properties addObject:@"textAlignment"];
-        [properties addObject:@"borderStyle"];
-        [properties addObject:@"placeholder"];
-        [properties addObject:@"clearsOnBeginEditing"];
-        [properties addObject:@"adjustsFontSizeToFitWidth"];
-        [properties addObject:@"minimumFontSize"];
-        [properties addObject:@"delegate"];
-        [properties addObject:@"background"];
-        [properties addObject:@"disabledBackground"];
-        [properties addObject:@"clearButtonMode"];
-        [copy setLeftView:[self copyOf:[view leftView]]];
-        [properties addObject:@"leftViewMode"];
-        [copy setRightView:[self copyOf:[view rightView]]];
-        [properties addObject:@"rightViewMode"];
-        [copy setInputView:[self copyOf:[view inputView]]];
-        [copy setInputAccessoryView:[self copyOf:[view inputAccessoryView]]];
-    }
-    
-    // UIButton
-    if ([view isKindOfClass:[UIButton class]]) {
-        [properties addObject:@"contentEdgeInsets"];
-        [properties addObject:@"titleEdgeInsets"];
-        [properties addObject:@"reversesTitleShadowWhenHighlighted"];
-        [properties addObject:@"imageEdgeInsets"];
-        [properties addObject:@"adjustsImageWhenHighlighted"];
-        [properties addObject:@"adjustsImageWhenDisabled"];
-        [properties addObject:@"showsTouchWhenHighlighted"];
-        [properties addObject:@"tintColor"];
-        for (NSNumber *state in [NSArray arrayWithObjects:
-                                 PearlUnsignedInteger(UIControlStateNormal),
-                                 PearlUnsignedInteger(UIControlStateHighlighted),
-                                 PearlUnsignedInteger(UIControlStateDisabled),
-                                 PearlUnsignedInteger(UIControlStateSelected),
-                                 PearlUnsignedInteger(UIControlStateApplication),
-                                 PearlUnsignedInteger(UIControlStateReserved),
-                                 nil]) {
-            UIControlState controlState = [state unsignedIntegerValue];
-            
-            [copy setTitle:[view titleForState:controlState] forState:controlState];
-            [copy setTitleColor:[view titleColorForState:controlState] forState:controlState];
-            [copy setTitleShadowColor:[view titleShadowColorForState:controlState] forState:controlState];
-            [copy setBackgroundImage:[view backgroundImageForState:controlState] forState:controlState];
-            [copy setImage:[view imageForState:controlState] forState:controlState];
-        }
-    }
-    
-    // UIImageView
-    if ([view isKindOfClass:[UIImageView class]]) {
-        [properties addObject:@"image"];
-        [properties addObject:@"highlightedImage"];
-        [properties addObject:@"userInteractionEnabled"];
-        [properties addObject:@"highlighted"];
-        [properties addObject:@"animationImages"];
-        [properties addObject:@"highlightedAnimationImages"];
-        [properties addObject:@"animationDuration"];
-        [properties addObject:@"animationRepeatCount"];
-    }
-    
-    // Copy properties.
-    [copy setValuesForKeysWithDictionary:[view dictionaryWithValuesForKeys:properties]];
-    
-    // Add copy to view's hierarchy and copy on recursively.
-    [superView addSubview:copy];
-    for (UIView *subView in [view subviews])
-        [self copyOf:subView addTo:copy];
-    
-    return copy;
-}
-
-+ (void)loadLocalization:(UIView *)view {
-    
-    static NSArray *UIUtils_localizableProperties = nil;
-    if (UIUtils_localizableProperties == nil)
-        UIUtils_localizableProperties = [[NSArray alloc] initWithObjects:@"text", @"placeholder", nil];
-    
-    // Load localization for each of the view's supported properties.
-    for (NSString *localizableProperty in UIUtils_localizableProperties) {
-        if ([view respondsToSelector:NSSelectorFromString(localizableProperty)]) {
-            id value = [view valueForKey:localizableProperty];
-            if ([value isKindOfClass:[NSString class]])
-                [view setValue:[self applyLocalization:value] forKey:localizableProperty];
-        }
-    }
-    
-    // Handle certain types of view specially.
-    if ([view isKindOfClass:[UISegmentedControl class]]) {
-        UISegmentedControl *segmentView = (UISegmentedControl *)view;
-        
-        // Localize titles of segments.
-        for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
-            [segmentView setTitle:[self applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
-                forSegmentAtIndex:segment];
-    }
-    if ([view isKindOfClass:[UIButton class]]) {
-        UIButton *button = (UIButton *)view;
-        
-        // Localize titles of segments.
-        UIControlState states[] = { UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication };
-        for (NSUInteger s = 0; s < 5; ++s) {
-            UIControlState state = states[s];
-            NSString *title = [button titleForState:state];
-            if (title)
-                [button setTitle:[self applyLocalization:title] forState:state];
-        }
-    }
-    if ([view isKindOfClass:[UITabBar class]]) {
-        UITabBar *tabBar = (UITabBar *)view;
-        
-        for (UITabBarItem *item in tabBar.items)
-            item.title = [self applyLocalization:item.title];
-    }
-    
-    // Load localization for all children, too.
-    for (UIView *childView in [view subviews])
-        [self loadLocalization:childView];
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {

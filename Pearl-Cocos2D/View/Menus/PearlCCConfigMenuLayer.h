@@ -57,7 +57,7 @@
                     settingsFromArray:(NSArray *)settings;
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-              settings:(SEL)setting, ...;
+              settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
      settingsFromArray:(NSArray *)settings;

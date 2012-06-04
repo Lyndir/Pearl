@@ -35,16 +35,13 @@
 #define NullToNil(__O)                                                                          \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 
-#define Throw(__reason)                                                                         \
+#define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
                     exceptionWithName:NSInternalInconsistencyException                          \
-                    reason:__reason                                                             \
-                    userInfo:nil]
-#define ThrowInfo(__reason, __userInfo)                                                         \
-            @throw [NSException                                                                 \
-                    exceptionWithName:NSInternalInconsistencyException                          \
-                    reason:__reason                                                             \
+                    reason:PearlString(__reason , ##__VA_ARGS__)                                \
                     userInfo:__userInfo]
+#define Throw(__reason, ...)                                                                    \
+            ThrowInfo(nil, __reason , ##__VA_ARGS__)
 
 #define PearlInteger(__number) \
             [NSNumber numberWithInteger:__number]

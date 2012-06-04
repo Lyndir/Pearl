@@ -25,9 +25,9 @@
 @synthesize color = _color, width = _width, filled = _filled;
 
 + (id)boxed:(id)view {
-    
-    [PearlUIUtils showBoundingBoxForView:view];
-    return view;
+
+    [view showBoundingBox];
+    return self;
 }
 
 + (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {

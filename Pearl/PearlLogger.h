@@ -26,7 +26,7 @@
 #define err(format, ...)    [[PearlLogger get] err:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
 #define ftl(format, ...)    [[PearlLogger get] ftl:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
 
-NSString *errstr(void);
+extern NSString *errstr(void);
 
 /** Levels that determine the importance of logging events. */
 typedef enum {
@@ -100,16 +100,16 @@ typedef enum {
 /** Print all log messages of the given level or above to the console. */
 - (void)printAllWithLevel:(PearlLogLevel)level;
 /** Log a new TRACE-level event. */
-- (PearlLogger *)trc:(NSString *)format, ...;
+- (PearlLogger *)trc:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 /** Log a new DEBUG-level event. */
-- (PearlLogger *)dbg:(NSString *)format, ...;
+- (PearlLogger *)dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 /** Log a new INFO-level event. */
-- (PearlLogger *)inf:(NSString *)format, ...;
+- (PearlLogger *)inf:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 /** Log a new WARNING-level event. */
-- (PearlLogger *)wrn:(NSString *)format, ...;
+- (PearlLogger *)wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 /** Log a new ERROR-level event. */
-- (PearlLogger *)err:(NSString *)format, ...;
+- (PearlLogger *)err:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 /** Log a new FATAL-level event. */
-- (PearlLogger *)ftl:(NSString *)format, ...;
+- (PearlLogger *)ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 
 @end

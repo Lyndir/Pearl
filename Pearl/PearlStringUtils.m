@@ -20,7 +20,17 @@
 #import "PearlStrings.h"
 
 
-NSString* RPad(const NSString* string, const NSUInteger l) {
+NSString *PearlString(NSString *format, ...) {
+    
+    va_list argList;
+    va_start(argList, format);
+    NSString *string = [[NSString alloc] initWithFormat:format arguments:argList];
+    va_end(argList);
+    
+    return string;
+}
+
+NSString *RPad(const NSString* string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -30,7 +40,7 @@ NSString* RPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString* LPad(const NSString* string, const NSUInteger l) {
+NSString *LPad(const NSString* string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -40,7 +50,7 @@ NSString* LPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
+NSString *AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
 
     NSString *suffix = [PearlStrings get].timeDaySuffix;
     if(number % 10 == 1 && number != 11)
@@ -53,7 +63,7 @@ NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }
 
-NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style) {
+NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style) {
 
     NSNumberFormatter *formatter = [NSNumberFormatter new];
     formatter.numberStyle = style;
@@ -63,7 +73,3 @@ NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterSt
 
     return numbers;
 }
-
-@implementation PearlStringUtils
-
-@end

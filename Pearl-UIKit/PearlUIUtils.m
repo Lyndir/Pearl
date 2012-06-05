@@ -200,7 +200,7 @@ static NSMutableSet     *dismissableResponders;
         if ([ignoredSubviewsArray containsObject:subview])
             continue;
 
-        CGRect subviewContent = [self contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray];
+        CGRect subviewContent = [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray];
         subviewContent = [self convertRect:subviewContent fromView:subview];
 
         if (CGRectIsNull(contentRect))
@@ -437,11 +437,23 @@ static NSMutableSet     *dismissableResponders;
                                  nil]) {
             UIControlState controlState = [state unsignedIntegerValue];
 
-            [copy setTitle:[(UIButton *)self titleForState:controlState] forState:controlState];
-            [copy setTitleColor:[(UIButton *)self titleColorForState:controlState] forState:controlState];
-            [copy setTitleShadowColor:[(UIButton *)self titleShadowColorForState:controlState] forState:controlState];
-            [copy setBackgroundImage:[(UIButton *)self backgroundImageForState:controlState] forState:controlState];
-            [copy setImage:[(UIButton *)self imageForState:controlState] forState:controlState];
+            UIButton *selfButton = (UIButton *) self;
+            NSString *title = [selfButton titleForState:controlState];
+            UIColor *titleColor = [selfButton titleColorForState:controlState];
+            UIColor *shadowColor = [selfButton titleShadowColorForState:controlState];
+            UIImage *backgroundImage = [selfButton backgroundImageForState:controlState];
+            UIImage *image = [selfButton imageForState:controlState];
+
+            if (controlState == UIControlStateNormal || title != [selfButton titleForState:UIControlStateNormal])
+                [copy setTitle:title forState:controlState];
+            if (controlState == UIControlStateNormal || titleColor != [selfButton titleColorForState:UIControlStateNormal])
+                [copy setTitleColor:titleColor forState:controlState];
+            if (controlState == UIControlStateNormal || shadowColor != [selfButton titleShadowColorForState:UIControlStateNormal])
+                [copy setTitleShadowColor:shadowColor forState:controlState];
+            if (controlState == UIControlStateNormal || backgroundImage != [selfButton backgroundImageForState:UIControlStateNormal])
+                [copy setBackgroundImage:backgroundImage forState:controlState];
+            if (controlState == UIControlStateNormal || image != [selfButton imageForState:UIControlStateNormal])
+                [copy setImage:image forState:controlState];
         }
     }
 

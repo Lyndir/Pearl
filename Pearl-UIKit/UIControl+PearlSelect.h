@@ -19,7 +19,7 @@
 
 @interface UIControl (PearlSelect)
 
-@property (assign) BOOL toggleSelectionWhenTouchedInside;
+@property (assign) BOOL togglesSelectionInSuperview;
 
 - (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options;
 - (void)onHighlight:(void (^)(BOOL highlighted))aBlock options:(NSKeyValueObservingOptions)options;

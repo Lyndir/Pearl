@@ -28,9 +28,6 @@
           initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
-+ (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
-                 tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
-                       cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
 
 @end
 
@@ -134,7 +131,7 @@
     va_start(otherTitlesList, otherTitles);
     
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
-                  tappedButtonBlock:aTappedButtonBlock
+                          initAlert:nil tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles :otherTitlesList];
 }
 
@@ -153,7 +150,7 @@
     va_start(otherTitlesList, otherTitles);
     
     return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
-                  tappedButtonBlock:aTappedButtonBlock
+                          initAlert:nil tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonThanks otherTitle:otherTitles :otherTitlesList];
 }
 

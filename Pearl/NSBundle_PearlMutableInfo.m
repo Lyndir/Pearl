@@ -44,9 +44,9 @@ static BOOL infoSwizzled = NO, localizedInfoSwizzled = NO;
     
     NSMutableDictionary *bundleInfo;
     NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
+    if (!(bundleInfo = NSNullToNil([bundleInfos objectForKey:selfValue]))) {
         NSDictionary *originalInfo = infoSwizzled? [self infoDictionary_PearlMutableInfo]: [self infoDictionary];
-        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+        [bundleInfos setObject:NilToNSNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
     }
     
     return bundleInfo;
@@ -60,9 +60,9 @@ static BOOL infoSwizzled = NO, localizedInfoSwizzled = NO;
     
     NSMutableDictionary *bundleInfo;
     NSValue *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NullToNil([bundleInfos objectForKey:selfValue]))) {
+    if (!(bundleInfo = NSNullToNil([bundleInfos objectForKey:selfValue]))) {
         NSDictionary *originalInfo = localizedInfoSwizzled? [self localizedInfoDictionary_PearlMutableInfo]: [self localizedInfoDictionary];
-        [bundleInfos setObject:NilToNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
+        [bundleInfos setObject:NilToNSNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
     }
     
     return bundleInfo;

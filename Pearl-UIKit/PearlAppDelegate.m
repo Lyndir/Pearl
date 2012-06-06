@@ -78,7 +78,7 @@
                                  
                                  [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
                                  if (buttonIndex == [alert firstOtherButtonIndex]) {
-                                     if (NullToNil([PearlConfig get].iTunesID))
+                                     if (NSNullToNil([PearlConfig get].iTunesID))
                                          [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
                                      else
                                          [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];

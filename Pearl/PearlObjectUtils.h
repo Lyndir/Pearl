@@ -30,9 +30,9 @@
             })
 
 
-#define NilToNull(__O)                                                                          \
+#define NilToNSNull(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
-#define NullToNil(__O)                                                                          \
+#define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \

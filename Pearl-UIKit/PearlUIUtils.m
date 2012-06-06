@@ -16,6 +16,7 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <objc/runtime.h>
 #import "PearlUIUtils.h"
 #import "PearlLogger.h"
 #import "PearlAppDelegate.h"
@@ -254,7 +255,7 @@ static NSMutableSet     *dismissableResponders;
 
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
-        dbg(PearlString(@"%%%ds - %%@", indent), "", [view debugDescription]);
+        dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", view.tag, view.alpha, view.hidden? @"YES": @"NO", [view debugDescription]);
         indent += 4;
     }
 }
@@ -266,7 +267,7 @@ static NSMutableSet     *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg(PearlString(@"%%%ds - %%@", indent), "", [self debugDescription]);
+    dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", self.tag, self.alpha, self.hidden? @"YES": @"NO", [self debugDescription]);
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];
@@ -335,8 +336,17 @@ static NSMutableSet     *dismissableResponders;
 - (id)cloneAddedTo:(UIView *)superView {
 
     id copy = [[[self class] alloc] initWithFrame:self.frame];
-
     NSMutableArray *properties = [NSMutableArray array];
+
+    // Recursively clone subviews only if this is a container-style view (ie. a UIView or UIScrollView subclass)
+    BOOL recurse = YES;
+    for (Class class = [self class]; class && class != [UIView class]; class = class_getSuperclass(class)) {
+        if ([NSStringFromClass([self class]) hasPrefix:@"UI"]) {
+            if ([self class] != [UIView class] && [self class] != [UIScrollView class])
+                recurse = NO;
+            break;
+        }
+    }
 
     // UIView
     if ([self isKindOfClass:[UIView class]]) {
@@ -472,10 +482,13 @@ static NSMutableSet     *dismissableResponders;
     // Copy properties.
     [copy setValuesForKeysWithDictionary:[self dictionaryWithValuesForKeys:properties]];
 
-    // Add copy to view's hierarchy and copy on recursively.
+    // Add copy to view's hierarchy.
     [superView addSubview:copy];
-    for (UIView *subView in self.subviews)
-        [subView cloneAddedTo:copy];
+
+    // If requested, clone the original's subviews, too.
+    if (recurse)
+        for (UIView *subView in self.subviews)
+            [subView cloneAddedTo:copy];
 
     return copy;
 }

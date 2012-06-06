@@ -18,6 +18,7 @@
 //  See http://www.cocoadev.com/index.pl?BaseSixtyFour
 
 #import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonHMAC.h>
 
 #import "PearlObjectUtils.h"
 #import "PearlCodeUtils.h"
@@ -25,28 +26,28 @@
 
 static const char CodeUtils_Base64EncodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-PearlDigest PearlDigestFromNSString(NSString *digest) {
+PearlHash PearlHashFromNSString(NSString *hash) {
     
-    digest = [digest stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    if ([digest caseInsensitiveCompare:@"None"] == NSOrderedSame)
-        return PearlDigestNone;
-    if ([digest caseInsensitiveCompare:@"MD4"] == NSOrderedSame)
-        return PearlDigestMD4;
-    if ([digest caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
-        return PearlDigestMD5;
-    if ([digest caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
-        return PearlDigestSHA1;
-    if ([digest caseInsensitiveCompare:@"SHA224"] == NSOrderedSame)
-        return PearlDigestSHA224;
-    if ([digest caseInsensitiveCompare:@"SHA256"] == NSOrderedSame)
-        return PearlDigestSHA256;
-    if ([digest caseInsensitiveCompare:@"SHA384"] == NSOrderedSame)
-        return PearlDigestSHA384;
-    if ([digest caseInsensitiveCompare:@"SHA512"] == NSOrderedSame)
-        return PearlDigestSHA512;
+    hash = [hash stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    if ([hash caseInsensitiveCompare:@"None"] == NSOrderedSame)
+        return PearlHashNone;
+    if ([hash caseInsensitiveCompare:@"MD4"] == NSOrderedSame)
+        return PearlHashMD4;
+    if ([hash caseInsensitiveCompare:@"MD5"] == NSOrderedSame)
+        return PearlHashMD5;
+    if ([hash caseInsensitiveCompare:@"SHA1"] == NSOrderedSame)
+        return PearlHashSHA1;
+    if ([hash caseInsensitiveCompare:@"SHA224"] == NSOrderedSame)
+        return PearlHashSHA224;
+    if ([hash caseInsensitiveCompare:@"SHA256"] == NSOrderedSame)
+        return PearlHashSHA256;
+    if ([hash caseInsensitiveCompare:@"SHA384"] == NSOrderedSame)
+        return PearlHashSHA384;
+    if ([hash caseInsensitiveCompare:@"SHA512"] == NSOrderedSame)
+        return PearlHashSHA512;
     
-    err(@"Can't understand digest string: %@", digest);
-    return PearlDigestNone;
+    err(@"Can't understand hash function string: %@", hash);
+    return PearlHashNone;
 }
 
 uint64_t PearlSecureRandom() {
@@ -71,9 +72,9 @@ uint64_t PearlSecureRandom() {
 
 @implementation NSString (PearlCodeUtils)
 
-- (NSData *)hashWith:(PearlDigest)digest {
+- (NSData *)hashWith:(PearlHash)hash {
     
-    return [[self dataUsingEncoding:NSUTF8StringEncoding] hashWith:digest];
+    return [[self dataUsingEncoding:NSUTF8StringEncoding] hashWith:hash];
 }
 
 - (NSData *)decodeHex {
@@ -190,10 +191,10 @@ uint64_t PearlSecureRandom() {
 
 @implementation NSData (PearlCodeUtils)
 
-+ (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... {
++ (NSData *)dataByConcatenatingDatas:(NSData *)datas, ... {
     
     NSArray *datasArray = va_array(datas);
-    NSUInteger capacity = [datasArray count] - 1;
+    NSUInteger capacity = 0;
     for (NSData *data in datasArray)
         capacity += data.length;
     
@@ -201,6 +202,25 @@ uint64_t PearlSecureRandom() {
     for (NSData *data in datasArray)
         [concatenated appendData:data];
     
+    return concatenated;
+}
+
++ (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... {
+
+    NSArray *datasArray = va_array(datas);
+    NSUInteger capacity = [datasArray count] - 1;
+    for (NSData *data in datasArray)
+        capacity += data.length;
+
+    NSMutableData *concatenated = [NSMutableData dataWithCapacity:capacity];
+    NSUInteger d = 0;
+    for (NSData *data in datasArray) {
+        [concatenated appendData:data];
+
+        if (++d != [datasArray count])
+            [concatenated appendBytes:&delimitor length:1];
+    }
+
     return concatenated;
 }
 
@@ -243,58 +263,109 @@ uint64_t PearlSecureRandom() {
 	return [[NSString alloc] initWithBytesNoCopy:characters length:length encoding:NSASCIIStringEncoding freeWhenDone:YES];
 }
 
-- (NSData *)hashWith:(PearlDigest)digest {
+- (NSData *)hashWith:(PearlHash)hash {
     
-    switch (digest) {
-        case PearlDigestNone:
+    switch (hash) {
+        case PearlHashNone:
             return self;
-        case PearlDigestMD4: {
+        case PearlHashMD4: {
             unsigned char result[CC_MD4_DIGEST_LENGTH];
             CC_MD4(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestMD5: {
+        case PearlHashMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
             CC_MD5(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestSHA1: {
+        case PearlHashSHA1: {
             unsigned char result[CC_SHA1_DIGEST_LENGTH];
             CC_SHA1(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestSHA224: {
+        case PearlHashSHA224: {
             unsigned char result[CC_SHA224_DIGEST_LENGTH];
             CC_SHA224(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestSHA256: {
+        case PearlHashSHA256: {
             unsigned char result[CC_SHA256_DIGEST_LENGTH];
             CC_SHA256(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestSHA384: {
+        case PearlHashSHA384: {
             unsigned char result[CC_SHA384_DIGEST_LENGTH];
             CC_SHA384(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestSHA512: {
+        case PearlHashSHA512: {
             unsigned char result[CC_SHA512_DIGEST_LENGTH];
             CC_SHA512(self.bytes, (CC_LONG)self.length, result);
             
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
-        case PearlDigestCount:
+        case PearlHashCount:
             break;
     }
     
-    err(@"Digest not supported: %d", digest);
+    err(@"Hash function not supported: %d", hash);
+    return nil;
+}
+
+- (NSData *)hmacWith:(PearlHash)hash key:(NSData *)key {
+
+    switch (hash) {
+        case PearlHashNone:
+            return self;
+        case PearlHashMD4:
+            break;
+        case PearlHashMD5: {
+            unsigned char result[CC_MD5_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgMD5, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashSHA1: {
+            unsigned char result[CC_SHA1_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA1, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashSHA224: {
+            unsigned char result[CC_SHA224_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA224, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashSHA256: {
+            unsigned char result[CC_SHA256_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA256, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashSHA384: {
+            unsigned char result[CC_SHA384_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA384, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashSHA512: {
+            unsigned char result[CC_SHA512_DIGEST_LENGTH];
+            CCHmac(kCCHmacAlgSHA512, key.bytes, key.length, self.bytes, self.length, result);
+
+            return [NSData dataWithBytes:result length:sizeof(result)];
+        }
+        case PearlHashCount:
+            break;
+    }
+
+    err(@"Hash function not supported: %d", hash);
     return nil;
 }
 

@@ -20,24 +20,24 @@
 
 
 typedef enum {
-    PearlDigestNone,
-    PearlDigestMD4,
-    PearlDigestMD5,
-    PearlDigestSHA1,
-    PearlDigestSHA224,
-    PearlDigestSHA256,
-    PearlDigestSHA384,
-    PearlDigestSHA512,
-    PearlDigestCount,
-} PearlDigest;
+    PearlHashNone,
+    PearlHashMD4,
+    PearlHashMD5,
+    PearlHashSHA1,
+    PearlHashSHA224,
+    PearlHashSHA256,
+    PearlHashSHA384,
+    PearlHashSHA512,
+    PearlHashCount,
+} PearlHash;
 
-PearlDigest PearlDigestFromNSString(NSString *digest);
+PearlHash PearlHashFromNSString(NSString *hash);
 uint64_t PearlSecureRandom(void);
 
 @interface NSString (PearlCodeUtils)
 
 /** Generate a hash for the string. */
-- (NSData *)hashWith:(PearlDigest)digest;
+- (NSData *)hashWith:(PearlHash)hash;
 
 /** Decode a hex-encoded string into bytes. */
 - (NSData *)decodeHex;
@@ -57,12 +57,19 @@ uint64_t PearlSecureRandom(void);
 @interface NSData (PearlCodeUtils)
 
 /**
+ * Concatenate the given data objects.
+ */
++ (NSData *)dataByConcatenatingDatas:(NSData *)datas, ...;
+
+/**
  * Concatenate the given data objects by putting the given delimitor inbetween them.
  */
 + (NSData *)dataByConcatenatingWithDelimitor:(char)delimitor datas:(NSData *)datas, ... NS_REQUIRES_NIL_TERMINATION;
 
 /** Generate a hash for the bytes. */
-- (NSData *)hashWith:(PearlDigest)digest;
+- (NSData *)hashWith:(PearlHash)hash;
+/** Generate a message authentication code based on the given hash function, using the given secret key. */
+- (NSData *)hmacWith:(PearlHash)hash key:(NSData *)key;
 /** Append the given delimitor and the given salt to the bytes. */
 - (NSData *)saltWith:(NSData *)salt delimitor:(char)delimitor;
 

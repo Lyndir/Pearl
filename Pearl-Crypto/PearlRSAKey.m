@@ -28,7 +28,7 @@
 
 - (BOOL)isValid;
 
-- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
+- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash;
 
 @end
 
@@ -76,30 +76,30 @@ static size_t pem_password_callback(char *buf, size_t bufsiz, int verify, char *
     memcpy(buf, keyPhrase, length);
     return length; 
 }
-static const EVP_MD *EVP_md(PearlDigest digest) {
+static const EVP_MD *EVP_md(PearlHash hash) {
     
-    switch (digest) {
-        case PearlDigestNone:
+    switch (hash) {
+        case PearlHashNone:
             return NULL;
-        case PearlDigestMD4:
+        case PearlHashMD4:
             return EVP_md4();
-        case PearlDigestMD5:
+        case PearlHashMD5:
             return EVP_md5();
-        case PearlDigestSHA1:
+        case PearlHashSHA1:
             return EVP_sha1();
-        case PearlDigestSHA224:
+        case PearlHashSHA224:
             return EVP_sha224();
-        case PearlDigestSHA256:
+        case PearlHashSHA256:
             return EVP_sha256();
-        case PearlDigestSHA384:
+        case PearlHashSHA384:
             return EVP_sha384();
-        case PearlDigestSHA512:
+        case PearlHashSHA512:
             return EVP_sha512();
-        case PearlDigestCount:
+        case PearlHashCount:
             break;
     }
     
-    err(@"Unsupported digest: %d", digest);
+    err(@"Unsupported hash function: %d", hash);
     return 0;
 }
 
@@ -565,7 +565,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return nil;
 }
 
-- (NSData *)signData:(NSData *)data hashWith:(PearlDigest)digest {
+- (NSData *)signData:(NSData *)data hashWith:(PearlHash)hash {
     
     /* Initialize Context */
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -586,13 +586,13 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     }
     
-    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(hash)) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
     
     /* Perform Operation */
-    NSData *hash = [data hashWith:digest];
+    NSData *hash = [data hashWith:hash];
     size_t length;
     if (EVP_PKEY_sign(ctx, NULL, &length, hash.bytes, hash.length) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
@@ -611,7 +611,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return [NSData dataWithBytes:buffer length:length];
 }
 
-- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlDigest)digest {
+- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlHash)hash {
     
     /* Initialize Context */
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -632,13 +632,13 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return NO;
     }
     
-    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(hash)) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return NO;
     }
     
     /* Perform Operation */
-    NSData *hash = [data hashWith:digest];
+    NSData *hash = [data hashWith:hash];
     if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, hash.bytes, hash.length))
         return YES;
     
@@ -646,7 +646,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return NO;
 }
 
-- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlDigest)digest {
+- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlHash)hash {
     
     /* Initialize Context */
     EVP_PKEY *pkey = EVP_PKEY_new();
@@ -667,7 +667,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
         return nil;
     }
     
-    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(digest)) <= 0) {
+    if (EVP_PKEY_CTX_set_signature_md(ctx, EVP_md(hash)) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
@@ -690,7 +690,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return nil;
 }
 
-- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
+- (X509_REQ *)csrForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash {
     
     X509_REQ *csr = X509_REQ_new();
     if (!csr) {
@@ -739,7 +739,7 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     }
     
     // Sign
-    if (!X509_REQ_sign(csr, pkey, EVP_md(digest))) {
+    if (!X509_REQ_sign(csr, pkey, EVP_md(hash))) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
@@ -753,9 +753,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
     return csr;
 }
 
-- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
+- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash {
     
-    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:digest];
+    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:hash];
     
     // Export
 	unsigned char *bufferOut, *bufferIn;
@@ -770,9 +770,9 @@ static const EVP_MD *EVP_md(PearlDigest digest) {
 }
 
 
-- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest {
+- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash {
     
-    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:digest];
+    X509_REQ *csr = [self csrForSubject:x509Subject hashWith:hash];
     
     // Export
     BIO *bio = BIO_new(BIO_s_mem());

@@ -83,41 +83,41 @@
  * Sign the given data with this private key.
  * 
  * PKCS1 padding will be used.
- * If a digest other than PearlDigestNone is given, the data will be hashed by the digest algorithm and wrapped in a DigestInfo structure
- * before RSA signing is applied to it.  If PearlDigestNone is given, the data must be a DER-encoded DigestInfo structure.
+ * If a hash other than PearlHashNone is given, the data will be hashed by the hash algorithm and wrapped in a DigestInfo structure
+ * before RSA signing is applied to it.  If PearlHashNone is given, the data must be a DER-encoded DigestInfo structure.
  */
-- (NSData *)signData:(NSData *)data hashWith:(PearlDigest)digest;
+- (NSData *)signData:(NSData *)data hashWith:(PearlHash)hash;
 /**
  * Verify that the given signature is the result of signing the given data with the private key equivalent of this public key.
  * 
  * The signature must have been created with PKCS1 padding.
- * If a digest other than PearlDigestNone is given, the data will be hashed by the digest algorithm and wrapped in a DigestInfo structure
- * before RSA signing is applied to it.  If PearlDigestNone is given, the data must be a DER-encoded DigestInfo structure.
+ * If a hash other than PearlHashNone is given, the data will be hashed by the hash algorithm and wrapped in a DigestInfo structure
+ * before RSA signing is applied to it.  If PearlHashNone is given, the data must be a DER-encoded DigestInfo structure.
  */
-- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlDigest)digest;
+- (BOOL)verifySignature:(NSData *)signature ofData:(NSData *)data hashWith:(PearlHash)hash;
 /**
  * Verify that the given signature is the result of signing certain data with the private key equivalent of this public key.
- * The digest of the signed data will be recovered if the signature is valid.
+ * The hash of the signed data will be recovered if the signature is valid.
  * 
  * The signature must have been created with PKCS1 padding.
- * If a digest other than PearlDigestNone is given, the data must have been hashed by the given digest algorithm before it was signed.
- * If PearlDigestNone is given, the DigestInfo structure will be recovered.
+ * If a hash other than PearlHashNone is given, the data must have been hashed by the given hash algorithm before it was signed.
+ * If PearlHashNone is given, the DigestInfo structure will be recovered.
  */
-- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlDigest)digest;
+- (NSData *)verifySignature:(NSData *)signature recoverDataHashedWith:(PearlHash)hash;
 
 /**
  * Generate a certificate signing request signed by this private key and return the ASN.1 structure in DER encoding.
  * 
  * The result can be used by a certificate authority to generate a certificate for use by the owner of this key.
  */
-- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
+- (NSData *)derEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash;
 
 /**
  * Generate a certificate signing request signed by this private key and return it PEM-encoded.
  * 
  * The result can be used by a certificate authority to generate a certificate for use by the owner of this key.
  */
-- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlDigest)digest;
+- (NSData *)pemEncodedCSRForSubject:(NSDictionary *)x509Subject hashWith:(PearlHash)hash;
 
 
 @end

@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
 
 #define PearlLocalize(key, ...) \
     PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:nil table:nil] , ##__VA_ARGS__)
@@ -27,10 +27,10 @@ extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
     PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:nil table:tableName] , ##__VA_ARGS__)
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
-extern NSString *RPad(const NSString* string, NSUInteger l);
+extern NSString *RPad(const NSString *string, NSUInteger l);
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the left side. */
-extern NSString *LPad(const NSString* string, NSUInteger l);
+extern NSString *LPad(const NSString *string, NSUInteger l);
 /** Generate a string where the ordinal suffix of the given number is appended to the given prefix. */
-extern NSString *AppendOrdinalPrefix(const NSInteger number, const NSString* prefix);
+extern NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix);
 
 extern NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);

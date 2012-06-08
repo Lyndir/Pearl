@@ -23,7 +23,7 @@
 
     PearlCCScrollLayer *_content;
 
-    CCMenuItem             *_right, *_left;
+    CCMenuItem *_right, *_left;
 }
 
 + (id)flickSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;

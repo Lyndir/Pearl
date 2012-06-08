@@ -38,8 +38,8 @@ extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
 extern CGPoint CGPointFromCGSize(const CGSize size);
 extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
-extern CGSize CGSizeFromCGPoint(const CGPoint point);
-extern CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
+extern CGSize  CGSizeFromCGPoint(const CGPoint point);
+extern CGRect  CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
@@ -77,9 +77,9 @@ __END_DECLS
  * @see -autoSizeContent:ignoreSubviewsArray:
  */
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
-        ignoreInvisible:(BOOL)ignoreInvisible
-           limitPadding:(BOOL)limitPadding
-         ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
+                    ignoreInvisible:(BOOL)ignoreInvisible
+                       limitPadding:(BOOL)limitPadding
+                     ignoreSubviews:(UIView *)ignoredSubviews, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Automatically determines and sets the content size of the given scroll view.
@@ -90,9 +90,9 @@ __END_DECLS
  * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
  */
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
-        ignoreInvisible:(BOOL)ignoreInvisible
-           limitPadding:(BOOL)limitPadding
-    ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
+                    ignoreInvisible:(BOOL)ignoreInvisible
+                       limitPadding:(BOOL)limitPadding
+                ignoreSubviewsArray:(NSArray *)ignoredSubviewsArray;
 
 @end
 

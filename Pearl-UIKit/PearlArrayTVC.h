@@ -40,7 +40,7 @@ typedef enum {
 
 @interface PearlArrayTVC : UITableViewController {
 
-    NSMutableArray                                          *_sections;
+    NSMutableArray *_sections;
 }
 
 /**
@@ -71,8 +71,9 @@ typedef enum {
  * Add a row to the table of style UITableViewCellStyleValue1 where aName is used for the left aligned label and aDetail for the detailTextLabel.
  * When tapped, activateRowNamed:inSection:withContext: will be invoked on the given delegate.
  */
-- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection withDelegate:(id<PearlArrayTVCDelegate>)aDelegate
-            context:(id)aContext;
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection
+          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate
+               context:(id)aContext;
 
 /**
  * Fully customize the table cell for the given row.  This method is invoked for each row you added.

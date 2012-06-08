@@ -21,7 +21,7 @@
 
 @interface PearlBlockObserver_NSObject : NSObject
 
-- (id)initWithBlock:(void(^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock;
+- (id)initWithBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock;
 
 @end
 
@@ -30,7 +30,7 @@
     void(^block)(NSString *keyPath, id object, NSDictionary *change, void *context);
 }
 
-- (id)initWithBlock:(void(^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock  {
+- (id)initWithBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock {
 
     if (!(self = [super init]))
         return nil;
@@ -51,11 +51,12 @@
 @implementation NSObject (PearlKVO)
 static char actionBlocksKey;
 
-- (void)addObserverBlock:(void(^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
+- (void)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
+              forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
 
     NSMutableArray *blockObservers = objc_getAssociatedObject(self, &actionBlocksKey);
-        if (!blockObservers)
-            objc_setAssociatedObject(self, &actionBlocksKey, blockObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!blockObservers)
+        objc_setAssociatedObject(self, &actionBlocksKey, blockObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
     PearlBlockObserver_NSObject *handler = [[PearlBlockObserver_NSObject alloc] initWithBlock:observerBlock];
     [self addObserver:handler forKeyPath:keyPath options:options context:context];

@@ -23,19 +23,19 @@
 
 - (id)initWithMaximumCapacity:(NSUInteger)maximumCapacity
         usingOverflowStrategy:(PearlQueueOverflow)overflowStrategy {
-    
+
     if (!(self = [super init]))
         return nil;
-    
-    _maximumCapacity = maximumCapacity;
+
+    _maximumCapacity  = maximumCapacity;
     _overflowStrategy = overflowStrategy;
-    _array = [[NSMutableArray alloc] initWithCapacity:maximumCapacity];
-    
+    _array            = [[NSMutableArray alloc] initWithCapacity:maximumCapacity];
+
     return self;
 }
 
 - (BOOL)pushObject:(id)object {
-    
+
     if (_maximumCapacity)
         while ([self.array count] >= _maximumCapacity)
             switch (_overflowStrategy) {
@@ -54,31 +54,31 @@
                     break;
                 }
             }
-    
+
     @synchronized (self.array) {
         [self.array addObject:object];
     }
-    
+
     return YES;
 }
 
 - (id)popObject {
-    
+
     @synchronized (self.array) {
         id object = [self.array objectAtIndex:0];
         [self.array removeObjectAtIndex:0];
-        
+
         return object;
     }
 }
 
 - (BOOL)popObject:(id)object {
-    
+
     @synchronized (self.array) {
         NSUInteger index = [self.array indexOfObject:object];
         if (index == NSNotFound)
             return NO;
-        
+
         [self.array removeObjectAtIndex:index];
     }
 
@@ -86,14 +86,14 @@
 }
 
 - (id)peekObject {
-    
+
     @synchronized (self.array) {
         return [self.array objectAtIndex:0];
     }
 }
 
 - (void)clear {
-    
+
     @synchronized (self) {
         [self.array removeAllObjects];
     }

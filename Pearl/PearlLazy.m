@@ -19,36 +19,36 @@
 @implementation PearlLazy
 
 + (id)lazyObjectLoadedFrom:(id(^)(void))loadObject {
-    
+
     return (id)[[PearlLazy alloc] initLoadedFrom:loadObject];
 }
 
 - (id)initLoadedFrom:(id(^)(void))loadObject {
-    
+
     if (!(self = [super init]))
         return nil;
 
     _loadObject = [loadObject copy];
-    
+
     return self;
 }
 
 - (id)loadedObject_PearlLazy {
-    
+
     if (!_object)
         _object = _loadObject();
-    
+
     return _object;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    
+
     return [[self loadedObject_PearlLazy] methodSignatureForSelector:aSelector];
 }
 
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    
+
     [anInvocation invokeWithTarget:[self loadedObject_PearlLazy]];
 }
 

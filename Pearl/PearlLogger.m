@@ -16,35 +16,34 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlLogger.h"
 @implementation PearlLogMessage
 
 @synthesize message, occurance, level;
 
 
 + (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
-    
+
     return [[self alloc] initWithMessage:aMessage at:anOccurance withLevel:aLevel];
 }
 
 
 - (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
-    
+
     if (!(self = [super init]))
         return nil;
-    
-    self.message    = aMessage;
-    self.occurance  = anOccurance;
-    self.level      = aLevel;
-    
+
+    self.message   = aMessage;
+    self.occurance = anOccurance;
+    self.level     = aLevel;
+
     if (!self.occurance)
         self.occurance = [NSDate date];
-    
+
     return self;
 }
 
 - (NSString *)levelDescription {
-    
+
     switch (self.level) {
         case PearlLogLevelTrace:
             return @"TRACE-  ";
@@ -71,7 +70,7 @@
 }
 
 - (NSString *)description {
-    
+
     static NSDateFormatter *dateFormatter = nil;
     if (!dateFormatter) {
         dateFormatter = [NSDateFormatter new];
@@ -79,13 +78,13 @@
     }
 
     return [NSString stringWithFormat:@"%@ %@",
-            [dateFormatter stringFromDate:self.occurance], [self messageDescription]];
+                                      [dateFormatter stringFromDate:self.occurance], [self messageDescription]];
 }
 
 - (NSString *)messageDescription {
-    
+
     return [NSString stringWithFormat:@"%@ %@",
-            [self levelDescription], self.message];
+                                      [self levelDescription], self.message];
 }
 
 @end
@@ -93,8 +92,8 @@
 
 @interface PearlLogger ()
 
-@property (readwrite, retain) NSMutableArray           *messages;
-@property (readwrite, retain) NSMutableArray           *listeners;
+@property (readwrite, retain) NSMutableArray *messages;
+@property (readwrite, retain) NSMutableArray *listeners;
 
 @end
 
@@ -104,67 +103,69 @@
 @synthesize messages = _messages, listeners = _listeners, autoprintLevel = _autoprintLevel;
 
 - (id)init {
-    
+
     if (!(self = [super init]))
         return nil;
-    
-    self.messages = [NSMutableArray arrayWithCapacity:20];
-    self.listeners = [NSMutableArray array];
+
+    self.messages       = [NSMutableArray arrayWithCapacity:20];
+    self.listeners      = [NSMutableArray array];
     self.autoprintLevel = PearlLogLevelInfo;
-    
+
     return self;
 }
 
 
 + (PearlLogger *)get {
-    
+
     static PearlLogger *instance = nil;
     if (!instance)
         instance = [PearlLogger new];
-    
+
     return instance;
 }
 
 
 - (NSString *)formatMessages {
-    
+
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDateStyle:NSDateFormatterNoStyle];
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    
-    NSMutableString *formattedLog = [NSMutableString new];
+
+    NSMutableString      *formattedLog = [NSMutableString new];
     for (PearlLogMessage *message in self.messages)
         [formattedLog appendString:[message description]];
-    
+
     return formattedLog;
 }
 
 
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener {
-    
+
     [self.listeners addObject:listener];
 }
 
 
 - (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString {
-    
+
     PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
-    
-    for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
+
+    for (
+     BOOL (^listener)(PearlLogMessage *message)
+     in self.listeners)
         if (!listener(message))
             return self;
-    
+
     if (aLevel >= self.autoprintLevel)
         fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
     if (message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
-    
+
     return self;
 }
 
 
 - (void)printAllWithLevel:(PearlLogLevel)level {
-    
+
     for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
             fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -172,23 +173,23 @@
 
 
 - (PearlLogger *)trc:(NSString *)format, ... {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelTrace andMessage:message];
 }
 
 
 - (PearlLogger *)dbg:(NSString *)format, ... {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelDebug andMessage:message];
 }
 
@@ -199,40 +200,40 @@
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelInfo andMessage:message];
 }
 
 
 - (PearlLogger *)wrn:(NSString *)format, ... {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelWarn andMessage:message];
 }
 
 
 - (PearlLogger *)err:(NSString *)format, ... {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelError andMessage:message];
 }
 
 
 - (PearlLogger *)ftl:(NSString *)format, ... {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return [self logWithLevel:PearlLogLevelFatal andMessage:message];
 }
 
@@ -240,7 +241,7 @@
 
 
 NSString *errstr() {
-    
+
     switch (errno) {
         case 1:
             return @"EPERM (1): Operation not permitted";

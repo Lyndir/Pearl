@@ -91,7 +91,7 @@
  * 
  * @param query The attributes to use for finding the item.
  */
-+ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result;
++ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id *)result;
 
 /** Run a query on the keychain and return the (first) found item in the form of the given return type.
  * 

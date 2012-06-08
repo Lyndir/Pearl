@@ -34,9 +34,9 @@
 @interface PearlLayout : NSObject {
 
 @private
-    UIScrollView                                        *_scrollView;
-    UIView                                              *_contentView;
-    UIView                                              *_lastChild;
+    UIScrollView *_scrollView;
+    UIView       *_contentView;
+    UIView       *_lastChild;
 }
 
 
@@ -48,7 +48,7 @@
  *
  * This is the view to which all views are added using the add methods.
  */
-@property (nonatomic, readonly, retain) UIScrollView    *scrollView;
+@property (nonatomic, readonly, retain) UIScrollView *scrollView;
 
 
 #pragma mark ###############################
@@ -95,7 +95,7 @@
  *
  * @see -addMax:top:minus:usingDefault:
  */
- - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus;
+- (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus;
 /**
  * Add the given view to the layout's view and maximize the given view's location and size in the layout's frame.
  *

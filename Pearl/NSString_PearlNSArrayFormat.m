@@ -16,12 +16,10 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "NSString_PearlNSArrayFormat.h"
-
 @implementation NSString (PearlNSArrayFormat)
 
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
-    
+
     __unsafe_unretained id *argList = (__unsafe_unretained id *)malloc(sizeof(id) * [arguments count]);
     @try {
         [arguments getObjects:argList];

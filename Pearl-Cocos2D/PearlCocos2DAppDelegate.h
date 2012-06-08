@@ -22,20 +22,20 @@
 #import "PearlCCShadeLayer.h"
 
 
-@interface PearlCocos2DAppDelegate : PearlAppDelegate <CCDirectorDelegate> {
+@interface PearlCocos2DAppDelegate : PearlAppDelegate<CCDirectorDelegate> {
 
-    PearlCCUILayer *_uiLayer;
+    PearlCCUILayer  *_uiLayer;
     PearlCCHUDLayer *_hudLayer;
 
-    NSMutableArray                                           *_menuLayers;
+    NSMutableArray *_menuLayers;
 }
 
-@property (nonatomic, readonly, retain) PearlCCUILayer *uiLayer;
+@property (nonatomic, readonly, retain) PearlCCUILayer  *uiLayer;
 @property (nonatomic, readonly, retain) PearlCCHUDLayer *hudLayer;
 
 - (void)hudMenuPressed;
 - (void)pushLayer:(PearlCCShadeLayer *)layer;
-- (void)pushLayer: (PearlCCShadeLayer *)layer hidden:(BOOL)hidden;
+- (void)pushLayer:(PearlCCShadeLayer *)layer hidden:(BOOL)hidden;
 - (void)popAllLayers;
 - (BOOL)isLastLayerShowing;
 - (BOOL)isLayerShowing:(PearlCCShadeLayer *)layer;
@@ -49,7 +49,7 @@
 - (void)revealHud;
 - (void)hideHud;
 
-+(PearlCocos2DAppDelegate *) get;
++ (PearlCocos2DAppDelegate *)get;
 
 
 @end

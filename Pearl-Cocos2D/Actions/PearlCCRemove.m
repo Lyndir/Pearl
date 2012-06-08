@@ -16,15 +16,13 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCRemove.h"
-
 
 @implementation PearlCCRemove
 
 - (void)startWithTarget:(CCNode *)aTarget {
-    
+
     [super startWithTarget:aTarget];
-	[self.target removeFromParentAndCleanup:NO];
+    [self.target removeFromParentAndCleanup:NO];
 }
 
 @end

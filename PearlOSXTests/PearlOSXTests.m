@@ -19,30 +19,34 @@
 
 @implementation PearlOSXTests
 
-- (void)setUp
-{
+- (void)setUp {
+
     [super setUp];
-    
+
     // Set-up code here.
 }
 
-- (void)tearDown
-{
+- (void)tearDown {
     // Tear-down code here.
-    
+
     [super tearDown];
 }
 
-- (void)moo:(NSString *)args, ... {
-    
-    NSMutableArray *array = va_array(args);
-    
-    inf(@"%@", array);
-}
+- (void)testSCrypt {
 
-- (void)testDefines
-{
-    [self moo:@"1", @"2", nil];
+    uint64_t N;
+    uint32_t r, p;
+
+    PearlSCrypt *scrypt = [[PearlSCrypt alloc] initWithMemoryFraction:0 maximum:0 time:1];
+    [scrypt determineParametersN:&N r:&r p:&p];
+
+    inf(@"N: %u, r: %u, p: %u", N, r, p);
+    [scrypt deriveKeyWithLength:64
+                   fromPassword:
+                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
+                   usingSalt:
+                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]];
+    inf(@"done");
 }
 
 @end

@@ -21,10 +21,10 @@
 
 @interface PearlRootViewController : UIViewController {
 
-    NSMutableArray                              *_supportedIterfaceOrientations;
+    NSMutableArray *_supportedIterfaceOrientations;
 }
 
-@property (nonatomic, retain) NSMutableArray    *supportedIterfaceOrientations;
+@property (nonatomic, retain) NSMutableArray *supportedIterfaceOrientations;
 
 - (id)initWithView:(UIView *)aView;
 

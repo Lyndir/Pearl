@@ -19,6 +19,7 @@
 
 @interface NSObject (PearlKVO)
 
-- (void)addObserverBlock:(void(^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
+- (void)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
+              forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
 
 @end

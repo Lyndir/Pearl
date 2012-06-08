@@ -21,16 +21,16 @@
 
 @interface PearlCCUILayer : CCLayerColor {
 
-    CCLabelTTF                                  *_messageLabel;
-    NSMutableArray                              *_messageQueue, *_callbackQueue;
+    CCLabelTTF     *_messageLabel;
+    NSMutableArray *_messageQueue, *_callbackQueue;
 
-    CCRotateTo                                  *_rotateAction;
-    UIAccelerationValue                         _accelX, _accelY, _accelZ;
+    CCRotateTo *_rotateAction;
+    UIAccelerationValue _accelX, _accelY, _accelZ;
 }
 
 //-(void) rotateTo:(float)aRotation;
 
--(void) message:(NSString *)msg;
--(void) message:(NSString *)msg callback:(id)target :(SEL)selector;
+- (void)message:(NSString *)msg;
+- (void)message:(NSString *)msg callback:(id)target :(SEL)selector;
 
 @end

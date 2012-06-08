@@ -19,14 +19,14 @@
 #import <UIKit/UIKit.h>
 
 
-@interface PearlAppDelegate : UIResponder <UIApplicationDelegate, PearlConfigDelegate> {
+@interface PearlAppDelegate : UIResponder<UIApplicationDelegate, PearlConfigDelegate> {
 
-    UIWindow                                                                *_window;
-    UINavigationController                                                  *_navigationController;
+    UIWindow               *_window;
+    UINavigationController *_navigationController;
 }
 
-@property (nonatomic, readwrite, retain) IBOutlet UIWindow                  *window;
-@property (nonatomic, readwrite, retain) IBOutlet UINavigationController    *navigationController;
+@property (nonatomic, readwrite, retain) IBOutlet UIWindow               *window;
+@property (nonatomic, readwrite, retain) IBOutlet UINavigationController *navigationController;
 
 - (void)preSetup;
 

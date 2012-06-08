@@ -32,7 +32,7 @@ typedef enum {
 } PearlHash;
 
 PearlHash PearlHashFromNSString(NSString *hash);
-uint64_t PearlSecureRandom(void);
+uint64_t  PearlSecureRandom(void);
 
 @interface NSString (PearlCodeUtils)
 

@@ -28,7 +28,7 @@ static char togglesSelectionInSuperview;
     if (!superviewsControls)
         superviewsControls = [NSMutableDictionary dictionary];
 
-    NSValue *key = [NSValue valueWithNonretainedObject:self.superview];
+    NSValue      *key               = [NSValue valueWithNonretainedObject:self.superview];
     NSMutableSet *superviewControls = [superviewsControls objectForKey:key];
     if (!superviewControls)
         [superviewsControls setObject:superviewControls = [NSMutableSet set] forKey:key];
@@ -52,13 +52,13 @@ static char togglesSelectionInSuperview;
     objc_setAssociatedObject(self, &togglesSelectionInSuperview, [NSNumber numberWithBool:toggle], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
     [self addTargetBlock:^(id sender, UIControlEvents event) {
-        UIControl *const senderControl = (UIControl *) sender;
+        UIControl *const senderControl = (UIControl *)sender;
 
         if (!senderControl.selected)
             for (NSValue *controlValue in [sender Pearl_controlsForSuperview]) {
                 UIControl *control = [controlValue nonretainedObjectValue];
                 if (![senderControl.superview.subviews containsObject:control])
-                    // This control no longer exists in the superview.
+                 // This control no longer exists in the superview.
                     continue;
 
                 control.selected = NO;
@@ -72,35 +72,35 @@ static char togglesSelectionInSuperview;
 
     void (^block)(BOOL, BOOL) = [aBlock copy];
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *) object;
+        UIControl *const senderControl = (UIControl *)object;
 
         block(senderControl.highlighted, senderControl.selected);
-    } forKeyPath:@"highlighted" options:options context:nil];
+    }           forKeyPath:@"highlighted" options:options context:nil];
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *) object;
+        UIControl *const senderControl = (UIControl *)object;
 
         block(senderControl.highlighted, senderControl.selected);
-    } forKeyPath:@"selected" options:options context:nil];
+    }           forKeyPath:@"selected" options:options context:nil];
 }
 
 - (void)onHighlight:(void (^)(BOOL highlighted))aBlock options:(NSKeyValueObservingOptions)options {
 
     void (^block)(BOOL) = [aBlock copy];
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *) object;
+        UIControl *const senderControl = (UIControl *)object;
 
         block(senderControl.highlighted);
-    } forKeyPath:@"highlighted" options:options context:nil];
+    }           forKeyPath:@"highlighted" options:options context:nil];
 }
 
 - (void)onSelect:(void (^)(BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {
 
     void (^block)(BOOL) = [aBlock copy];
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *) object;
+        UIControl *const senderControl = (UIControl *)object;
 
         block(senderControl.selected);
-    } forKeyPath:@"selected" options:options context:nil];
+    }           forKeyPath:@"selected" options:options context:nil];
 }
 
 @end

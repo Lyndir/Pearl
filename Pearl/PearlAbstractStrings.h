@@ -20,11 +20,11 @@
 
 @interface PearlAbstractStrings : NSObject {
 
-    NSString                            *_tableName;
+    NSString *_tableName;
 }
 
 - (id)initWithTable:(NSString *)tableName;
 
-@property(nonatomic, retain) NSString   *tableName;
+@property (nonatomic, retain) NSString *tableName;
 
 @end

@@ -16,21 +16,18 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlStringUtils.h"
-#import "PearlStrings.h"
-
 
 NSString *PearlString(NSString *format, ...) {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *string = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
-    
+
     return string;
 }
 
-NSString *RPad(const NSString* string, const NSUInteger l) {
+NSString *RPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -40,7 +37,7 @@ NSString *RPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString *LPad(const NSString* string, const NSUInteger l) {
+NSString *LPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -50,15 +47,17 @@ NSString *LPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString *AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
+NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix) {
 
     NSString *suffix = [PearlStrings get].timeDaySuffix;
-    if(number % 10 == 1 && number != 11)
+    if (number % 10 == 1 && number != 11)
         suffix = [PearlStrings get].timeDaySuffixOne;
-    else if(number % 10 == 2 && number != 12)
-        suffix = [PearlStrings get].timeDaySuffixTwo;
-    else if(number % 10 == 3 && number != 13)
-        suffix = [PearlStrings get].timeDaySuffixThree;
+    else
+        if (number % 10 == 2 && number != 12)
+            suffix = [PearlStrings get].timeDaySuffixTwo;
+        else
+            if (number % 10 == 3 && number != 13)
+                suffix = [PearlStrings get].timeDaySuffixThree;
 
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }

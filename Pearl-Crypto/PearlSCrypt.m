@@ -9,9 +9,7 @@
  */
 
 #ifdef PEARL_WITH_SCRYPT
-#import "PearlSCrypt.h"
-#import "PearlObjectUtils.h"
-#import "PearlLogger.h"
+
 #import <scrypt/crypto_scrypt.h>
 #import <scrypt/scryptenc.h>
 
@@ -24,33 +22,33 @@
 @synthesize fractionOfAvailableMemory = _fractionOfAvailableMemory, maximumMemory = _maximumMemory, time = _time;
 
 - (id)init {
-    
+
     if (!(self = [self initWithMemoryFraction:0 maximum:0 time:0]))
         return nil;
-    
+
     return self;
 }
 
 - (id)initWithMemoryFraction:(double)fractionOfAvailableMemory maximum:(NSUInteger)maximumMemory time:(double)time {
-    
+
     if (!(self = [super init]))
         return nil;
-    
+
     self.fractionOfAvailableMemory = fractionOfAvailableMemory;
-    self.maximumMemory = maximumMemory;
-    self.time = time;
-    
+    self.maximumMemory             = maximumMemory;
+    self.time                      = time;
+
     return self;
 }
 
 static BOOL checkResult(int resultCode) {
-    
+
     if (resultCode == 0)
         return YES;
-    
+
     switch (resultCode) {
         case 1:
-            err(@"Error determining amount of available memory: getrlimit or sysctl(hw.usermem) failed");                                                                                                                                               
+            err(@"Error determining amount of available memory: getrlimit or sysctl(hw.usermem) failed");
             break;
         case 2:
             err(@"Error reading clocks: clock_getres or clock_gettime failed");
@@ -89,7 +87,7 @@ static BOOL checkResult(int resultCode) {
             err(@"Error reading input");
             break;
     }
-    
+
     return NO;
 }
 
@@ -99,47 +97,58 @@ static BOOL checkResult(int resultCode) {
     size_t outbuflen = keyLength;
     uint8_t *outbuf = malloc(outbuflen);
     if (crypto_scrypt(password.bytes, password.length,
-                                   salt.bytes, salt.length, N, r, p,
-                                   outbuf, outbuflen) < 0) {
+                      salt.bytes, salt.length, N, r, p,
+                      outbuf, outbuflen) < 0) {
         err(@"crypto_scrypt: %@", errstr());
         return nil;
     }
-    
+
     return [NSData dataWithBytes:outbuf length:outbuflen];
 }
 
+- (NSData *)deriveKeyWithLength:(NSUInteger)keyLength fromPassword:(NSData *)password usingSalt:(NSData *)salt {
+
+    uint64_t N;
+    uint32_t r, p;
+    if (![self determineParametersN:&N r:&r p:&p])
+        return nil;
+
+    return [PearlSCrypt deriveKeyWithLength:keyLength fromPassword:password usingSalt:salt N:N r:r p:p];
+}
+
 - (BOOL)determineParametersN:(uint64_t *)N r:(uint32_t *)r p:(uint32_t *)p {
-    
+
     int logN;
     if (!checkResult(pickparams(self.maximumMemory, self.fractionOfAvailableMemory, self.time,
-                                  &logN, r, p)))
+                                &logN, r, p)))
         return NO;
-    
+
     *N = (uint64_t)(1) << logN;
     return YES;
 }
 
 - (NSData *)encrypt:(NSData *)plain withPassword:(NSData *)password {
-    
+
     size_t outbuflen = plain.length + 128;
     uint8_t *outbuf = malloc(outbuflen);
     if (!checkResult(scryptenc_buf(plain.bytes, plain.length, outbuf, password.bytes, password.length,
                                    self.maximumMemory, self.fractionOfAvailableMemory, self.time)))
         return nil;
-    
+
     return [NSData dataWithBytes:outbuf length:outbuflen];
 }
 
 - (NSData *)decrypt:(NSData *)encrypted withPassword:(NSData *)password {
-    
+
     size_t outbuflen = encrypted.length;
     uint8_t *outbuf = malloc(outbuflen);
     if (!checkResult(scryptdec_buf(encrypted.bytes, encrypted.length, outbuf, &outbuflen, (uint8_t *)password.bytes, password.length,
                                    self.maximumMemory, self.fractionOfAvailableMemory, self.time)))
         return nil;
-    
+
     return [NSData dataWithBytes:outbuf length:outbuflen];
 }
 
 @end
+
 #endif

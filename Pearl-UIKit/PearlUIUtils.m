@@ -17,108 +17,123 @@
 //
 
 #import <objc/runtime.h>
-#import "PearlUIUtils.h"
-#import "PearlLogger.h"
-#import "PearlAppDelegate.h"
-#import "PearlBoxView.h"
-#import "PearlObjectUtils.h"
-#import "PearlStringUtils.h"
 
 
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
-    
+
     return (CGRect){{x, rect.origin.y}, {rect.size.width, rect.size.height}};
 }
+
 CGRect CGRectSetY(CGRect rect, CGFloat y) {
-    
+
     return (CGRect){{rect.origin.x, y}, {rect.size.width, rect.size.height}};
 }
+
 CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
-    
+
     return (CGRect){rect.origin, {width, rect.size.height}};
 }
+
 CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
-    
+
     return (CGRect){rect.origin, {rect.size.width, height}};
 }
+
 CGRect CGRectSetOrigin(CGRect rect, CGPoint origin) {
-    
+
     return (CGRect){origin, rect.size};
 }
+
 CGRect CGRectSetSize(CGRect rect, CGSize size) {
-    
+
     return (CGRect){rect.origin, size};
 }
+
 CGPoint CGPointFromCGRectCenter(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2);
 }
+
 CGPoint CGPointFromCGRectTop(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y);
 }
+
 CGPoint CGPointFromCGRectRight(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2);
 }
+
 CGPoint CGPointFromCGRectBottom(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height);
 }
+
 CGPoint CGPointFromCGRectLeft(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height / 2);
 }
+
 CGPoint CGPointFromCGRectTopLeft(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x, rect.origin.y);
 }
+
 CGPoint CGPointFromCGRectTopRight(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y);
 }
+
 CGPoint CGPointFromCGRectBottomRight(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
 }
+
 CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
-    
+
     return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
 }
+
 CGPoint CGPointFromCGSize(const CGSize size) {
-    
+
     return CGPointMake(size.width, size.height);
 }
+
 CGPoint CGPointFromCGSizeCenter(const CGSize size) {
-    
+
     return CGPointMake(size.width / 2, size.height / 2);
 }
+
 CGSize CGSizeFromCGPoint(const CGPoint point) {
-    
+
     return CGSizeMake(point.x, point.y);
 }
+
 CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
-    
+
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
+
 CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
-    
+
     return CGPointMake(to.x - from.x, to.y - from.y);
 }
+
 CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
-    
+
     return powf(to.x - from.x, 2) + powf(to.y - from.y, 2);
 }
+
 CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
-    
+
     return sqrtf(DistanceBetweenCGPointsSq(from, to));
 }
 
-static UIScrollView     *keyboardScrollView_current, *keyboardScrollView_resized;
-static CGPoint          keyboardScrollView_originalOffset;
-static CGRect           keyboardScrollView_originalFrame;
-static BOOL             keyboardScrollView_shouldHide;
-static NSMutableSet     *dismissableResponders;
+static UIScrollView *keyboardScrollView_current, *keyboardScrollView_resized;
+static CGPoint                                   keyboardScrollView_originalOffset;
+static CGRect                                    keyboardScrollView_originalFrame;
+static BOOL                                      keyboardScrollView_shouldHide;
+static NSMutableSet *dismissableResponders;
 
 @interface PearlUIUtils ()
 
@@ -130,30 +145,30 @@ static NSMutableSet     *dismissableResponders;
 @implementation UIImage (PearlUIUtils)
 
 - (UIImage *)highlightedImage {
-    
-    const CGRect    bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
-    UIColor         *color = [[UIColor alloc] initWithWhite:1 alpha:0.7f];
-    
+
+    const CGRect bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
+    UIColor *color = [[UIColor alloc] initWithWhite:1 alpha:0.7f];
+
     UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
-    CGContextRef    context = UIGraphicsGetCurrentContext();
-    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
     // transform CG* coords to UI* coords
     CGContextTranslateCTM(context, 0, bounds.size.height);
     CGContextScaleCTM(context, 1, -1);
-    
+
     // draw original image
     CGContextDrawImage(context, bounds, self.CGImage);
-    
+
     // draw highlight overlay
     CGContextClipToMask(context, bounds, self.CGImage);
     CGContextSetBlendMode(context, kCGBlendModeOverlay);
     CGContextSetFillColorWithColor(context, color.CGColor);
     CGContextFillRect(context, bounds);
-    
+
     // finish image context
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     return result;
 }
 
@@ -164,7 +179,7 @@ static NSMutableSet     *dismissableResponders;
 - (void)autoSize {
 
     self.frame = CGRectSetHeight(self.frame, [self textRectForBounds:CGRectSetHeight(self.frame, CGFLOAT_MAX)
-                                                 limitedToNumberOfLines:self.numberOfLines].size.height);
+                                              limitedToNumberOfLines:self.numberOfLines].size.height);
 }
 
 @end
@@ -177,12 +192,12 @@ static NSMutableSet     *dismissableResponders;
 }
 
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
-        ignoreInvisible:(BOOL)ignoreInvisible
-           limitPadding:(BOOL)limitPadding
-         ignoreSubviews:(UIView *)ignoredSubviews, ... {
+                    ignoreInvisible:(BOOL)ignoreInvisible
+                       limitPadding:(BOOL)limitPadding
+                     ignoreSubviews:(UIView *)ignoredSubviews, ... {
 
     [self autoSizeContentIgnoreHidden:ignoreHidden ignoreInvisible:ignoreInvisible limitPadding:limitPadding
-      ignoreSubviewsArray:va_array(ignoredSubviews)];
+                  ignoreSubviewsArray:va_array(ignoredSubviews)];
 }
 
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
@@ -210,28 +225,28 @@ static NSMutableSet     *dismissableResponders;
             contentRect = CGRectUnion(contentRect, subviewContent);
     }
     if (CGRectEqualToRect(contentRect, CGRectNull))
-        // No subviews inside the scroll area.
-        contentRect = CGRectZero;
+     // No subviews inside the scroll area.
+        contentRect    = CGRectZero;
 
     // Add right/bottom padding by adding left/top offset to the size (but no more than 20pt if limitPadding).
     CGSize originPadding = CGSizeMake(MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y));
-    CGRect paddedRect = (CGRect){CGPointZero,
-        CGSizeMake(contentRect.size.width   + originPadding.width   + (limitPadding? MIN(20, originPadding.width): originPadding.width),
-                   contentRect.size.height  + originPadding.height  + (limitPadding? MIN(20, originPadding.height): originPadding.height))};
+    CGRect paddedRect    = (CGRect){CGPointZero,
+     CGSizeMake(contentRect.size.width + originPadding.width + (limitPadding? MIN(20, originPadding.width): originPadding.width),
+                contentRect.size.height + originPadding.height + (limitPadding? MIN(20, originPadding.height): originPadding.height))};
 
     // Apply rect to scrollView's content definition.
     self.contentOffset = CGPointZero;
-    self.contentSize = paddedRect.size;
+    self.contentSize   = paddedRect.size;
 
     // === Step 2: Manage the scroll view on keyboard notifications.
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:self.window];
+                           selector:@selector(keyboardWillShow:)
+                               name:UIKeyboardWillShowNotification
+                             object:self.window];
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:self.window];
+                           selector:@selector(keyboardWillHide:)
+                               name:UIKeyboardWillHideNotification
+                             object:self.window];
     keyboardScrollView_current = self;
 }
 
@@ -255,7 +270,8 @@ static NSMutableSet     *dismissableResponders;
 
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
-        dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", view.tag, view.alpha, view.hidden? @"YES": @"NO", [view debugDescription]);
+        dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", view.tag, view.alpha, view.hidden? @"YES"
+         : @"NO", [view debugDescription]);
         indent += 4;
     }
 }
@@ -267,7 +283,8 @@ static NSMutableSet     *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", self.tag, self.alpha, self.hidden? @"YES": @"NO", [self debugDescription]);
+    dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", self.tag, self.alpha, self.hidden? @"YES"
+     : @"NO", [self debugDescription]);
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];
@@ -291,8 +308,8 @@ static NSMutableSet     *dismissableResponders;
             if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
                 contentRect = CGRectUnion(contentRect,
                                           [self convertRect:
-                                           [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
-                                                   fromView:subview]);
+                                                 [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
+                                                fromView:subview]);
 
     return contentRect;
 }
@@ -320,7 +337,7 @@ static NSMutableSet     *dismissableResponders;
     if (self.isFirstResponder)
         return self;
 
-    UIView *firstResponder = nil;
+    UIView      *firstResponder = nil;
     for (UIView *subView in self.subviews)
         if ((firstResponder = [subView findFirstResponderInHierarchy]))
             break;
@@ -339,8 +356,8 @@ static NSMutableSet     *dismissableResponders;
     NSMutableArray *properties = [NSMutableArray array];
 
     // Recursively clone subviews only if this is a container-style view (ie. a UIView or UIScrollView subclass)
-    BOOL recurse = YES;
-    for (Class class = [self class]; class && class != [UIView class]; class = class_getSuperclass(class)) {
+    BOOL       recurse = YES;
+    for (Class class   = [self class]; class && class != [UIView class]; class = class_getSuperclass(class)) {
         if ([NSStringFromClass([self class]) hasPrefix:@"UI"]) {
             if ([self class] != [UIView class] && [self class] != [UIScrollView class])
                 recurse = NO;
@@ -438,21 +455,21 @@ static NSMutableSet     *dismissableResponders;
         [properties addObject:@"showsTouchWhenHighlighted"];
         [properties addObject:@"tintColor"];
         for (NSNumber *state in [NSArray arrayWithObjects:
-                                 PearlUnsignedInteger(UIControlStateNormal),
-                                 PearlUnsignedInteger(UIControlStateHighlighted),
-                                 PearlUnsignedInteger(UIControlStateDisabled),
-                                 PearlUnsignedInteger(UIControlStateSelected),
-                                 PearlUnsignedInteger(UIControlStateApplication),
-                                 PearlUnsignedInteger(UIControlStateReserved),
-                                 nil]) {
+                                          PearlUnsignedInteger(UIControlStateNormal),
+                                          PearlUnsignedInteger(UIControlStateHighlighted),
+                                          PearlUnsignedInteger(UIControlStateDisabled),
+                                          PearlUnsignedInteger(UIControlStateSelected),
+                                          PearlUnsignedInteger(UIControlStateApplication),
+                                          PearlUnsignedInteger(UIControlStateReserved),
+                                          nil]) {
             UIControlState controlState = [state unsignedIntegerValue];
 
-            UIButton *selfButton = (UIButton *) self;
-            NSString *title = [selfButton titleForState:controlState];
-            UIColor *titleColor = [selfButton titleColorForState:controlState];
-            UIColor *shadowColor = [selfButton titleShadowColorForState:controlState];
-            UIImage *backgroundImage = [selfButton backgroundImageForState:controlState];
-            UIImage *image = [selfButton imageForState:controlState];
+            UIButton *selfButton      = (UIButton *)self;
+            NSString *title           = [selfButton titleForState:controlState];
+            UIColor  *titleColor      = [selfButton titleColorForState:controlState];
+            UIColor  *shadowColor     = [selfButton titleShadowColorForState:controlState];
+            UIImage  *backgroundImage = [selfButton backgroundImageForState:controlState];
+            UIImage  *image           = [selfButton imageForState:controlState];
 
             if (controlState == UIControlStateNormal || title != [selfButton titleForState:UIControlStateNormal])
                 [copy setTitle:title forState:controlState];
@@ -515,14 +532,14 @@ static NSMutableSet     *dismissableResponders;
         // Localize titles of segments.
         for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
             [segmentView setTitle:[PearlUIUtils applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
-                forSegmentAtIndex:segment];
+                         forSegmentAtIndex:segment];
     }
     if ([self isKindOfClass:[UIButton class]]) {
         UIButton *button = (UIButton *)self;
 
         // Localize titles of segments.
-        UIControlState states[] = { UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication };
-        for (NSUInteger s = 0; s < 5; ++s) {
+        UIControlState  states[] = {UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication};
+        for (NSUInteger s        = 0; s < 5; ++s) {
             UIControlState state = states[s];
             NSString *title = [button titleForState:state];
             if (title)
@@ -549,54 +566,54 @@ static NSMutableSet     *dismissableResponders;
 
 
 + (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... {
-    
+
     return [self viewClosestTo:point ofArray:va_array(views)];
 }
 
 + (UIView *)viewClosestTo:(CGPoint)point ofArray:(NSArray *)views {
-    
+
     UIView *closestView = nil;
     CGFloat closestDistance = 0;
     for (UIView *view in views) {
         if (view.hidden || !view.alpha)
             continue;
-        
+
         CGFloat distance = DistanceBetweenCGPointsSq(view.center, point);
         if (!closestDistance || distance < closestDistance) {
             closestDistance = distance;
-            closestView = view;
+            closestView     = view;
         }
     }
-    
+
     return closestView;
 }
 
 + (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {
-    
-    CGFloat tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
-    NSUInteger tabIndex = [tabBar.items indexOfObject:item];
+
+    CGFloat    tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
+    NSUInteger tabIndex     = [tabBar.items indexOfObject:item];
     if (tabIndex == NSNotFound)
         return CGRectNull;
-    
+
     return CGRectMake(tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height);
 }
 
 + (void)makeDismissable:(UIView *)views, ... {
-    
+
     [self makeDismissableArray:va_array(views)];
 }
 
 + (void)makeDismissableArray:(NSArray *)viewsArray {
-    
+
     if (!dismissableResponders)
         dismissableResponders = [[NSMutableSet alloc] initWithCapacity:3];
-    
+
     [dismissableResponders addObjectsFromArray:viewsArray];
 }
 
 + (UIWindow *)findWindow {
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow          *window = [UIApplication sharedApplication].keyWindow;
     if (!window)
         for (UIWindow *aWindow in [UIApplication sharedApplication].windows)
             if ([aWindow findFirstResponderInHierarchy]) {
@@ -604,24 +621,24 @@ static NSMutableSet     *dismissableResponders;
                 break;
             }
     if (!window)
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        window                = [[UIApplication sharedApplication].windows objectAtIndex:0];
 
     return window;
 }
 
 + (void)keyboardWillShow:(NSNotification *)n {
-    
+
     UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
     if (!responder)
-        // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
-        // Don't know why but since no keyboard actually appears in this case, ignore them.
+     // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
+     // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
     if (!keyboardScrollView_current || ![responder isDescendantOfView:keyboardScrollView_current]) {
         // Make sure the responder is a descendant of the current view.
         keyboardScrollView_shouldHide = NO;
         return;
     }
-    
+
     // Make sure no old view is still resized and a current view is set.
     if (keyboardScrollView_resized && keyboardScrollView_resized != keyboardScrollView_current) {
         err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
@@ -629,98 +646,102 @@ static NSMutableSet     *dismissableResponders;
     }
     assert(keyboardScrollView_current);
     assert(!keyboardScrollView_resized);
-    
+
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
     keyboardScrollView_resized = keyboardScrollView_current;
-    
-    NSDictionary* userInfo = [n userInfo];
+
+    NSDictionary *userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect scrollRect   = [keyboardScrollView_resized frameInWindow];
     CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
-    
-    keyboardScrollView_originalOffset       = keyboardScrollView_resized.contentOffset;
-    keyboardScrollView_originalFrame        = keyboardScrollView_resized.frame;
-    CGPoint keyboardScrollNewOffset         = keyboardScrollView_originalOffset;
-    keyboardScrollNewOffset.y               += keyboardRect.size.height / 2;
-    CGRect keyboardScrollNewFrame           = keyboardScrollView_resized.frame;
-    keyboardScrollNewFrame.size.height      -= hiddenRect.size.height;
-    
+
+    keyboardScrollView_originalOffset = keyboardScrollView_resized.contentOffset;
+    keyboardScrollView_originalFrame  = keyboardScrollView_resized.frame;
+    CGPoint keyboardScrollNewOffset = keyboardScrollView_originalOffset;
+    keyboardScrollNewOffset.y += keyboardRect.size.height / 2;
+    CGRect keyboardScrollNewFrame = keyboardScrollView_resized.frame;
+    keyboardScrollNewFrame.size.height -= hiddenRect.size.height;
+
     CGRect responderRect = [keyboardScrollView_resized convertRect:responder.bounds fromView:responder];
-    
+
     if (responderRect.origin.y < keyboardScrollNewOffset.y)
         keyboardScrollNewOffset.y = 0;
-    else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
-        keyboardScrollNewOffset.y = responderRect.origin.y;
-    
+    else
+        if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
+            keyboardScrollNewOffset.y = responderRect.origin.y;
+
     if (CGRectEqualToRect(keyboardScrollView_resized.frame, keyboardScrollNewFrame))
-        // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
+     // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
         keyboardScrollNewFrame = CGRectNull;
-    
+
     UIScrollView *animatingScrollView = keyboardScrollView_resized;
     [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                          delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                     animations:^{
-                         animatingScrollView.contentOffset  = keyboardScrollNewOffset;
-                     } completion:^(BOOL finished) {
-                         if (!CGRectIsNull(keyboardScrollNewFrame))
-                             animatingScrollView.frame      = keyboardScrollNewFrame;
-                     }];
+            delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+              animations:^{
+                  animatingScrollView.contentOffset = keyboardScrollNewOffset;
+              } completion:^(BOOL finished) {
+        if (!CGRectIsNull(keyboardScrollNewFrame))
+            animatingScrollView.frame = keyboardScrollNewFrame;
+    }];
 }
 
 + (void)keyboardWillHide:(NSNotification *)n {
-    
+
     if (!keyboardScrollView_resized)
-        // Don't do any scrollview animation when no scrollview is active.
+     // Don't do any scrollview animation when no scrollview is active.
         return;
-    
-    UIScrollView *animatingScrollView           = keyboardScrollView_resized;
-    CGRect animatingScrollView_originalFrame    = keyboardScrollView_originalFrame;
-    CGPoint animatingScrollView_originalOffset  = keyboardScrollView_originalOffset;
-    keyboardScrollView_shouldHide               = YES;
-    
+
+    UIScrollView *animatingScrollView = keyboardScrollView_resized;
+    CGRect  animatingScrollView_originalFrame  = keyboardScrollView_originalFrame;
+    CGPoint animatingScrollView_originalOffset = keyboardScrollView_originalOffset;
+    keyboardScrollView_shouldHide = YES;
+
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!keyboardScrollView_shouldHide)
             return;
-        
-        CGPoint currentOffset                   = animatingScrollView.contentOffset;
-        animatingScrollView.frame               = animatingScrollView_originalFrame;
-        animatingScrollView.contentOffset       = currentOffset;
-        
+
+        CGPoint currentOffset = animatingScrollView.contentOffset;
+        animatingScrollView.frame         = animatingScrollView_originalFrame;
+        animatingScrollView.contentOffset = currentOffset;
+
         [UIView animateWithDuration:[[n.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                              delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                         animations:^{
-                             animatingScrollView.contentOffset = animatingScrollView_originalOffset;
-                         } completion:^(BOOL finished) {
-                         }];
-        
+                delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+                  animations:^{
+                      animatingScrollView.contentOffset = animatingScrollView_originalOffset;
+                  } completion:^(BOOL finished) {
+        }];
+
         keyboardScrollView_resized = nil;
     });
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {
-    
+
     static NSRegularExpression *UIUtils_localizableSyntax = nil;
     if (UIUtils_localizableSyntax == nil)
         UIUtils_localizableSyntax = [[NSRegularExpression alloc] initWithPattern:@"^\\{([^:]*)(?::(.*))?\\}$" options:0 error:nil];
-    
+
     __block NSString *localizedValue = localizableValue;
-    [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length]) usingBlock:
-     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-         if (result) {
-             NSRange localizationKeyRange   = [result rangeAtIndex:1];
-             NSRange defaultValueRange      = [result rangeAtIndex:2];
-             if (NSEqualRanges(localizationKeyRange, NSMakeRange(NSNotFound , 0)))
-                 return;
-             
-             NSString *localizationKey  = [localizableValue substringWithRange:localizationKeyRange];
-             NSString *defaultValue     = nil;
-             if (!NSEqualRanges(defaultValueRange, NSMakeRange(NSNotFound , 0)))
-                 defaultValue           = [localizableValue substringWithRange:defaultValueRange];
-             
-             localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
-         }
-     }];
-    
+    [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length])
+                                                                         usingBlock:
+                                                                          ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                                                                              if (result) {
+                                                                                  NSRange localizationKeyRange = [result rangeAtIndex:1];
+                                                                                  NSRange defaultValueRange    = [result rangeAtIndex:2];
+                                                                                  if (NSEqualRanges(localizationKeyRange,
+                                                                                                    NSMakeRange(NSNotFound, 0)))
+                                                                                      return;
+
+                                                                                  NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
+                                                                                  NSString *defaultValue    = nil;
+                                                                                  if (!NSEqualRanges(defaultValueRange,
+                                                                                                     NSMakeRange(NSNotFound, 0)))
+                                                                                      defaultValue = [localizableValue substringWithRange:defaultValueRange];
+
+                                                                                  localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+                                                                              }
+                                                                          }];
+
     return localizedValue;
 }
 

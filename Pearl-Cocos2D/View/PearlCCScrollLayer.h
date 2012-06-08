@@ -28,36 +28,36 @@ typedef enum {
 
 @protocol PearlCCScrollLayerDelegate
 
--(void)didUpdateScrollWithOrigin:(CGPoint)origin to:(CGPoint)newScroll;
+- (void)didUpdateScrollWithOrigin:(CGPoint)origin to:(CGPoint)newScroll;
 
 @end
 
 
 @interface PearlCCScrollLayer : CCLayer {
 
-    @private
-    CGPoint                                                                 _dragFromPoint;
-    CGPoint                                                                 _dragFromPosition;
+@private
+    CGPoint _dragFromPoint;
+    CGPoint _dragFromPosition;
 
-    CGFloat                                                                 _scrollPerSecond;
-    CGPoint                                                                 _scrollRatio;
-    CGPoint                                                                 _scrollStep;
+    CGFloat                       _scrollPerSecond;
+    CGPoint                       _scrollRatio;
+    CGPoint                       _scrollStep;
     PearlCCScrollContentDirection _scrollContentDirection;
-    CGSize                                                                  _scrollContentSize;
+    CGSize                        _scrollContentSize;
 
-    CGPoint                                                                 _origin;
-    CGPoint                                                                 _scroll;
+    CGPoint _origin;
+    CGPoint _scroll;
 
-    BOOL                                                                    _isTouching;
-    id<NSObject, PearlCCScrollLayerDelegate>                                       _delegate;
+    BOOL                                     _isTouching;
+    id<NSObject, PearlCCScrollLayerDelegate> _delegate;
 }
 
-@property (nonatomic, readwrite) CGFloat                                    scrollPerSecond;
-@property (nonatomic, readwrite) CGPoint                                    scrollRatio;
-@property (nonatomic, readwrite) CGPoint                                    scrollStep;
-@property (nonatomic, readwrite) PearlCCScrollContentDirection scrollContentDirection;
-@property (nonatomic, readwrite) CGSize                                     scrollContentSize;
-@property (nonatomic, readwrite, retain) id<NSObject, PearlCCScrollLayerDelegate>  delegate;
+@property (nonatomic, readwrite) CGFloat                                          scrollPerSecond;
+@property (nonatomic, readwrite) CGPoint                                          scrollRatio;
+@property (nonatomic, readwrite) CGPoint                                          scrollStep;
+@property (nonatomic, readwrite) PearlCCScrollContentDirection                    scrollContentDirection;
+@property (nonatomic, readwrite) CGSize                                           scrollContentSize;
+@property (nonatomic, readwrite, retain) id<NSObject, PearlCCScrollLayerDelegate> delegate;
 
 + (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
 + (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction;

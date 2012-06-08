@@ -21,28 +21,28 @@
 
 @interface PearlCCBarLayer : CCSprite {
 
-    CCMenuItemAtlasFont    *_menuButton;
-    CCMenu                 *_menuMenu;
-    CCLabelTTF             *_messageLabel;
+    CCMenuItemAtlasFont *_menuButton;
+    CCMenu              *_menuMenu;
+    CCLabelTTF          *_messageLabel;
 
-    NSUInteger            _textColor, _renderColor;
-    CGPoint               _showPosition;
+    NSUInteger _textColor, _renderColor;
+    CGPoint    _showPosition;
 
-    BOOL                 _dismissed;
+    BOOL _dismissed;
 }
 
 @property (nonatomic, readonly) BOOL dismissed;
 
 + (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
--(id) initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
+- (id)initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
 
--(void) setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector;
--(CGPoint) hidePosition;
--(void) reveal;
--(void) dismiss;
+- (void)setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector;
+- (CGPoint)hidePosition;
+- (void)reveal;
+- (void)dismiss;
 
--(void) message:(NSString *)msg isImportant:(BOOL)important;
--(void) message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important;
--(void) dismissMessage;
+- (void)message:(NSString *)msg isImportant:(BOOL)important;
+- (void)message:(NSString *)msg duration:(ccTime)_duration isImportant:(BOOL)important;
+- (void)dismissMessage;
 
 @end

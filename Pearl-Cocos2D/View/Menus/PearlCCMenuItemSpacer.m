@@ -16,13 +16,10 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCMenuItemSpacer.h"
-#import "PearlConfig.h"
-
 
 @interface PearlCCMenuItemSpacer ()
 
-@property (readwrite, assign) CGFloat  height;
+@property (readwrite, assign) CGFloat height;
 
 @end
 
@@ -31,58 +28,58 @@
 
 @synthesize height = _height;
 
-+(id) spacerSmall {
-    
++ (id)spacerSmall {
+
     return [[self alloc] initSmall];
 }
 
-+(id) spacerNormal {
-    
++ (id)spacerNormal {
+
     return [[self alloc] initNormal];
 }
 
-+(id) spacerLarge {
-    
++ (id)spacerLarge {
+
     return [[self alloc] initLarge];
 }
 
--(id) initSmall {
-    
+- (id)initSmall {
+
     return [self initWithHeight:[[PearlConfig get].smallFontSize unsignedIntegerValue]];
 }
 
--(id) initNormal {
-    
+- (id)initNormal {
+
     return [self initWithHeight:[[PearlConfig get].fontSize unsignedIntegerValue]];
 }
 
--(id) initLarge {
-    
+- (id)initLarge {
+
     return [self initWithHeight:[[PearlConfig get].largeFontSize unsignedIntegerValue]];
 }
 
 
--(id) initWithHeight:(CGFloat)aHeight {
-    
-    if(!(self = [super initWithTarget:nil selector:nil]))
+- (id)initWithHeight:(CGFloat)aHeight {
+
+    if (!(self = [super initWithTarget:nil selector:nil]))
         return self;
-    
+
     self.height = aHeight;
     [self setIsEnabled:NO];
-    
+
     return self;
 }
 
 
--(CGRect) rect {
-    
-	return CGRectMake(self.position.x, self.position.y - self.height / 2, self.position.x, self.position.y + self.height / 2);
+- (CGRect)rect {
+
+    return CGRectMake(self.position.x, self.position.y - self.height / 2, self.position.x, self.position.y + self.height / 2);
 }
 
 
--(CGSize) contentSize {
-    
-	return CGSizeMake(0, self.height);
+- (CGSize)contentSize {
+
+    return CGSizeMake(0, self.height);
 }
 
 

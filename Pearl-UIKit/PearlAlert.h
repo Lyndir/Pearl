@@ -24,12 +24,12 @@
  *
  * The user is presented with a message in an alert dialog and (a) configurable button(s).
  */
-@interface PearlAlert : NSObject <UIAlertViewDelegate> {
-    
+@interface PearlAlert : NSObject<UIAlertViewDelegate> {
+
 @private
-    UIAlertView     *alertView;
-    UITextField     *alertField;
-    
+    UIAlertView *alertView;
+    UITextField *alertField;
+
     void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
 }
 
@@ -62,21 +62,21 @@
 
 + (PearlAlert *)showError:(NSString *)message;
 + (PearlAlert *)showError:(NSString *)message
-                 tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
-                       otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+        tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
+              otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 + (PearlAlert *)showNotice:(NSString *)message;
 + (PearlAlert *)showNotice:(NSString *)message
-                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
-                        otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+         tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
+               otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
                          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
-                          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
-                                cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
+                 tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
+                       cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 
 #pragma mark ###############################

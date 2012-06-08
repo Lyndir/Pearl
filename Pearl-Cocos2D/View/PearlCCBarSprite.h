@@ -22,20 +22,20 @@
 @interface PearlCCBarSprite : CCLayer {
 
 @private
-    CCTexture2D                                     *_head, __strong **_body, *_tail;
+    CCTexture2D *_head, __strong **_body, *_tail;
 
-    CGFloat                                         _age;
-    NSUInteger                                      _bodyFrame, _bodyFrames;
+    CGFloat    _age;
+    NSUInteger _bodyFrame, _bodyFrames;
 
-    BOOL                                            _animatedTargetting;
-    ccTime                                          _smoothTimeElapsed;
-    CGPoint                                         _target;
+    BOOL    _animatedTargetting;
+    ccTime  _smoothTimeElapsed;
+    CGPoint _target;
 
-    CGPoint                                         _current;
-    CGFloat                                         _currentLength;
+    CGPoint _current;
+    CGFloat _currentLength;
 
-    CGSize                                          _textureSize;
-    NSUInteger                                      _uniformColor;
+    CGSize     _textureSize;
+    NSUInteger _uniformColor;
 }
 
 @property (nonatomic, readwrite, assign) CGPoint    target;
@@ -46,6 +46,7 @@
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-- (id) initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting;
+- (id)initWithHead:(NSString *)bundleHeadReference body:(NSString *)bundleBodyReference withFrames:(NSUInteger)bodyFrameCount
+              tail:(NSString *)bundleTailReference animatedTargetting:(BOOL)anAnimatedTargetting;
 
 @end

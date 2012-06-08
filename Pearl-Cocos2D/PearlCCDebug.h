@@ -19,7 +19,7 @@
 
 
 @interface PearlCCDebug : NSObject {
-    
+
 }
 
 + (void)printStateForScene:(CCScene *)scene;

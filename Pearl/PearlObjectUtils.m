@@ -16,8 +16,6 @@
 //  Copyright 2010 Lyndir. All rights reserved.
 //
 
-#import "PearlObjectUtils.h"
-
 
 @interface PearlBlockObject ()
 
@@ -45,7 +43,7 @@
     if (!(self = [super init]))
         return nil;
 
-    self.block = aBlock;
+    self.block        = aBlock;
     self.facadeObject = facade;
 
     return self;

@@ -16,23 +16,21 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlUIDebug.h"
-
 
 @implementation PearlUIDebug
 
 static CGFloat autoWidth = 5;
 
 + (UIView *)view {
-    
+
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
 
     static UIView *instance;
     if (!instance) {
         [window addSubview:instance = [[UIView alloc] initWithFrame:window.bounds]];
         instance.userInteractionEnabled = NO;
-        instance.opaque = NO;
-        instance.alpha = 0.7f;
+        instance.opaque                 = NO;
+        instance.alpha                  = 0.7f;
         [self clear];
     }
 
@@ -41,7 +39,7 @@ static CGFloat autoWidth = 5;
 }
 
 + (void)clear {
-    
+
     [[[self view] subviews] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj removeFromSuperview];
     }];
@@ -49,14 +47,14 @@ static CGFloat autoWidth = 5;
 }
 
 + (PearlBoxView *)showRect:(CGRect)rect color:(UIColor *)color {
-    
+
     autoWidth = fmaxf(autoWidth - 1, 1);
-    
+
     return [self showRect:rect color:color width:autoWidth];
 }
 
 + (PearlBoxView *)showRect:(CGRect)rect color:(UIColor *)color width:(CGFloat)width {
-    
+
     PearlBoxView *box = [PearlBoxView boxWithFrame:rect color:color width:width];
     [[self view] addSubview:box];
 
@@ -67,8 +65,8 @@ static CGFloat autoWidth = 5;
 
     PearlBoxView *box = [self showRect:rect color:color];
     box.filled = YES;
-    box.alpha = 0.7f;
-    
+    box.alpha  = 0.7f;
+
     return box;
 }
 

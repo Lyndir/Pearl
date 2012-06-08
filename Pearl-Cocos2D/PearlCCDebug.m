@@ -15,8 +15,6 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
-#import "PearlCCDebug.h"
-#import "PearlStringUtils.h"
 #import "JRSwizzle.h"
 
 
@@ -24,11 +22,11 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 
 @interface PearlCCDebugActivity : NSObject {
 @private
-    long                                    index;
-    NSString                                *lastDescription;
+    long index;
+    NSString *lastDescription;
 }
 
-@property (nonatomic, retain) NSString      *lastDescription;
+@property (nonatomic, retain) NSString *lastDescription;
 
 - (char)activityStateWithDescription:(NSString *)description;
 
@@ -43,11 +41,11 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 @implementation PearlCCDebug
 
 + (void)initialize {
-    
+
     NSError *error = nil;
     [CCNode jr_swizzleMethod:@selector(draw) withMethod:@selector(draw_PearlCCDebug) error:&error];
     if (error)
-        dbg(@"Swizzling error: %@", error);
+    dbg(@"Swizzling error: %@", error);
 }
 
 + (void)printStateForScene:(CCScene *)scene {
@@ -61,11 +59,11 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
     if (nodeActivity == nil)
         nodeActivity = [[NSMutableDictionary alloc] init];
 
-    NSValue *nodeValue = [NSValue valueWithPointer:(void *)node];
-    PearlCCDebugActivity *activity = [nodeActivity objectForKey:nodeValue];
+    NSValue              *nodeValue = [NSValue valueWithPointer:(void *)node];
+    PearlCCDebugActivity *activity  = [nodeActivity objectForKey:nodeValue];
     if (activity == nil)
         [nodeActivity setObject:activity = [PearlCCDebugActivity new] forKey:nodeValue];
-    
+
     NSString *nodeDescription = [self describe:node];
     char activityState = [activity activityStateWithDescription:nodeDescription];
 
@@ -88,17 +86,17 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 @synthesize lastDescription;
 
 - (id)init {
-    
+
     if (!(self = [super init]))
         return self;
-    
+
     index = -1;
-    
+
     return self;
 }
 
 - (char)activityStateWithDescription:(NSString *)description {
-    
+
     static char activityStates[4] = "-\\|/";
     if (![lastDescription isEqualToString:description]) {
         index = (index + 1) % (signed)(sizeof(activityStates) / sizeof(char));
@@ -113,7 +111,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 @implementation CCNode (PearlCCDebug)
 
 - (void)draw_PearlCCDebug {
-    
+
     if (!PearlCCDebugDrawOrder)
         PearlCCDebugDrawOrder = [[NSMutableDictionary alloc] init];
 
@@ -122,7 +120,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
         order = 0;
 
     [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInt:order++] forKey:[NSValue valueWithPointer:(void *)self]];
-    
+
     [self draw_PearlCCDebug];
 }
 

@@ -16,13 +16,11 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlLayout.h"
-
 @interface PearlLayout ()
 
-@property (nonatomic, readwrite, retain) UIScrollView   *scrollView;
-@property (nonatomic, readwrite, retain) UIView         *contentView;
-@property (nonatomic, readwrite, retain) UIView         *lastChild;
+@property (nonatomic, readwrite, retain) UIScrollView *scrollView;
+@property (nonatomic, readwrite, retain) UIView       *contentView;
+@property (nonatomic, readwrite, retain) UIView       *lastChild;
 
 @end
 
@@ -34,10 +32,9 @@
 @synthesize lastChild = _lastChild;
 
 
-
 - (id)init {
-    
-    if(!(self = [self initWithView:[[UIScrollView alloc] init]]))
+
+    if (!(self = [self initWithView:[[UIScrollView alloc] init]]))
         return nil;
 
     return self;
@@ -45,39 +42,39 @@
 
 
 - (id)initWithView:(UIView *)aView {
-    
-    if(!(self = [super init]))
+
+    if (!(self = [super init]))
         return self;
 
-    CGRect applicationFrame     = [[UIScreen mainScreen] applicationFrame];
-    CGRect contentFrame         = applicationFrame;
-    contentFrame.origin         = CGPointZero;
+    CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
+    CGRect contentFrame     = applicationFrame;
+    contentFrame.origin = CGPointZero;
 
-    self.scrollView                  = [[UIScrollView alloc] initWithFrame:applicationFrame];
-    self.contentView                 = aView;
-    self.contentView.frame           = contentFrame;
+    self.scrollView                   = [[UIScrollView alloc] initWithFrame:applicationFrame];
+    self.contentView                  = aView;
+    self.contentView.frame            = contentFrame;
     self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+
     [self.scrollView addSubview:self.contentView];
-    
+
     return self;
 }
 
 
 - (PearlLayout *)addLogo {
-    
+
     return [self addLogo:nil];
 }
 
 
 - (PearlLayout *)addLogo:(UIImage *)logoImage {
 
-    UIImageView *logo   = [[UIImageView alloc] initWithImage:logoImage];
+    UIImageView *logo = [[UIImageView alloc] initWithImage:logoImage];
     [logo setCenter:CGPointMake(self.contentView.frame.size.width / 2, logo.frame.size.height / 2)];
     [logo setAutoresizingMask:
-     UIViewAutoresizingFlexibleLeftMargin |
-     UIViewAutoresizingFlexibleRightMargin];
-    
+           UIViewAutoresizingFlexibleLeftMargin |
+            UIViewAutoresizingFlexibleRightMargin];
+
     return [self add:logo];
 }
 
@@ -89,13 +86,13 @@
 
 
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top {
-    
+
     return [self addMax:newView top:top minus:0];
 }
 
 
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus {
-    
+
     return [self addMax:newView top:top minus:minus usingDefault:-1];
 }
 
@@ -103,7 +100,7 @@
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)d {
 
     CGFloat y = top;
-    if(y == d) {
+    if (y == d) {
         if (self.lastChild)
             y = [self.lastChild frame].origin.y + [self.lastChild frame].size.height + PearlLayoutPadding;
         else
@@ -114,49 +111,49 @@
                                  y,
                                  self.contentView.frame.size.width,
                                  self.scrollView.frame.size.height / 1 - y - PearlLayoutPadding - minus)];
-    
+
     return [self add:newView usingDefault:-1];
 }
 
 
 - (PearlLayout *)addSpace:(CGFloat)space {
-    
+
     UIView *spaceView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, space)];
-    return [self add: spaceView];
+    return [self add:spaceView];
 }
 
 
 - (PearlLayout *)add:(UIView *)newView {
-    
+
     return [self add:newView usingDefault:0];
 }
 
 
 - (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)d {
-    
+
     // Calculate some defaults for frame values that are set to d.
     CGFloat x = newView.frame.origin.x;
     CGFloat y = newView.frame.origin.y;
     CGFloat w = newView.frame.size.width;
     CGFloat h = newView.frame.size.height;
-    if(w == d)
+    if (w == d)
         w = self.contentView.frame.size.width;
-    if(h == d)
+    if (h == d)
         h = 30;
-    if(x == d)
+    if (x == d)
         x = (self.contentView.bounds.size.width - w) / 2;
-    if(y == d) {
+    if (y == d) {
         if (self.lastChild)
             y = self.lastChild.frame.origin.y + self.lastChild.frame.size.height + PearlLayoutPadding;
         else
             y = 20;
     }
-    
+
     newView.frame = CGRectMake(x, y, w, h);
     [self.contentView addSubview:newView];
 
     self.lastChild = newView;
-    
+
     return self;
 }
 

@@ -16,12 +16,10 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCActivitySprite.h"
-
 
 @interface PearlCCActivitySprite ()
 
-@property (nonatomic, readwrite, retain) CCSprite   *sprite;
+@property (nonatomic, readwrite, retain) CCSprite *sprite;
 
 @end
 
@@ -30,19 +28,19 @@
 @synthesize sprite = _sprite;
 
 - (id)init {
-    
+
     if (!(self = [super initWithFile:@"wheel.png" capacity:32]))
         return nil;
 
     CCAnimation *spinAnimation = [CCAnimation animationWithSpriteFrames:nil delay:0.03f];
     for (NSUInteger f = 0; f < 31; ++f)
         [spinAnimation addSpriteFrameWithTexture:self.texture rect:CGRectMake(f * 32, 0, 32, 32)];
-    
-    self.sprite = [CCSprite spriteWithTexture:self.texture rect:((CCSpriteFrame *) [[spinAnimation frames] lastObject]).rect];
+
+    self.sprite = [CCSprite spriteWithTexture:self.texture rect:((CCSpriteFrame *)[[spinAnimation frames] lastObject]).rect];
     [self.sprite setBatchNode:self];
     [self addChild:self.sprite];
     [self.sprite runAction:[CCRepeatForever actionWithAction:[CCAnimate actionWithAnimation:spinAnimation]]];
-    
+
     return self;
 }
 

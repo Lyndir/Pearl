@@ -69,7 +69,10 @@
            valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset
             duration:(ccTime)t {
     
-    const char *keyPathString = [keyPath cStringUsingEncoding:NSUTF8StringEncoding];
+    size_t keyPathStringLength = keyPath.length + 1;
+    char *keyPathString = malloc(sizeof(char) * keyPathStringLength);
+    [keyPath getCString:keyPathString maxLength:keyPathStringLength encoding:NSUTF8StringEncoding];
+    
     float from = [self valueForKeyPath:keyPath
                              valueSize:valueSize valueOffset:valueOffset];
     NSUInteger tw;
@@ -81,7 +84,7 @@
             // Inactive tween, reactivate it.
             reuseTween = YES;
             break;
-        } else if (tween.keyPath == keyPathString && tween.valueSize == valueSize && tween.valueOffset == valueOffset) {
+        } else if (strcmp(tween.keyPath, keyPathString) == 0 && tween.valueSize == valueSize && tween.valueOffset == valueOffset) {
             // Active tween for the key, update it.
             reuseTween = YES;
             resetTween = NO;
@@ -95,7 +98,9 @@
         
         return;
     }
-    if (!reuseTween) {
+    if (reuseTween) {
+        free(_tweens[tw].keyPath);
+    } else {
         // Not updating or reactivating any tweens, make a new tween.
         tw      = tweenCount;
         _tweens = realloc(_tweens, sizeof(PropertyTween) * (++tweenCount));
@@ -237,6 +242,8 @@
 
 - (void)stop {
 
+    for (NSUInteger tw = 0; tw < tweenCount; ++tw)
+        free(_tweens[tw].keyPath);
     tweenCount = 0;
     _tweens = realloc(_tweens, 0);
 

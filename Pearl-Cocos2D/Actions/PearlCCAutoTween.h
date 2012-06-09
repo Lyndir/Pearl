@@ -18,7 +18,7 @@
 
 typedef struct {
     BOOL active;
-    const char *keyPath;
+    char *keyPath;
     ccTime elapsed;
     ccTime duration;
     float ai;

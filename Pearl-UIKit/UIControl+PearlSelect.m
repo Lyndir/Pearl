@@ -64,15 +64,18 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
                 if (senderControl.selectionInSuperviewClearable)
                     senderControl.selected = NO;
 
-            } else
-                for (NSValue *controlValue in [sender Pearl_controlsForSuperview]) {
+            } else {
+                for (NSValue *controlValue in [senderControl Pearl_controlsForSuperview]) {
                     UIControl *siblingControl = [controlValue nonretainedObjectValue];
-                    if (![senderControl.superview.subviews containsObject:siblingControl])
+                    if (siblingControl.superview != senderControl.superview)
                      // This siblingControl no longer exists in the superview.
                         continue;
 
-                    siblingControl.selected = (siblingControl == senderControl);
+                    if (siblingControl.selected)
+                        siblingControl.selected = NO;
                 }
+                senderControl.selected = YES;
+            }
         } forControlEvents:UIControlEventTouchUpInside];
 
     objc_setAssociatedObject(self, &selectionInSuperviewCandidateKey, [NSNumber numberWithBool:providesSelection],

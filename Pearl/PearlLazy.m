@@ -20,7 +20,7 @@
 
 + (id)lazyObjectLoadedFrom:(id(^)(void))loadObject {
 
-    return (id)[[PearlLazy alloc] initLoadedFrom:loadObject];
+    return [[PearlLazy alloc] initLoadedFrom:loadObject];
 }
 
 - (id)initLoadedFrom:(id(^)(void))loadObject {

@@ -141,7 +141,9 @@
 
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener {
 
-    [self.listeners addObject:listener];
+    @synchronized (self.listeners) {
+        [self.listeners addObject:listener];
+    }
 }
 
 
@@ -152,10 +154,12 @@
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
     if (![[threadLocals allKeys] containsObject:@"PearlDisableLogListeners"])
         @try {
-            [threadLocals setObject:@"" forKey:@"PearlDisableLogListeners"];
-            for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
-                if (!listener(message))
-                    return self;
+            @synchronized (self.listeners) {
+                [threadLocals setObject:@"" forKey:@"PearlDisableLogListeners"];
+                for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
+                    if (!listener(message))
+                        return self;
+            }
         } @finally {
             [threadLocals removeObjectForKey:@"PearlDisableLogListeners"];
         }

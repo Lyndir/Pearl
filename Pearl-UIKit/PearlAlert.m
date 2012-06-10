@@ -202,7 +202,7 @@
         tappedButtonBlock(self.alertView, buttonIndex);
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+- (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     [((NSMutableArray *)[PearlAlert activeAlerts]) removeObject:self];
 }

@@ -253,6 +253,8 @@
         currentTrackIndex = -1U;
 
     NSUInteger realTracks = [self.tracks count] - 3;
+    assert(realTracks);
+    
     return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
 

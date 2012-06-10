@@ -9,7 +9,7 @@
  */
 
 //
-//  UIImage_PearlScaling.h
+//  UIImage+PearlScaling.h
 //  Pearl
 //
 //  Created by Maarten Billemont on 30/07/09.

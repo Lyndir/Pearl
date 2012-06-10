@@ -9,14 +9,14 @@
  */
 
 //
-//  NSBundle_PearlMutableInfo.m
+//  NSBundle+PearlMutableInfo.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 16/06/11.
 //  Copyright 2011 Lyndir. All rights reserved.
 //
 
-#import "NSBundle_PearlMutableInfo.h"
+#import "NSBundle+PearlMutableInfo.h"
 #import "PearlLogger.h"
 #import "JRSwizzle.h"
 

@@ -16,7 +16,7 @@
 //
 
 #import <objc/runtime.h>
-#import "UIControl_PearlBlocks.h"
+#import "UIControl+PearlBlocks.h"
 
 @interface PearlActionBlock_UIControl : NSObject
 

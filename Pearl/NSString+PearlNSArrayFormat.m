@@ -9,7 +9,7 @@
  */
 
 //
-//  NSString_PearlNSArrayFormat.m
+//  NSString+PearlNSArrayFormat.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 28/07/09.

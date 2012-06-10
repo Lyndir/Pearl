@@ -16,11 +16,10 @@
 //
 
 #import <objc/runtime.h>
-#import "UIControl+PearlSelect.h"
 
 
 @implementation UIControl (PearlSelect)
-static char togglesSelectionInSuperview;
+static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
 
 - (NSMutableSet *)Pearl_controlsForSuperview {
 
@@ -36,36 +35,50 @@ static char togglesSelectionInSuperview;
     return superviewControls;
 }
 
-- (BOOL)togglesSelectionInSuperview {
+- (BOOL)selectionInSuperviewCandidate {
 
-    return [objc_getAssociatedObject(self, &togglesSelectionInSuperview) boolValue];
+    return [objc_getAssociatedObject(self, &selectionInSuperviewCandidateKey) boolValue];
 }
 
-- (void)setTogglesSelectionInSuperview:(BOOL)toggle {
+- (BOOL)selectionInSuperviewClearable {
 
-    if (toggle) {
+    return [objc_getAssociatedObject(self, &selectionInSuperviewClearableKey) boolValue];
+}
+
+- (void)setSelectionInSuperviewCandidate:(BOOL)providesSelection isClearable:(BOOL)clearable {
+
+    if (providesSelection) {
         if (self.superview)
             [[self Pearl_controlsForSuperview] addObject:[NSValue valueWithNonretainedObject:self]];
     } else
         [[self Pearl_controlsForSuperview] removeObject:[NSValue valueWithNonretainedObject:self]];
 
-    objc_setAssociatedObject(self, &togglesSelectionInSuperview, [NSNumber numberWithBool:toggle], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!objc_getAssociatedObject(self, &selectionInSuperviewCandidateKey))
+        [self addTargetBlock:^(id sender, UIControlEvents event) {
+            UIControl *const senderControl = (UIControl *)sender;
+            if (!senderControl.selectionInSuperviewCandidate)
+                return;
 
-    [self addTargetBlock:^(id sender, UIControlEvents event) {
-        UIControl *const senderControl = (UIControl *)sender;
+            if (senderControl.selected) {
+                // Already selected, clear selection if clearable
+                if (senderControl.selectionInSuperviewClearable)
+                    senderControl.selected = NO;
 
-        if (!senderControl.selected)
-            for (NSValue *controlValue in [sender Pearl_controlsForSuperview]) {
-                UIControl *control = [controlValue nonretainedObjectValue];
-                if (![senderControl.superview.subviews containsObject:control])
-                 // This control no longer exists in the superview.
-                    continue;
+            } else
+                for (NSValue *controlValue in [sender Pearl_controlsForSuperview]) {
+                    UIControl *siblingControl = [controlValue nonretainedObjectValue];
+                    if (![senderControl.superview.subviews containsObject:siblingControl])
+                     // This siblingControl no longer exists in the superview.
+                        continue;
 
-                control.selected = NO;
-            }
+                    siblingControl.selected = (siblingControl == senderControl);
+                }
+        } forControlEvents:UIControlEventTouchUpInside];
 
-        senderControl.selected = !senderControl.selected;
-    } forControlEvents:UIControlEventTouchUpInside];
+    objc_setAssociatedObject(self, &selectionInSuperviewCandidateKey, [NSNumber numberWithBool:providesSelection],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &selectionInSuperviewClearableKey, [NSNumber numberWithBool:clearable],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {

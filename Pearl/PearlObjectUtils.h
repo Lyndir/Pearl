@@ -56,12 +56,12 @@
 #define PearlFloatOp(__number, __operation) \
             PearlFloat([__number floatValue] __operation)
 
-#define PearlMainThread(__block)                                                                \
+#define PearlMainThread(__mainBlock)                                                            \
             ({                                                                                  \
                 if ([NSThread isMainThread])                                                    \
-                    __block();                                                                  \
+                    __mainBlock();                                                              \
                 else                                                                            \
-                    dispatch_async(dispatch_get_main_queue(), __block);                         \
+                    dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
 
 @interface PearlBlockObject : NSObject

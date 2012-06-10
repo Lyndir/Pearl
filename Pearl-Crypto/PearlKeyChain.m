@@ -95,6 +95,32 @@
 
 @implementation PearlKeyChain
 
++ (NSString *)deviceIdentifier {
+
+    static NSString *deviceIdentifierString = nil;
+    if (deviceIdentifierString)
+        return deviceIdentifierString;
+
+    static NSDictionary *query = nil;
+    if (!query)
+        query = [self createQueryForClass:kSecClassGenericPassword
+                               attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                         (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly, kSecAttrAccessible,
+                                                         @"deviceIdentifier", kSecAttrAccount,
+                                                         @"com.lyndir.Pearl", kSecAttrService,
+                                                         nil]
+                               matches:nil];
+
+    NSData *deviceIdentifier = [self dataOfItemForQuery:query];
+    if (!deviceIdentifier)
+        [self addOrUpdateItemForQuery:query
+                       withAttributes:[NSDictionary dictionaryWithObject:deviceIdentifier = [[PearlCodeUtils randomUUID] dataUsingEncoding:NSUTF8StringEncoding]
+                                                    forKey:(__bridge id)kSecValueData]];
+
+    return deviceIdentifierString = [[NSString alloc] initWithBytes:deviceIdentifier.bytes length:deviceIdentifier.length
+                                                           encoding:NSUTF8StringEncoding];
+}
+
 + (OSStatus)updateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
 
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);

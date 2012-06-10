@@ -9,7 +9,7 @@
  */
 
 //
-//  NSString_PearlSEL.m
+//  NSString+PearlSEL.m
 //  Pearl
 //
 //  Created by Maarten Billemont on 06/10/09.

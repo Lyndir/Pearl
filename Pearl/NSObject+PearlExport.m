@@ -9,7 +9,7 @@
  */
 
 //
-//  NSObject_PearlExport.m
+//  NSObject+PearlExport.m
 //  RedButton
 //
 //  Created by Maarten Billemont on 16/06/11.

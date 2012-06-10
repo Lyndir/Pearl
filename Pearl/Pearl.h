@@ -2,11 +2,11 @@
 #error PEARL used but not enabled.  If you want to use this library, first enable it with #define PEARL in your Pearl prefix file.
 #endif
 
-#import "NSBundle_PearlMutableInfo.h"
+#import "NSBundle+PearlMutableInfo.h"
 #import "NSObject+PearlKVO.h"
-#import "NSObject_PearlExport.h"
-#import "NSString_PearlNSArrayFormat.h"
-#import "NSString_PearlSEL.h"
+#import "NSObject+PearlExport.h"
+#import "NSString+PearlNSArrayFormat.h"
+#import "NSString+PearlSEL.h"
 #import "PearlAbstractStrings.h"
 #import "PearlCodeUtils.h"
 #import "PearlConfig.h"

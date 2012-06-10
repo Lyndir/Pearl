@@ -19,7 +19,9 @@
 
 @interface UIControl (PearlSelect)
 
-@property (assign) BOOL togglesSelectionInSuperview;
+- (BOOL)selectionInSuperviewCandidate;
+- (BOOL)selectionInSuperviewClearable;
+- (void)setSelectionInSuperviewCandidate:(BOOL)providesSelection isClearable:(BOOL)clearable;
 
 - (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options;
 - (void)onHighlight:(void (^)(BOOL highlighted))aBlock options:(NSKeyValueObservingOptions)options;

@@ -9,8 +9,8 @@
  */
 
 //
-//  NSObject_PearlExport.h
-//  RedButton
+//  NSBundle+PearlMutableInfo.h
+//  Pearl
 //
 //  Created by Maarten Billemont on 16/06/11.
 //  Copyright 2011 Lyndir. All rights reserved.
@@ -18,10 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (PearlExport)
+@interface NSBundle (PearlMutableInfo)
 
-- (id)exportToCodable;
-
-+ (id)exportToCodable:(id)object;
+- (NSMutableDictionary *)mutableInfoDictionary;
+- (NSMutableDictionary *)mutableLocalizedInfoDictionary;
 
 @end

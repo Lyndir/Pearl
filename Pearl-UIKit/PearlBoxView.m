@@ -23,7 +23,7 @@
 + (id)boxed:(id)view {
 
     [view showBoundingBox];
-    return self;
+    return view;
 }
 
 + (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {

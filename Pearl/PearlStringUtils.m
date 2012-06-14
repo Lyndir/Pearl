@@ -72,3 +72,43 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
 
     return numbers;
 }
+
+@implementation NSString (PearlStringUtils)
+
+- (NSString *)stringByDeletingMatchesOf:(NSString *)pattern {
+
+    NSError *error = nil;
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                options:0 error:&error];
+    if (error) {
+        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        return nil;
+    }
+
+    return [self stringByDeletingMatchesOfExpression:expression];
+}
+
+- (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression {
+
+    return [self stringByReplacingMatchesOfExpression:expression with:@""];
+}
+
+- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern with:(NSString *)template {
+
+    NSError *error = nil;
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                options:0 error:&error];
+    if (error) {
+        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        return nil;
+    }
+
+    return [self stringByReplacingMatchesOfExpression:expression with:template];
+}
+
+- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression with:(NSString *)template {
+
+    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, self.length) withTemplate:template];
+}
+
+@end

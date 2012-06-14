@@ -30,11 +30,11 @@ static BOOL infoSwizzled = NO, localizedInfoSwizzled = NO;
     if (!(infoSwizzled          = [self jr_swizzleMethod:@selector(infoDictionary)
                                               withMethod:@selector(infoDictionary_PearlMutableInfo)
                                                    error:&error]))
-    dbg(@"Failed to swizzle -infoDictionary: %@", error);
+    wrn(@"Failed to swizzle -infoDictionary: %@", error);
     if (!(localizedInfoSwizzled = [self jr_swizzleMethod:@selector(localizedInfoDictionary)
                                               withMethod:@selector(localizedInfoDictionary_PearlMutableInfo)
                                                    error:&error]))
-    dbg(@"Failed to swizzle -localizedInfoDictionary: %@", error);
+    wrn(@"Failed to swizzle -localizedInfoDictionary: %@", error);
 }
 
 - (NSDictionary *)infoDictionary_PearlMutableInfo {

@@ -83,7 +83,10 @@ typedef enum {
 + (PearlLogger *)get;
 
 /** Obtain the logged events in a formatted string fit for display. */
-- (NSString *)formatMessages;
+- (NSString *)formatMessagesWithLevel:(PearlLogLevel)level;
+
+/** Print all log messages of the given level or above to the console. */
+- (void)printAllWithLevel:(PearlLogLevel)level;
 
 /** Register a listener invoked for each message that gets logged.
  * 
@@ -96,8 +99,6 @@ typedef enum {
  *              Subsequent nil-terminated arguments are arguments to the format string.
  */
 - (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString;
-/** Print all log messages of the given level or above to the console. */
-- (void)printAllWithLevel:(PearlLogLevel)level;
 /** Log a new TRACE-level event. */
 - (PearlLogger *)trc:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new DEBUG-level event. */

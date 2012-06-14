@@ -34,3 +34,13 @@ extern NSString *LPad(const NSString *string, NSUInteger l);
 extern NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix);
 
 extern NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);
+
+@interface NSString (PearlStringUtils)
+
+- (NSString *)stringByDeletingMatchesOf:(NSString *)pattern;
+- (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression;
+
+- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern with:(NSString *)template;
+- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression with:(NSString *)template;
+
+@end

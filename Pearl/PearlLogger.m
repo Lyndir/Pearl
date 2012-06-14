@@ -125,17 +125,22 @@
 }
 
 
-- (NSString *)formatMessages {
+- (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
 
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setDateStyle:NSDateFormatterNoStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-
-    NSMutableString      *formattedLog = [NSMutableString new];
+    NSMutableString *formattedLog = [NSMutableString new];
     for (PearlLogMessage *message in self.messages)
-        [formattedLog appendString:[message description]];
+        if (message.level >= level)
+            [formattedLog appendString:[message description]];
 
     return formattedLog;
+}
+
+
+- (void)printAllWithLevel:(PearlLogLevel)level {
+
+    for (PearlLogMessage *message in self.messages)
+        if (message.level >= level)
+            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 
@@ -170,14 +175,6 @@
         [self.messages addObject:message];
 
     return self;
-}
-
-
-- (void)printAllWithLevel:(PearlLogLevel)level {
-
-    for (PearlLogMessage *message in self.messages)
-        if (message.level >= level)
-            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 

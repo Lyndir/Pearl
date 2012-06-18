@@ -15,9 +15,6 @@
 //
 
 
-#import "PearlStrings.h"
-
-
 @implementation PearlStrings
 
 - (id)init {
@@ -64,5 +61,10 @@
 @dynamic commonButtonSave;
 @dynamic commonButtonSure;
 @dynamic commonButtonThanks;
+@dynamic reviewTitle;
+@dynamic reviewMessage;
+@dynamic reviewLater;
+@dynamic reviewNow;
+@dynamic reviewNever;
 
 @end

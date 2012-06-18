@@ -20,6 +20,6 @@
 
 @protocol PearlResettable
 
--(void) reset;
+- (void)reset;
 
 @end

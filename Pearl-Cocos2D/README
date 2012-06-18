@@ -1,4 +1,4 @@
 I depend on the following external libraries:
 
     - Cocos2D-iPhone
-    - JRSwizzle
+    - JRSwizzle (PearlCCDebug)

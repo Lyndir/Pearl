@@ -21,9 +21,9 @@
 
 @interface PearlCCActivitySprite : CCSpriteBatchNode {
 
-    CCSprite                                        *_sprite;
+    CCSprite *_sprite;
 }
 
-@property (nonatomic, readonly, retain) CCSprite    *sprite;
+@property (nonatomic, readonly, retain) CCSprite *sprite;
 
 @end

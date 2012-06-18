@@ -16,10 +16,6 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlDeviceUtils.h"
-#import "PearlConfig.h"
-
-#include <sys/types.h>
 #include <sys/sysctl.h>
 
 
@@ -29,29 +25,29 @@
 
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-    
+
     char *machine = malloc(size);
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    
+
     NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
     free(machine);
-    
+
     return platform;
 }
 
 + (NSString *)currentDeviceTokenAsHex {
-    
+
     return [PearlDeviceUtils deviceTokenAsHex:[PearlConfig get].deviceToken];
 }
 
 
 + (NSString *)deviceTokenAsHex:(NSData *)deviceToken {
-    
+
     NSMutableString *deviceTokenHex = [NSMutableString stringWithCapacity:deviceToken.length * 2];
-    
+
     for (NSUInteger b = 0; b < deviceToken.length; ++b)
-        [deviceTokenHex appendFormat:@"%02hhX", ((const char*) deviceToken.bytes)[b]];
-    
+        [deviceTokenHex appendFormat:@"%02hhX", ((const char *)deviceToken.bytes)[b]];
+
     return deviceTokenHex;
 }
 
@@ -63,7 +59,7 @@
 
 
 + (BOOL)isIPad {
-    
+
     return [[self platform] hasPrefix:@"iPad"];
 }
 
@@ -75,7 +71,7 @@
 
 
 + (BOOL)isSimulator {
-    
+
 #if TARGET_IPHONE_SIMULATOR
     return YES;
 #else
@@ -93,7 +89,7 @@
             break;
     }
 #endif
-    
+
     return 1;
 }
 

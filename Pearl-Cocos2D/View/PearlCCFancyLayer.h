@@ -27,28 +27,28 @@ typedef struct {
 
 static inline PearlMargin PearlMarginMake(CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
-    PearlMargin margin = { top, right, bottom, left };
+    PearlMargin margin = {top, right, bottom, left};
     return margin;
 }
 
-@interface PearlCCFancyLayer : CCLayer <CCRGBAProtocol> {
+@interface PearlCCFancyLayer : CCLayer<CCRGBAProtocol> {
 
-    CGSize                                   _contentSize;
+    CGSize      _contentSize;
     PearlMargin _outerPadding;
     PearlMargin _padding;
-    float                                    _innerRatio;
-    ccColor4B                                _backColor, _colorGradient;
+    float       _innerRatio;
+    ccColor4B   _backColor, _colorGradient;
 
-    GLuint                                   _vertexBuffer;
-    GLuint                                   _colorBuffer;
+    GLuint _vertexBuffer;
+    GLuint _colorBuffer;
 }
 
-@property (nonatomic, readonly) CGSize      contentSize;
-@property (nonatomic, readwrite) ccColor4B  colorGradient;
+@property (nonatomic, readonly) CGSize       contentSize;
+@property (nonatomic, readwrite) ccColor4B   colorGradient;
 @property (nonatomic, readwrite) PearlMargin outerPadding;
 @property (nonatomic, readwrite) PearlMargin padding;
-@property (nonatomic, readwrite) float      innerRatio;
+@property (nonatomic, readwrite) float       innerRatio;
 
--(void) update;
+- (void)update;
 
 @end

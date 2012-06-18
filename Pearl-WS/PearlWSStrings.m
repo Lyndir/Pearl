@@ -15,9 +15,6 @@
 //
 
 
-#import "PearlWSStrings.h"
-
-
 @implementation PearlWSStrings
 
 - (id)init {

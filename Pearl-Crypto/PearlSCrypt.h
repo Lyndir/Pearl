@@ -55,13 +55,18 @@
  * @param r Size parameter. Recommended: 8.  Increase this value to multiply the memory cost without affecting CPU cost significantly.
  * @param p Parallelization parameter. Recommended: 1.  Increase this value to multiply the CPU cost without affecting memory cost significantly.
  */
-+ (NSData *)deriveKeyWithLength:(NSUInteger)keyLength fromPassword:(NSData *)password
-                      usingSalt:(NSData *)salt N:(uint64_t)N r:(uint32_t)r p:(uint32_t)p;
++ (NSData *)deriveKeyWithLength:(NSUInteger)keyLength fromPassword:(NSData *)password usingSalt:(NSData *)salt
+                              N:(uint64_t)N r:(uint32_t)r p:(uint32_t)p;
 
 /**
  * Determine values for cost parameters N, r and p that adhere to this instance's cost limits when used on the current system.
  */
 - (BOOL)determineParametersN:(uint64_t *)N r:(uint32_t *)r p:(uint32_t *)p;
+
+/**
+ * Derive a key with the given length from a given password using the given salt.
+ */
+- (NSData *)deriveKeyWithLength:(NSUInteger)keyLength fromPassword:(NSData *)password usingSalt:(NSData *)salt;
 
 /**
  * AES encrypt the given plain data using the given password.  This will first derive a key from the password, taking this instance's cost limits into account when determining the cost parameters for the derivation.

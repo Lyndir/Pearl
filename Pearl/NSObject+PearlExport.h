@@ -9,22 +9,19 @@
  */
 
 //
-//  NSString_PearlSEL.h
-//  Pearl
+//  NSObject+PearlExport.h
+//  RedButton
 //
-//  Created by Maarten Billemont on 06/10/09.
-//  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
+//  Created by Maarten Billemont on 16/06/11.
+//  Copyright 2011 Lyndir. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
+@interface NSObject (PearlExport)
 
-@interface NSString (PearlSEL)
+- (id)exportToCodable;
 
-- (BOOL)isGetter;
-- (BOOL)isSetter;
-
-- (NSString *)getterToSetter;
-- (NSString *)setterToGetter;
++ (id)exportToCodable:(id)object;
 
 @end

@@ -15,13 +15,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCMenuItemBlock.h"
-#import "PearlConfig.h"
-#import "PearlGLUtils.h"
-
 
 @implementation PearlCCMenuItemBlock
-
 
 
 + (PearlCCMenuItemBlock *)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
@@ -34,7 +29,7 @@
     if (!(self = [super initWithTarget:target selector:selector]))
         return nil;
 
-    self.contentSize = CGSizeMake(size, size);
+    self.contentSize   = CGSizeMake(size, size);
     self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
 
     return self;
@@ -45,7 +40,7 @@
     [super draw];
 
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
-   	CC_NODE_DRAW_SETUP();
+    CC_NODE_DRAW_SETUP();
 
     if (!self.isEnabled) {
         ccDrawColor4B(0xff, 0xff, 0xff, 0xff);
@@ -54,7 +49,7 @@
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);
-   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
 }
 
 @end

@@ -16,11 +16,18 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlStringUtils.h"
-#import "PearlStrings.h"
 
+NSString *PearlString(NSString *format, ...) {
 
-NSString* RPad(const NSString* string, const NSUInteger l) {
+    va_list argList;
+    va_start(argList, format);
+    NSString *string = [[NSString alloc] initWithFormat:format arguments:argList];
+    va_end(argList);
+
+    return string;
+}
+
+NSString *RPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -30,7 +37,7 @@ NSString* RPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString* LPad(const NSString* string, const NSUInteger l) {
+NSString *LPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
     while (newString.length < l)
@@ -40,20 +47,22 @@ NSString* LPad(const NSString* string, const NSUInteger l) {
 }
 
 
-NSString* AppendOrdinalPrefix(const NSInteger number, const NSString* prefix) {
+NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix) {
 
     NSString *suffix = [PearlStrings get].timeDaySuffix;
-    if(number % 10 == 1 && number != 11)
+    if (number % 10 == 1 && number != 11)
         suffix = [PearlStrings get].timeDaySuffixOne;
-    else if(number % 10 == 2 && number != 12)
-        suffix = [PearlStrings get].timeDaySuffixTwo;
-    else if(number % 10 == 3 && number != 13)
-        suffix = [PearlStrings get].timeDaySuffixThree;
+    else
+        if (number % 10 == 2 && number != 12)
+            suffix = [PearlStrings get].timeDaySuffixTwo;
+        else
+            if (number % 10 == 3 && number != 13)
+                suffix = [PearlStrings get].timeDaySuffixThree;
 
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }
 
-NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style) {
+NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style) {
 
     NSNumberFormatter *formatter = [NSNumberFormatter new];
     formatter.numberStyle = style;
@@ -64,6 +73,42 @@ NSArray* NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     return numbers;
 }
 
-@implementation PearlStringUtils
+@implementation NSString (PearlStringUtils)
+
+- (NSString *)stringByDeletingMatchesOf:(NSString *)pattern {
+
+    NSError *error = nil;
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                options:0 error:&error];
+    if (error) {
+        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        return nil;
+    }
+
+    return [self stringByDeletingMatchesOfExpression:expression];
+}
+
+- (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression {
+
+    return [self stringByReplacingMatchesOfExpression:expression with:@""];
+}
+
+- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern with:(NSString *)template {
+
+    NSError *error = nil;
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                                options:0 error:&error];
+    if (error) {
+        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        return nil;
+    }
+
+    return [self stringByReplacingMatchesOfExpression:expression with:template];
+}
+
+- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression with:(NSString *)template {
+
+    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, self.length) withTemplate:template];
+}
 
 @end

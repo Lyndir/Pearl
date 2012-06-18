@@ -14,18 +14,14 @@
 //
 
 
-#import "PearlGLShaders.h"
+const GLchar *PearlGLShaderPointSize_vert =
 
-const GLchar * PearlGLShaderPointSize_vert =
-#import "PearlGLShaderPointSize_vert.h"
-const GLchar * PearlGLShaderPointSize_frag =
-#import "PearlGLShaderPointSize_frag.h"
+const GLchar *PearlGLShaderPointSize_frag =
 
 //
-const GLchar * PearlGLShaderPointSprite_vert =
-#import "PearlGLShaderPointSprite_vert.h"
-const GLchar * PearlGLShaderPointSprite_frag =
-#import "PearlGLShaderPointSprite_frag.h"
+const GLchar *PearlGLShaderPointSprite_vert =
+
+const GLchar *PearlGLShaderPointSprite_frag =
 
 @implementation PearlGLShaders {
 
@@ -36,7 +32,7 @@ const GLchar * PearlGLShaderPointSprite_frag =
     static CCGLProgram *program = nil;
     if (!program) {
         program = [[CCGLProgram alloc] initWithVertexShaderByteArray:PearlGLShaderPointSize_vert
-                                                             fragmentShaderByteArray:PearlGLShaderPointSize_frag];
+                                             fragmentShaderByteArray:PearlGLShaderPointSize_frag];
 
         [program addAttribute:kCCAttributeNamePosition index:kCCVertexAttrib_Position];
         [program addAttribute:kCCAttributeNameColor index:kCCVertexAttrib_Color];
@@ -55,7 +51,7 @@ const GLchar * PearlGLShaderPointSprite_frag =
     static CCGLProgram *program = nil;
     if (!program) {
         program = [[CCGLProgram alloc] initWithVertexShaderByteArray:PearlGLShaderPointSprite_vert
-                                                             fragmentShaderByteArray:PearlGLShaderPointSprite_frag];
+                                             fragmentShaderByteArray:PearlGLShaderPointSprite_frag];
 
         [program addAttribute:kCCAttributeNamePosition index:kCCVertexAttrib_Position];
         [program addAttribute:kCCAttributeNameColor index:kCCVertexAttrib_Color];

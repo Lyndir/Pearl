@@ -20,12 +20,12 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 
-@interface PearlAudioController : NSObject <AVAudioPlayerDelegate> {
+@interface PearlAudioController : NSObject<AVAudioPlayerDelegate> {
 
-    AVAudioPlayer                *_audioPlayer;
-    NSString                     *_nextTrack;
+    AVAudioPlayer *_audioPlayer;
+    NSString      *_nextTrack;
 
-    NSMutableDictionary          *_effects;
+    NSMutableDictionary *_effects;
 }
 
 - (void)clickEffect;

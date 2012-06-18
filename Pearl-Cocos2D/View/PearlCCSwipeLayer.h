@@ -21,22 +21,22 @@
 
 @interface PearlCCSwipeLayer : CCLayer {
 
-    NSInvocation        *_invocation;
+    NSInvocation *_invocation;
 
-    CCActionInterval    *_swipeAction;
-    CGPoint             _swipeFrom;
-    CGPoint             _swipeTo;
-    CGPoint             _swipeStart;
-    BOOL                _swipeForward;
-    BOOL                _swiped;
+    CCActionInterval *_swipeAction;
+    CGPoint _swipeFrom;
+    CGPoint _swipeTo;
+    CGPoint _swipeStart;
+    BOOL    _swipeForward;
+    BOOL    _swiped;
 }
 
-+(id) nodeWithTarget:(id)t selector:(SEL)s;
++ (id)nodeWithTarget:(id)t selector:(SEL)s;
 
--(id) initWithTarget:(id)t selector:(SEL)s;
+- (id)initWithTarget:(id)t selector:(SEL)s;
 
--(void) setSwipeAreaFrom:(CGPoint)f to:(CGPoint)t;
--(void) setTarget:(id)t selector:(SEL)s;
--(void) swipeDone:(id)sender;
+- (void)setSwipeAreaFrom:(CGPoint)f to:(CGPoint)t;
+- (void)setTarget:(id)t selector:(SEL)s;
+- (void)swipeDone:(id)sender;
 
 @end

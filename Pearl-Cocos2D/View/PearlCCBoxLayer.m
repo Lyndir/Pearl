@@ -15,10 +15,6 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCBoxLayer.h"
-#import "PearlLayout.h"
-#import "PearlGLUtils.h"
-
 
 @implementation PearlCCBoxLayer
 @synthesize color = _color;
@@ -34,30 +30,30 @@
     PearlCCBoxLayer *box = [PearlCCBoxLayer boxWithSize:node.contentSize at:CGPointZero color:color];
     [node addChild:box];
     [node addObserver:box forKeyPath:@"contentSize" options:0 context:nil];
-    
+
     return node;
 }
 
 + (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
-    
+
     return [[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor];
 }
 
 - (id)initWithSize:(CGSize)size at:(CGPoint)aLocation color:(ccColor4B)aColor {
-    
+
     if (!(self = [super init]))
         return self;
-    
-    self.position = aLocation;
-    self.contentSize = size;
-    self.color = aColor;
+
+    self.position      = aLocation;
+    self.contentSize   = size;
+    self.color         = aColor;
     self.shaderProgram = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionColor];
-    
+
     return self;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
+
     if (object == self.parent && [keyPath isEqualToString:@"contentSize"])
         self.contentSize = self.parent.contentSize;
 }
@@ -67,17 +63,17 @@
     [super draw];
 
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
-   	CC_NODE_DRAW_SETUP();
+    CC_NODE_DRAW_SETUP();
 
     ccColor4B backColor = self.color;
     backColor.a = 0x33;
-    
+
     PearlGLDrawBoxFrom(CGPointZero, CGPointFromCGSize(self.contentSize), backColor);
     PearlGLDrawBorderFrom(CGPointZero, CGPointFromCGSize(self.contentSize), self.color);
 
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);
-   	CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
+    CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBoxLayer - draw");
 }
 
 @end

@@ -20,17 +20,17 @@
 
 @interface PearlCCMenuItemSpacer : CCMenuItem {
 
-    CGFloat  _height;
+    CGFloat _height;
 }
 
-+(id) spacerSmall;
-+(id) spacerNormal;
-+(id) spacerLarge;
++ (id)spacerSmall;
++ (id)spacerNormal;
++ (id)spacerLarge;
 
--(id) initSmall;
--(id) initNormal;
--(id) initLarge;
+- (id)initSmall;
+- (id)initNormal;
+- (id)initLarge;
 
--(id) initWithHeight:(CGFloat)_height;
+- (id)initWithHeight:(CGFloat)_height;
 
 @end

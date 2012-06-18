@@ -20,15 +20,15 @@
 
 typedef enum {
     /** Submit the parameters in a www-form encoded HTTP-GET request. */
-    PearlWSRequestMethodGET_REST,
+     PearlWSRequestMethodGET_REST,
     /** Submit the parameters in a www-form encoded HTTP-POST request. */
-    PearlWSRequestMethodPOST_REST,
+     PearlWSRequestMethodPOST_REST,
     /** Submit the parameters in a JSON encoded HTTP-POST request. */
-    PearlWSRequestMethodPOST_JSON,
+     PearlWSRequestMethodPOST_JSON,
 } PearlWSRequestMethod;
 
 typedef enum {
-    PearlJSONResultCodeSuccess = 0,
+    PearlJSONResultCodeSuccess        = 0,
     PearlJSONResultCodeGenericFailure = -1,
     PearlJSONResultCodeUpdateRequired = -2,
 } PearlJSONResultCode;
@@ -36,19 +36,19 @@ typedef enum {
 @interface PearlJSONResult : NSObject {
 
     PearlJSONResultCode _code;
-    BOOL            _outdated;
-    NSString        *_userDescription;
-    NSArray         *_userDescriptionArguments;
-    NSString        *_technicalDescription;
-    id              _result;
+    BOOL                _outdated;
+    NSString *_userDescription;
+    NSArray  *_userDescriptionArguments;
+    NSString *_technicalDescription;
+    id _result;
 }
 
 @property (nonatomic, assign) PearlJSONResultCode code;
-@property (nonatomic, retain) NSString          *userDescription;
-@property (nonatomic, retain) NSArray           *userDescriptionArguments;
-@property (nonatomic, retain) NSString          *technicalDescription;
-@property (nonatomic, assign) BOOL              outdated;
-@property (nonatomic, retain) id                result;
+@property (nonatomic, retain) NSString *userDescription;
+@property (nonatomic, retain) NSArray  *userDescriptionArguments;
+@property (nonatomic, retain) NSString *technicalDescription;
+@property (nonatomic, assign) BOOL outdated;
+@property (nonatomic, retain) id   result;
 
 - (id)initWithDictionary:(NSDictionary *)aDictionary;
 
@@ -59,10 +59,10 @@ typedef enum {
  */
 @interface PearlWSController : NSObject {
 
-    BOOL            _suppressOutdatedWarning;
+    BOOL _suppressOutdatedWarning;
 }
 
-@property (nonatomic, assign) BOOL              suppressOutdatedWarning;
+@property (nonatomic, assign) BOOL suppressOutdatedWarning;
 
 #pragma mark ###############################
 #pragma mark Lifecycle

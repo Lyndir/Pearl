@@ -26,15 +26,15 @@ typedef enum {
 } PearlLayoutGravity;
 
 @interface PearlLayoutView : UIView {
-    
+
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                        gravity:(PearlLayoutGravity)gravity;
+                             gravity:(PearlLayoutGravity)gravity;
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                        gravity:(PearlLayoutGravity)gravity;
+                             gravity:(PearlLayoutGravity)gravity;
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                        gravity:(PearlLayoutGravity)gravity;
+                             gravity:(PearlLayoutGravity)gravity;
 
 - (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity;
 

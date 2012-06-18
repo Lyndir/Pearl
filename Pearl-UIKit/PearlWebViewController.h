@@ -18,7 +18,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface PearlWebViewController : UIViewController <UIWebViewDelegate> {
+@interface PearlWebViewController : UIViewController<UIWebViewDelegate> {
 
     UIWebView *webView;
 }

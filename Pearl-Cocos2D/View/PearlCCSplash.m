@@ -16,11 +16,6 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCSplash.h"
-#import "PearlConfig.h"
-#import "PearlCocos2DAppDelegate.h"
-#import "PearlCCBarSprite.h"
-
 
 @interface PearlCCSplashTransition : CCTransitionZoomFlipY
 
@@ -31,10 +26,10 @@
 - (id)initWithGameScene:(CCScene *)uiScene {
 
     if (!(self = [super initWithDuration:[[PearlConfig get].transitionDuration floatValue]
-                                   scene:uiScene
-                             orientation:kOrientationDownOver]))
+                        scene:uiScene
+                  orientation:kOrientationDownOver]))
         return nil;
-    
+
     return self;
 }
 
@@ -45,7 +40,7 @@
 
 - (void)switchScene;
 
-@property (readwrite, assign) BOOL  switching;
+@property (readwrite, assign) BOOL switching;
 
 @end
 
@@ -55,48 +50,49 @@
 @synthesize switching = _switching;
 
 
--(id) init {
-    
-    if(!(self = [super init]))
+- (id)init {
+
+    if (!(self = [super init]))
         return self;
-    
-    self.texture            = [[CCTextureCache sharedTextureCache] addImage:@"splash.png"];
-    self.textureRect        = CGRectFromCGPointAndCGSize(CGPointZero, self.texture.contentSize);
-    self.position           = ccp([self contentSize].width / 2, [self contentSize].height / 2);
-    
-    PearlCCBarSprite *loadingBar   = [[PearlCCBarSprite alloc] initWithHead:@"aim.head.png" body:@"aim.body.%02d.png" withFrames:16 tail:@"aim.tail.png" animatedTargetting:NO];
-    loadingBar.position     = ccp(self.contentSize.width / 2 - 50, 40);
-    loadingBar.target       = ccpAdd(loadingBar.position, ccp(100, 0));
+
+    self.texture     = [[CCTextureCache sharedTextureCache] addImage:@"splash.png"];
+    self.textureRect = CGRectFromCGPointAndCGSize(CGPointZero, self.texture.contentSize);
+    self.position    = ccp([self contentSize].width / 2, [self contentSize].height / 2);
+
+    PearlCCBarSprite *loadingBar = [[PearlCCBarSprite alloc] initWithHead:@"aim.head.png" body:@"aim.body.%02d.png" withFrames:16
+                                                                     tail:@"aim.tail.png" animatedTargetting:NO];
+    loadingBar.position = ccp(self.contentSize.width / 2 - 50, 40);
+    loadingBar.target   = ccpAdd(loadingBar.position, ccp(100, 0));
     [self addChild:loadingBar];
-    
+
     self.switching = NO;
-    
+
     return self;
 }
 
 
--(void) onEnter {
-    
+- (void)onEnter {
+
     [super onEnter];
-    
+
     [self switchScene];
     //[self performSelector:@selector(switchScene) withObject:nil afterDelay:20];
 }
 
 
--(void) switchScene {
-    
-    @synchronized(self) {
-        if(self.switching)
+- (void)switchScene {
+
+    @synchronized (self) {
+        if (self.switching)
             return;
         self.switching = YES;
 
         CCScene *uiScene = [CCScene new];
         [uiScene addChild:[PearlCocos2DAppDelegate get].uiLayer];
-        
+
         // Build a transition scene from the splash scene to the game scene.
         CCTransitionScene *transitionScene = [[PearlCCSplashTransition alloc] initWithGameScene:uiScene];
-        
+
         // Start the scene and bring up the menu.
         [[CCDirector sharedDirector] replaceScene:transitionScene];
     }

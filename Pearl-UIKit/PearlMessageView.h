@@ -24,14 +24,14 @@
  */
 @interface PearlMessageView : UIView {
 
-    BOOL                                    _initialized;
-    UIRectCorner                            _corners;
-    UIColor                                 *_fill;
-    CGSize                                  _radii;
+    BOOL         _initialized;
+    UIRectCorner _corners;
+    UIColor *_fill;
+    CGSize _radii;
 }
 
-@property (nonatomic, assign) UIRectCorner  corners;
-@property (nonatomic, retain) UIColor       *fill;
-@property (nonatomic, assign) CGSize        radii;
+@property (nonatomic, assign) UIRectCorner corners;
+@property (nonatomic, retain) UIColor *fill;
+@property (nonatomic, assign) CGSize radii;
 
 @end

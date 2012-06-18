@@ -20,7 +20,7 @@
 
 @interface PearlCCBoxLayer : CCNode {
 
-    ccColor4B                           _color;
+    ccColor4B _color;
 }
 
 @property (nonatomic, assign) ccColor4B color;

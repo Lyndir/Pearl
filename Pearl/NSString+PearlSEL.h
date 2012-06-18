@@ -9,21 +9,22 @@
  */
 
 //
-//  NSString_PearlNSArrayFormat.h
+//  NSString+PearlSEL.h
 //  Pearl
 //
-//  Created by Maarten Billemont on 28/07/09.
+//  Created by Maarten Billemont on 06/10/09.
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 
-@interface NSString (PearlNSArrayFormat)
+@interface NSString (PearlSEL)
 
-- (id)initWithFormat:(NSString *)format array:(NSArray *)arguments;
+- (BOOL)isGetter;
+- (BOOL)isSetter;
 
-/** Generate a string from the given printf(3)-style format by using the arguments in the given array as arguments to the format string. */
-+ (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments;
+- (NSString *)getterToSetter;
+- (NSString *)setterToGetter;
 
 @end

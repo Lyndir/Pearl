@@ -15,10 +15,9 @@
 //  Copyright (c) 2012 Lyndir. All rights reserved.
 //
 
-#import "PearlInfoPlist.h"
-
 @implementation PearlInfoPlist
 
+@dynamic GITDescription;
 @dynamic CFBundleAllowMixedLocalizations;
 @dynamic CFBundleDevelopmentRegion;
 @dynamic CFBundleDisplayName;
@@ -63,23 +62,26 @@
 @dynamic UIViewGroupOpacity;
 
 + (PearlInfoPlist *)get {
-    
+
     static PearlInfoPlist *instance = nil;
     if (!instance)
         instance = [self new];
-    
+
     return instance;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    
+
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    
+
     NSString *selector = NSStringFromSelector(anInvocation.selector);
-    __unsafe_unretained NSString *value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+    NSString *value    = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:selector];
+    if (!value)
+        value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
+
     [anInvocation setReturnValue:&value];
 }
 

@@ -19,42 +19,41 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define trc(format, ...)    [[PearlLogger get] trc:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define dbg(format, ...)    [[PearlLogger get] dbg:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define inf(format, ...)    [[PearlLogger get] inf:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define wrn(format, ...)    [[PearlLogger get] wrn:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define err(format, ...)    [[PearlLogger get] err:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
-#define ftl(format, ...)    [[PearlLogger get] ftl:@"%25s:%-3d | " format, basename(__FILE__), __LINE__ , ##__VA_ARGS__]
+#define trc(format, ...)    [[PearlLogger get] trc:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
+#define dbg(format, ...)    [[PearlLogger get] dbg:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
+#define inf(format, ...)    [[PearlLogger get] inf:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
+#define wrn(format, ...)    [[PearlLogger get] wrn:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
+#define err(format, ...)    [[PearlLogger get] err:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
+#define ftl(format, ...)    [[PearlLogger get] ftl:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
 
-NSString *errstr(void);
+extern NSString *errstr(void);
 
 /** Levels that determine the importance of logging events. */
 typedef enum {
     /** Trace internal operations. */
-    PearlLogLevelTrace,
+     PearlLogLevelTrace,
     /** Inform the developer of certain events and information. */
-    PearlLogLevelDebug,
+     PearlLogLevelDebug,
     /** General notice to the user and developer that something took place. */
-    PearlLogLevelInfo,
+     PearlLogLevelInfo,
     /** Notice that something unexpected happened but was dealt with as best as possible. */
-    PearlLogLevelWarn,
+     PearlLogLevelWarn,
     /** Notice that something went wrong that should be fixed. */
-    PearlLogLevelError,
+     PearlLogLevelError,
     /** Notice that something went wrong from which could not be recovered, causing the operation to abort. */
-    PearlLogLevelFatal
-} PearlLogLevel;
+     PearlLogLevelFatal
+}               PearlLogLevel;
 
-@interface PearlLogMessage : NSObject
-{
+@interface PearlLogMessage : NSObject {
 @private
-    NSString                                *message;
-    NSDate                                  *occurance;
-    PearlLogLevel                           level;
+    NSString *message;
+    NSDate   *occurance;
+    PearlLogLevel level;
 }
 
-@property (readwrite, copy) NSString        *message;
-@property (readwrite, copy) NSDate          *occurance;
-@property (readwrite) PearlLogLevel         level;
+@property (readwrite, copy) NSString *message;
+@property (readwrite, copy) NSDate   *occurance;
+@property (readwrite) PearlLogLevel level;
 
 + (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel;
 
@@ -73,9 +72,9 @@ typedef enum {
 @interface PearlLogger : NSObject {
 
 @private
-    NSMutableArray                          *_messages;
-    NSMutableArray                          *_listeners;
-    PearlLogLevel                           _autoprintLevel;
+    NSMutableArray *_messages;
+    NSMutableArray *_listeners;
+    PearlLogLevel _autoprintLevel;
 }
 
 @property (nonatomic, assign) PearlLogLevel autoprintLevel;
@@ -84,7 +83,10 @@ typedef enum {
 + (PearlLogger *)get;
 
 /** Obtain the logged events in a formatted string fit for display. */
-- (NSString *)formatMessages;
+- (NSString *)formatMessagesWithLevel:(PearlLogLevel)level;
+
+/** Print all log messages of the given level or above to the console. */
+- (void)printAllWithLevel:(PearlLogLevel)level;
 
 /** Register a listener invoked for each message that gets logged.
  * 
@@ -97,19 +99,17 @@ typedef enum {
  *              Subsequent nil-terminated arguments are arguments to the format string.
  */
 - (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString;
-/** Print all log messages of the given level or above to the console. */
-- (void)printAllWithLevel:(PearlLogLevel)level;
 /** Log a new TRACE-level event. */
-- (PearlLogger *)trc:(NSString *)format, ...;
+- (PearlLogger *)trc:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new DEBUG-level event. */
-- (PearlLogger *)dbg:(NSString *)format, ...;
+- (PearlLogger *)dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new INFO-level event. */
-- (PearlLogger *)inf:(NSString *)format, ...;
+- (PearlLogger *)inf:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new WARNING-level event. */
-- (PearlLogger *)wrn:(NSString *)format, ...;
+- (PearlLogger *)wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new ERROR-level event. */
-- (PearlLogger *)err:(NSString *)format, ...;
+- (PearlLogger *)err:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 /** Log a new FATAL-level event. */
-- (PearlLogger *)ftl:(NSString *)format, ...;
+- (PearlLogger *)ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(1, 2);
 
 @end

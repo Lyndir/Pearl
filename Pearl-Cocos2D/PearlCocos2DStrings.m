@@ -14,9 +14,6 @@
 //
 
 
-#import "PearlCocos2DStrings.h"
-
-
 @implementation PearlCocos2DStrings
 
 - (id)init {

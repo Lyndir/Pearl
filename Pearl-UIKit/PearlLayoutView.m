@@ -16,40 +16,38 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
-#import "PearlLayoutView.h"
-
 
 @implementation PearlLayoutView
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                        gravity:(PearlLayoutGravity)gravity {
-    
+                             gravity:(PearlLayoutGravity)gravity {
+
     return [self viewWithContent:contentView padWidth:padWidth padHeight:0 gravity:gravity];
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                        gravity:(PearlLayoutGravity)gravity {
-    
+                             gravity:(PearlLayoutGravity)gravity {
+
     return [self viewWithContent:contentView padWidth:0 padHeight:padHeight gravity:gravity];
 }
 
 + (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                        gravity:(PearlLayoutGravity)gravity {
-    
+                             gravity:(PearlLayoutGravity)gravity {
+
     return [[self alloc]
-             initWithContent:contentView
-             width:contentView.frame.size.width + padWidth
-             height:contentView.frame.size.height + padHeight
-             gravity:gravity];
+                  initWithContent:contentView
+                            width:contentView.frame.size.width + padWidth
+                           height:contentView.frame.size.height + padHeight
+                          gravity:gravity];
 }
 
 - (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity {
-    
+
     if (!(self = [super initWithFrame:CGRectMake(0, 0, width, height)]))
         return self;
-    
-    CGSize size = contentView.frame.size;
-    CGFloat x = 0, y = 0;
+
+    CGSize  size = contentView.frame.size;
+    CGFloat x    = 0, y = 0;
     switch (gravity) {
         case PearlLayoutGravityNorth:
             break;
@@ -62,7 +60,7 @@
         case PearlLayoutGravityWest:
             break;
     }
-    
+
     [self addSubview:contentView];
     contentView.frame = (CGRect){CGPointMake(x, y), size};
 

@@ -13,8 +13,6 @@
 //  To change this template use File | Settings | File Templates.
 //
 
-#import "PearlCCAutoTween.h"
-
 
 @interface PearlCCAutoTween ()
 
@@ -29,27 +27,27 @@
 
 + (PearlCCAutoTween *)actionWithDuration:(ccTime)duration {
 
-    return [[self alloc] initWithDuration:(ccTime) duration];
+    return [[self alloc] initWithDuration:(ccTime)duration];
 }
 
 - (id)initWithDuration:(ccTime)duration {
 
-    if (!( self = [super init] ))
+    if (!(self = [super init]))
         return nil;
 
-    _duration     = duration;
+    _duration = duration;
 
     return self;
 }
 
 - (void)dealloc {
-    
+
     free(_tweens);
 }
 
--(void) startWithTarget:(id)aTarget
-{
-	originalTarget_ = target_ = aTarget;
+- (void)startWithTarget:(id)aTarget {
+
+    originalTarget_ = target_ = aTarget;
 }
 
 - (void)tweenKeyPath:(NSString *)keyPath to:(float)to {
@@ -60,7 +58,7 @@
 
 - (void)tweenKeyPath:(NSString *)keyPath to:(float)to
            valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset {
-    
+
     [self tweenKeyPath:keyPath to:to valueSize:valueSize valueOffset:valueOffset
               duration:_duration];
 }
@@ -95,7 +93,7 @@
         // Already at target.
         if (!resetTween)
             _tweens[tw].active = NO;
-        
+
         return;
     }
     if (reuseTween) {
@@ -107,9 +105,9 @@
     }
 
     PropertyTween tween = _tweens[tw];
-    float vi = resetTween ? 0 : tween.v;
+    float         vi    = resetTween? 0: tween.v;
     //ai = Sign(to - from) * 2000;
-    float ai = 2 * ((to - from) - vi * t) / powf(t, 2);
+    float         ai    = 2 * ((to - from) - vi * t) / powf(t, 2);
     //ai = resetTween || ai != tween.ai ? ai : tween.a;
 
     // The acceleration needed to keep up can be too high.
@@ -119,36 +117,36 @@
     float a = ai;
     /*if (!resetTween && fabsf(a - tween.a) > 2000)
         a = tween.a + Sign(a - tween.a) * 2000;*/
-    
+
 //    dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
 
-    _tweens[tw] = (PropertyTween) {
+    _tweens[tw] = (PropertyTween){
 //        BOOL active;
-            YES,
+     YES,
 //        char *keyPath;
-            keyPathString,
+     keyPathString,
 //        ccTime elapsed;
-            0,
+     0,
 //        ccTime duration;
-            sqrtf( 2 * (to - from) / a ),
+     sqrtf(2 * (to - from) / a),
 //        float ai;
-            ai,
+     ai,
 //        float a;
-            a,
+     a,
 //        float vi;
-            vi,
+     vi,
 //        float v;
-            vi,
+     vi,
 //        id from;
-            from,
+     from,
 //        id current;
-            from,
+     from,
 //        id to;
-            to,
+     to,
 //        NSUInteger valueSize,
-            valueSize,
+     valueSize,
 //        NSUInteger valueOffset,
-            valueOffset,
+     valueOffset,
     };
 }
 
@@ -162,9 +160,9 @@
             continue;
 
         // Apply dt
-        float new       = tween.current + tween.v * dt + tween.a * dt * dt / 2.0f;
-        tween.elapsed   += dt;
-        tween.v         += tween.a * dt;
+        float new = tween.current + tween.v * dt + tween.a * dt * dt / 2.0f;
+        tween.elapsed += dt;
+        tween.v += tween.a * dt;
 
         // Current to final.
 //        float sLeft     = tween.to - tween.current;         // displacement left.
@@ -190,7 +188,7 @@
         }
 
         [self setValue:tween.current = new forKeyPath:[NSString stringWithCString:tween.keyPath encoding:NSUTF8StringEncoding]
-             valueSize:tween.valueSize valueOffset:tween.valueOffset];
+                                           valueSize:tween.valueSize valueOffset:tween.valueOffset];
         _tweens[tw] = tween;
     }
 }
@@ -198,39 +196,42 @@
 - (float)valueForKeyPath:(NSString *)keyPath
                valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset {
 
-    float fromFloat     = 0;
+    float fromFloat = 0;
 
     id target = self.target;
-    id from = [target valueForKeyPath:keyPath];
+    id from   = [target valueForKeyPath:keyPath];
     if ([from respondsToSelector:@selector(floatValue)])
         fromFloat = [from floatValue];
-    else if ([from isKindOfClass:[NSValue class]]) {
-        void *buf = malloc(valueSize);
-        [from getValue:buf];
-        memcpy(&fromFloat, buf + valueOffset, sizeof(float));
-        free(buf);
-    }
-    
+    else
+        if ([from isKindOfClass:[NSValue class]]) {
+            void *buf = malloc(valueSize);
+            [from getValue:buf];
+            memcpy(&fromFloat, buf + valueOffset, sizeof(float));
+            free(buf);
+        }
+
     return fromFloat;
 }
 
 - (void)setValue:(float)value forKeyPath:(NSString *)keyPath
-        valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset {
+       valueSize:(size_t)valueSize valueOffset:(NSUInteger)valueOffset {
 
     id oldValue = [[self target] valueForKeyPath:keyPath], newValue = nil;
 
     if ([oldValue isKindOfClass:[NSNumber class]])
         newValue = [NSNumber numberWithFloat:value];
-    else if ([oldValue isKindOfClass:[NSString class]])
-        newValue = [NSString stringWithFormat:@"%f", value];
-    else if ([oldValue isKindOfClass:[NSValue class]]) {
-        void *buf = malloc(valueSize);
-        [oldValue getValue:buf];
-        memcpy(buf + valueOffset, &value, sizeof(float));
-        newValue = [NSValue valueWithBytes:buf objCType:[oldValue objCType]];
-    }
     else
-        err(@"Don't know how to handle: %@, type: %@", oldValue, [oldValue class]);
+        if ([oldValue isKindOfClass:[NSString class]])
+            newValue = [NSString stringWithFormat:@"%f", value];
+        else
+            if ([oldValue isKindOfClass:[NSValue class]]) {
+                void *buf = malloc(valueSize);
+                [oldValue getValue:buf];
+                memcpy(buf + valueOffset, &value, sizeof(float));
+                newValue = [NSValue valueWithBytes:buf objCType:[oldValue objCType]];
+            }
+            else
+             err(@"Don't know how to handle: %@, type: %@", oldValue, [oldValue class]);
 
     [[self target] setValue:newValue forKeyPath:keyPath];
 }
@@ -245,7 +246,7 @@
     for (NSUInteger tw = 0; tw < tweenCount; ++tw)
         free(_tweens[tw].keyPath);
     tweenCount = 0;
-    _tweens = realloc(_tweens, 0);
+    _tweens    = realloc(_tweens, 0);
 
     [super stop];
 }

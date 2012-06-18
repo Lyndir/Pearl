@@ -19,10 +19,10 @@
 #import "PearlCCBarLayer.h"
 
 
-@interface PearlCCHUDLayer : PearlCCBarLayer <PearlResettable> {
+@interface PearlCCHUDLayer : PearlCCBarLayer<PearlResettable> {
 
-    CCLabelAtlas                                        *_scoreSprite;
-    CCLabelAtlas                                        *_scoreCount;
+    CCLabelAtlas    *_scoreSprite;
+    CCLabelAtlas    *_scoreCount;
     PearlCCBarLayer *_messageBar;
 }
 
@@ -30,7 +30,7 @@
 @property (nonatomic, readonly, retain) CCLabelAtlas    *scoreCount;
 @property (nonatomic, readonly, retain) PearlCCBarLayer *messageBar;
 
-- (BOOL)hitsHud: (CGPoint)pos;
+- (BOOL)hitsHud:(CGPoint)pos;
 - (void)highlightGood:(BOOL)wasGood;
 - (int64_t)score;
 

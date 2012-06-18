@@ -16,19 +16,22 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "PearlAppDelegate.h"
-#import "PearlLogger.h"
-#import "PearlConfig.h"
 #ifdef PEARL_MEDIA
-#import "PearlAudioController.h"
-#endif
-#import "PearlResettable.h"
-#ifdef PEARL_UIKIT
-#import "PearlAlert.h"
-#import "PearlRootViewController.h"
-#endif
-#import "PearlCodeUtils.h"
 
+#endif
+
+#ifdef PEARL_UIKIT
+
+#endif
+
+#ifndef ITMS_REVIEW_URL
+#define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat:\
+@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@", __id]]
+#endif
+#ifndef ITMS_APP_URL
+#define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
+@"itms://itunes.com/apps/%@", __app]]
+#endif
 
 @implementation PearlAppDelegate
 @synthesize window = _window, navigationController = _navigationController;
@@ -37,36 +40,61 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     // Log application details.
-    NSString *name = [PearlInfoPlist get].CFBundleName;
+    NSString *name        = [PearlInfoPlist get].CFBundleName;
     NSString *displayName = [PearlInfoPlist get].CFBundleDisplayName;
-    NSString *build = [PearlConfig get].build;
-    NSString *version = [PearlConfig get].version;
-    
+    NSString *build       = [PearlInfoPlist get].CFBundleVersion;
+    NSString *version     = [PearlInfoPlist get].CFBundleShortVersionString;
+    NSString *description = [PearlInfoPlist get].GITDescription;
+
     if (!name)
-        name = displayName;
+        name    = displayName;
     if (displayName && ![displayName isEqualToString:name])
-        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
+        name    = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
     if (!version)
         version = build;
     if (build && ![build isEqualToString:version])
         version = [NSString stringWithFormat:@"%@ (%@)", version, build];
-    
+    if (description)
+        version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
+
     inf(@"%@ %@", name, version);
-    
+
+    [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
+    if ([[PearlConfig get].askForReviews boolValue])
+        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion])
+            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue]))
+                [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
+                            message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
+                            viewStyle:UIAlertViewStyleDefault
+                            initAlert:nil tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                    if (buttonIndex == [alert cancelButtonIndex])
+                        return;
+
+                    [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+                    if (buttonIndex == [alert firstOtherButtonIndex]) {
+                        if (NSNullToNil([PearlConfig get].iTunesID))
+                            [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+                        else
+                            [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+                    }
+                }
+                            cancelTitle:[PearlStrings get].reviewLater
+                            otherTitles:[PearlStrings get].reviewNow, [PearlStrings get].reviewNever, nil];
+
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
         [application registerForRemoteNotificationTypes:[[PearlConfig get].supportedNotifications unsignedIntegerValue]];
 #endif
-    
+
     // Start the background music.
     [self preSetup];
-    
+
     return NO;
 }
 
 
 - (void)preSetup {
-    
+
 #ifdef PEARL_MEDIA
     if ([[PearlConfig get].currentTrack isEqualToString:@"sequential"]) {
         // Restart sequentially from the start.
@@ -75,7 +103,7 @@
     } else
         [[PearlAudioController get] playTrack:[PearlConfig get].currentTrack];
 #endif
-    
+
     if (!self.window) {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef PEARL_UIKIT
@@ -83,19 +111,19 @@
 #endif
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
-        self.navigationController = (UINavigationController *) self.window.rootViewController;
+        self.navigationController = (UINavigationController *)self.window.rootViewController;
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {
-    
+
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    
+
 }
 
 - (void)restart {
-    
+
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissModalViewControllerAnimated:YES];
 #ifdef PEARL_UIKIT
@@ -104,108 +132,112 @@
 }
 
 - (void)shutdown:(id)caller {
-    
+
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    
+
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    
+
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Will be deprecated at some point, please replace with application:openURL:sourceApplication:annotation:" userInfo:nil];
+
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:@"Will be deprecated at some point, please replace with application:openURL:sourceApplication:annotation:"
+                                 userInfo:nil];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+
     return YES;
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-    
+
 #ifdef PEARL_MEDIA
     [[PearlAudioController get] playTrack:nil];
 #endif
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    
+
 }
 
 - (void)applicationSignificantTimeChange:(UIApplication *)application {
-    
+
 }
 
-- (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-    
+- (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation
+           duration:(NSTimeInterval)duration {
+
 }
 
 - (void)application:(UIApplication *)application didChangeStatusBarOrientation:(UIInterfaceOrientation)oldStatusBarOrientation {
-    
+
 }
 
 - (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
-    
+
 }
 
 - (void)application:(UIApplication *)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame {
-    
+
 }
 
 #ifdef PEARL_WITH_APNS
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
-    [PearlConfig get].deviceToken = deviceToken;
+
+    [PearlConfig get].deviceToken            = deviceToken;
     [PearlConfig get].notificationsSupported = YES;
-    [PearlConfig get].notificationsChecked = YES;
-    
+    [PearlConfig get].notificationsChecked   = YES;
+
     dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
 
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    
+
     [PearlConfig get].notificationsSupported = NO;
-    [PearlConfig get].notificationsChecked = YES;
-    
+    [PearlConfig get].notificationsChecked   = YES;
+
     wrn(@"Couldn't register with the APNs: %@", error);
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    
+
 }
 #endif
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    
+
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_4_0) {
-    
+- (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
+
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_4_0) {
-    
+- (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
+
 }
 
 - (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application {
-    
+
 }
 
 - (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application {
-    
+
 }
 
-+(PearlAppDelegate *) get {
-    
++ (PearlAppDelegate *)get {
+
     id delegate = [UIApplication sharedApplication].delegate;
     if ([delegate isKindOfClass:[self class]])
-        return (PearlAppDelegate *) delegate;
-    
+        return (PearlAppDelegate *)delegate;
+
     return nil;
 }
 

@@ -18,17 +18,17 @@
 
 typedef struct {
     BOOL active;
-    char *keyPath;
-    ccTime elapsed;
-    ccTime duration;
-    float ai;
-    float a;
-    float vi;
-    float v;
-    float from;
-    float current;
-    float to;
-    size_t valueSize;
+    char       *keyPath;
+    ccTime     elapsed;
+    ccTime     duration;
+    float      ai;
+    float      a;
+    float      vi;
+    float      v;
+    float      from;
+    float      current;
+    float      to;
+    size_t     valueSize;
     NSUInteger valueOffset;
 } PropertyTween;
 
@@ -39,9 +39,9 @@ typedef struct {
     NSUInteger tweenCount;
 }
 
-+ (PearlCCAutoTween *)actionWithDuration:(ccTime )duration;
++ (PearlCCAutoTween *)actionWithDuration:(ccTime)duration;
 
-- (id)initWithDuration:(ccTime )duration;
+- (id)initWithDuration:(ccTime)duration;
 
 - (void)tweenKeyPath:(NSString *)keyPath to:(float)to;
 - (void)tweenKeyPath:(NSString *)keyPath

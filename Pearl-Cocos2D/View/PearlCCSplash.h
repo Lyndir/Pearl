@@ -21,7 +21,7 @@
 
 @interface PearlCCSplash : CCSprite {
 
-    BOOL  _switching;
+    BOOL _switching;
 }
 
 @end

@@ -25,7 +25,7 @@
 @interface PearlGradientView : UIView {
 
 @private
-    CGFloat             *components;
+    CGFloat *components;
 }
 
 /** Create a gradient view that renders a gradient which begins at the top with the given topColor

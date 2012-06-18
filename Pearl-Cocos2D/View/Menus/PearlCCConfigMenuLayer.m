@@ -16,19 +16,12 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlCCConfigMenuLayer.h"
-#import "PearlConfig.h"
-#import "PearlCCMenuItemTitle.h"
-#import "NSString_PearlSEL.h"
-#import "PearlStringUtils.h"
-#import "PearlCocos2DStrings.h"
-
 
 @interface PearlCCConfigMenuLayer ()
 
 - (void)tapped:(id)sender;
 
-@property (readwrite, retain) NSDictionary                         *itemConfigs;
+@property (readwrite, retain) NSDictionary *itemConfigs;
 
 @end
 
@@ -38,9 +31,9 @@
 @synthesize configDelegate = _configDelegate;
 
 
-
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                             settings:(SEL)setting, ... {
++ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
+                                        logo:(CCMenuItem *)aLogo
+                                    settings:(SEL)setting, ... {
 
     if (!setting)
         [NSException raise:NSInvalidArgumentException
@@ -60,14 +53,15 @@
 }
 
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                    settingsFromArray:(NSArray *)settings {
++ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
+                                        logo:(CCMenuItem *)aLogo
+                           settingsFromArray:(NSArray *)settings {
 
     return [[self alloc] initWithDelegate:aDelegate logo:aLogo settingsFromArray:settings];
 }
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                             settings:(SEL)setting, ... {
+              settings:(SEL)setting, ... {
 
     if (!setting)
         [NSException raise:NSInvalidArgumentException
@@ -95,14 +89,14 @@
     self.itemConfigs = mutableItemConfigs;
 
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:[settings count]];
-    for (NSString *setting in settings) {
+    for (NSString  *setting in settings) {
         SEL settingSel = NSSelectorFromString(setting);
 
         // Build the setting's toggle button.
         CCMenuItemToggle *menuItem = [CCMenuItemToggle itemWithTarget:self selector:@selector(tapped:)];
         if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(toggleItemsForSetting:)]) {
-            NSArray *settingItems = [self.configDelegate toggleItemsForSetting:settingSel];
-            NSMutableArray *subItems = [NSMutableArray arrayWithCapacity:[settingItems count]];
+            NSArray        *settingItems = [self.configDelegate toggleItemsForSetting:settingSel];
+            NSMutableArray *subItems     = [NSMutableArray arrayWithCapacity:[settingItems count]];
             for (id settingItem in settingItems)
                 if ([settingItem isKindOfClass:[CCMenuItem class]])
                     [subItems addObject:settingItem];
@@ -111,10 +105,10 @@
             menuItem.subItems = subItems;
         }
         if (![menuItem.subItems count])
-            menuItem.subItems = [NSMutableArray arrayWithObjects:
-                                 [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOff],
-                                 [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOn],
-                                 nil];
+            menuItem.subItems      = [NSMutableArray arrayWithObjects:
+                                                      [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOff],
+                                                      [CCMenuItemFont itemWithString:[PearlCocos2DStrings get].menuConfigOn],
+                                                      nil];
 
         // Force update.
         [menuItem setSelectedIndex:[menuItem.subItems count] - 1];
@@ -141,10 +135,10 @@
     [super onEnter];
 
     for (NSValue *itemValue in [self.itemConfigs allKeys]) {
-        NSString *selector = [self.itemConfigs objectForKey:itemValue];
-        CCMenuItemToggle *item = [itemValue pointerValue];
+        NSString         *selector = [self.itemConfigs objectForKey:itemValue];
+        CCMenuItemToggle *item     = [itemValue pointerValue];
 
-        id t = [PearlConfig get];
+        id  t = [PearlConfig get];
         SEL s = NSSelectorFromString(selector);
 
         // Search t's class hierarchy for the selector.
@@ -178,10 +172,10 @@
 
 - (void)tapped:(CCMenuItemToggle *)toggle {
 
-    id t = [PearlConfig get];
-    SEL s = [self configForItem:toggle];
-    SEL setterS = NSSelectorFromString([NSStringFromSelector(s) getterToSetter]);
-    id toggledValue = nil;
+    id  t            = [PearlConfig get];
+    SEL s            = [self configForItem:toggle];
+    SEL setterS      = NSSelectorFromString([NSStringFromSelector(s) getterToSetter]);
+    id  toggledValue = nil;
     if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(valueForSetting:index:)])
         toggledValue = [self.configDelegate valueForSetting:s index:[toggle selectedIndex]];
     if (!toggledValue)
@@ -204,18 +198,18 @@
 
 
 - (SEL)configForItem:(CCMenuItemToggle *)item {
-    
+
     return NSSelectorFromString([self.itemConfigs objectForKey:[NSValue valueWithPointer:(void *)item]]);
 }
 
 
 - (CCMenuItemToggle *)itemForConfig:(SEL)config {
-    
-    NSString *configString = NSStringFromSelector(config);
+
+    NSString     *configString = NSStringFromSelector(config);
     for (NSValue *itemValue in [self.itemConfigs allKeys])
         if ([[self.itemConfigs objectForKey:itemValue] isEqualToString:configString])
             return [itemValue pointerValue];
-    
+
     return nil;
 }
 

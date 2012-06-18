@@ -21,24 +21,24 @@
 
 @interface PearlCCShadeLayer : PearlCCFancyLayer {
 
-    BOOL                                                    _pushed;
-    BOOL                                                    _fadeNextEntry;
-    CCMenuItem                                              *_backButton, *_nextButton, *_defaultBackButton, *_defaultNextButton;
-    CCMenu                                                  *_backMenu, *_nextMenu;
-    NSInvocation                                            *_backInvocation, *_nextInvocation;
+    BOOL _pushed;
+    BOOL _fadeNextEntry;
+    CCMenuItem *_backButton, *_nextButton, *_defaultBackButton, *_defaultNextButton;
+    CCMenu *_backMenu, *_nextMenu;
+    NSInvocation *_backInvocation, *_nextInvocation;
 
-    CCNode                                                  *_background;
-    CGPoint                                                 _backgroundOffset;
+    CCNode *_background;
+    CGPoint _backgroundOffset;
 }
 
-@property (nonatomic, readonly, assign) BOOL                pushed;
-@property (nonatomic, readwrite, retain) CCMenuItem         *backButton;
-@property (nonatomic, readwrite, retain) CCMenuItem         *nextButton;
-@property (nonatomic, readwrite, retain) CCMenuItem         *defaultBackButton;
-@property (nonatomic, readwrite, retain) CCMenuItem         *defaultNextButton;
-@property (nonatomic, readwrite) BOOL                       fadeNextEntry;
-@property (nonatomic, readwrite, retain) CCNode             *background;
-@property (nonatomic, readwrite, assign) CGPoint            backgroundOffset;
+@property (nonatomic, readonly, assign) BOOL pushed;
+@property (nonatomic, readwrite, retain) CCMenuItem *backButton;
+@property (nonatomic, readwrite, retain) CCMenuItem *nextButton;
+@property (nonatomic, readwrite, retain) CCMenuItem *defaultBackButton;
+@property (nonatomic, readwrite, retain) CCMenuItem *defaultNextButton;
+@property (nonatomic, readwrite) BOOL fadeNextEntry;
+@property (nonatomic, readwrite, retain) CCNode *background;
+@property (nonatomic, readwrite, assign) CGPoint backgroundOffset;
 
 - (void)setBackButtonTarget:(id)target selector:(SEL)selector;
 - (void)setNextButtonTarget:(id)target selector:(SEL)selector;

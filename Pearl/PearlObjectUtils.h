@@ -30,24 +30,45 @@
             })
 
 
-#define NilToNull(__O)                                                                          \
+#define NilToNSNull(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
-#define NullToNil(__O)                                                                          \
+#define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 
-#define Throw(__reason)                                                                         \
+#define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
                     exceptionWithName:NSInternalInconsistencyException                          \
-                    reason:__reason                                                             \
-                    userInfo:nil]
-#define ThrowInfo(__reason, __userInfo)                                                         \
-            @throw [NSException                                                                 \
-                    exceptionWithName:NSInternalInconsistencyException                          \
-                    reason:__reason                                                             \
+                    reason:PearlString(__reason , ##__VA_ARGS__)                                \
                     userInfo:__userInfo]
+#define Throw(__reason, ...)                                                                    \
+            ThrowInfo(nil, __reason , ##__VA_ARGS__)
 
-@interface PearlObjectUtils : NSObject {
+#define PearlInteger(__number) \
+            [NSNumber numberWithInteger:__number]
+#define PearlUnsignedInteger(__number) \
+            [NSNumber numberWithUnsignedInteger:__number]
+#define PearlFloat(__number) \
+            [NSNumber numberWithFloat:__number]
+#define PearlIntegerOp(__number, __operation) \
+            PearlInteger([__number integerValue] __operation)
+#define PearlUnsignedIntegerOp(__number, __operation) \
+            PearlUnsignedInteger([__number unsignedIntegerValue] __operation)
+#define PearlFloatOp(__number, __operation) \
+            PearlFloat([__number floatValue] __operation)
 
-}
+#define PearlMainThread(__mainBlock)                                                            \
+            ({                                                                                  \
+                if ([NSThread isMainThread])                                                    \
+                    __mainBlock();                                                              \
+                else                                                                            \
+                    dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
+            })
+
+@interface PearlBlockObject : NSObject
+
++ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)facadeFor:(id)facadeObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
+
+- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock facadeObject:(id)facade;
 
 @end

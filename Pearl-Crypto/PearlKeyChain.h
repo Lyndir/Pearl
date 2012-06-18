@@ -57,6 +57,15 @@
 
 }
 
+/**
+* Obtains a device-identifier scoped to the keychain access group.
+*
+* This identifier is not reset when the application is removed but does change if the device gets wiped.
+*
+* The identifier is created on first access from a random UUID and remains private to the access group.
+*/
++ (NSString *)deviceIdentifier;
+
 /** Update an item in the keychain.
  * 
  * @param query A query dictionary to use for searching an existing keychain item to update.  Should contain a kSecClass and one or more of kSecAttr and kSecMatch.
@@ -91,7 +100,7 @@
  * 
  * @param query The attributes to use for finding the item.
  */
-+ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id*)result;
++ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id *)result;
 
 /** Run a query on the keychain and return the (first) found item in the form of the given return type.
  * 

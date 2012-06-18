@@ -7,11 +7,6 @@
  * @author   Maarten Billemont <lhunath@lyndir.com>
  * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
-//
-//  Created by lhunath on 09/04/12.
-//
-// To change the template use AppCode | Preferences | File Templates.
-//
 
 
 #import <Foundation/Foundation.h>

@@ -68,11 +68,7 @@
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
     if (bundleBodyReference) {
         self.bodyFrames = bodyFrameCount;
-<<<<<<< HEAD
         self.body = (__strong CCTexture2D **)calloc(sizeof(CCTexture2D *), self.bodyFrames);
-=======
-        self.body       = (__strong CCTexture2D **)malloc(sizeof(CCTexture2D *) * self.bodyFrames);
->>>>>>> 82fb855dd9dd61e8a895852b91885c15d27b7c7d
         if (self.bodyFrames > 1) {
             for (NSUInteger f = 0; f < self.bodyFrames; ++f)
                 self.body[f] = [[CCTextureCache sharedTextureCache] addImage:[NSString stringWithFormat:bundleBodyReference, f]];
@@ -234,13 +230,9 @@
 
 
 - (void)dealloc {
-<<<<<<< HEAD
     
     for (NSUInteger f = 0; f < self.bodyFrames; ++f)
         self.body[f] = nil;
-=======
-
->>>>>>> 82fb855dd9dd61e8a895852b91885c15d27b7c7d
     free(self.body);
 }
 

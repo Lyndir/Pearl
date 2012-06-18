@@ -110,10 +110,6 @@
 
     self.resetTriggers = [NSMutableDictionary dictionary];
 
-#ifdef PEARL_UIKIT
-    self.delegate = [PearlAppDelegate get];
-#endif
-
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
     self.build     = [info objectForKey:@"CFBundleVersion"];
     self.version   = [info objectForKey:@"CFBundleShortVersionString"];
@@ -214,8 +210,8 @@
 
     else {
         trc(@"%@.%@ = %@", [self class], selector, currentValue);
-        //        __unsafe_unretained id returnValue = currentValue;
-        [anInvocation setReturnValue:&currentValue];
+        __autoreleasing id returnValue = currentValue;
+        [anInvocation setReturnValue:&returnValue];
     }
 }
 
@@ -321,8 +317,8 @@
         srandom(aSeed);
         free(_gameRandomSeeds);
         free(_gameRandomCounters);
-        _gameRandomSeeds    = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
-        _gameRandomCounters = malloc(sizeof(NSUInteger) * PearlMaxGameRandom);
+        _gameRandomSeeds    = calloc(PearlMaxGameRandom, sizeof(NSUInteger));
+        _gameRandomCounters = calloc(PearlMaxGameRandom, sizeof(NSUInteger));
         for (NSUInteger s = 0; s < PearlMaxGameRandom; ++s) {
             _gameRandomSeeds[s]    = (unsigned)random();
             _gameRandomCounters[s] = 0;

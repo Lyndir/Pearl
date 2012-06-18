@@ -52,7 +52,8 @@
     id tableValue = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:self.tableName];
     id value      = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
 
-    [anInvocation setReturnValue:&value];
+    __autoreleasing id returnValue = value;
+    [anInvocation setReturnValue:&returnValue];
 }
 
 @end

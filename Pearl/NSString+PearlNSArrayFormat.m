@@ -20,7 +20,7 @@
 
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
 
-    __unsafe_unretained id *argList = (__unsafe_unretained id *)malloc(sizeof(id) * [arguments count]);
+    __unsafe_unretained id *argList = (typeof(argList))calloc([arguments count], sizeof(id));
     @try {
         [arguments getObjects:argList];
 
@@ -37,7 +37,7 @@
 
 + (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
 
-    __unsafe_unretained id *argList = (__unsafe_unretained id *)malloc(sizeof(id) * [arguments count]);
+    __unsafe_unretained id *argList = (typeof(argList))calloc([arguments count], sizeof(id));
     @try {
         [arguments getObjects:argList];
 

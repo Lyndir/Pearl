@@ -36,6 +36,15 @@
 @implementation PearlAppDelegate
 @synthesize window = _window, navigationController = _navigationController;
 
+- (id)init {
+    
+    if (!(self = [super init]))
+        return nil;
+    
+    [PearlConfig get].delegate = self;
+
+    return self;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 

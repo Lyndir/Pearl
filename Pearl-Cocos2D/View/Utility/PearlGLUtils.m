@@ -68,7 +68,7 @@ void PearlGLDrawIndicators() {
     if (!PearlGLIndicatorPoints)
         return;
 
-    CGPoint *points = malloc(sizeof(CGPoint) * IndicatorCount);
+    CGPoint *points = calloc(IndicatorCount, sizeof(CGPoint));
     for (NSUInteger i = 0; i < IndicatorCount; ++i)
         points[i] = [PearlGLIndicatorSpaces[i] convertToWorldSpace:PearlGLIndicatorPoints[i]];
 

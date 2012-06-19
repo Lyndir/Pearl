@@ -133,7 +133,7 @@
     glGenBuffers(1, &_vertexBuffer);
     glGenBuffers(1, &_colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat *) * 10 * 2, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 10 * 2, vertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(ccColor4B) * 10, colors, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

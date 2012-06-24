@@ -16,6 +16,14 @@
 //  Copyright 2010 Lyndir. All rights reserved.
 //
 
+@implementation PearlObjectUtils
+
++ (id)getNil {
+    
+    return nil;
+}
+
+@end
 
 @interface PearlBlockObject ()
 

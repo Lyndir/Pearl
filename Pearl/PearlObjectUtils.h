@@ -34,6 +34,7 @@
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
+#define PearlNil [PearlObjectUtils getNil]
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
@@ -63,6 +64,12 @@
                 else                                                                            \
                     dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
+
+@interface PearlObjectUtils : NSObject
+
++ (id)getNil;
+
+@end
 
 @interface PearlBlockObject : NSObject
 

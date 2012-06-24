@@ -7,9 +7,12 @@
 //
 
 #import "PearlLazy.h"
+#import <objc/runtime.h>
+
 
 @interface PearlLazy () {
 
+    BOOL _trace;
     id _object;
     id (^_loadObject)(void);
 }
@@ -20,14 +23,20 @@
 
 + (id)lazyObjectLoadedFrom:(id(^)(void))loadObject {
 
-    return [[PearlLazy alloc] initLoadedFrom:loadObject];
+    return [self lazyObjectLoadedFrom:loadObject trace:NO];
 }
 
-- (id)initLoadedFrom:(id(^)(void))loadObject {
++ (id)lazyObjectLoadedFrom:(id(^)(void))loadObject trace:(BOOL)trace {
+    
+    return [[PearlLazy alloc] initLoadedFrom:loadObject trace:trace];
+}
+
+- (id)initLoadedFrom:(id(^)(void))loadObject trace:(BOOL)trace {
 
     if (!(self = [super init]))
         return nil;
 
+    _trace = trace;
     _loadObject = [loadObject copy];
 
     return self;
@@ -48,8 +57,25 @@
 
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
+    
+    id loadedObject = [self loadedObject_PearlLazy];
+    [anInvocation invokeWithTarget:loadedObject];
 
-    [anInvocation invokeWithTarget:[self loadedObject_PearlLazy]];
+    if (_trace) {
+        NSMutableArray *arguments = [NSMutableArray arrayWithCapacity:anInvocation.methodSignature.numberOfArguments];
+        for (NSUInteger a = 2; a < anInvocation.methodSignature.numberOfArguments; a++) {
+            // FIXME: Handle non-object argument values.
+            id argument = nil;
+            [anInvocation getArgument:&argument atIndex:(signed)a];
+            [arguments addObject:argument];
+        }
+        
+        // FIXME: Handle non-object return values.
+        id returnValue = nil;
+        [anInvocation getReturnValue:&returnValue];
+        
+        inf(@"-[%@ %s] with %@ returns: %@", [loadedObject class], [anInvocation selector], arguments, returnValue);
+    }
 }
 
 @end

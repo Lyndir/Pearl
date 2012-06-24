@@ -17,15 +17,11 @@
 //
 
 #ifdef PEARL_MEDIA
-
 #import "PearlAudioController.h"
-
 #endif
-#ifdef PEARL_UIKIT
 
-#endif
 #if TARGET_OS_IPHONE
-
+#import <UIKit/UIKit.h>
 #else
 #import <Cocoa/Cocoa.h>
 #endif

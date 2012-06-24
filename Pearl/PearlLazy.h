@@ -11,5 +11,6 @@
 @interface PearlLazy : NSObject
 
 + (id)lazyObjectLoadedFrom:(id(^)(void))loadObject;
++ (id)lazyObjectLoadedFrom:(id(^)(void))loadObject trace:(BOOL)trace;
 
 @end

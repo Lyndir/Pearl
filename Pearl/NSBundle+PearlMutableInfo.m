@@ -19,74 +19,96 @@
 #import "NSBundle+PearlMutableInfo.h"
 #import "PearlLogger.h"
 #import "JRSwizzle.h"
+#import <objc/runtime.h>
 
 @implementation NSBundle (PearlMutableInfo)
 
 static BOOL infoSwizzled = NO, localizedInfoSwizzled = NO;
+static char mutableInfoDictionaryKey, mutableLocalizedInfoDictionaryKey;
 
 + (void)initialize {
-
-    NSError *error = nil;
-    if (!(infoSwizzled          = [self jr_swizzleMethod:@selector(infoDictionary)
-                                              withMethod:@selector(infoDictionary_PearlMutableInfo)
-                                                   error:&error]))
-    wrn(@"Failed to swizzle -infoDictionary: %@", error);
-    if (!(localizedInfoSwizzled = [self jr_swizzleMethod:@selector(localizedInfoDictionary)
-                                              withMethod:@selector(localizedInfoDictionary_PearlMutableInfo)
-                                                   error:&error]))
-    wrn(@"Failed to swizzle -localizedInfoDictionary: %@", error);
+    
+    if ([self respondsToSelector:@selector(jr_swizzleMethod:withMethod:error:)]) {
+        NSError *error = nil;
+        if (!(infoSwizzled          = [self jr_swizzleMethod:@selector(infoDictionary)
+                                                  withMethod:@selector(infoDictionary_PearlMutableInfo)
+                                                       error:&error]))
+            wrn(@"Failed to swizzle -infoDictionary: %@", error);
+        if (!(localizedInfoSwizzled = [self jr_swizzleMethod:@selector(localizedInfoDictionary)
+                                                  withMethod:@selector(localizedInfoDictionary_PearlMutableInfo)
+                                                       error:&error]))
+            wrn(@"Failed to swizzle -localizedInfoDictionary: %@", error);
+    }
+    else
+        wrn(@"Swizzling not supported.");
 }
 
 - (NSDictionary *)infoDictionary_PearlMutableInfo {
-
-    static NSMutableDictionary *bundleInfos = nil;
-    if (!bundleInfos)
-        bundleInfos                = [NSMutableDictionary dictionary];
-
-    NSMutableDictionary *bundleInfo;
-    NSValue             *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NSNullToNil([bundleInfos objectForKey:selfValue]))) {
-        NSDictionary *originalInfo = infoSwizzled? [self infoDictionary_PearlMutableInfo]: [self infoDictionary];
-        [bundleInfos setObject:NilToNSNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
-    }
-
-    return bundleInfo;
+    
+    return [PearlBlockObject facadeFor:(infoSwizzled? [self infoDictionary_PearlMutableInfo]: [self infoDictionary])
+                            usingBlock:
+            ^(SEL message, __autoreleasing id *result, id argument, NSInvocation *invocation) {
+                NSDictionary *customInfoDictionary = [self mutableInfoDictionary];
+                
+                if (message == @selector(valueForKey:)) {
+                    id customValue = [customInfoDictionary valueForKey:argument];
+                    if (customValue != [NSNull null])
+                        *result = customValue;
+                } else if (message == @selector(objectForKey:)) {
+                    id customValue = [customInfoDictionary objectForKey:argument];
+                    if (customValue != [NSNull null])
+                        *result = customValue;
+                }
+            }];
 }
 
 - (NSDictionary *)localizedInfoDictionary_PearlMutableInfo {
-
-    static NSMutableDictionary *bundleInfos = nil;
-    if (!bundleInfos)
-        bundleInfos                = [NSMutableDictionary dictionary];
-
-    NSMutableDictionary *bundleInfo;
-    NSValue             *selfValue = [NSValue valueWithNonretainedObject:self];
-    if (!(bundleInfo = NSNullToNil([bundleInfos objectForKey:selfValue]))) {
-        NSDictionary *originalInfo = localizedInfoSwizzled? [self localizedInfoDictionary_PearlMutableInfo]: [self localizedInfoDictionary];
-        [bundleInfos setObject:NilToNSNull(bundleInfo = [originalInfo mutableCopy]) forKey:selfValue];
-    }
-
-    return bundleInfo;
+    
+    return [PearlBlockObject facadeFor:(localizedInfoSwizzled? [self localizedInfoDictionary_PearlMutableInfo]: [self localizedInfoDictionary])
+                            usingBlock:
+            ^(SEL message, __autoreleasing id *result, id argument, NSInvocation *invocation) {
+                NSDictionary *customLocalizedInfoDictionary = [self mutableLocalizedInfoDictionary];
+                
+                if (message == @selector(valueForKey:)) {
+                    id customValue = [customLocalizedInfoDictionary valueForKey:argument];
+                    if (customValue != [NSNull null])
+                        *result = customValue;
+                } else if (message == @selector(objectForKey:)) {
+                    id customValue = [customLocalizedInfoDictionary objectForKey:argument];
+                    if (customValue != [NSNull null])
+                        *result = customValue;
+                }
+            }];
 }
 
 - (NSMutableDictionary *)mutableInfoDictionary {
-
+    
     if (!infoSwizzled) {
         err(@"The info dictionary hasn't been swizzled!");
         return nil;
     }
-
-    return (NSMutableDictionary *)[self infoDictionary];
+    
+    NSMutableDictionary *mutableInfoDictionary = objc_getAssociatedObject(self, &mutableInfoDictionaryKey);
+    if (!mutableInfoDictionary)
+        objc_setAssociatedObject(self, &mutableInfoDictionaryKey,
+                                 mutableInfoDictionary = [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN);
+    
+    return mutableInfoDictionary;
 }
 
 - (NSMutableDictionary *)mutableLocalizedInfoDictionary {
-
+    
     if (!localizedInfoSwizzled) {
         err(@"The localized info dictionary hasn't been swizzled!");
         return nil;
     }
-
-    return (NSMutableDictionary *)[self localizedInfoDictionary];
+    
+    NSMutableDictionary *mutableLocalizedInfoDictionary = objc_getAssociatedObject(self, &mutableLocalizedInfoDictionaryKey);
+    if (!mutableLocalizedInfoDictionary)
+        objc_setAssociatedObject(self, &mutableLocalizedInfoDictionaryKey,
+                                 mutableLocalizedInfoDictionary = [NSMutableDictionary dictionary], OBJC_ASSOCIATION_RETAIN);
+    
+    return mutableLocalizedInfoDictionary;
 }
 
 @end

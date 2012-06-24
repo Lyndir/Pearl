@@ -50,13 +50,12 @@ static char mutableInfoDictionaryKey, mutableLocalizedInfoDictionaryKey;
             ^(SEL message, __autoreleasing id *result, id argument, NSInvocation *invocation) {
                 NSDictionary *customInfoDictionary = [self mutableInfoDictionary];
                 
-                if (message == @selector(valueForKey:)) {
-                    id customValue = [customInfoDictionary valueForKey:argument];
-                    if (customValue != [NSNull null])
-                        *result = customValue;
-                } else if (message == @selector(objectForKey:)) {
-                    id customValue = [customInfoDictionary objectForKey:argument];
-                    if (customValue != [NSNull null])
+                if (message == @selector(objectForKey:) || message == @selector(valueForKey:) || message == @selector(valueForKeyPath:)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    __autoreleasing id customValue = [customInfoDictionary performSelector:message withObject:argument];
+#pragma clang diagnostic pop
+                    if (NSNullToNil(customValue))
                         *result = customValue;
                 }
             }];
@@ -69,13 +68,12 @@ static char mutableInfoDictionaryKey, mutableLocalizedInfoDictionaryKey;
             ^(SEL message, __autoreleasing id *result, id argument, NSInvocation *invocation) {
                 NSDictionary *customLocalizedInfoDictionary = [self mutableLocalizedInfoDictionary];
                 
-                if (message == @selector(valueForKey:)) {
-                    id customValue = [customLocalizedInfoDictionary valueForKey:argument];
-                    if (customValue != [NSNull null])
-                        *result = customValue;
-                } else if (message == @selector(objectForKey:)) {
-                    id customValue = [customLocalizedInfoDictionary objectForKey:argument];
-                    if (customValue != [NSNull null])
+                if (message == @selector(objectForKey:) || message == @selector(valueForKey:) || message == @selector(valueForKeyPath:)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    __autoreleasing id customValue = [customLocalizedInfoDictionary performSelector:message withObject:argument];
+#pragma clang diagnostic pop
+                    if (NSNullToNil(customValue))
                         *result = customValue;
                 }
             }];

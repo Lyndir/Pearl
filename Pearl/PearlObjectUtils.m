@@ -66,7 +66,7 @@
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
-    id result = nil, argument = nil;
+    __autoreleasing id result = nil, argument = nil;
     if ([[anInvocation methodSignature] numberOfArguments] > 2)
         [anInvocation getArgument:&argument atIndex:2];
 
@@ -78,6 +78,32 @@
     if (!result)
         if ([self.facadeObject methodSignatureForSelector:anInvocation.selector])
             [anInvocation invokeWithTarget:self.facadeObject];
+}
+
+- (id)valueForKey:(NSString *)key {
+
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    [invocation setSelector:_cmd];
+    [invocation setArgument:&key atIndex:2];
+
+    [self forwardInvocation:invocation];
+
+    __autoreleasing id returnValue = nil;
+    [invocation getReturnValue:&returnValue];
+    return returnValue;
+}
+
+- (id)valueForKeyPath:(NSString *)key {
+
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    [invocation setSelector:_cmd];
+    [invocation setArgument:&key atIndex:2];
+
+    [self forwardInvocation:invocation];
+
+    __autoreleasing id returnValue = nil;
+    [invocation getReturnValue:&returnValue];
+    return returnValue;
 }
 
 @end

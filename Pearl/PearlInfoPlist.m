@@ -82,7 +82,8 @@
     if (!value)
         value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
 
-    [anInvocation setReturnValue:&value];
+    __autoreleasing id returnValue = value;
+    [anInvocation setReturnValue:&returnValue];
 }
 
 @end

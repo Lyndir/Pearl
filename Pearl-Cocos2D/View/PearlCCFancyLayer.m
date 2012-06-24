@@ -100,7 +100,7 @@
           pos.x + pad + inner                           pos.x + width - pad
     */
 
-    GLfloat *vertices = malloc(sizeof(GLfloat) * 10 * 2);
+    GLfloat *vertices = calloc(10 * 2, sizeof(GLfloat));
     vertices[0]  = self.contentSize.width / 2;                            // 0
     vertices[1]  = self.contentSize.height / 2;
     vertices[2]  = self.outerPadding.left + inner;                        // 1
@@ -122,7 +122,7 @@
     vertices[18] = self.outerPadding.left + inner;                        // 9
     vertices[19] = self.outerPadding.bottom;
 
-    ccColor4B *colors = malloc(sizeof(ccColor4B) * 10);
+    ccColor4B *colors = calloc(10, sizeof(ccColor4B));
     colors[1] = colors[2] = colors[7] = colors[8] = colors[9] = self.backColor;
     colors[3]                                                 = colors[4] = colors[5] = colors[6] = self.colorGradient;
     colors[0]                                                                                     = self.backColor;
@@ -133,7 +133,7 @@
     glGenBuffers(1, &_vertexBuffer);
     glGenBuffers(1, &_colorBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat *) * 10 * 2, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 10 * 2, vertices, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(ccColor4B) * 10, colors, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

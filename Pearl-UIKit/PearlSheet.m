@@ -76,13 +76,9 @@
 
     tappedButtonBlock = [aTappedButtonBlock copy];
     sheetView         = [[UIActionSheet alloc] initWithTitle:title delegate:self
-                                           cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                                           cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle, nil];
     sheetView.actionSheetStyle = viewStyle;
 
-    if (destructiveTitle)
-        sheetView.destructiveButtonIndex = [sheetView addButtonWithTitle:destructiveTitle];
-    if (firstOtherTitle)
-        [sheetView addButtonWithTitle:firstOtherTitle];
     if (otherTitlesList) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
             [sheetView addButtonWithTitle:otherTitle];

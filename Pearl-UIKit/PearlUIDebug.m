@@ -21,6 +21,16 @@
 
 static CGFloat autoWidth = 5;
 
++ (void)printFonts {
+    
+    dbg(@"Fonts:");
+    for (NSString *family in [UIFont familyNames]) {
+        dbg(@"  Family: %@", family);
+        for (NSString *name in [UIFont fontNamesForFamilyName:family])
+            dbg(@"    - %@", name);
+    }
+}
+
 + (UIView *)view {
 
     UIWindow *window = [UIApplication sharedApplication].keyWindow;

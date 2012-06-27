@@ -50,6 +50,8 @@
             [NSNumber numberWithUnsignedInteger:__number]
 #define PearlFloat(__number) \
             [NSNumber numberWithFloat:__number]
+#define PearlBool(__number) \
+            [NSNumber numberWithBool:__number]
 #define PearlIntegerOp(__number, __operation) \
             PearlInteger([__number integerValue] __operation)
 #define PearlUnsignedIntegerOp(__number, __operation) \

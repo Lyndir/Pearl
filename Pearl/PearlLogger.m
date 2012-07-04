@@ -154,20 +154,21 @@
 
 - (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString {
 
-    PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
-    
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
-    if (![[threadLocals allKeys] containsObject:@"PearlDisableLogListeners"])
-        @try {
-            @synchronized (self.listeners) {
-                [threadLocals setObject:@"" forKey:@"PearlDisableLogListeners"];
-                for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
-                    if (!listener(message))
-                        return self;
-            }
-        } @finally {
-            [threadLocals removeObjectForKey:@"PearlDisableLogListeners"];
+    if ([[threadLocals allKeys] containsObject:@"PearlDisableLog"])
+        return self;
+
+    PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
+    @try {
+        @synchronized (self.listeners) {
+            [threadLocals setObject:@"" forKey:@"PearlDisableLog"];
+            for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
+                if (!listener(message))
+                    return self;
         }
+    } @finally {
+        [threadLocals removeObjectForKey:@"PearlDisableLog"];
+    }
     
     if (aLevel >= self.autoprintLevel)
         fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);

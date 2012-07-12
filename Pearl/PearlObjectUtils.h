@@ -58,6 +58,8 @@
             PearlUnsignedInteger([__number unsignedIntegerValue] __operation)
 #define PearlFloatOp(__number, __operation) \
             PearlFloat([__number floatValue] __operation)
+#define PearlBoolNot(__number) \
+            PearlBool(![__number boolValue])
 
 #define PearlMainThread(__mainBlock)                                                            \
             ({                                                                                  \

@@ -17,6 +17,8 @@
 
 #import <Foundation/Foundation.h>
 
+NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSString *bundleVersion2);
+
 @interface PearlInfoPlist : NSObject
 
 /** A custom key that can be used to record the description of the GIT commit that the application was built from. */

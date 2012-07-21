@@ -40,7 +40,7 @@ extern NSArray *NumbersRanging(double min, double max, double step, NSNumberForm
 - (NSString *)stringByDeletingMatchesOf:(NSString *)pattern;
 - (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression;
 
-- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern with:(NSString *)template;
-- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression with:(NSString *)template;
+- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern withTemplate:(NSString *)templ;
+- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression withTemplate:(NSString *)templ;
 
 @end

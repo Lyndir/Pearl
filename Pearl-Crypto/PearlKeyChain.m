@@ -131,6 +131,11 @@
     return status;
 }
 
++ (OSStatus)setData:(NSData *)data ofItemForQuery:(NSDictionary *)query {
+
+    return [self addOrUpdateItemForQuery:query withAttributes:[NSDictionary dictionaryWithObject:data forKey:(__bridge id)kSecValueData]];
+}
+
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
 
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);

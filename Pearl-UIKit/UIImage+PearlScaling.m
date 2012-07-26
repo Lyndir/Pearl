@@ -21,6 +21,70 @@
 
 @implementation UIImage (PearlScaling)
 
++ (UIImage *)imageNamed:(NSString *)imageName inSquareScalingHeight:(CGFloat)height {
+
+    return [[self imageNamed:imageName] imageInSquareScalingHeight:height];
+}
+
++ (UIImage *)imageNamed:(NSString *)imageName inSquareScalingWidth:(CGFloat)width {
+
+    return [[self imageNamed:imageName] imageInSquareScalingWidth:width];
+}
+
++ (UIImage *)imageNamed:(NSString *)imageName inSizeScalingHeight:(CGSize)size {
+
+    return [[self imageNamed:imageName] imageInSizeScalingHeight:size];
+}
+
++ (UIImage *)imageNamed:(NSString *)imageName inSizeScalingWidth:(CGSize)size {
+
+    return [[self imageNamed:imageName] imageInSizeScalingWidth:size];
+}
+
++ (UIImage *)imageNamed:(NSString *)imageName scaleInto:(CGSize)scaleSize cropTo:(CGSize)cropSize {
+
+    return [[self imageNamed:imageName] imageScaledInto:scaleSize cropTo:cropSize];
+}
+
+- (UIImage *)imageInSquareScalingHeight:(CGFloat)height {
+
+    return [self imageInSizeScalingHeight:CGSizeMake(height, height)];
+}
+
+- (UIImage *)imageInSquareScalingWidth:(CGFloat)width {
+
+    return [self imageInSizeScalingWidth:CGSizeMake(width, width)];
+}
+
+- (UIImage *)imageInSizeScalingHeight:(CGSize)size {
+
+    return [self imageScaledInto:CGSizeMake(CGFLOAT_MAX, size.height) cropTo:size];
+}
+
+- (UIImage *)imageInSizeScalingWidth:(CGSize)size {
+
+    return [self imageScaledInto:CGSizeMake(size.width, CGFLOAT_MAX) cropTo:size];
+}
+
+- (UIImage *)imageScaledInto:(CGSize)scaleSize cropTo:(CGSize)cropSize {
+
+    static NSCache *imageCache = nil;
+    @synchronized (self) {
+        if (!imageCache)
+            imageCache = [NSCache new];
+    }
+
+    NSString *imageSourceKey = [[(__bridge_transfer NSData *)CGDataProviderCopyData(CGImageGetDataProvider(self.CGImage))
+     hashWith:PearlHashMD4] encodeBase64];
+    NSString *imageKey       = PearlString(@"%@_%@_%@", imageSourceKey, NSStringFromCGSize(scaleSize), NSStringFromCGSize(cropSize));
+    UIImage  *image          = [imageCache objectForKey:imageKey];
+    if (!image)
+        [imageCache setObject:image = [[self imageByScalingAndFittingInSize:scaleSize] imageByScalingAndCroppingToSize:cropSize]
+                       forKey:imageKey];
+
+    return image;
+}
+
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize {
 
     CGFloat widthFactor  = targetSize.width / self.size.width;

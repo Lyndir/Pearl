@@ -53,6 +53,7 @@ static char mutableInfoDictionaryKey, mutableLocalizedInfoDictionaryKey;
                 if (message == @selector(objectForKey:) || message == @selector(valueForKey:) || message == @selector(valueForKeyPath:)) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    // TODO: Try [invocation invokeWithTarget:customInfoDictionary];
                     __autoreleasing id customValue = [customInfoDictionary performSelector:message withObject:argument];
 #pragma clang diagnostic pop
                     if (NSNullToNil(customValue))
@@ -71,6 +72,7 @@ static char mutableInfoDictionaryKey, mutableLocalizedInfoDictionaryKey;
                 if (message == @selector(objectForKey:) || message == @selector(valueForKey:) || message == @selector(valueForKeyPath:)) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    // TODO: Try [invocation invokeWithTarget:customInfoDictionary];
                     __autoreleasing id customValue = [customLocalizedInfoDictionary performSelector:message withObject:argument];
 #pragma clang diagnostic pop
                     if (NSNullToNil(customValue))

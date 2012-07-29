@@ -21,6 +21,18 @@
 
 @interface UIImage (PearlScaling)
 
++ (UIImage *)imageNamed:(NSString *)imageName inSquareScalingHeight:(CGFloat)height;
++ (UIImage *)imageNamed:(NSString *)imageName inSquareScalingWidth:(CGFloat)width;
++ (UIImage *)imageNamed:(NSString *)imageName inSizeScalingHeight:(CGSize)size;
++ (UIImage *)imageNamed:(NSString *)imageName inSizeScalingWidth:(CGSize)size;
++ (UIImage *)imageNamed:(NSString *)imageName scaleInto:(CGSize)scaleSize cropTo:(CGSize)cropSize;
+
+- (UIImage *)imageInSquareScalingHeight:(CGFloat)height;
+- (UIImage *)imageInSquareScalingWidth:(CGFloat)width;
+- (UIImage *)imageInSizeScalingHeight:(CGSize)size;
+- (UIImage *)imageInSizeScalingWidth:(CGSize)size;
+- (UIImage *)imageScaledInto:(CGSize)scaleSize cropTo:(CGSize)cropSize;
+
 /** Scale an image such that its entire content fits in the given size.
  *
  * We scale until either the width or the height fills the image while the other either also fills the image or is smaller. */

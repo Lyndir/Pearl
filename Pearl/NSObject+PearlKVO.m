@@ -51,7 +51,7 @@
 @implementation NSObject (PearlKVO)
 static char actionBlocksKey;
 
-- (void)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
+- (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
               forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
 
     NSMutableArray *blockObservers = objc_getAssociatedObject(self, &actionBlocksKey);
@@ -61,6 +61,8 @@ static char actionBlocksKey;
     PearlBlockObserver_NSObject *handler = [[PearlBlockObserver_NSObject alloc] initWithBlock:observerBlock];
     [self addObserver:handler forKeyPath:keyPath options:options context:context];
     [blockObservers addObject:handler];
+
+    return handler;
 }
 
 @end

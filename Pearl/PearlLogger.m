@@ -171,7 +171,9 @@
     }
     
     if (aLevel >= self.autoprintLevel)
-        fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
+        @synchronized (self) {
+            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
+        }
     if (message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
 

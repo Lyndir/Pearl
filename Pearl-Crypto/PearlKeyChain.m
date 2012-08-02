@@ -55,7 +55,8 @@
 
     NSDictionary *queryAttr = [NSDictionary dictionaryWithObjectsAndKeys:
                                              (__bridge id)kSecClassKey, (__bridge id)kSecClass,
-                                             [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
+                                             [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding],
+                                             (__bridge id)kSecAttrApplicationTag,
                                              (__bridge id)kSecAttrKeyTypeRSA, (__bridge id)kSecAttrKeyType,
                                              (id)kCFBooleanTrue, (__bridge id)kSecReturnRef,
                                              nil];
@@ -109,13 +110,13 @@
                                                          @"deviceIdentifier", kSecAttrAccount,
                                                          @"com.lyndir.Pearl", kSecAttrService,
                                                          nil]
-                               matches:nil];
+                                  matches:nil];
 
     NSData *deviceIdentifier = [self dataOfItemForQuery:query];
     if (!deviceIdentifier)
         [self addOrUpdateItemForQuery:query
                        withAttributes:[NSDictionary dictionaryWithObject:deviceIdentifier = [[PearlCodeUtils randomUUID] dataUsingEncoding:NSUTF8StringEncoding]
-                                                    forKey:(__bridge id)kSecValueData]];
+                                                                  forKey:(__bridge id)kSecValueData]];
 
     return deviceIdentifierString = [[NSString alloc] initWithBytes:deviceIdentifier.bytes length:deviceIdentifier.length
                                                            encoding:NSUTF8StringEncoding];
@@ -124,6 +125,7 @@
 + (OSStatus)updateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
 
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
+    trc(@"SecItemUpdate(%@, %@) = %@", query, attributes, NSStringFromErrSec(status));
     if (status != noErr)
     err(@"While updating keychain item: %@: %@",
     query, NSStringFromErrSec(status));
@@ -139,18 +141,17 @@
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
 
     OSStatus status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributes);
+    trc(@"SecItemUpdate(%@, %@) = %@", query, attributes, NSStringFromErrSec(status));
     if (status == errSecItemNotFound) {
         NSMutableDictionary *newItem = [query mutableCopy];
         [newItem addEntriesFromDictionary:attributes];
 
         status = SecItemAdd((__bridge CFDictionaryRef)newItem, NULL);
+        trc(@"SecItemAdd(%@) = %@", newItem, NSStringFromErrSec(status));
         if (status != noErr)
-        err(@"While adding keychain item: %@: %@",
-        query, NSStringFromErrSec(status));
-    } else
-        if (status != noErr)
-        err(@"While updating keychain item: %@: %@",
-        query, NSStringFromErrSec(status));
+        err(@"While adding keychain item: %@: %@", query, NSStringFromErrSec(status));
+    } else if (status != noErr)
+    err(@"While updating keychain item: %@: %@", query, NSStringFromErrSec(status));
 
     return status;
 }
@@ -170,6 +171,7 @@
     CFTypeRef cfResult = NULL;
     OSStatus  status   = SecItemCopyMatching((__bridge CFDictionaryRef)query, &cfResult);
     *result = (__bridge_transfer id)cfResult;
+    trc(@"SecItemCopyMatching(%@) = %@, result: %@", query, NSStringFromErrSec(status), *result);
 
     return status;
 }
@@ -223,10 +225,12 @@
 
 #if TARGET_OS_IPHONE
     NSDictionary *privKeyAttr = [NSDictionary dictionaryWithObjectsAndKeys:
-                                               [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
+                                               [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding],
+                                               (__bridge id)kSecAttrApplicationTag,
                                                nil];
     NSDictionary *pubKeyAttr  = [NSDictionary dictionaryWithObjectsAndKeys:
-                                               [[tag stringByAppendingString:@"-pub"] dataUsingEncoding:NSUTF8StringEncoding], (__bridge id)kSecAttrApplicationTag,
+                                               [[tag stringByAppendingString:@"-pub"] dataUsingEncoding:NSUTF8StringEncoding],
+                                               (__bridge id)kSecAttrApplicationTag,
                                                nil];
 #endif
     NSDictionary *keyPairAttr = [NSDictionary dictionaryWithObjectsAndKeys:

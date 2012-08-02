@@ -17,15 +17,6 @@
 //
 
 
-@interface PearlAlert (Private)
-
-- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
-          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
-  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
-        cancelTitle:(NSString *)cancelTitle otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
-
-@end
-
 @implementation PearlAlert
 @synthesize alertView, alertField;
 
@@ -53,7 +44,7 @@
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self initWithTitle:title message:message viewStyle:viewStyle initAlert:initBlock tappedButtonBlock:aTappedButtonBlock
@@ -101,7 +92,7 @@
             [alertField becomeFirstResponder];
         }
 
-    if (firstOtherTitle && otherTitlesList) {
+    if (firstOtherTitle) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
             [alertView addButtonWithTitle:otherTitle];
         va_end(otherTitlesList);
@@ -124,7 +115,7 @@
         tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
               otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
@@ -144,7 +135,7 @@
          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
@@ -168,7 +159,7 @@
                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self showAlertWithTitle:title message:message viewStyle:viewStyle initAlert:initBlock tappedButtonBlock:aTappedButtonBlock

@@ -169,7 +169,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
      (hmac[offset + 3] & 0xff) << 0;
 
     // Extract otpLength digits out of the OTP data.
-    return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%dd", otpLength], otp % (int)powf(10, otpLength)];
+    return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%lud", otpLength], otp % (int)powf(10, otpLength)];
 }
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42

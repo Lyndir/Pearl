@@ -26,6 +26,7 @@
 #define err(format, ...)    [[PearlLogger get] err:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
 #define ftl(format, ...)    [[PearlLogger get] ftl:[@"%25s:%-3d | " stringByAppendingString:(format)], basename((char *)__FILE__), __LINE__ , ##__VA_ARGS__]
 
+__BEGIN_DECLS
 extern NSString *errstr(void);
 
 /** Levels that determine the importance of logging events. */
@@ -43,6 +44,7 @@ typedef enum {
     /** Notice that something went wrong from which could not be recovered, causing the operation to abort. */
      PearlLogLevelFatal
 }               PearlLogLevel;
+__END_DECLS
 
 @interface PearlLogMessage : NSObject {
 @private

@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+__BEGIN_DECLS
 extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
 
 #define PearlLocalize(key, ...) \
@@ -34,6 +35,7 @@ extern NSString *LPad(const NSString *string, NSUInteger l);
 extern NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix);
 
 extern NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);
+__END_DECLS
 
 @interface NSString (PearlStringUtils)
 

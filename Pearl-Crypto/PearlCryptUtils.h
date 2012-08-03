@@ -29,8 +29,10 @@
 #define PearlCryptBlockSize     kCCBlockSizeAES128
 #endif
 
+__BEGIN_DECLS
 NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status);
 NSString *NSStringFromErrSec(OSStatus status);
+__END_DECLS
 
 @interface NSString (PearlCryptUtils)
 

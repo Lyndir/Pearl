@@ -48,29 +48,29 @@ NSString *NSStringFromErrSec(OSStatus status) {
 
     switch (status) {
         case errSecSuccess:
-            return [NSString stringWithFormat:@"No error (errSecSuccess: %d).", status];
+            return [NSString stringWithFormat:@"No error (errSecSuccess: %ld).", status];
         case errSecUnimplemented:
-            return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %d).", status];
+            return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", status];
         case errSecParam:
-            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %d).", status];
+            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).", status];
         case errSecAllocate:
-            return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %d).", status];
+            return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", status];
         case errSecNotAvailable:
-            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %d).", status];
+            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).", status];
         case errSecDuplicateItem:
-            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %d).", status];
+            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %ld).", status];
         case errSecItemNotFound:
-            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %d).", status];
+            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %ld).", status];
         case errSecInteractionNotAllowed:
-            return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %d).", status];
+            return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %ld).", status];
         case errSecDecode:
-            return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %d).", status];
+            return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %ld).", status];
         case errSecAuthFailed:
-            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %d).", status];
+            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).", status];
     }
 
     wrn(@"Security Error status code not known: %d", status);
-    return [NSString stringWithFormat:@"Unknown status (%d).", status];
+    return [NSString stringWithFormat:@"Unknown status (%ld).", status];
 }
 
 @implementation NSString (PearlCryptUtils)

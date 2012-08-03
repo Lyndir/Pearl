@@ -7,7 +7,7 @@ shopt -s extglob
 ## Pearl
 #
 ## Submodules that need to be checked out.
-dependencies=( )
+dependencies=( External/jrswizzle )
 
 ## Custom migration.
 # Nothing yet.

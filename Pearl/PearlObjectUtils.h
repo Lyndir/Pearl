@@ -58,6 +58,8 @@
             PearlUnsignedInteger([__number unsignedIntegerValue] __operation)
 #define PearlFloatOp(__number, __operation) \
             PearlFloat([__number floatValue] __operation)
+#define PearlBoolNot(__number) \
+            PearlBool(![__number boolValue])
 
 #define PearlMainThread(__mainBlock)                                                            \
             ({                                                                                  \
@@ -76,8 +78,10 @@
 @interface PearlBlockObject : NSObject
 
 + (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
-+ (id)facadeFor:(id)facadeObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
++ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock facadeObject:(id)facade;
+- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+       facadeObject:(id)facade superClass:(Class)superClass;
 
 @end

@@ -73,8 +73,8 @@
         // FIXME: Handle non-object return values.
         id returnValue = nil;
         [anInvocation getReturnValue:&returnValue];
-        
-        inf(@"-[%@ %s] with %@ returns: %@", [loadedObject class], [anInvocation selector], arguments, returnValue);
+
+        inf(@"-[%@ %s] with %@ returns: %@", [loadedObject class], (char *)[anInvocation selector], arguments, returnValue);
     }
 }
 

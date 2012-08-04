@@ -67,10 +67,10 @@ NSString *NSStringFromErrSec(OSStatus status) {
             return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %ld).", status];
         case errSecAuthFailed:
             return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).", status];
+        default:
+            wrn(@"Security Error status code not known: %ld", status);
+            return PearlString(@"Unknown status (%ld).", status);
     }
-
-    wrn(@"Security Error status code not known: %d", status);
-    return [NSString stringWithFormat:@"Unknown status (%ld).", status];
 }
 
 @implementation NSString (PearlCryptUtils)

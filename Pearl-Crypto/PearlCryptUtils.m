@@ -169,7 +169,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
      (hmac[offset + 3] & 0xff) << 0;
 
     // Extract otpLength digits out of the OTP data.
-    return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%lud", otpLength], otp % (int)powf(10, otpLength)];
+    return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%ud", otpLength], otp % (int)powf(10, otpLength)];
 }
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42
@@ -185,7 +185,7 @@ static size_t DEREncodeLength(unsigned char *buf, size_t length) {
     size_t i = (length / 256) + 1;
     buf[0] = (unsigned char)(i + 0x80);
     for (size_t j = 0; j < i; ++j) {
-        buf[i - j] = length & 0xFF;
+        buf[i - j] = (unsigned char)(length & 0xFF);
         length = length >> 8;
     }
 

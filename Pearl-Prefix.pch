@@ -21,31 +21,30 @@
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>
 
-// Pearl Configuration
 #define PEARL
-#if TARGET_OS_IPHONE
-#define PEARL_COCOS2D
-#endif
-#define PEARL_CRYPTO
-#define PEARL_MEDIA
-#if TARGET_OS_IPHONE
-#define PEARL_UIKIT
-#endif
-#define PEARL_WS
 
-#define PEARL_WITH_APNS
-#define PEARL_WITH_OPENSSL
-#define PEARL_WITH_SCRYPT
-
+// Pearl Configuration
+#ifdef PEARL
 #import "Pearl.h"
+#endif
 #if TARGET_OS_IPHONE
+#ifdef PEARL_COCOS2D
 #import "Pearl-Cocos2D.h"
 #endif
+#endif
+#ifdef PEARL_CRYPTO
 #import "Pearl-Crypto.h"
+#endif
+#ifdef PEARL_MEDIA
 #import "Pearl-Media.h"
+#endif
 #if TARGET_OS_IPHONE
+#ifdef PEARL_UIKIT
 #import "Pearl-UIKit.h"
 #endif
+#endif
+#ifdef PEARL_WS
 #import "Pearl-WS.h"
+#endif
 
 #endif

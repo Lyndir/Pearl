@@ -32,9 +32,9 @@
     [super tearDown];
 }
 
-- (void)testKeys {
+- (void)testSize {
 
-    [PearlKeyChain generateKeyPairWithTag:@"Test"];
+    inf(@"size GLfloat*: %u, size GLfloat: %u", sizeof(GLfloat *), sizeof(GLfloat));
 }
 
 @end

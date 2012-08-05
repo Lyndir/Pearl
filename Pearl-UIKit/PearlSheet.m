@@ -17,20 +17,6 @@
 //
 
 
-@interface PearlSheet (Private)
-
-- (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
-  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
-        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
-         otherTitle:(NSString *)otherTitle :(va_list)otherTitlesList;
-+ (PearlSheet *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
-                 tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
-                       cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
-                        otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList;
-
-@end
-
-
 @implementation PearlSheet
 @synthesize sheetView;
 
@@ -49,24 +35,26 @@
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message cancelTitle:(NSString *)cancelTitle {
 
-    return [self initWithTitle:title message:message viewStyle:UIActionSheetStyleAutomatic tappedButtonBlock:nil cancelTitle:cancelTitle
+    return [self initWithTitle:title message:message viewStyle:UIActionSheetStyleAutomatic initSheet:nil tappedButtonBlock:nil cancelTitle:cancelTitle
               destructiveTitle:nil otherTitles:nil];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+          initSheet:(void (^)(UIActionSheet *sheet))initBlock
   tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
         otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
-    return [self initWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock
+    return [self initWithTitle:title message:message viewStyle:viewStyle initSheet:initBlock tappedButtonBlock:aTappedButtonBlock
                    cancelTitle:cancelTitle destructiveTitle:destructiveTitle
                     otherTitle:otherTitles :otherTitlesList];
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+          initSheet:(void (^)(UIActionSheet *sheet))initBlock
   tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
          otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
@@ -76,18 +64,18 @@
 
     tappedButtonBlock = [aTappedButtonBlock copy];
     sheetView         = [[UIActionSheet alloc] initWithTitle:title delegate:self
-                                           cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:firstOtherTitle, nil];
+                                           cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle, nil];
     sheetView.actionSheetStyle = viewStyle;
 
-    if (firstOtherTitle && otherTitlesList) {
+    if (firstOtherTitle) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
             [sheetView addButtonWithTitle:otherTitle];
         va_end(otherTitlesList);
     }
+    if (initBlock)
+        initBlock(sheetView);
     if (cancelTitle)
         sheetView.cancelButtonIndex      = [sheetView addButtonWithTitle:cancelTitle];
-    if (destructiveTitle)
-        sheetView.destructiveButtonIndex = [sheetView addButtonWithTitle:destructiveTitle];
 
     return self;
 }
@@ -95,18 +83,20 @@
 + (PearlSheet *)showError:(NSString *)message {
 
     return [self showSheetWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIActionSheetStyleAutomatic
-                                                              tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonOkay
+                          initSheet:nil tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonOkay
                                                               destructiveTitle:nil otherTitles:nil];
 }
 
 + (PearlSheet *)showError:(NSString *)message
+                initSheet:(void (^)(UIActionSheet *sheet))initBlock
         tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
          destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self showSheetWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIActionSheetStyleAutomatic
+                          initSheet:initBlock
                                                               tappedButtonBlock:aTappedButtonBlock
                                                                     cancelTitle:[PearlStrings get].commonButtonOkay
                                                                     destructiveTitle:destructiveTitle
@@ -116,18 +106,20 @@
 + (PearlSheet *)showNotice:(NSString *)message {
 
     return [self showSheetWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIActionSheetStyleAutomatic
-                                                               tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonThanks
+                          initSheet:nil tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonThanks
                                                                destructiveTitle:nil otherTitles:nil];
 }
 
 + (PearlSheet *)showNotice:(NSString *)message
+                 initSheet:(void (^)(UIActionSheet *sheet))initBlock
          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
           destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
     return [self showSheetWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIActionSheetStyleAutomatic
+                          initSheet:initBlock
                                                                tappedButtonBlock:aTappedButtonBlock
                                                                      cancelTitle:[PearlStrings get].commonButtonThanks
                                                                      destructiveTitle:destructiveTitle
@@ -135,24 +127,27 @@
 }
 
 + (PearlSheet *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                         initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
                         otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
 
     return [[[PearlSheet alloc] initWithTitle:title message:message viewStyle:viewStyle
+                                    initSheet:initBlock
                             tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle destructiveTitle:destructiveTitle
                                    otherTitle:firstOtherTitle :otherTitlesList] showSheet];
 }
 
 + (PearlSheet *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                         initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
                        otherTitles:(NSString *)otherTitles, ... {
 
-    va_list(otherTitlesList);
+    va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
-    return [self showSheetWithTitle:title message:message viewStyle:viewStyle tappedButtonBlock:aTappedButtonBlock
+    return [self showSheetWithTitle:title message:message viewStyle:viewStyle initSheet:initBlock tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:cancelTitle destructiveTitle:destructiveTitle
                          otherTitle:otherTitles :otherTitlesList];
 }

@@ -34,6 +34,7 @@
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
+#define PearlNil [PearlObjectUtils getNil]
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
@@ -49,12 +50,16 @@
             [NSNumber numberWithUnsignedInteger:__number]
 #define PearlFloat(__number) \
             [NSNumber numberWithFloat:__number]
+#define PearlBool(__number) \
+            [NSNumber numberWithBool:__number]
 #define PearlIntegerOp(__number, __operation) \
             PearlInteger([__number integerValue] __operation)
 #define PearlUnsignedIntegerOp(__number, __operation) \
             PearlUnsignedInteger([__number unsignedIntegerValue] __operation)
 #define PearlFloatOp(__number, __operation) \
             PearlFloat([__number floatValue] __operation)
+#define PearlBoolNot(__number) \
+            PearlBool(![__number boolValue])
 
 #define PearlMainThread(__mainBlock)                                                            \
             ({                                                                                  \
@@ -64,11 +69,19 @@
                     dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
 
+@interface PearlObjectUtils : NSObject
+
++ (id)getNil;
+
+@end
+
 @interface PearlBlockObject : NSObject
 
 + (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
-+ (id)facadeFor:(id)facadeObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
++ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock facadeObject:(id)facade;
+- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+       facadeObject:(id)facade superClass:(Class)superClass;
 
 @end

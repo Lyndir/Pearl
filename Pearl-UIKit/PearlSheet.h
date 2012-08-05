@@ -53,17 +53,20 @@
  * @param otherTitles       The text on action buttons or nil to not show any such buttons.
  */
 - (id)initWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+          initSheet:(void (^)(UIActionSheet *sheet))initBlock
   tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
         otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 + (PearlSheet *)showError:(NSString *)message;
 + (PearlSheet *)showError:(NSString *)message
+                initSheet:(void (^)(UIActionSheet *sheet))initBlock
         tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
          destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 + (PearlSheet *)showNotice:(NSString *)message;
 + (PearlSheet *)showNotice:(NSString *)message
+                 initSheet:(void (^)(UIActionSheet *sheet))initBlock
          tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
           destructiveTitle:(NSString *)destructiveTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
@@ -71,6 +74,7 @@
  * Initializes and shows a sheet.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
 + (PearlSheet *)showSheetWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIActionSheetStyle)viewStyle
+                         initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
                        otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;

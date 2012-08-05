@@ -81,7 +81,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        err(@"Couldn't compile pattern: %@, reason: %@", pattern, error);
         return nil;
     }
 
@@ -90,25 +90,25 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
 
 - (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression {
 
-    return [self stringByReplacingMatchesOfExpression:expression with:@""];
+    return [self stringByReplacingMatchesOfExpression:expression withTemplate:@""];
 }
 
-- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern with:(NSString *)template {
+- (NSString *)stringByReplacingMatchesOf:(NSString *)pattern withTemplate:(NSString *)templ {
 
     NSError *error = nil;
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", error);
+        err(@"Couldn't compile pattern: %@, reason: %@", pattern, error);
         return nil;
     }
 
-    return [self stringByReplacingMatchesOfExpression:expression with:template];
+    return [self stringByReplacingMatchesOfExpression:expression withTemplate:templ];
 }
 
-- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression with:(NSString *)template {
+- (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression withTemplate:(NSString *)templ {
 
-    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, self.length) withTemplate:template];
+    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, self.length) withTemplate:templ];
 }
 
 @end

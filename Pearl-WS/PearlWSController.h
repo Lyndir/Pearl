@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+__BEGIN_DECLS
 typedef enum {
     /** Submit the parameters in a www-form encoded HTTP-GET request. */
      PearlWSRequestMethodGET_REST,
@@ -32,6 +33,7 @@ typedef enum {
     PearlJSONResultCodeGenericFailure = -1,
     PearlJSONResultCodeUpdateRequired = -2,
 } PearlJSONResultCode;
+__END_DECLS
 
 @interface PearlJSONResult : NSObject {
 

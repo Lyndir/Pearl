@@ -18,12 +18,14 @@
 
 #import <UIKit/UIKit.h>
 
+__BEGIN_DECLS
 typedef enum {
     PearlLayoutGravityNorth,
     PearlLayoutGravityEast,
     PearlLayoutGravitySouth,
     PearlLayoutGravityWest,
 } PearlLayoutGravity;
+__END_DECLS
 
 @interface PearlLayoutView : UIView {
 

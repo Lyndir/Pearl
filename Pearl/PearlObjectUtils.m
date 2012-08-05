@@ -16,43 +16,71 @@
 //  Copyright 2010 Lyndir. All rights reserved.
 //
 
+#import "objc/runtime.h"
 
-@interface PearlBlockObject ()
+@implementation PearlObjectUtils
 
-@property (copy) void (^block)(SEL message, id *result, id argument, NSInvocation *invocation);
-@property (strong) id facadeObject;
++ (id)getNil {
+
+    return nil;
+}
 
 @end
 
 @implementation PearlBlockObject
-@synthesize block = _block, facadeObject = _facadeObject;
 
-+ (id)objectWithBlock:(void (^)(SEL, id *, id, NSInvocation *))aBlock {
+static char facadeBlockKey, facadedObjectKey;
 
-    return [[self alloc] initWithBlock:aBlock facadeObject:nil];
++ (id)objectWithBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock {
+
+    return [self objectWithBlock:facadeBlock superClass:[self superclass]];
 }
 
-+ (id)facadeFor:(id)facadeObject usingBlock:(void (^)(SEL, id *, id, NSInvocation *))aBlock {
++ (id)objectWithBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock superClass:(Class)superClass {
 
-    return [[self alloc] initWithBlock:aBlock facadeObject:facadeObject];
+    return [[self alloc] initWithBlock:facadeBlock facadeObject:nil superClass:superClass];
 }
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock
-       facadeObject:(id)facade {
++ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock {
 
-    if (!(self = [super init]))
+    return [[self alloc] initWithBlock:facadeBlock facadeObject:facadedObject superClass:[self superclass]];
+}
+
+- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+       facadeObject:(id)facadedObject superClass:(Class)superClass {
+
+    // Create a clone of this class that uses the given superClass.
+    static NSUInteger classCloneCounter = 0;
+    NSString *classCloneName = [NSStringFromClass(superClass) stringByAppendingFormat:@"_PearlBlock%u", classCloneCounter++];
+    Class classClone = objc_allocateClassPair(superClass, classCloneName.UTF8String, 0);
+
+    NSUInteger outCount = 0;
+    Method *methods = class_copyMethodList([self class], &outCount);
+    for (NSUInteger m = 0; m < outCount; ++m) {
+        SEL methodName = method_getName(methods[m]);
+            if (!class_addMethod(classClone, methodName, method_getImplementation(methods[m]), method_getTypeEncoding(methods[m]))) {
+                err(@"Failed to add method to proxy class.");
+                return nil;
+            }
+    }
+    free(methods);
+
+    objc_registerClassPair(classClone);
+    if (!(self = [classClone alloc]))
         return nil;
 
-    self.block        = aBlock;
-    self.facadeObject = facade;
+    objc_setAssociatedObject(self, &facadeBlockKey, facadeBlock, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, &facadedObjectKey, facadedObject, OBJC_ASSOCIATION_RETAIN);
 
     return self;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
 
+    id facadedObject = objc_getAssociatedObject(self, &facadedObjectKey);
+
     // If we have a facade object and it knows this selector, use its signature.
-    NSMethodSignature *facadeObjectSignature = [self.facadeObject methodSignatureForSelector:aSelector];
+    NSMethodSignature *facadeObjectSignature = [facadedObject methodSignatureForSelector:aSelector];
     if (facadeObjectSignature)
         return facadeObjectSignature;
 
@@ -66,18 +94,47 @@
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
-    id result = nil, argument = nil;
+    id facadedObject = objc_getAssociatedObject(self, &facadedObjectKey);
+    void (^facadeBlock)(SEL message, id *result, id argument, NSInvocation *invocation) = objc_getAssociatedObject(self, &facadeBlockKey);
+
+    __autoreleasing id result = nil, argument = nil;
     if ([[anInvocation methodSignature] numberOfArguments] > 2)
         [anInvocation getArgument:&argument atIndex:2];
 
-    self.block(anInvocation.selector, &result, argument, anInvocation);
+    facadeBlock(anInvocation.selector, &result, argument, anInvocation);
 
     if ([[anInvocation methodSignature] methodReturnLength])
         [anInvocation setReturnValue:&result];
 
     if (!result)
-        if ([self.facadeObject methodSignatureForSelector:anInvocation.selector])
-            [anInvocation invokeWithTarget:self.facadeObject];
+        if ([facadedObject methodSignatureForSelector:anInvocation.selector])
+            [anInvocation invokeWithTarget:facadedObject];
+}
+
+- (id)valueForKey:(NSString *)key {
+
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    [invocation setSelector:_cmd];
+    [invocation setArgument:&key atIndex:2];
+
+    [self forwardInvocation:invocation];
+
+    __autoreleasing id returnValue = nil;
+    [invocation getReturnValue:&returnValue];
+    return returnValue;
+}
+
+- (id)valueForKeyPath:(NSString *)key {
+
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    [invocation setSelector:_cmd];
+    [invocation setArgument:&key atIndex:2];
+
+    [self forwardInvocation:invocation];
+
+    __autoreleasing id returnValue = nil;
+    [invocation getReturnValue:&returnValue];
+    return returnValue;
 }
 
 @end

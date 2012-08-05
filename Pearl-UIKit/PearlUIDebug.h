@@ -23,6 +23,8 @@
 
 }
 
++ (void)printFonts;
+
 /**
  * Remove all the debug elements currently showing.
  */

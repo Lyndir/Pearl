@@ -150,7 +150,7 @@
     NSArray      *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
     NSDictionary *row         = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
 
-    UITableViewCellStyle cellStyle = [NSNullToNil([row objectForKey:PearlATVCCellStyle]) unsignedIntValue];
+    UITableViewCellStyle cellStyle = (UITableViewCellStyle)[NSNullToNil([row objectForKey:PearlATVCCellStyle]) integerValue];
     NSString        *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
     UITableViewCell *cell       = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil)

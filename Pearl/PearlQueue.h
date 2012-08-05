@@ -18,11 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+__BEGIN_DECLS
 typedef enum {
     PearlQueueOverflowFails,
     PearlQueueOverflowBlocks,
     PearlQueueOverflowPopsFirst,
 } PearlQueueOverflow;
+__END_DECLS
 
 @interface PearlQueue : NSObject
 

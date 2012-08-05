@@ -15,6 +15,29 @@
 //  Copyright (c) 2012 Lyndir. All rights reserved.
 //
 
+NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSString *bundleVersion2) {
+
+    NSArray *bundleVersion1Components = [bundleVersion1 componentsSeparatedByString:@"."];
+    NSArray *bundleVersion2Components = [bundleVersion2 componentsSeparatedByString:@"."];
+    for (NSUInteger i = 0; i < MAX([bundleVersion1Components count], [bundleVersion2Components count]); ++i) {
+        if (i >= [bundleVersion1Components count])
+            // 1 has too few elements.
+            return NSOrderedAscending;
+        if (i >= [bundleVersion2Components count])
+            // 2 has too few elements.
+            return NSOrderedDescending;
+
+        NSString *bundleVersion1Element = [bundleVersion1Components objectAtIndex:i];
+        NSString *bundleVersion2Element = [bundleVersion2Components objectAtIndex:i];
+
+        NSComparisonResult comparison = [bundleVersion1Element compare:bundleVersion2Element];
+        if (comparison != NSOrderedSame)
+            return comparison;
+    }
+
+    return NSOrderedSame;
+}
+
 @implementation PearlInfoPlist
 
 @dynamic GITDescription;

@@ -41,6 +41,9 @@ extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
 extern CGSize  CGSizeFromCGPoint(const CGPoint point);
 extern CGRect  CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
+extern CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract);
+extern CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add);
+
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);

@@ -27,7 +27,11 @@
 
 - (BOOL)isSetter {
 
-    return [self hasPrefix:@"set"];
+    static NSRegularExpression *setterPattern = nil;
+    if (!setterPattern)
+        setterPattern = [NSRegularExpression regularExpressionWithPattern:@"^set[[:upper:]]" options:0 error:nil];
+
+    return [setterPattern numberOfMatchesInString:self options:0 range:NSMakeRange(0, self.length)] > 0;
 }
 
 

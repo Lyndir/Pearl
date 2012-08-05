@@ -77,7 +77,7 @@
 
 - (void)reset {
 
-    [self.scoreCount setString:[NSString stringWithFormat:@"%04d", [self score]]];
+    [self.scoreCount setString:[NSString stringWithFormat:@"%04lld", [self score]]];
 }
 
 - (void)highlightGood:(BOOL)wasGood {

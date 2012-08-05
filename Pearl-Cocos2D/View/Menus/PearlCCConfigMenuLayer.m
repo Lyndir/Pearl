@@ -144,7 +144,7 @@
         // Search t's class hierarchy for the selector.
         NSMethodSignature *sig = [t methodSignatureForSelector:s];
         if (!sig)
-            [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+            [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %@ on %@", NSStringFromSelector(s), t];
 
         // Build an invocation for the signature & invoke it.
         __unsafe_unretained id ret;
@@ -185,7 +185,7 @@
     // Search t's class hierarchy for the selector.
     NSMethodSignature *sig = [t methodSignatureForSelector:setterS];
     if (!sig)
-        [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+        [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %@ on %@", NSStringFromSelector(s), t];
 
     // Build an invocation for the signature & invoke it.
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];

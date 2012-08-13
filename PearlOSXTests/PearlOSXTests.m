@@ -31,22 +31,49 @@
 
     [super tearDown];
 }
+//
+//- (void)testEndian {
+//    
+//#if __LITTLE_ENDIAN__
+//    inf(@"OSX: little endian");
+//#else
+//    inf(@"OSX: big endian");
+//#endif
+//}
+//- (void)testSCrypt {
+//
+//    uint64_t N;
+//    uint32_t r, p;
+//
+//    PearlSCrypt *scrypt = [[PearlSCrypt alloc] initWithMemoryFraction:0 maximum:0 time:1];
+//    [scrypt determineParametersN:&N r:&r p:&p];
+//
+//    inf(@"N: %u, r: %u, p: %u", N, r, p);
+//    NSDate *start = [NSDate date];
+//    [scrypt deriveKeyWithLength:64
+//                   fromPassword:
+//                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
+//                   usingSalt:
+//                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]];
+//    inf(@"done after %0.2fs", -[start timeIntervalSinceNow]);
+//    start = [NSDate date];
+//    [PearlSCrypt deriveKeyWithLength:64
+//                   fromPassword:
+//     [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
+//                      usingSalt:
+//     [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding] N:32768 r:8 p:2];
+//    inf(@"done after %0.2fs", -[start timeIntervalSinceNow]);
+//}
 
-- (void)testSCrypt {
+- (void)testKVC {
 
-    uint64_t N;
-    uint32_t r, p;
-
-    PearlSCrypt *scrypt = [[PearlSCrypt alloc] initWithMemoryFraction:0 maximum:0 time:1];
-    [scrypt determineParametersN:&N r:&r p:&p];
-
-    inf(@"N: %u, r: %u, p: %u", N, r, p);
-    [scrypt deriveKeyWithLength:64
-                   fromPassword:
-                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
-                   usingSalt:
-                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]];
-    inf(@"done");
+    NSDictionary *testDict = [NSDictionary dictionaryWithObject:[NSOrderedSet orderedSetWithObjects:
+                                                                  [NSDictionary dictionaryWithObject:@"one" forKey:@"inner"],
+                                                                  [NSDictionary dictionaryWithObject:@"two" forKey:@"inner"],
+                                                                  nil]
+                                                         forKey:@"outer"];
+    id result = [testDict valueForKeyPath:@"outer.@distinctUnionOfSets.inner"];
+    inf(@"result: %@ %@", [result class], result);
 }
 
 @end

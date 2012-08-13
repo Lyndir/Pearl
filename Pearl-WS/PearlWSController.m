@@ -43,12 +43,12 @@
     if (!(aDictionary == nil || (self = [super init])))
         return nil;
 
-    self.code                     = [NullToNil([aDictionary valueForKeyPath:@"code"]) intValue];
-    self.outdated                 = [NullToNil([aDictionary valueForKeyPath:@"outdated"]) boolValue];
-    self.userDescription          = NullToNil([aDictionary valueForKeyPath:@"userDescription"]);
-    self.userDescriptionArguments = NullToNil([aDictionary valueForKeyPath:@"userDescriptionArguments"]);
-    self.technicalDescription     = NullToNil([aDictionary valueForKeyPath:@"technicalDescription"]);
-    self.result                   = NullToNil([aDictionary valueForKeyPath:@"result"]);
+    self.code                     = [NSNullToNil([aDictionary valueForKeyPath:@"code"]) intValue];
+    self.outdated                 = [NSNullToNil([aDictionary valueForKeyPath:@"outdated"]) boolValue];
+    self.userDescription          = NSNullToNil([aDictionary valueForKeyPath:@"userDescription"]);
+    self.userDescriptionArguments = NSNullToNil([aDictionary valueForKeyPath:@"userDescriptionArguments"]);
+    self.technicalDescription     = NSNullToNil([aDictionary valueForKeyPath:@"technicalDescription"]);
+    self.result                   = NSNullToNil([aDictionary valueForKeyPath:@"result"]);
 
     return self;
 }
@@ -315,7 +315,7 @@
     for (NSString *nextKey = key; nextKey; nextKey = va_arg(args, NSString*)) {
         id value = nil;
         @try {
-            value = NullToNil([(*response) valueForKeyPath:nextKey]);
+            value = NSNullToNil([(*response) valueForKeyPath:nextKey]);
         }
         @catch (NSException *e) {
         }

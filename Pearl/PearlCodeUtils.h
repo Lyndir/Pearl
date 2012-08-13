@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 
+__BEGIN_DECLS
 typedef enum {
     PearlHashNone,
     PearlHashMD4,
@@ -33,6 +34,7 @@ typedef enum {
 
 PearlHash PearlHashFromNSString(NSString *hash);
 uint64_t  PearlSecureRandom(void);
+__END_DECLS
 
 @interface NSString (PearlCodeUtils)
 

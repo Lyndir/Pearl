@@ -17,6 +17,7 @@
 
 #import <UIKit/UIKit.h>
 
+__BEGIN_DECLS
 typedef enum {
     PearlArrayTVCRowStylePlain,              // A row that does nothing.
     PearlArrayTVCRowStyleLink,               // A row that can be tapped.
@@ -24,6 +25,7 @@ typedef enum {
     PearlArrayTVCRowStyleCheck,              // A row that the user can put a checkmark on.
     PearlArrayTVCRowStyleToggle,             // A row that has a toggle component.
 } PearlArrayTVCRowStyle;
+__END_DECLS
 
 @protocol PearlArrayTVCDelegate
 

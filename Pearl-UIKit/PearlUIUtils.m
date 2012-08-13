@@ -114,9 +114,20 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
 
+CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract) {
+
+    return CGPointMake(origin.x - subtract.x, origin.y - subtract.y);
+}
+
+CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add) {
+
+    return CGPointMake(origin.x + add.x, origin.y + add.y);
+}
+
+
 CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
-    return CGPointMake(to.x - from.x, to.y - from.y);
+    return CGPointMinusCGPoint(to, from);
 }
 
 CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {

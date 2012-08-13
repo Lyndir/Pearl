@@ -106,7 +106,9 @@
     if (!query)
         query = [self createQueryForClass:kSecClassGenericPassword
                                attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+#if TARGET_OS_IPHONE
                                                          (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly, kSecAttrAccessible,
+#endif
                                                          @"deviceIdentifier", kSecAttrAccount,
                                                          @"com.lyndir.Pearl", kSecAttrService,
                                                          nil]

@@ -50,7 +50,7 @@ static NSString *NSStringFromOpenSSLErrors() {
 
 static NSString *toHexString(id object) {
 
-    if (NullToNil(object) == nil)
+    if (NSNullToNil(object) == nil)
         return nil;
 
     if ([object isKindOfClass:[NSData class]])
@@ -589,9 +589,9 @@ static const EVP_MD *EVP_md(PearlHash hash) {
     }
 
     /* Perform Operation */
-    NSData *hash = [data hashWith:hash];
+    NSData *digest = [data hashWith:hash];
     size_t length;
-    if (EVP_PKEY_sign(ctx, NULL, &length, hash.bytes, hash.length) <= 0) {
+    if (EVP_PKEY_sign(ctx, NULL, &length, digest.bytes, digest.length) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
@@ -600,7 +600,7 @@ static const EVP_MD *EVP_md(PearlHash hash) {
     if (!buffer)
         return nil;
 
-    if (EVP_PKEY_sign(ctx, buffer, &length, hash.bytes, hash.length) <= 0) {
+    if (EVP_PKEY_sign(ctx, buffer, &length, digest.bytes, digest.length) <= 0) {
         err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());
         return nil;
     }
@@ -635,8 +635,8 @@ static const EVP_MD *EVP_md(PearlHash hash) {
     }
 
     /* Perform Operation */
-    NSData *hash = [data hashWith:hash];
-    if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, hash.bytes, hash.length))
+    NSData *digest = [data hashWith:hash];
+    if (EVP_PKEY_verify(ctx, signature.bytes, signature.length, digest.bytes, digest.length))
         return YES;
 
     err(@"[OpenSSL] %@", NSStringFromOpenSSLErrors());

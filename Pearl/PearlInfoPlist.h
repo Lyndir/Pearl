@@ -17,7 +17,9 @@
 
 #import <Foundation/Foundation.h>
 
+__BEGIN_DECLS
 NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSString *bundleVersion2);
+__END_DECLS
 
 @interface PearlInfoPlist : NSObject
 

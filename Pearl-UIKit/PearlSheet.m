@@ -163,7 +163,10 @@
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         if (!window)
             window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-        [sheetView showInView:window.rootViewController.view];
+        UIView *view = window.rootViewController.view;
+        if (!view)
+            view = window;
+        [sheetView showInView:view];
         [((NSMutableArray *)[PearlSheet activeSheets]) addObject:self];
     });
 

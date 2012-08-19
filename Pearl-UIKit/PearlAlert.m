@@ -172,8 +172,10 @@
 
 - (PearlAlert *)showAlert {
 
-    [alertView show];
-    [((NSMutableArray *)[PearlAlert activeAlerts]) addObject:self];
+    PearlMainThread(^{
+        [alertView show];
+        [((NSMutableArray *)[PearlAlert activeAlerts]) addObject:self];
+    });
 
     return self;
 }
@@ -181,7 +183,9 @@
 
 - (PearlAlert *)dismissAlert {
 
-    [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    PearlMainThread(^{
+        [alertView dismissWithClickedButtonIndex:0 animated:YES];
+    });
 
     return self;
 }

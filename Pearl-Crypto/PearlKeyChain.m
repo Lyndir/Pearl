@@ -161,6 +161,7 @@
 + (OSStatus)deleteItemForQuery:(NSDictionary *)query {
 
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
+    trc(@"SecItemDelete(%@) = %@", query, NSStringFromErrSec(status));
     if (status != noErr && status != errSecItemNotFound)
     err(@"While deleting keychain item: %@: %@",
     query, NSStringFromErrSec(status));
@@ -181,6 +182,9 @@
 + (NSDictionary *)createQueryForClass:(CFTypeRef)kSecClassValue
                            attributes:(NSDictionary *)kSecAttrDictionary
                               matches:(NSDictionary *)kSecMatchDictionary {
+
+    if (![kSecAttrDictionary count])
+        wrn(@"No attributes when creating keychain query.");
 
     NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:(__bridge id)kSecClassValue forKey:(__bridge id)kSecClass];
     [query addEntriesFromDictionary:kSecAttrDictionary];
@@ -210,6 +214,11 @@
 
 + (NSData *)persistentItemForQuery:(NSDictionary *)query {
 
+    if (![query count]) {
+        wrn(@"Missing query.");
+        return nil;
+    }
+    
     return (NSData *)[self runQuery:query returnType:kSecReturnPersistentRef];
 }
 
@@ -220,6 +229,11 @@
 
 + (NSData *)dataOfItemForQuery:(NSDictionary *)query {
 
+    if (![query count]) {
+        wrn(@"Missing query.");
+        return nil;
+    }
+    
     return (NSData *)[self runQuery:query returnType:kSecReturnData];
 }
 

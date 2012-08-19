@@ -25,19 +25,19 @@ int PearlGLCheck(char *file, int line) {
     while ((glErr = glGetError()) != GL_NO_ERROR) {
         switch (glErr) {
             case GL_INVALID_ENUM:
-                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_ENUM", file, line];
+                err(@"%30s:%-5d\t    -> GL_INVALID_ENUM", file, line);
                 break;
             case GL_INVALID_VALUE:
-                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_VALUE", file, line];
+                err(@"%30s:%-5d\t    -> GL_INVALID_VALUE", file, line);
                 break;
             case GL_INVALID_OPERATION:
-                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_INVALID_OPERATION", file, line];
+                err(@"%30s:%-5d\t    -> GL_INVALID_OPERATION", file, line);
                 break;
             case GL_OUT_OF_MEMORY:
-                [[PearlLogger get] err:@"%30s:%-5d\t    -> GL_OUT_OF_MEMORY", file, line];
+                err(@"%30s:%-5d\t    -> GL_OUT_OF_MEMORY", file, line);
                 break;
             default:
-                [[PearlLogger get] err:@"%30s:%-5d\t    -> UNKNOWN", file, line];
+                err(@"%30s:%-5d\t    -> UNKNOWN", file, line);
         }
     }
 

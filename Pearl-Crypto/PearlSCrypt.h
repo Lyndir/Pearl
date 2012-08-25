@@ -24,20 +24,20 @@
  * 
  * Cannot be higher than 0.5.  Defaults to 0.5 if 0.
  */
-@property (assign) double       fractionOfAvailableMemory;
+@property (nonatomic, assign) double       fractionOfAvailableMemory;
 /**
  * The maximum amount of memory (in bytes) that the operation is allowed to consume.
  * 
  * Limits the memory selected by fractionOfAvailableMemory, if lower.
  * Defaults to unlimited if 0.
  */
-@property (assign) size_t       maximumMemory;
+@property (nonatomic, assign) size_t       maximumMemory;
 /**
  * The time (in seconds) that the operation should run for.  This is a multiplier for the amount of operations per second the CPU can compute.
  * 
  * Defaults to using the minimum of 32768 operations if 0.
  */
-@property (assign) double       time;
+@property (nonatomic, assign) double       time;
 
 /**
  * Initialize SCrypt with the default values for the cost limits.

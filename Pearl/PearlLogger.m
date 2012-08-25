@@ -90,8 +90,8 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
 @interface PearlLogger ()
 
-@property (readwrite, retain) NSMutableArray *messages;
-@property (readwrite, retain) NSMutableArray *listeners;
+@property (nonatomic, readwrite, retain) NSMutableArray *messages;
+@property (nonatomic, readwrite, retain) NSMutableArray *listeners;
 
 @end
 

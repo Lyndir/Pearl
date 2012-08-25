@@ -50,11 +50,11 @@ __END_DECLS
 @interface PearlLogMessage : NSObject
 
 
-@property (readwrite, strong) NSString *fileName;
-@property (readwrite) NSInteger lineNumber;
-@property (readwrite, copy) NSString *message;
-@property (readwrite, strong) NSDate   *occurrence;
-@property (readwrite) PearlLogLevel level;
+@property (nonatomic, readwrite, strong) NSString *fileName;
+@property (nonatomic, readwrite) NSInteger lineNumber;
+@property (nonatomic, readwrite, copy) NSString *message;
+@property (nonatomic, readwrite, strong) NSDate   *occurrence;
+@property (nonatomic, readwrite) PearlLogLevel level;
 
 + (PearlLogMessage *)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
                               text:(NSString *)aMessage;

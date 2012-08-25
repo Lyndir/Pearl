@@ -112,4 +112,6 @@ __END_DECLS
 
 + (PearlInfoPlist *)get;
 
+- (id)objectForKeyPath:(NSString *)keyPath;
+
 @end

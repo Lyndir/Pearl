@@ -81,20 +81,21 @@
 
 - (void)showComposer {
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    if (!window)
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    UIViewController *vc = window.rootViewController;
-    while ([vc presentedViewController])
-        vc = [vc presentedViewController];
-
-    [self showComposerForVC:vc];
+    [self showComposerForVC:nil];
 }
 
 - (void)showComposerForVC:(UIViewController *)vc {
 
+    if (!vc) {
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        if (!window)
+            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        vc = window.rootViewController;
+        while ([vc presentedViewController])
+            vc = [vc presentedViewController];
+    }
     if ([vc presentedViewController])
-        wrn(@"Can't show composer for VC, it's already presenting something.");
+        wrn(@"Won't be able to show composer, given VC is already presenting something.");
     
     [vc presentViewController:self.composer animated:YES completion:nil];
     [[PearlEMail activeComposers] addObject:self];

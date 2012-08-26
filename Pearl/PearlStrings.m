@@ -63,8 +63,8 @@
 @dynamic commonButtonThanks;
 @dynamic reviewTitle;
 @dynamic reviewMessage;
-@dynamic reviewLater;
-@dynamic reviewNow;
-@dynamic reviewNever;
+@dynamic reviewYes;
+@dynamic reviewComment;
+@dynamic reviewNo;
 
 @end

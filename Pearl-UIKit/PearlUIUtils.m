@@ -702,12 +702,13 @@ static NSMutableSet *dismissableResponders;
             }
         }
     }
+       
+    keyboardScrollView_shouldHide = NO;
     
-//    if (nil == activePearlKBSV) {
+    if (nil == activePearlKBSV) {
         // Make sure the responder is a descendant of the current view.
-        keyboardScrollView_shouldHide = NO;
-//        return;
-//    }
+        return;
+    }
 
     // Make sure no old view is still resized and a current view is set.
     if (keyboardScrollView_resized && keyboardScrollView_resized != activePearlKBSV.keyboardScrollView) {

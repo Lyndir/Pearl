@@ -81,7 +81,9 @@ uint64_t PearlSecureRandom() {
         NSScanner *scanner = [NSScanner scannerWithString:hex];
         unsigned intValue;
 
-        [scanner scanHexInt:&intValue];
+        if (![scanner scanHexInt:&intValue])
+            // Not a HEX string.
+            return nil;
         [data appendBytes:&intValue length:1];
     }
 

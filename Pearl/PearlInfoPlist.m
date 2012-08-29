@@ -93,6 +93,16 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
     return instance;
 }
 
+- (id)objectForKeyPath:(NSString *)keyPath {
+
+    id value    = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:keyPath];
+    if (!value)
+        value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:keyPath];
+
+    return value;
+}
+
+
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
 
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];
@@ -100,12 +110,7 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
-    NSString *selector = NSStringFromSelector(anInvocation.selector);
-    NSString *value    = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:selector];
-    if (!value)
-        value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:selector];
-
-    __autoreleasing id returnValue = value;
+    __autoreleasing id returnValue = [self objectForKeyPath:NSStringFromSelector(anInvocation.selector)];
     [anInvocation setReturnValue:&returnValue];
 }
 

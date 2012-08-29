@@ -8,6 +8,7 @@
 #import "PearlAppDelegate.h"
 #import "PearlArrayTVC.h"
 #import "PearlBoxView.h"
+#import "PearlEMail.h"
 #import "PearlGradientView.h"
 #import "PearlLayout.h"
 #import "PearlLayoutView.h"

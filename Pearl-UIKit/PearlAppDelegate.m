@@ -26,7 +26,7 @@
 
 #ifndef ITMS_REVIEW_URL
 #define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat:\
-@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@", __id]]
+@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", __id]]
 #endif
 #ifndef ITMS_APP_URL
 #define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
@@ -37,10 +37,10 @@
 @synthesize window = _window, navigationController = _navigationController;
 
 - (id)init {
-    
+
     if (!(self = [super init]))
         return nil;
-    
+
     [PearlConfig get].delegate = self;
 
     return self;
@@ -69,26 +69,33 @@
     inf(@"%@ %@", name, version);
 
     [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
-    if ([[PearlConfig get].askForReviews boolValue])
-        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion])
-            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue]))
-                [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
-                            message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
-                            viewStyle:UIAlertViewStyleDefault
-                            initAlert:nil tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
-                    if (buttonIndex == [alert cancelButtonIndex])
-                        return;
+    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
+        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
+            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
+                    [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
+                                           message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
+                                         viewStyle:UIAlertViewStyleDefault
+                                         initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
+                        if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
+                            // Comment
+                            [self showFeedback];
+                            return;
+                        }
 
-                    [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
-                    if (buttonIndex == [alert firstOtherButtonIndex]) {
-                        if (NSNullToNil([PearlConfig get].iTunesID))
-                            [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
-                        else
-                            [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
-                    }
-                }
-                            cancelTitle:[PearlStrings get].reviewLater
-                            otherTitles:[PearlStrings get].reviewNow, [PearlStrings get].reviewNever, nil];
+                        [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+                        if (buttonIndex_ == [alert_ cancelButtonIndex])
+                            // No
+                            return;
+
+                        if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
+                            // Yes
+                            if (NSNullToNil([PearlConfig get].iTunesID))
+                                [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+                            else
+                                [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+                        }
+                    }                  cancelTitle:[PearlStrings get].reviewNo
+                                       otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
 
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
@@ -138,6 +145,11 @@
 #ifdef PEARL_UIKIT
     [[PearlAlert activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
 #endif
+}
+
+- (void)showFeedback {
+
+    [PearlEMail sendEMailTo:nil subject:PearlString(@"Feedback for %@", [PearlInfoPlist get].CFBundleName) body:nil];
 }
 
 - (void)shutdown:(id)caller {

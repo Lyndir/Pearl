@@ -13,6 +13,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlCCAutoTween.h"
 
 @interface PearlCCAutoTween ()
 

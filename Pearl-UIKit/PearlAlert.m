@@ -16,6 +16,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
+#import "PearlAlert.h"
 
 @implementation PearlAlert
 @synthesize alertView, alertField;

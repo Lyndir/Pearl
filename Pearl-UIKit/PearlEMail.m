@@ -15,6 +15,7 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#ifdef PEARL_WITH_MESSAGEUI
 #import "PearlEMail.h"
 
 
@@ -149,3 +150,5 @@
 }
 
 @end
+
+#endif

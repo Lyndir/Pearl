@@ -17,6 +17,7 @@
 //
 
 #define SmoothingTime 0.1f
+#import "PearlCCBarSprite.h"
 
 
 @interface PearlCCBarSprite ()

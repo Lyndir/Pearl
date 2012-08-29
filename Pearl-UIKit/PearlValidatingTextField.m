@@ -16,6 +16,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2010. All rights reserved.
 //
 
+#import "PearlValidatingTextField.h"
 
 @interface PearlValidatingTextField ()
 

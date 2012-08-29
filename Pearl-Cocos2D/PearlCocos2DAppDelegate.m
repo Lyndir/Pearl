@@ -16,6 +16,14 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
+#import "PearlCocos2DAppDelegate.h"
+#import "PearlConfig.h"
+#import "PearlCCSplash.h"
+#import "PearlResettable.h"
+#import "PearlCCDebugLayer.h"
+#import "PearlCCShadeLayer.h"
+#import "PearlDeviceUtils.h"
+
 @interface CCDirector ()
 
 - (void)startAnimation;

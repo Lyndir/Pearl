@@ -16,6 +16,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlGradientView.h"
+#import "UIColor+Expanded.h"
 
 @implementation PearlGradientView
 

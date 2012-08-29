@@ -16,6 +16,8 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlGLUtils.h"
+
 int PearlGLCheck(char *file, int line) {
 
     file           = basename(file);

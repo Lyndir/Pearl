@@ -15,6 +15,8 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#ifdef PEARL_WITH_MESSAGEUI
+
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
 
@@ -48,3 +50,5 @@
 - (void)showComposerForVC:(UIViewController *)vc;
 
 @end
+
+#endif

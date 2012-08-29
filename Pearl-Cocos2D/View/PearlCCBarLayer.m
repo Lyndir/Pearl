@@ -16,6 +16,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCBarLayer.h"
+#import "PearlUIUtils.h"
 
 @interface PearlCCBarLayer ()
 

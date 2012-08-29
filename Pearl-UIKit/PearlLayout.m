@@ -16,6 +16,8 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlLayout.h"
+
 @interface PearlLayout ()
 
 @property (nonatomic, readwrite, retain) UIScrollView *scrollView;

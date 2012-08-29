@@ -15,6 +15,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCMenuItemBlock.h"
+#import "PearlUIUtils.h"
 
 @implementation PearlCCMenuItemBlock
 

@@ -16,6 +16,9 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCConfigMenuLayer.h"
+#import "PearlCocos2DStrings.h"
+#import "PearlCCMenuItemTitle.h"
 
 @interface PearlCCConfigMenuLayer ()
 

@@ -14,6 +14,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlWSStrings.h"
 
 @implementation PearlWSStrings
 

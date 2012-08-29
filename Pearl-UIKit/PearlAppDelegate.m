@@ -16,12 +16,20 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
+#import "PearlAppDelegate.h"
+#import "PearlLogger.h"
+#import "PearlConfig.h"
 #ifdef PEARL_MEDIA
-
+#import "PearlAudioController.h"
 #endif
-
+#import "PearlResettable.h"
 #ifdef PEARL_UIKIT
-
+#import "PearlAlert.h"
+#import "PearlRootViewController.h"
+#endif
+#import "PearlCodeUtils.h"
+#ifdef PEARL_WITH_MESSAGEUI
+#import "PearlEMail.h"
 #endif
 
 #ifndef ITMS_REVIEW_URL
@@ -68,6 +76,7 @@
 
     inf(@"%@ %@", name, version);
 
+#ifdef PEARL_UIKIT
     [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
     if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
         if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
@@ -96,6 +105,7 @@
                         }
                     }                  cancelTitle:[PearlStrings get].reviewNo
                                        otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
+#endif
 
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
@@ -149,7 +159,9 @@
 
 - (void)showFeedback {
 
+#ifdef PEARL_WITH_MESSAGEUI
     [PearlEMail sendEMailTo:nil subject:PearlString(@"Feedback for %@", [PearlInfoPlist get].CFBundleName) body:nil];
+#endif
 }
 
 - (void)shutdown:(id)caller {

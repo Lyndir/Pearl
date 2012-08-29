@@ -16,6 +16,10 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCUILayer.h"
+#import "PearlCCDebug.h"
+#import "PearlCCRemove.h"
+
 #define AccelerometerFilteringFactor            0.4f
 #define AccelerometerFrequency     50 //Hz
 

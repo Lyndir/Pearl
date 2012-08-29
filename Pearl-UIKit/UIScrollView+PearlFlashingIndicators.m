@@ -17,7 +17,6 @@
 
 #import "UIScrollView+PearlFlashingIndicators.h"
 
-
 @implementation UIScrollView (PearlFlashingIndicators)
 
 - (void)flashScrollIndicatorsContinuously {

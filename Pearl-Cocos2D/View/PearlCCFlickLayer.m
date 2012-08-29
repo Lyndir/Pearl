@@ -16,6 +16,7 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCFlickLayer.h"
 
 @interface PearlCCFlickLayer ()
 

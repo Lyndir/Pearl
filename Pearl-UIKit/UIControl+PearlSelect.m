@@ -16,7 +16,8 @@
 //
 
 #import <objc/runtime.h>
-
+#import "UIControl+PearlSelect.h"
+#import "UIControl+PearlBlocks.h"
 
 @implementation UIControl (PearlSelect)
 static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;

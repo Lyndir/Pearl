@@ -16,12 +16,12 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlAppDelegate.h"
+#import "PearlCCMenuLayer.h"
+#import "PearlCCMenuItemSpacer.h"
 #ifdef PEARL_MEDIA
-
 #import "PearlAudioController.h"
-
 #endif
-
 
 @interface PearlCCClickMenu : CCMenu
 

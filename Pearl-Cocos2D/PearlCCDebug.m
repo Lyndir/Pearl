@@ -15,6 +15,8 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
+#import "PearlCCDebug.h"
+#import "PearlStringUtils.h"
 #import "JRSwizzle.h"
 
 

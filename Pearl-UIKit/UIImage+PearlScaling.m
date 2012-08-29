@@ -18,6 +18,7 @@
 //  http://stackoverflow.com/questions/603907/uiimage-resize-then-crop/605385#605385
 //
 
+#import "UIImage+PearlScaling.h"
 
 @implementation UIImage (PearlScaling)
 

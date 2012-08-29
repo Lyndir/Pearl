@@ -15,6 +15,10 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCBoxLayer.h"
+#import "PearlLayout.h"
+#import "PearlGLUtils.h"
+#import "PearlUIUtils.h"
 
 @implementation PearlCCBoxLayer
 @synthesize color = _color;

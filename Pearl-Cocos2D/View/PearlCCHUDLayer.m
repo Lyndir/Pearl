@@ -16,11 +16,11 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCHUDLayer.h"
 #ifdef PEARL_MEDIA
-
 #import "PearlAudioController.h"
-
 #endif
+#import "PearlCocos2DAppDelegate.h"
 
 @interface PearlCCBarLayer ()
 

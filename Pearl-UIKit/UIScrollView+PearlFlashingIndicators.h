@@ -15,7 +15,7 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface UIScrollView (PearlFlashingIndicators)
 

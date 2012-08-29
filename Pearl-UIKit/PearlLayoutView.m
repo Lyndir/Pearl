@@ -16,6 +16,7 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
+#import "PearlLayoutView.h"
 
 @implementation PearlLayoutView
 

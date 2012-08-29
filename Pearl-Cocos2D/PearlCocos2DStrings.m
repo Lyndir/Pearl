@@ -13,6 +13,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlCocos2DStrings.h"
 
 @implementation PearlCocos2DStrings
 

@@ -16,6 +16,10 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCScrollLayer.h"
+#import "PearlGLUtils.h"
+#import "PearlUIUtils.h"
+
 #define ScrollPerSecond     0.01f
 
 

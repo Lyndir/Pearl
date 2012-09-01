@@ -98,10 +98,7 @@
 
                         if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
                             // Yes
-                            if (NSNullToNil([PearlConfig get].iTunesID))
-                                [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
-                            else
-                                [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+                            [self showReview];
                         }
                     }                  cancelTitle:[PearlStrings get].reviewNo
                                        otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
@@ -162,6 +159,14 @@
 #ifdef PEARL_WITH_MESSAGEUI
     [PearlEMail sendEMailTo:nil subject:PearlString(@"Feedback for %@", [PearlInfoPlist get].CFBundleName) body:nil];
 #endif
+}
+
+- (void)showReview {
+
+    if (NSNullToNil([PearlConfig get].iTunesID))
+        [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+    else
+        [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
 }
 
 - (void)shutdown:(id)caller {

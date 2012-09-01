@@ -108,8 +108,7 @@
 + (PearlAlert *)showError:(NSString *)message {
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
-                                                                      initAlert:nil tappedButtonBlock:nil
-                                                                    cancelTitle:[PearlStrings get].commonButtonOkay otherTitles:nil];
+                          initAlert:nil tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonOkay otherTitles:nil];
 }
 
 + (PearlAlert *)showError:(NSString *)message
@@ -120,16 +119,15 @@
     va_start(otherTitlesList, otherTitles);
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
-                                                                      initAlert:nil tappedButtonBlock:aTappedButtonBlock
-                                                                    cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles
-                                                                    :otherTitlesList];
+                          initAlert:nil tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles
+                        :otherTitlesList];
 }
 
 + (PearlAlert *)showNotice:(NSString *)message {
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
-                                                                       initAlert:nil tappedButtonBlock:nil
-                                                                     cancelTitle:[PearlStrings get].commonButtonThanks otherTitles:nil];
+                          initAlert:nil tappedButtonBlock:nil cancelTitle:[PearlStrings get].commonButtonThanks otherTitles:nil];
 }
 
 + (PearlAlert *)showNotice:(NSString *)message
@@ -140,9 +138,9 @@
     va_start(otherTitlesList, otherTitles);
 
     return [self showAlertWithTitle:[PearlStrings get].commonTitleNotice message:message viewStyle:UIAlertViewStyleDefault
-                                                                       initAlert:nil tappedButtonBlock:aTappedButtonBlock
-                                                                     cancelTitle:[PearlStrings get].commonButtonThanks
-                                                                     otherTitle:otherTitles :otherTitlesList];
+                          initAlert:nil tappedButtonBlock:aTappedButtonBlock
+                        cancelTitle:[PearlStrings get].commonButtonThanks
+                         otherTitle:otherTitles :otherTitlesList];
 }
 
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
@@ -165,6 +163,30 @@
 
     return [self showAlertWithTitle:title message:message viewStyle:viewStyle initAlert:initBlock tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
+}
+
++ (PearlAlert *)showActivityWithTitle:(NSString *)title {
+
+    return [self showAlertWithTitle:title message:@"\n\n" viewStyle:UIAlertViewStyleDefault initAlert:
+     ^(UIAlertView *alert, UITextField *firstField) {
+         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+         activityIndicator.center = CGPointMake(140, 90);
+         [activityIndicator startAnimating];
+         [alert addSubview:activityIndicator];
+     }            tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
+}
+
++ (PearlAlert *)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock {
+
+    return [self showAlertWithTitle:title message:@"\n\n" viewStyle:UIAlertViewStyleDefault initAlert:
+     ^(UIAlertView *alert, UITextField *firstField) {
+         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+         activityIndicator.center = CGPointMake(140, 90);
+         [activityIndicator startAnimating];
+         [alert addSubview:activityIndicator];
+
+         initBlock(alert);
+     }            tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
 }
 
 

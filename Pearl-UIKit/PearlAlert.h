@@ -71,6 +71,12 @@
                otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
+* Show an alert that contains only an activity indicator (no message and no buttons).
+*/
++ (PearlAlert *)showActivityWithTitle:(NSString *)title;
++ (PearlAlert *)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock;
+
+/**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
 + (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle

@@ -76,34 +76,6 @@
 
     inf(@"%@ %@", name, version);
 
-#ifdef PEARL_UIKIT
-    [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
-    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
-        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
-            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
-                    [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
-                                           message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
-                                         viewStyle:UIAlertViewStyleDefault
-                                         initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
-                        if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
-                            // Comment
-                            [self showFeedback];
-                            return;
-                        }
-
-                        [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
-                        if (buttonIndex_ == [alert_ cancelButtonIndex])
-                            // No
-                            return;
-
-                        if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
-                            // Yes
-                            [self showReview];
-                        }
-                    }                  cancelTitle:[PearlStrings get].reviewNo
-                                       otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
-#endif
-
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
         [application registerForRemoteNotificationTypes:[[PearlConfig get].supportedNotifications unsignedIntegerValue]];
@@ -175,6 +147,33 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 
+#ifdef PEARL_UIKIT
+    [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
+    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
+        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
+            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
+                    [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
+                                           message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
+                                         viewStyle:UIAlertViewStyleDefault
+                                         initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
+                        if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
+                            // Comment
+                            [self showFeedback];
+                            return;
+                        }
+
+                        [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+                        if (buttonIndex_ == [alert_ cancelButtonIndex])
+                            // No
+                            return;
+
+                        if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
+                            // Yes
+                            [self showReview];
+                        }
+                    }                  cancelTitle:[PearlStrings get].reviewNo
+                                       otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
+#endif
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

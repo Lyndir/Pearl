@@ -53,7 +53,7 @@
 
 + (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body attachments:(PearlEMailAttachment *)attachment, ... {
 
-    [[[self alloc] initForEMailTo:recipient subject:subject body:body attachments:nil] showComposer];
+    [[[self alloc] initForEMailTo:recipient subject:subject body:body attachmentsArray:va_array(attachment)] showComposer];
 }
 
 - (id)initForEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body attachments:(PearlEMailAttachment *)attachments, ... {
@@ -89,7 +89,7 @@
 
     if (!vc) {
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
-        if (!window)
+        if (!window || !window.rootViewController)
             window = [[UIApplication sharedApplication].windows objectAtIndex:0];
         vc = window.rootViewController;
         while ([vc presentedViewController])

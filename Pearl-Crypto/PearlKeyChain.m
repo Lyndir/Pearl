@@ -74,6 +74,10 @@
     // Malloc a buffer to hold signature.
     size_t signedHashBytesSize = SecKeyGetBlockSize(privateKey);
     uint8_t *signedHashBytes = calloc(signedHashBytesSize, sizeof(uint8_t));
+    if (!signedHashBytes) {
+        err(@"Couldn't allocate signed hash bytes: %@", errstr());
+        return nil;
+    }
 
     // Sign the SHA1 hash.
     status = SecKeyRawSign(privateKey, padding,
@@ -82,13 +86,13 @@
     CFRelease(privateKey);
     if (status != errSecSuccess) {
         err(@"During data signing: %@", NSStringFromErrSec(status));
+        free(signedHashBytes);
         return nil;
     }
 
     // Build up signed SHA1 blob.
     NSData *signedData = [NSData dataWithBytes:signedHashBytes length:signedHashBytesSize];
-    if (signedHashBytes)
-        free(signedHashBytes);
+    free(signedHashBytes);
 
     return signedData;
 }

@@ -167,6 +167,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
      (hmac[offset + 1] & 0xff) << 16 | //
      (hmac[offset + 2] & 0xff) << 8 | //
      (hmac[offset + 3] & 0xff) << 0;
+    free(hmac);
 
     // Extract otpLength digits out of the OTP data.
     return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%ud", otpLength], otp % (int)powf(10, otpLength)];

@@ -284,11 +284,11 @@ static NSMutableSet *dismissableResponders;
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                            selector:@selector(keyboardWillShow:)
                                name:UIKeyboardWillShowNotification
-                             object:self.window];
+                             object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                            selector:@selector(keyboardWillHide:)
                                name:UIKeyboardWillHideNotification
-                             object:self.window];
+                             object:nil];
     
     if (nil == keyboardScrollViews) {
         keyboardScrollViews = [[NSMutableArray alloc] initWithCapacity:1];

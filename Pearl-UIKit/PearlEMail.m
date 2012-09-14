@@ -68,7 +68,8 @@
 
     self.composer = [MFMailComposeViewController new];
     [self.composer setMailComposeDelegate:self];
-    [self.composer setToRecipients:[NSArray arrayWithObject:recipient]];
+    if (recipient)
+        [self.composer setToRecipients:@[recipient]];
     [self.composer setSubject:subject];
     [self.composer setMessageBody:body isHTML:NO];
 

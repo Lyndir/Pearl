@@ -119,7 +119,7 @@
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.firstRun = [NSNumber numberWithBool:NO];
-        [self.defaults synchronize];
+        [[self class] flush];
     }];
 #if TARGET_OS_IPHONE
     notification = UIApplicationDidEnterBackgroundNotification;
@@ -128,7 +128,7 @@
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.firstRun = [NSNumber numberWithBool:NO];
-        [self.defaults synchronize];
+        [[self class] flush];
     }];
 
     return self;

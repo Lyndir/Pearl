@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		DA3EE97D1601C3FB00C68F6D /* LinkDependencies */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DA3EE97E1601C3FB00C68F6D /* Build configuration list for PBXAggregateTarget "LinkDependencies" */;
+			buildPhases = (
+				DA3EE9851601C44E00C68F6D /* Run Script: Copy libraries */,
+			);
+			dependencies = (
+			);
+			name = LinkDependencies;
+			productName = LinkDependencies;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972314F438C300EB000C /* PearlInfoPlist.h */; };
 		DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972414F438C300EB000C /* PearlInfoPlist.m */; };
@@ -4808,6 +4822,7 @@
 				DA109E7B14F45FAE00EB000C /* TouchJSON */,
 				DA109EB814F45FF500EB000C /* jrswizzle */,
 				DA109F1114F4604000EB000C /* uicolor-utilities */,
+				DA3EE97D1601C3FB00C68F6D /* LinkDependencies */,
 			);
 		};
 /* End PBXProject section */
@@ -4856,6 +4871,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DA3EE9851601C44E00C68F6D /* Run Script: Copy libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script: Copy libraries";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -x\n\n# scrypt\ncd \"$PROJECT_DIR/External/iOSPorts/ports/security/scrypt\"\nxcodebuild -sdk iphonesimulator -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk iphoneos        -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk macosx          -target scrypt SYMROOT=\"$SYMROOT\" clean build\ncd \"$PROJECT_DIR\"\nlipo \"$BUILD_DIR/Release-iphoneos/libscryptenc.a\" \"$BUILD_DIR/Release-iphonesimulator/libscryptenc.a\" -create -output Pearl-Crypto/libscryptenc-ios.a\ncp \"$BUILD_DIR/Release/libscryptenc.a\" Pearl-Crypto/libscryptenc-osx.a\n\n# openssl\nlipo \"$BUILD_DIR/Release-iphoneos/libcrypto.a\" \"$BUILD_DIR/Release-iphonesimulator/libcrypto.a\" -create -output Pearl-Crypto/libopensslcrypto-ios.a\ncp \"$BUILD_DIR/Release/libcrypto.a\" Pearl-Crypto/libopensslcrypto-osx.a\n";
+		};
 		DAAD430315286F4400AADDBD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5383,6 +5412,34 @@
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 			};
 			name = "Release-iOS";
+		};
+		DA3EE97F1601C3FB00C68F6D /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug-iOS";
+		};
+		DA3EE9801601C3FB00C68F6D /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug-OSX";
+		};
+		DA3EE9811601C3FB00C68F6D /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release-iOS";
+		};
+		DA3EE9821601C3FB00C68F6D /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release-OSX";
 		};
 		DAAD42501528652F00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
@@ -6160,6 +6217,17 @@
 				DAAD42571528652F00AADDBD /* Debug-OSX */,
 				DA109F1C14F4604000EB000C /* Release-iOS */,
 				DAAD425F1528653800AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DA3EE97E1601C3FB00C68F6D /* Build configuration list for PBXAggregateTarget "LinkDependencies" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA3EE97F1601C3FB00C68F6D /* Debug-iOS */,
+				DA3EE9801601C3FB00C68F6D /* Debug-OSX */,
+				DA3EE9811601C3FB00C68F6D /* Release-iOS */,
+				DA3EE9821601C3FB00C68F6D /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-OSX";

@@ -34,7 +34,9 @@
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
-#define PearlNil [PearlObjectUtils getNil]
+#define IfNotNilElse(__NN,__N)                                                                  \
+            ({ NSNullToNil(__NN)? __NN: __N; })
+#define PearlNil (id)(__bridge void *)nil
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \

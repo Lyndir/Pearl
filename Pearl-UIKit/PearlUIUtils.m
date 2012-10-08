@@ -619,6 +619,33 @@ static NSMutableSet *dismissableResponders;
 
 @end
 
+@implementation UIViewController (PearlUIUtils)
+
+- (void)localizeProperties {
+    
+    // VC properties
+    self.title = [PearlUIUtils applyLocalization:self.title];
+    self.navigationItem.title = [PearlUIUtils applyLocalization:self.navigationItem.title];
+    [self.navigationItem.titleView localizeProperties];
+    
+    // Toolbar items
+    for (UIBarButtonItem *item in [self toolbarItems]) {
+        NSSet *titles = [item possibleTitles];
+        NSMutableSet *localizedTitles = [NSMutableSet setWithCapacity:[titles count]];
+        for (NSString *title in titles)
+            [localizedTitles addObject:[PearlUIUtils applyLocalization:title]];
+        [item setPossibleTitles:localizedTitles];
+    }
+    
+    // VC view hierarchy
+    [self.view localizeProperties];
+
+    // Child VCs
+    for (UIViewController *vc in [self childViewControllers])
+        [vc localizeProperties];
+}
+
+@end
 
 @implementation PearlUIUtils
 

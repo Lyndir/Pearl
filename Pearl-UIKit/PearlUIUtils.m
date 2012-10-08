@@ -808,6 +808,9 @@ static NSMutableSet *dismissableResponders;
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {
+    
+    if (!localizableValue)
+        return nil;
 
     static NSRegularExpression *UIUtils_localizableSyntax = nil;
     if (UIUtils_localizableSyntax == nil)
@@ -815,24 +818,24 @@ static NSMutableSet *dismissableResponders;
 
     __block NSString *localizedValue = localizableValue;
     [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length])
-                                                                         usingBlock:
-                                                                          ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                                                                              if (result) {
-                                                                                  NSRange localizationKeyRange = [result rangeAtIndex:1];
-                                                                                  NSRange defaultValueRange    = [result rangeAtIndex:2];
-                                                                                  if (NSEqualRanges(localizationKeyRange,
-                                                                                                    NSMakeRange(NSNotFound, 0)))
-                                                                                      return;
-
-                                                                                  NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
-                                                                                  NSString *defaultValue    = nil;
-                                                                                  if (!NSEqualRanges(defaultValueRange,
-                                                                                                     NSMakeRange(NSNotFound, 0)))
-                                                                                      defaultValue = [localizableValue substringWithRange:defaultValueRange];
-
-                                                                                  localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
-                                                                              }
-                                                                          }];
+                                             usingBlock:
+     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+         if (result) {
+             NSRange localizationKeyRange = [result rangeAtIndex:1];
+             NSRange defaultValueRange    = [result rangeAtIndex:2];
+             if (NSEqualRanges(localizationKeyRange,
+                               NSMakeRange(NSNotFound, 0)))
+                 return;
+             
+             NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
+             NSString *defaultValue    = nil;
+             if (!NSEqualRanges(defaultValueRange,
+                                NSMakeRange(NSNotFound, 0)))
+                 defaultValue = [localizableValue substringWithRange:defaultValueRange];
+             
+             localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+         }
+     }];
 
     return localizedValue;
 }

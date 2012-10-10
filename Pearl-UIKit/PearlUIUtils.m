@@ -568,7 +568,7 @@ static NSMutableSet *dismissableResponders;
     return copy;
 }
 
-- (void)localizeProperties {
+- (UIView *)localizeProperties {
 
     static NSArray *localizableProperties = nil;
     if (localizableProperties == nil)
@@ -614,6 +614,8 @@ static NSMutableSet *dismissableResponders;
     // Load localization for all children, too.
     for (UIView *childView in self.subviews)
         [childView localizeProperties];
+
+    return self;
 }
 
 
@@ -621,7 +623,7 @@ static NSMutableSet *dismissableResponders;
 
 @implementation UIViewController (PearlUIUtils)
 
-- (void)localizeProperties {
+- (UIViewController *)localizeProperties {
     
     // VC properties
     self.title = [PearlUIUtils applyLocalization:self.title];
@@ -643,6 +645,8 @@ static NSMutableSet *dismissableResponders;
     // Child VCs
     for (UIViewController *vc in [self childViewControllers])
         [vc localizeProperties];
+
+    return self;
 }
 
 @end

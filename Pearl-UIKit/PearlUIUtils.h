@@ -171,7 +171,7 @@ __END_DECLS
  *
  * See applyLocalization for the rules of localization expansion.
  */
-- (void)localizeProperties;
+- (UIView *)localizeProperties;
 
 @end
 
@@ -180,7 +180,7 @@ __END_DECLS
 /**
  * Expands localization keys to values in the given view controller's properties and view hierarchy.
  */
-- (void)localizeProperties;
+- (UIViewController *)localizeProperties;
 
 @end
 

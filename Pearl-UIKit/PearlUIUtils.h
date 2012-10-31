@@ -162,7 +162,7 @@ __END_DECLS
 - (id)cloneAddedTo:(UIView *)superView;
 
 /**
- * Expands localized text in the given view and all its subviews.
+ * Expands localization keys to values in the given view and all its subviews.
  *
  * Properties localizable by this method are: text, placeholder.
  * Additionally, the following views are handled specially:
@@ -171,7 +171,16 @@ __END_DECLS
  *
  * See applyLocalization for the rules of localization expansion.
  */
-- (void)localizeProperties;
+- (UIView *)localizeProperties;
+
+@end
+
+@interface UIViewController (PearlUIUtils)
+
+/**
+ * Expands localization keys to values in the given view controller's properties and view hierarchy.
+ */
+- (UIViewController *)localizeProperties;
 
 @end
 

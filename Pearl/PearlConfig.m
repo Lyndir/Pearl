@@ -329,7 +329,7 @@
 
 - (long)gameRandom:(NSUInteger)scope {
 
-    NSAssert2(scope < PearlMaxGameRandom, @"Scope (%u) must be < %u", scope, PearlMaxGameRandom);
+    NSAssert2(scope < PearlMaxGameRandom, @"Scope (%lu) must be < %u", (long)scope, PearlMaxGameRandom);
 
     @synchronized (self) {
         srandom(_gameRandomSeeds[scope]++);

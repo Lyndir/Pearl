@@ -81,8 +81,8 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
 - (NSString *)messageDescription {
 
-    return [NSString stringWithFormat:@"%25s:%-3d | %-7s : %@", //
-                     self.fileName.UTF8String, self.lineNumber, PearlLogLevelStr(self.level), self.message];
+    return [NSString stringWithFormat:@"%25s:%-3ld | %-7s : %@", //
+                     self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr(self.level), self.message];
 }
 
 @end

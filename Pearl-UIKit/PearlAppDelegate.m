@@ -120,7 +120,7 @@
 - (void)restart {
 
     [self.navigationController popToRootViewControllerAnimated:YES];
-    [self.window.rootViewController dismissModalViewControllerAnimated:YES];
+    [self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 #ifdef PEARL_UIKIT
     [[PearlAlert activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
 #endif

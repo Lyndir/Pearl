@@ -78,7 +78,7 @@
             alertLabel.backgroundColor = [UIColor clearColor];
             alertLabel.shadowColor     = [UIColor blackColor];
             alertLabel.shadowOffset    = CGSizeMake(0, -1);
-            alertLabel.textAlignment   = UITextAlignmentCenter;
+            alertLabel.textAlignment   = NSTextAlignmentCenter;
             alertLabel.text            = message;
             self.alertView.message     = @"\n\n\n";
 

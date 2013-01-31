@@ -7,6 +7,7 @@
 //
 
 #import "PearlLazy.h"
+#import "PearlLogger.h"
 #import <objc/runtime.h>
 
 

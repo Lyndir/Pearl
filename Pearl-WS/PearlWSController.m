@@ -215,7 +215,7 @@
 - (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
              completion:(void (^)(BOOL success, PearlJSONResult *response, NSError *connectionError))completion {
 
-    return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData, NSError *connectionError) {
+    return [self requestWithDictionary:[object exportToDictionary] method:method completion:^(NSData *responseData, NSError *connectionError) {
         PearlJSONResult *response = nil;
         BOOL valid = !connectionError && [self validateAndParseResponse:responseData into:&response
                                                            popupOnError:popupOnError requires:nil];

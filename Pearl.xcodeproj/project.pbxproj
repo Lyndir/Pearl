@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		93D39560B9BAA9FEC56C2EF8 /* NSTimer+PearlBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */; };
+		93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */; };
 		DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972314F438C300EB000C /* PearlInfoPlist.h */; };
 		DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972414F438C300EB000C /* PearlInfoPlist.m */; };
 		DA10974F14F438C300EB000C /* Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972B14F438C300EB000C /* Pearl.h */; };
@@ -179,6 +181,10 @@
 		DA4425991555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */; };
 		DA44259A1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
 		DA44259B1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
+		DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4416BAC40100F14463 /* NSArray+Indexing.h */; };
+		DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = DA692D4516BAC40100F14463 /* NSArray+Indexing.m */; };
+		DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */; };
+		DA692D4B16BAC40100F14463 /* NSDictionary+Indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */; };
 		DAAD427C15286E9800AADDBD /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
 		DAAD427D15286E9800AADDBD /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
 		DAAD427E15286E9800AADDBD /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
@@ -643,6 +649,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+PearlBlock.h"; sourceTree = "<group>"; };
+		93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+PearlBlock.m"; sourceTree = "<group>"; };
+		93D39BCB12419257FE3264AC /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Pearl.strings; sourceTree = "<group>"; };
 		DA10972314F438C300EB000C /* PearlInfoPlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlInfoPlist.h; sourceTree = "<group>"; };
 		DA10972414F438C300EB000C /* PearlInfoPlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlInfoPlist.m; sourceTree = "<group>"; };
 		DA10972B14F438C300EB000C /* Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pearl.h; sourceTree = "<group>"; };
@@ -1932,6 +1941,10 @@
 		DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_vert.h; sourceTree = "<group>"; };
 		DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAppDelegate.h; sourceTree = "<group>"; };
 		DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAppDelegate.m; sourceTree = "<group>"; };
+		DA692D4416BAC40100F14463 /* NSArray+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Indexing.h"; sourceTree = "<group>"; };
+		DA692D4516BAC40100F14463 /* NSArray+Indexing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Indexing.m"; sourceTree = "<group>"; };
+		DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Indexing.h"; sourceTree = "<group>"; };
+		DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Indexing.m"; sourceTree = "<group>"; };
 		DAAD42371528648000AADDBD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		DAAD423A1528648000AADDBD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		DAAD423B1528648000AADDBD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -2319,6 +2332,7 @@
 			isa = PBXGroup;
 			children = (
 				DA10974314F438C300EB000C /* Pearl.strings */,
+				93D392D41C7E3ED80B5EE67E /* Pearl.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -4035,6 +4049,10 @@
 		DADD1E2414F3BE5500413D09 /* Pearl */ = {
 			isa = PBXGroup;
 			children = (
+				DA692D4416BAC40100F14463 /* NSArray+Indexing.h */,
+				DA692D4516BAC40100F14463 /* NSArray+Indexing.m */,
+				DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */,
+				DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */,
 				DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */,
 				DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */,
 				DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */,
@@ -4076,6 +4094,8 @@
 				DA10974214F438C300EB000C /* Resources */,
 				DA10974514F438C300EB000C /* PearlStringUtils.h */,
 				DA10974614F438C300EB000C /* PearlStringUtils.m */,
+				93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */,
+				93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */,
 			);
 			path = Pearl;
 			sourceTree = "<group>";
@@ -4549,6 +4569,9 @@
 				DA3EF1CB15A4CE6A003ABF4E /* NSString+PearlSEL.h in Headers */,
 				DA3EF1CE15A4CE6A003ABF4E /* PearlLazy.h in Headers */,
 				DA3EF1D015A4CE6A003ABF4E /* PearlQueue.h in Headers */,
+				93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */,
+				DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */,
+				DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5183,6 +5206,9 @@
 				DA3EF1D115A4CE6A003ABF4E /* PearlQueue.m in Sources */,
 				DA3EF1D915A4CECF003ABF4E /* Pearl-Media.m in Sources */,
 				DA3EF1ED15A4CF07003ABF4E /* Pearl-WS.m in Sources */,
+				93D39560B9BAA9FEC56C2EF8 /* NSTimer+PearlBlock.m in Sources */,
+				DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */,
+				DA692D4B16BAC40100F14463 /* NSDictionary+Indexing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5272,6 +5298,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		93D392D41C7E3ED80B5EE67E /* Pearl.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93D39BCB12419257FE3264AC /* nl */,
+			);
+			name = Pearl.strings;
+			sourceTree = "<group>";
+		};
 		DA10974314F438C300EB000C /* Pearl.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

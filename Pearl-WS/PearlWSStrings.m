@@ -23,7 +23,7 @@
     return [super initWithTable:@"PearlWS"];
 }
 
-+ (PearlWSStrings *)get {
++ (instancetype)get {
 
     static PearlWSStrings *instance = nil;
     if (!instance)

@@ -64,7 +64,7 @@
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-+ (PearlWSController *)get {
++ (instancetype)get {
 
     static PearlWSController *instance;
     if (!instance)

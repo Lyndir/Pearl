@@ -74,7 +74,7 @@
         id returnValue = nil;
         [anInvocation getReturnValue:&returnValue];
 
-        inf(@"-[%@ %s] with %@ returns: %@", [loadedObject class], (char *)[anInvocation selector], arguments, returnValue);
+        inf(@"-[%@ %@] with %@ returns: %@", [loadedObject class], NSStringFromSelector([anInvocation selector]), arguments, returnValue);
     }
 }
 

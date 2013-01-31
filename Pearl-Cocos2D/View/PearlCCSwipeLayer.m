@@ -46,7 +46,7 @@
 @synthesize swiped = _swiped;
 
 
-+ (id)nodeWithTarget:(id)t selector:(SEL)s {
++ (instancetype)nodeWithTarget:(id)t selector:(SEL)s {
 
     return [[PearlCCSwipeLayer alloc] initWithTarget:t selector:s];
 }

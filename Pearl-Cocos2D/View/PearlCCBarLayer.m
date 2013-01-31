@@ -43,7 +43,7 @@
 @synthesize showPosition = _showPosition;
 @synthesize dismissed = _dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
++ (instancetype)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
 
     return [[self alloc] initWithColor:aColor position:aShowPosition];
 }

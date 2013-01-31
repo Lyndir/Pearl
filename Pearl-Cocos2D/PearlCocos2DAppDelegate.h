@@ -49,8 +49,5 @@
 - (void)revealHud;
 - (void)hideHud;
 
-+ (PearlCocos2DAppDelegate *)get;
-
-
 @end
 

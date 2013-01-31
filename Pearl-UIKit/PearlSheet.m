@@ -83,19 +83,19 @@
     return self;
 }
 
-+ (PearlSheet *)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
++ (instancetype)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
                          initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
                         otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
 
-    return [[[PearlSheet alloc] initWithTitle:title viewStyle:viewStyle
-                                    initSheet:initBlock
-                            tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle destructiveTitle:destructiveTitle
-                                   otherTitle:firstOtherTitle :otherTitlesList] showSheet];
+    return [[[self alloc] initWithTitle:title viewStyle:viewStyle
+                              initSheet:initBlock
+                      tappedButtonBlock:aTappedButtonBlock cancelTitle:cancelTitle destructiveTitle:destructiveTitle
+                             otherTitle:firstOtherTitle :otherTitlesList] showSheet];
 }
 
-+ (PearlSheet *)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
++ (instancetype)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
                          initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle

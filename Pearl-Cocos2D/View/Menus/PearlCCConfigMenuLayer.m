@@ -34,7 +34,7 @@
 @synthesize configDelegate = _configDelegate;
 
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
                                         logo:(CCMenuItem *)aLogo
                                     settings:(SEL)setting, ... {
 
@@ -56,7 +56,7 @@
 }
 
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
                                         logo:(CCMenuItem *)aLogo
                            settingsFromArray:(NSArray *)settings {
 

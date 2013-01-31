@@ -24,6 +24,6 @@
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments;
 
 /** Generate a string from the given printf(3)-style format by using the arguments in the given array as arguments to the format string. */
-+ (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments;
++ (instancetype)stringWithFormat:(NSString *)format array:(NSArray *)arguments;
 
 @end

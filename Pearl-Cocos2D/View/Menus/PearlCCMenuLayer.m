@@ -72,8 +72,8 @@
 @synthesize itemCounts = _itemCounts;
 
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                                 items:(CCMenuItem *)menuItem, ... {
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                           items:(CCMenuItem *)menuItem, ... {
 
     if (!menuItem)
         [NSException raise:NSInvalidArgumentException
@@ -93,8 +93,8 @@
 }
 
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                        itemsFromArray:(NSArray *)menuItems {
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                  itemsFromArray:(NSArray *)menuItems {
 
     return [[self alloc] initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }

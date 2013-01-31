@@ -60,26 +60,26 @@
   tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
         cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (PearlAlert *)showError:(NSString *)message;
-+ (PearlAlert *)showError:(NSString *)message
++ (instancetype)showError:(NSString *)message;
++ (instancetype)showError:(NSString *)message
         tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
               otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (PearlAlert *)showNotice:(NSString *)message;
-+ (PearlAlert *)showNotice:(NSString *)message
++ (instancetype)showNotice:(NSString *)message;
++ (instancetype)showNotice:(NSString *)message
          tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
                otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
 * Show an alert that contains only an activity indicator (no message and no buttons).
 */
-+ (PearlAlert *)showActivityWithTitle:(NSString *)title;
-+ (PearlAlert *)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock;
++ (instancetype)showActivityWithTitle:(NSString *)title;
++ (instancetype)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock;
 
 /**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
-+ (PearlAlert *)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
++ (instancetype)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle
                          initAlert:(void (^)(UIAlertView *alert, UITextField *firstField))initBlock
                  tappedButtonBlock:(void (^)(UIAlertView *alert, NSInteger buttonIndex))tappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;

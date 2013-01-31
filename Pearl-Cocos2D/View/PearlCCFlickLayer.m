@@ -36,7 +36,7 @@
 @synthesize content = _content;
 @synthesize right = _right, left = _left;
 
-+ (PearlCCFlickLayer *)flickSprites:(CCSprite *)firstSprite, ... {
++ (instancetype)flickSprites:(CCSprite *)firstSprite, ... {
 
     va_list list;
     va_start(list, firstSprite);
@@ -51,7 +51,7 @@
 }
 
 
-+ (PearlCCFlickLayer *)flickSpritesFromArray:(NSArray *)sprites {
++ (instancetype)flickSpritesFromArray:(NSArray *)sprites {
 
     return [[self alloc] initWithSpritesFromArray:sprites];
 }

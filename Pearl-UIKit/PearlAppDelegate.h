@@ -38,8 +38,7 @@
 - (void)showFeedback;
 - (void)showReview;
 
-+ (PearlAppDelegate *)get;
-
++ (instancetype)get;
 
 @end
 

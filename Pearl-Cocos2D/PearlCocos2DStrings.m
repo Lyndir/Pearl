@@ -22,7 +22,7 @@
     return [super initWithTable:@"Pearl-Cocos2D"];
 }
 
-+ (PearlCocos2DStrings *)get {
++ (instancetype)get {
 
     static PearlCocos2DStrings *instance = nil;
     if (!instance)

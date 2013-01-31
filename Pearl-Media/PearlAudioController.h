@@ -38,6 +38,6 @@
 + (void)playEffect:(SystemSoundID)soundFileObject;
 + (void)disposeEffect:(SystemSoundID)soundFileObject;
 
-+ (PearlAudioController *)get;
++ (instancetype)get;
 
 @end

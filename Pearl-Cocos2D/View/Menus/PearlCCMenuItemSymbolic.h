@@ -23,8 +23,8 @@
 
 }
 
-+ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol;
-+ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol target:(id)target selector:(SEL)selector;
++ (instancetype)itemWithString:(NSString *)symbol;
++ (instancetype)itemWithString:(NSString *)symbol target:(id)target selector:(SEL)selector;
 
 - (id)initWithString:(NSString *)symbol;
 - (id)initWithString:(NSString *)symbol target:(id)target selector:(SEL)selector;

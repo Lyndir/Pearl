@@ -29,17 +29,17 @@
 
 @synthesize height = _height;
 
-+ (id)spacerSmall {
++ (instancetype)spacerSmall {
 
     return [[self alloc] initSmall];
 }
 
-+ (id)spacerNormal {
++ (instancetype)spacerNormal {
 
     return [[self alloc] initNormal];
 }
 
-+ (id)spacerLarge {
++ (instancetype)spacerLarge {
 
     return [[self alloc] initLarge];
 }

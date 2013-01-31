@@ -267,11 +267,4 @@
     [[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
 }
 
-
-+ (PearlAppDelegate *)get {
-
-    return (PearlAppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-
 @end

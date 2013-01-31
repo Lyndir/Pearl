@@ -33,7 +33,7 @@
 
 @property (nonatomic, readonly) BOOL dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
++ (instancetype)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
 - (id)initWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition;
 
 - (void)setButtonTitle:(NSString *)aTitle callback:(id)target :(SEL)selector;

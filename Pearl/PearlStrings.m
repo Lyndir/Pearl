@@ -22,7 +22,7 @@
     return [super initWithTable:@"Pearl"];
 }
 
-+ (PearlStrings *)get {
++ (instancetype)get {
 
     static PearlStrings *instance = nil;
     if (!instance)

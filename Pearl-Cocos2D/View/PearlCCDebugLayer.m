@@ -22,7 +22,7 @@
 @implementation PearlCCDebugLayer
 
 
-+ (PearlCCDebugLayer *)get {
++ (instancetype)get {
 
     static PearlCCDebugLayer *instance = nil;
     if (!instance)

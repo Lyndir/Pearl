@@ -45,19 +45,7 @@
 
 @end
 
-@interface PearlConfig : NSObject {
-
-    NSUserDefaults *_defaults;
-
-    id<PearlConfigDelegate> delegate;
-    NSMutableDictionary *_resetTriggers;
-
-    unsigned   *_gameRandomSeeds;
-    NSUInteger *_gameRandomCounters;
-
-    BOOL _notificationsChecked;
-    BOOL _notificationsSupported;
-}
+@interface PearlConfig : NSObject
 
 @property (nonatomic, readonly, retain) NSUserDefaults *defaults;
 @property (nonatomic, WEAK_OR_UNRETAINED) id<PearlConfigDelegate> delegate;
@@ -119,7 +107,7 @@
 - (long)gameRandom:(NSUInteger)scope;
 - (long)gameRandom:(NSUInteger)scope from:(char *)file :(NSUInteger)line;
 
-+ (PearlConfig *)get;
++ (instancetype)get;
 + (void)flush;
 
 @end

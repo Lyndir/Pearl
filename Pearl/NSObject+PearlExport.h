@@ -20,8 +20,8 @@
 
 @interface NSObject (PearlExport)
 
-- (id)exportToCodable;
+- (id<NSCoding, NSCopying>)exportToCodable;
 
-+ (id)exportToCodable:(id)object;
++ (id<NSCoding, NSCopying>)exportToCodable:(id)object;
 
 @end

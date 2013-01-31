@@ -54,13 +54,13 @@
 @synthesize delegate = _delegate;
 
 
-+ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
++ (instancetype)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
 
     return [[self alloc] initWithContentSize:contentSize direction:direction];
 }
 
 
-+ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction {
++ (instancetype)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction {
 
     PearlCCScrollLayer *scrollLayer = [self scrollWithContentSize:node.contentSize direction:direction];
     [scrollLayer addChild:node];

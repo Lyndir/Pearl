@@ -50,7 +50,7 @@
 @implementation NSTimer (PearlBlock)
 static char blockTriggersKey;
 
-+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo {
++ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo {
 
     PearlBlock_NSTimer *blockTrigger = [[PearlBlock_NSTimer alloc] initWithBlock:block];
     NSTimer *timer = [self timerWithTimeInterval:ti target:blockTrigger selector:@selector(triggerWithUserInfo:)

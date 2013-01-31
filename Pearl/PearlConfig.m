@@ -30,18 +30,19 @@
 @interface PearlConfig ()
 
 @property (nonatomic, readwrite, retain) NSUserDefaults *defaults;
-
 @property (nonatomic, readwrite, retain) NSMutableDictionary *resetTriggers;
 
 @end
 
 
-@implementation PearlConfig
-
-@synthesize defaults = _defaults;
-@synthesize delegate = _delegate, resetTriggers = _resetTriggers;
-@synthesize notificationsChecked = _notificationsChecked, notificationsSupported = _notificationsSupported;
-
+@implementation PearlConfig {
+    
+    unsigned   *_gameRandomSeeds;
+    NSUInteger *_gameRandomCounters;
+    
+    BOOL _notificationsChecked;
+    BOOL _notificationsSupported;
+}
 @dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewedVersion, iTunesID;
 @dynamic supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
@@ -135,23 +136,23 @@
 }
 
 
-+ (PearlConfig *)get {
++ (instancetype)get {
 
     static PearlConfig *instance = nil;
     if (!instance)
         instance = [self new];
 
     if (![instance isKindOfClass:self])
-    err(@"Tried to use config of type: %@, but the config instance is of the incompatible type: %@.  "
-     @"You should probably add [%@ get] to your application delegate's +initialize.",
-    self, [instance class], self);
+        err(@"Tried to use config of type: %@, but the config instance is of the incompatible type: %@.  "
+            @"You should probably add [%@ get] to your application delegate's +initialize.",
+            self, [instance class], self);
 
     return instance;
 }
 
 + (void)flush {
 
-    [[self get].defaults synchronize];
+    [[[self get] defaults] synchronize];
 }
 
 

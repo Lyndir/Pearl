@@ -41,8 +41,8 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 @synthesize message, occurrence, level;
 
 
-+ (PearlLogMessage *)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
-                              text:(NSString *)aMessage {
++ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
+                         text:(NSString *)aMessage {
 
     return [[self alloc] initInFile:fileName atLine:lineNumber withLevel:aLevel text:aMessage];
 }
@@ -113,11 +113,11 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 }
 
 
-+ (PearlLogger *)get {
++ (instancetype)get {
 
     static PearlLogger *instance = nil;
     if (!instance)
-        instance = [PearlLogger new];
+        instance = [self new];
 
     return instance;
 }

@@ -56,8 +56,8 @@ __END_DECLS
 @property (nonatomic, readwrite, strong) NSDate   *occurrence;
 @property (nonatomic, readwrite) PearlLogLevel level;
 
-+ (PearlLogMessage *)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
-                              text:(NSString *)aMessage;
++ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
+                         text:(NSString *)aMessage;
 
 - (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
             text:(NSString *)aMessage;
@@ -80,7 +80,7 @@ __END_DECLS
 @property (nonatomic, assign) BOOL history;
 
 /** Obtain the shared Logger instance. */
-+ (PearlLogger *)get;
++ (instancetype)get;
 
 /** Obtain the logged events in a formatted string fit for display. Requires history to be enabled. */
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level;

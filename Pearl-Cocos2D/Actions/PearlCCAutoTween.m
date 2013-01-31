@@ -26,7 +26,7 @@
 
 @implementation PearlCCAutoTween
 
-+ (PearlCCAutoTween *)actionWithDuration:(ccTime)duration {
++ (instancetype)actionWithDuration:(ccTime)duration {
 
     return [[self alloc] initWithDuration:(ccTime)duration];
 }

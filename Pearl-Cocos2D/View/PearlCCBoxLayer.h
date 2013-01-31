@@ -27,7 +27,7 @@
 
 + (id)boxed:(CCNode *)node;
 + (id)boxed:(CCNode *)node color:(ccColor4B)color;
-+ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor;
++ (instancetype)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor;
 
 - (id)initWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor;
 

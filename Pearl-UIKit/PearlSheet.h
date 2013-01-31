@@ -60,7 +60,7 @@
 /**
  * Initializes and shows a sheet.  See -initWithTitle:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
-+ (PearlSheet *)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
++ (instancetype)showSheetWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
                          initSheet:(void (^)(UIActionSheet *sheet))initBlock
                  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
                        cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle

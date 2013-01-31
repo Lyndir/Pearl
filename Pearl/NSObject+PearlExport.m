@@ -21,12 +21,12 @@
 
 @implementation NSObject (PearlExport)
 
-- (id)exportToCodable {
+- (id<NSCoding, NSCopying>)exportToCodable {
 
     return [NSObject exportToCodable:self];
 }
 
-+ (id)exportToCodable:(id)object {
++ (id<NSCoding, NSCopying>)exportToCodable:(id)object {
 
     // nil to NSNull.
     if (!object)

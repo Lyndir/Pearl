@@ -27,14 +27,17 @@
 - (void)flashScrollIndicatorsContinuouslyAfterSeconds:(float)seconds {
 
     __weak UIScrollView *weakScrollView = self;
-    __block dispatch_block_t flashBlock = ^{
+    __weak dispatch_block_t flashBlock = ^{
         if (!weakScrollView)
             return;
 
         if (!(weakScrollView.tracking || weakScrollView.dragging || weakScrollView.decelerating))
             [weakScrollView flashScrollIndicators];
 
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), flashBlock);
+        dispatch_block_t futureFlashBlock = flashBlock;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            futureFlashBlock();
+        });
     };
 
     flashBlock();

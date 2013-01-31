@@ -23,7 +23,7 @@
 
 }
 
-+ (PearlStrings *)get;
++ (instancetype)get;
 
 @property (nonatomic, readonly) NSString *timeDaySuffix;
 @property (nonatomic, readonly) NSString *timeDaySuffixOne;

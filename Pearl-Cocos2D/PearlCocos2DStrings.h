@@ -22,7 +22,7 @@
 
 }
 
-+ (PearlCocos2DStrings *)get;
++ (instancetype)get;
 
 @property (nonatomic, readonly) NSString *menuConfig;
 @property (nonatomic, readonly) NSString *menuConfigMusic;

@@ -20,7 +20,7 @@
 @implementation PearlCCMenuItemTitle
 
 
-+ (PearlCCMenuItemTitle *)itemWithString:(NSString *)title {
++ (instancetype)itemWithString:(NSString *)title {
 
     return [[self alloc] initWithString:title];
 }

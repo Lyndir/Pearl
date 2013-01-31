@@ -70,7 +70,7 @@ __END_DECLS
 #pragma mark Lifecycle
 
 /** Obtain the webservice controller instance. */
-+ (PearlWSController *)get;
++ (instancetype)get;
 
 /** Reset the active session and all warnings issued in it. */
 - (void)reset;

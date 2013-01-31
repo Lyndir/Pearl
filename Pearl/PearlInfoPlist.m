@@ -84,7 +84,7 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
 @dynamic UIViewEdgeAntialiasing;
 @dynamic UIViewGroupOpacity;
 
-+ (PearlInfoPlist *)get {
++ (instancetype)get {
 
     static PearlInfoPlist *instance = nil;
     if (!instance)

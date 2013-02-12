@@ -23,7 +23,7 @@ typedef enum {
     PearlArrayTVCRowStyleLink,               // A row that can be tapped.
     PearlArrayTVCRowStyleDisclosure,         // A row that has a detail disclosure arrow.
     PearlArrayTVCRowStyleCheck,              // A row that the user can put a checkmark on.
-    PearlArrayTVCRowStyleToggle,             // A row that has a toggle component.
+    PearlArrayTVCRowStyleToggle              // A row that has a toggle component.
 } PearlArrayTVCRowStyle;
 __END_DECLS
 

@@ -23,7 +23,7 @@ typedef enum {
     PearlLayoutGravityNorth,
     PearlLayoutGravityEast,
     PearlLayoutGravitySouth,
-    PearlLayoutGravityWest,
+    PearlLayoutGravityWest
 } PearlLayoutGravity;
 __END_DECLS
 

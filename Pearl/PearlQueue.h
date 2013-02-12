@@ -22,7 +22,7 @@ __BEGIN_DECLS
 typedef enum {
     PearlQueueOverflowFails,
     PearlQueueOverflowBlocks,
-    PearlQueueOverflowPopsFirst,
+    PearlQueueOverflowPopsFirst
 } PearlQueueOverflow;
 __END_DECLS
 

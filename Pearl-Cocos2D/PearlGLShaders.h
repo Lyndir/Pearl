@@ -17,7 +17,7 @@
 enum {
     kPearlGLVertexAttrib_Size = kCCVertexAttrib_MAX,
 
-    kPearlGLVertexAttrib_MAX,
+    kPearlGLVertexAttrib_MAX
 };
 
 @interface PearlGLShaders : NSObject

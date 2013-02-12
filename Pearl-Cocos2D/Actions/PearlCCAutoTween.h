@@ -39,7 +39,7 @@ typedef struct {
     NSUInteger tweenCount;
 }
 
-+ (PearlCCAutoTween *)actionWithDuration:(ccTime)duration;
++ (instancetype)actionWithDuration:(ccTime)duration;
 
 - (id)initWithDuration:(ccTime)duration;
 

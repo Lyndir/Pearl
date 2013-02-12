@@ -13,6 +13,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlCCAutoTween.h"
 
 @interface PearlCCAutoTween ()
 
@@ -25,7 +26,7 @@
 
 @implementation PearlCCAutoTween
 
-+ (PearlCCAutoTween *)actionWithDuration:(ccTime)duration {
++ (instancetype)actionWithDuration:(ccTime)duration {
 
     return [[self alloc] initWithDuration:(ccTime)duration];
 }

@@ -41,6 +41,9 @@ extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
 extern CGSize  CGSizeFromCGPoint(const CGPoint point);
 extern CGRect  CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
 
+extern CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract);
+extern CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add);
+
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
@@ -159,7 +162,7 @@ __END_DECLS
 - (id)cloneAddedTo:(UIView *)superView;
 
 /**
- * Expands localized text in the given view and all its subviews.
+ * Expands localization keys to values in the given view and all its subviews.
  *
  * Properties localizable by this method are: text, placeholder.
  * Additionally, the following views are handled specially:
@@ -168,7 +171,16 @@ __END_DECLS
  *
  * See applyLocalization for the rules of localization expansion.
  */
-- (void)localizeProperties;
+- (UIView *)localizeProperties;
+
+@end
+
+@interface UIViewController (PearlUIUtils)
+
+/**
+ * Expands localization keys to values in the given view controller's properties and view hierarchy.
+ */
+- (UIViewController *)localizeProperties;
 
 @end
 

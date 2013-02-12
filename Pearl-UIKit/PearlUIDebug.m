@@ -16,6 +16,7 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlUIDebug.h"
 
 @implementation PearlUIDebug
 

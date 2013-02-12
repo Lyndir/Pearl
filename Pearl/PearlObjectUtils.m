@@ -51,10 +51,10 @@ static char facadeBlockKey, facadedObjectKey;
 
     // Create a clone of this class that uses the given superClass.
     static NSUInteger classCloneCounter = 0;
-    NSString *classCloneName = [NSStringFromClass(superClass) stringByAppendingFormat:@"_PearlBlock%u", classCloneCounter++];
+    NSString *classCloneName = [NSStringFromClass(superClass) stringByAppendingFormat:@"_PearlBlock%lu", (long)classCloneCounter++];
     Class classClone = objc_allocateClassPair(superClass, classCloneName.UTF8String, 0);
 
-    NSUInteger outCount = 0;
+    unsigned int outCount = 0;
     Method *methods = class_copyMethodList([self class], &outCount);
     for (NSUInteger m = 0; m < outCount; ++m) {
         SEL methodName = method_getName(methods[m]);

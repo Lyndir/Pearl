@@ -16,6 +16,9 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCConfigMenuLayer.h"
+#import "PearlCocos2DStrings.h"
+#import "PearlCCMenuItemTitle.h"
 
 @interface PearlCCConfigMenuLayer ()
 
@@ -31,7 +34,7 @@
 @synthesize configDelegate = _configDelegate;
 
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
                                         logo:(CCMenuItem *)aLogo
                                     settings:(SEL)setting, ... {
 
@@ -53,7 +56,7 @@
 }
 
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
                                         logo:(CCMenuItem *)aLogo
                            settingsFromArray:(NSArray *)settings {
 
@@ -144,7 +147,7 @@
         // Search t's class hierarchy for the selector.
         NSMethodSignature *sig = [t methodSignatureForSelector:s];
         if (!sig)
-            [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+            [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %@ on %@", NSStringFromSelector(s), t];
 
         // Build an invocation for the signature & invoke it.
         __unsafe_unretained id ret;
@@ -160,7 +163,7 @@
             if ([ret respondsToSelector:@selector(unsignedIntValue)])
                 index = [ret unsignedIntValue];
             else {
-                wrn(@"Couldn't obtain config menu item index for setting: %s, value: %@", s, ret);
+                wrn(@"Couldn't obtain config menu item index for setting: %@, value: %@", NSStringFromSelector(s), ret);
                 index = 0;
             }
         }
@@ -180,12 +183,12 @@
         toggledValue = [self.configDelegate valueForSetting:s index:[toggle selectedIndex]];
     if (!toggledValue)
         toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
-    dbg(@"Setting %s to %@", s, toggledValue);
+    dbg(@"Setting %@ to %@", NSStringFromSelector(s), toggledValue);
 
     // Search t's class hierarchy for the selector.
     NSMethodSignature *sig = [t methodSignatureForSelector:setterS];
     if (!sig)
-        [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %s on %@", s, t];
+        [NSException raise:NSInternalInconsistencyException format:@"Couldn't find signature for %@ on %@", NSStringFromSelector(s), t];
 
     // Build an invocation for the signature & invoke it.
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];

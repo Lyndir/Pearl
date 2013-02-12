@@ -20,11 +20,11 @@
 
 @implementation NSDateFormatter (RFC3339)
 
-+ (NSDateFormatter *)rfc3339DateFormatter {
++ (instancetype)rfc3339DateFormatter {
 
     static NSDateFormatter *dateFormatter = nil;
     if (!dateFormatter) {
-        dateFormatter             = [NSDateFormatter new];
+        dateFormatter = [self new];
         [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
         [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
         [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];

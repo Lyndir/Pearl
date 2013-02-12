@@ -16,22 +16,23 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
+#import "PearlLayoutView.h"
 
 @implementation PearlLayoutView
 
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
++ (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
                              gravity:(PearlLayoutGravity)gravity {
 
     return [self viewWithContent:contentView padWidth:padWidth padHeight:0 gravity:gravity];
 }
 
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
++ (instancetype)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
                              gravity:(PearlLayoutGravity)gravity {
 
     return [self viewWithContent:contentView padWidth:0 padHeight:padHeight gravity:gravity];
 }
 
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
++ (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
                              gravity:(PearlLayoutGravity)gravity {
 
     return [[self alloc]

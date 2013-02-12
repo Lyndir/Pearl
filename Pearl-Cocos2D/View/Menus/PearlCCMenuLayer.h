@@ -69,10 +69,10 @@ typedef enum {
 @property (nonatomic, readwrite, retain) id<NSObject, PearlCCMenuDelegate> delegate;
 @property (nonatomic, readwrite, retain) NSArray *itemCounts;
 
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                                 items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
-+ (PearlCCMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
-                        itemsFromArray:(NSArray *)menuItems;
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                           items:(CCMenuItem *)menuItems, ... NS_REQUIRES_NIL_TERMINATION;
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
+                  itemsFromArray:(NSArray *)menuItems;
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:aLogo
                  items:(CCMenuItem *)menuItem, ... NS_REQUIRES_NIL_TERMINATION;

@@ -15,6 +15,8 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
+#import "PearlCCDebug.h"
+#import "PearlStringUtils.h"
 #import "JRSwizzle.h"
 
 
@@ -69,7 +71,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 
     NSNumber *drawOrder = [PearlCCDebugDrawOrder objectForKey:nodeValue];
 
-    [[PearlLogger get] dbg:@"%*s%@. [%c] %@", 4 * indent, "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription];
+    dbg(@"%*s%@. [%c] %@", 4 * indent, "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription);
     for (CCNode *child in node.children)
         [self printStateForNode:child indent:indent + 1];
 }

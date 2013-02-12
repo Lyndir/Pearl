@@ -23,7 +23,7 @@
 
 }
 
-+ (PearlWSStrings *)get;
++ (instancetype)get;
 
 @property (nonatomic, readonly) NSString *errorWSConnection;
 @property (nonatomic, readonly) NSString *errorWSResponseInvalid;

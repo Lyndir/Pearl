@@ -23,7 +23,7 @@
 
 }
 
-+ (PearlCCMenuItemBlock *)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;
++ (instancetype)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;
 
 - (id)initWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;
 

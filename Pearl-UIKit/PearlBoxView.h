@@ -34,8 +34,8 @@
 @property (nonatomic, assign) BOOL    filled;
 
 + (id)boxed:(id)view;
-+ (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
-+ (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)width;
++ (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;
++ (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)width;
 
 - (id)initWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)width;
 

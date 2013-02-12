@@ -23,9 +23,9 @@
     CGFloat _height;
 }
 
-+ (id)spacerSmall;
-+ (id)spacerNormal;
-+ (id)spacerLarge;
++ (instancetype)spacerSmall;
++ (instancetype)spacerNormal;
++ (instancetype)spacerLarge;
 
 - (id)initSmall;
 - (id)initNormal;

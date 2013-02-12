@@ -31,7 +31,7 @@
     BOOL    _swiped;
 }
 
-+ (id)nodeWithTarget:(id)t selector:(SEL)s;
++ (instancetype)nodeWithTarget:(id)t selector:(SEL)s;
 
 - (id)initWithTarget:(id)t selector:(SEL)s;
 

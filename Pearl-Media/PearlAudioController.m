@@ -154,7 +154,7 @@
     AudioServicesDisposeSystemSoundID(soundFileObject);
 }
 
-+ (PearlAudioController *)get {
++ (instancetype)get {
 
     static PearlAudioController *instance = nil;
     if (!instance)

@@ -2,8 +2,10 @@
 #error PEARL used but not enabled.  If you want to use this library, first enable it with #define PEARL in your Pearl prefix file.
 #endif
 
+#import "NSArray+Indexing.h"
 #import "NSBundle+PearlMutableInfo.h"
 #import "NSDateFormatter+RFC3339.h"
+#import "NSDictionary+Indexing.h"
 #import "NSObject+PearlExport.h"
 #import "NSObject+PearlKVO.h"
 #import "NSString+PearlNSArrayFormat.h"

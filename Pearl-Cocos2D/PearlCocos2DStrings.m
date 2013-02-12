@@ -13,6 +13,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlCocos2DStrings.h"
 
 @implementation PearlCocos2DStrings
 
@@ -21,7 +22,7 @@
     return [super initWithTable:@"Pearl-Cocos2D"];
 }
 
-+ (PearlCocos2DStrings *)get {
++ (instancetype)get {
 
     static PearlCocos2DStrings *instance = nil;
     if (!instance)

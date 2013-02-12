@@ -16,15 +16,18 @@
 //  Copyright, lhunath (Maarten Billemont) 2009. All rights reserved.
 //
 
+#import "PearlWSController.h"
 #import "NSDictionary_JSONExtensions.h"
-
+#import "NSString+PearlNSArrayFormat.h"
 #ifdef PEARL_UIKIT
-
+#import "PearlAlert.h"
 #endif
-
 #import "ASIFormDataRequest.h"
 #import "ASIHttpRequest.h"
+#import "PearlLogger.h"
+#import "PearlStringUtils.h"
 #import "CJSONSerializer.h"
+#import "NSObject+PearlExport.h"
 
 #define JSON_NON_EXECUTABLE_PREFIX      @")]}'\n"
 
@@ -61,7 +64,7 @@
 #pragma mark ###############################
 #pragma mark Lifecycle
 
-+ (PearlWSController *)get {
++ (instancetype)get {
 
     static PearlWSController *instance;
     if (!instance)
@@ -212,7 +215,7 @@
 - (id)requestWithObject:(id)object method:(PearlWSRequestMethod)method popupOnError:(BOOL)popupOnError
              completion:(void (^)(BOOL success, PearlJSONResult *response, NSError *connectionError))completion {
 
-    return [self requestWithDictionary:[object exportToCodable] method:method completion:^(NSData *responseData, NSError *connectionError) {
+    return [self requestWithDictionary:[object exportToDictionary] method:method completion:^(NSData *responseData, NSError *connectionError) {
         PearlJSONResult *response = nil;
         BOOL valid = !connectionError && [self validateAndParseResponse:responseData into:&response
                                                            popupOnError:popupOnError requires:nil];

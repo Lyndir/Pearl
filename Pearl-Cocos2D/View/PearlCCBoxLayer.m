@@ -15,6 +15,10 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCBoxLayer.h"
+#import "PearlLayout.h"
+#import "PearlGLUtils.h"
+#import "PearlUIUtils.h"
 
 @implementation PearlCCBoxLayer
 @synthesize color = _color;
@@ -34,7 +38,7 @@
     return node;
 }
 
-+ (PearlCCBoxLayer *)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
++ (instancetype)boxWithSize:(CGSize)aFrame at:(CGPoint)aLocation color:(ccColor4B)aColor {
 
     return [[self alloc] initWithSize:aFrame at:(CGPoint)aLocation color:aColor];
 }

@@ -16,6 +16,10 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCSplash.h"
+#import "PearlUIUtils.h"
+#import "PearlCCBarSprite.h"
+#import "PearlCocos2DAppDelegate.h"
 
 @interface PearlCCSplashTransition : CCTransitionZoomFlipY
 

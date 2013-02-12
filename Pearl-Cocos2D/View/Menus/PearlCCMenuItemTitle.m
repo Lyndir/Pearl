@@ -15,11 +15,12 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCMenuItemTitle.h"
 
 @implementation PearlCCMenuItemTitle
 
 
-+ (PearlCCMenuItemTitle *)itemWithString:(NSString *)title {
++ (instancetype)itemWithString:(NSString *)title {
 
     return [[self alloc] initWithString:title];
 }

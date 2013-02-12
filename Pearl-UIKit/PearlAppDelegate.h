@@ -35,8 +35,10 @@
 - (IBAction)restart;
 - (void)shutdown:(id)caller;
 
-+ (PearlAppDelegate *)get;
+- (void)showFeedback;
+- (void)showReview;
 
++ (instancetype)get;
 
 @end
 

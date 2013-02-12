@@ -48,29 +48,29 @@ NSString *NSStringFromErrSec(OSStatus status) {
 
     switch (status) {
         case errSecSuccess:
-            return [NSString stringWithFormat:@"No error (errSecSuccess: %ld).", status];
+            return [NSString stringWithFormat:@"No error (errSecSuccess: %ld).", (long)status];
         case errSecUnimplemented:
-            return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", status];
+            return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", (long)status];
         case errSecParam:
-            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).", status];
+            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).", (long)status];
         case errSecAllocate:
-            return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", status];
+            return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", (long)status];
         case errSecNotAvailable:
-            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).", status];
+            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).", (long)status];
         case errSecDuplicateItem:
-            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %ld).", status];
+            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %ld).", (long)status];
         case errSecItemNotFound:
-            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %ld).", status];
+            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %ld).", (long)status];
         case errSecInteractionNotAllowed:
-            return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %ld).", status];
+            return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %ld).", (long)status];
         case errSecDecode:
-            return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %ld).", status];
+            return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %ld).", (long)status];
         case errSecAuthFailed:
-            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).", status];
+            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).", (long)status];
+        default:
+            wrn(@"Security Error status code not known: %ld", (long)status);
+            return PearlString(@"Unknown status (%ld).", (long)status);
     }
-
-    wrn(@"Security Error status code not known: %d", status);
-    return [NSString stringWithFormat:@"Unknown status (%ld).", status];
 }
 
 @implementation NSString (PearlCryptUtils)
@@ -120,7 +120,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
 - (NSData *)doCipher:(CCOperation)encryptOrDecrypt withSymmetricKey:(NSData *)symmetricKey options:(CCOptions)options {
 
     if (symmetricKey.length != PearlCryptKeySize) {
-        err(@"Key size (%d) doesn't match cipher size (%d).", symmetricKey.length, PearlCryptKeySize);
+        err(@"Key size (%ld) doesn't match cipher size (%d).", (long)symmetricKey.length, PearlCryptKeySize);
         return nil;
     }
 
@@ -167,9 +167,10 @@ NSString *NSStringFromErrSec(OSStatus status) {
      (hmac[offset + 1] & 0xff) << 16 | //
      (hmac[offset + 2] & 0xff) << 8 | //
      (hmac[offset + 3] & 0xff) << 0;
+    free(hmac);
 
     // Extract otpLength digits out of the OTP data.
-    return [NSString stringWithFormat:[NSString stringWithFormat:@"%%0%lud", otpLength], otp % (int)powf(10, otpLength)];
+    return PearlString(PearlString(@"%%0%lud", (long)otpLength), otp % (int)powf(10, otpLength));
 }
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42
@@ -185,7 +186,7 @@ static size_t DEREncodeLength(unsigned char *buf, size_t length) {
     size_t i = (length / 256) + 1;
     buf[0] = (unsigned char)(i + 0x80);
     for (size_t j = 0; j < i; ++j) {
-        buf[i - j] = length & 0xFF;
+        buf[i - j] = (unsigned char)(length & 0xFF);
         length = length >> 8;
     }
 

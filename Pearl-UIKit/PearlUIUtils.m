@@ -17,7 +17,8 @@
 //
 
 #import <objc/runtime.h>
-
+#import "PearlUIUtils.h"
+#import "PearlBoxView.h"
 
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
 
@@ -114,9 +115,20 @@ CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
     return CGRectMake(point.x, point.y, size.width, size.height);
 }
 
+CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract) {
+
+    return CGPointMake(origin.x - subtract.x, origin.y - subtract.y);
+}
+
+CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add) {
+
+    return CGPointMake(origin.x + add.x, origin.y + add.y);
+}
+
+
 CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
-    return CGPointMake(to.x - from.x, to.y - from.y);
+    return CGPointMinusCGPoint(to, from);
 }
 
 CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
@@ -129,11 +141,41 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
     return sqrtf(DistanceBetweenCGPointsSq(from, to));
 }
 
-static UIScrollView *keyboardScrollView_current, *keyboardScrollView_resized;
-static CGPoint                                   keyboardScrollView_originalOffset;
-static CGRect                                    keyboardScrollView_originalFrame;
-static BOOL                                      keyboardScrollView_shouldHide;
+@interface PearlUIUtilsKeyboardScrollView : NSObject
+
+@property (nonatomic, retain) UIScrollView *keyboardScrollView;
+@property (nonatomic)         CGPoint       keyboardScrollViewOriginalOffset;
+@property (nonatomic)         CGRect        keyboardScrollViewOriginalFrame;
+
+@end
+
+@implementation PearlUIUtilsKeyboardScrollView
+
+@synthesize keyboardScrollView = _keyboardScrollView;
+@synthesize keyboardScrollViewOriginalOffset = _keyboardScrollViewOriginalOffset;
+@synthesize keyboardScrollViewOriginalFrame = _keyboardScrollViewOriginalFrame;
+
+- (id)init {
+    
+    if (!(self = [super init])) {
+        return nil;
+    }
+    
+    self.keyboardScrollViewOriginalFrame = CGRectNull;
+    self.keyboardScrollViewOriginalOffset = CGPointZero;
+    
+    return self;
+}
+
+@end
+
+// TODO: dont hold strong references to the scrollviews
+static NSMutableArray      *keyboardScrollViews;
+static UIScrollView        *keyboardScrollView_resized;
+static BOOL                 keyboardScrollView_shouldHide;
+
 static NSMutableSet *dismissableResponders;
+
 
 @interface PearlUIUtils ()
 
@@ -242,12 +284,28 @@ static NSMutableSet *dismissableResponders;
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                            selector:@selector(keyboardWillShow:)
                                name:UIKeyboardWillShowNotification
-                             object:self.window];
+                             object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
                            selector:@selector(keyboardWillHide:)
                                name:UIKeyboardWillHideNotification
-                             object:self.window];
-    keyboardScrollView_current = self;
+                             object:nil];
+    
+    if (nil == keyboardScrollViews) {
+        keyboardScrollViews = [[NSMutableArray alloc] initWithCapacity:1];
+    }
+    bool found = false;
+    for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+        if (pearlKBSV.keyboardScrollView == self) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+     
+        PearlUIUtilsKeyboardScrollView *pearlKBSV = [[PearlUIUtilsKeyboardScrollView alloc] init];
+        pearlKBSV.keyboardScrollView = self;
+        [keyboardScrollViews addObject:pearlKBSV];
+    }
 }
 
 @end
@@ -510,7 +568,7 @@ static NSMutableSet *dismissableResponders;
     return copy;
 }
 
-- (void)localizeProperties {
+- (UIView *)localizeProperties {
 
     static NSArray *localizableProperties = nil;
     if (localizableProperties == nil)
@@ -556,11 +614,42 @@ static NSMutableSet *dismissableResponders;
     // Load localization for all children, too.
     for (UIView *childView in self.subviews)
         [childView localizeProperties];
+
+    return self;
 }
 
 
 @end
 
+@implementation UIViewController (PearlUIUtils)
+
+- (UIViewController *)localizeProperties {
+    
+    // VC properties
+    self.title = [PearlUIUtils applyLocalization:self.title];
+    self.navigationItem.title = [PearlUIUtils applyLocalization:self.navigationItem.title];
+    [self.navigationItem.titleView localizeProperties];
+    
+    // Toolbar items
+    for (UIBarButtonItem *item in [self toolbarItems]) {
+        NSSet *titles = [item possibleTitles];
+        NSMutableSet *localizedTitles = [NSMutableSet setWithCapacity:[titles count]];
+        for (NSString *title in titles)
+            [localizedTitles addObject:[PearlUIUtils applyLocalization:title]];
+        [item setPossibleTitles:localizedTitles];
+    }
+    
+    // VC view hierarchy
+    [self.view localizeProperties];
+
+    // Child VCs
+    for (UIViewController *vc in [self childViewControllers])
+        [vc localizeProperties];
+
+    return self;
+}
+
+@end
 
 @implementation PearlUIUtils
 
@@ -627,37 +716,53 @@ static NSMutableSet *dismissableResponders;
 }
 
 + (void)keyboardWillShow:(NSNotification *)n {
-
+    
     UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
     if (!responder)
      // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
      // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
-    if (!keyboardScrollView_current || ![responder isDescendantOfView:keyboardScrollView_current]) {
+    
+    // Find the active scrollview in our dictionary
+    PearlUIUtilsKeyboardScrollView *activePearlKBSV = nil;
+    if (nil != keyboardScrollViews && [keyboardScrollViews count] > 0) {
+        
+        for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+            if ([responder isDescendantOfView:pearlKBSV.keyboardScrollView]) {
+                activePearlKBSV = pearlKBSV;
+            }
+        }
+    }
+       
+    keyboardScrollView_shouldHide = NO;
+    
+    if (nil == activePearlKBSV) {
         // Make sure the responder is a descendant of the current view.
-        keyboardScrollView_shouldHide = NO;
         return;
     }
 
     // Make sure no old view is still resized and a current view is set.
-    if (keyboardScrollView_resized && keyboardScrollView_resized != keyboardScrollView_current) {
+    if (keyboardScrollView_resized && keyboardScrollView_resized != activePearlKBSV.keyboardScrollView) {
         err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
         return;
     }
-    assert(keyboardScrollView_current);
-    assert(!keyboardScrollView_resized);
+    assert(activePearlKBSV);
+//    assert(!keyboardScrollView_resized);
 
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
-    keyboardScrollView_resized = keyboardScrollView_current;
-
+    keyboardScrollView_resized = activePearlKBSV.keyboardScrollView;
+    
     NSDictionary *userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect scrollRect   = [keyboardScrollView_resized frameInWindow];
     CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
 
-    keyboardScrollView_originalOffset = keyboardScrollView_resized.contentOffset;
-    keyboardScrollView_originalFrame  = keyboardScrollView_resized.frame;
-    CGPoint keyboardScrollNewOffset = keyboardScrollView_originalOffset;
+    // store initial scrollview frame when needed
+    if (CGRectIsNull(activePearlKBSV.keyboardScrollViewOriginalFrame)) {
+        activePearlKBSV.keyboardScrollViewOriginalOffset = keyboardScrollView_resized.contentOffset;
+        activePearlKBSV.keyboardScrollViewOriginalFrame  = keyboardScrollView_resized.frame;
+    }
+    CGPoint keyboardScrollNewOffset = activePearlKBSV.keyboardScrollViewOriginalOffset;
     keyboardScrollNewOffset.y += keyboardRect.size.height / 2;
     CGRect keyboardScrollNewFrame = keyboardScrollView_resized.frame;
     keyboardScrollNewFrame.size.height -= hiddenRect.size.height;
@@ -670,19 +775,22 @@ static NSMutableSet *dismissableResponders;
         if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
             keyboardScrollNewOffset.y = responderRect.origin.y;
 
-    if (CGRectEqualToRect(keyboardScrollView_resized.frame, keyboardScrollNewFrame))
+    if (CGRectEqualToRect(keyboardScrollView_resized.frame, keyboardScrollNewFrame)) {
      // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
         keyboardScrollNewFrame = CGRectNull;
-
-    UIScrollView *animatingScrollView = keyboardScrollView_resized;
-    [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-            delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-              animations:^{
-                  animatingScrollView.contentOffset = keyboardScrollNewOffset;
-              } completion:^(BOOL finished) {
-        if (!CGRectIsNull(keyboardScrollNewFrame))
-            animatingScrollView.frame = keyboardScrollNewFrame;
-    }];
+    }
+    
+    if (!CGRectIsNull(keyboardScrollNewFrame)) {
+        UIScrollView *animatingScrollView = keyboardScrollView_resized;
+        [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
+                delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+                  animations:^{
+                      animatingScrollView.contentOffset = keyboardScrollNewOffset;
+                  } completion:^(BOOL finished) {
+            if (!CGRectIsNull(keyboardScrollNewFrame))
+                animatingScrollView.frame = keyboardScrollNewFrame;
+        }];
+    }
 }
 
 + (void)keyboardWillHide:(NSNotification *)n {
@@ -692,13 +800,28 @@ static NSMutableSet *dismissableResponders;
         return;
 
     UIScrollView *animatingScrollView = keyboardScrollView_resized;
-    CGRect  animatingScrollView_originalFrame  = keyboardScrollView_originalFrame;
-    CGPoint animatingScrollView_originalOffset = keyboardScrollView_originalOffset;
+    PearlUIUtilsKeyboardScrollView *currentPearlKBSV;
+    for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+        if (pearlKBSV.keyboardScrollView == keyboardScrollView_resized) {
+            currentPearlKBSV = pearlKBSV;
+        }
+    }
+    if(nil == currentPearlKBSV) {
+        err(@"No PearlKBSV found in dictionary yet got keyboardWillHide notification...");
+        return;
+    }
+    
+    CGRect  animatingScrollView_originalFrame  = currentPearlKBSV.keyboardScrollViewOriginalFrame;
+    CGPoint animatingScrollView_originalOffset = currentPearlKBSV.keyboardScrollViewOriginalOffset;
     keyboardScrollView_shouldHide = YES;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!keyboardScrollView_shouldHide)
             return;
+        
+        currentPearlKBSV.keyboardScrollViewOriginalFrame = CGRectNull;
+        currentPearlKBSV.keyboardScrollViewOriginalOffset = CGPointZero;
+
 
         CGPoint currentOffset = animatingScrollView.contentOffset;
         animatingScrollView.frame         = animatingScrollView_originalFrame;
@@ -716,6 +839,9 @@ static NSMutableSet *dismissableResponders;
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {
+    
+    if (!localizableValue)
+        return nil;
 
     static NSRegularExpression *UIUtils_localizableSyntax = nil;
     if (UIUtils_localizableSyntax == nil)
@@ -723,24 +849,24 @@ static NSMutableSet *dismissableResponders;
 
     __block NSString *localizedValue = localizableValue;
     [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length])
-                                                                         usingBlock:
-                                                                          ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                                                                              if (result) {
-                                                                                  NSRange localizationKeyRange = [result rangeAtIndex:1];
-                                                                                  NSRange defaultValueRange    = [result rangeAtIndex:2];
-                                                                                  if (NSEqualRanges(localizationKeyRange,
-                                                                                                    NSMakeRange(NSNotFound, 0)))
-                                                                                      return;
-
-                                                                                  NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
-                                                                                  NSString *defaultValue    = nil;
-                                                                                  if (!NSEqualRanges(defaultValueRange,
-                                                                                                     NSMakeRange(NSNotFound, 0)))
-                                                                                      defaultValue = [localizableValue substringWithRange:defaultValueRange];
-
-                                                                                  localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
-                                                                              }
-                                                                          }];
+                                             usingBlock:
+     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+         if (result) {
+             NSRange localizationKeyRange = [result rangeAtIndex:1];
+             NSRange defaultValueRange    = [result rangeAtIndex:2];
+             if (NSEqualRanges(localizationKeyRange,
+                               NSMakeRange(NSNotFound, 0)))
+                 return;
+             
+             NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
+             NSString *defaultValue    = nil;
+             if (!NSEqualRanges(defaultValueRange,
+                                NSMakeRange(NSNotFound, 0)))
+                 defaultValue = [localizableValue substringWithRange:defaultValueRange];
+             
+             localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+         }
+     }];
 
     return localizedValue;
 }

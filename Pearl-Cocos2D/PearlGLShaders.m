@@ -8,6 +8,8 @@
  * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
  */
 
+#import "PearlGLShaders.h"
+
 const GLchar *PearlGLShaderPointSize_vert =
 #import "PearlGLShaderPointSize_vert.h"
 const GLchar *PearlGLShaderPointSize_frag =

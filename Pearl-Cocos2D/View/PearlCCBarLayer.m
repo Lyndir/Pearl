@@ -16,6 +16,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCBarLayer.h"
+#import "PearlUIUtils.h"
 
 @interface PearlCCBarLayer ()
 
@@ -41,7 +43,7 @@
 @synthesize showPosition = _showPosition;
 @synthesize dismissed = _dismissed;
 
-+ (PearlCCBarLayer *)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
++ (instancetype)barWithColor:(NSUInteger)aColor position:(CGPoint)aShowPosition {
 
     return [[self alloc] initWithColor:aColor position:aShowPosition];
 }

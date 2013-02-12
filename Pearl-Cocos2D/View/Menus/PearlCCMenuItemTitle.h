@@ -23,7 +23,7 @@
 
 }
 
-+ (PearlCCMenuItemTitle *)itemWithString:(NSString *)title;
++ (instancetype)itemWithString:(NSString *)title;
 
 - (id)initWithString:(NSString *)title;
 

@@ -19,6 +19,13 @@
 
 @interface NSObject (PearlKVO)
 
+/**
+ * Add an observer block to the receiver that observes changes to value at the receiver's keyPath.
+ *
+ * @param observerBlock The block that gets invoked whenever a change to the receiver's value at the keyPath is detected.
+ *                      The keyPath passed to the block is the keyPath where the change happened, the object is the receiver,
+  *                     change is a dictionary that describes the change and context is the context given to this method.
+*/
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
               forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
 

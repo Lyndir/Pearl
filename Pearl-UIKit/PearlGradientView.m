@@ -16,6 +16,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlGradientView.h"
+#import "UIColor+Expanded.h"
 
 @implementation PearlGradientView
 
@@ -30,7 +32,8 @@
      bottomColor.red, bottomColor.green, bottomColor.blue, bottomColor.alpha,
     };
 
-    components = memcpy(malloc(sizeof(newComponents)), newComponents, sizeof(newComponents));
+    components = calloc(2 * 4, sizeof(CGFloat));
+    memcpy(components, newComponents, sizeof(newComponents));
 
     return self;
 }
@@ -48,6 +51,11 @@
 
     CGContextDrawLinearGradient(UIGraphicsGetCurrentContext(), newGradient, CGPointZero, CGPointMake(0, rect.size.height), 0);
     CGGradientRelease(newGradient);
+}
+
+- (void)dealloc {
+    
+    free(components);
 }
 
 @end

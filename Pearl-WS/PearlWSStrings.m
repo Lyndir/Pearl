@@ -14,6 +14,7 @@
 //  To change this template use File | Settings | File Templates.
 //
 
+#import "PearlWSStrings.h"
 
 @implementation PearlWSStrings
 
@@ -22,7 +23,7 @@
     return [super initWithTable:@"PearlWS"];
 }
 
-+ (PearlWSStrings *)get {
++ (instancetype)get {
 
     static PearlWSStrings *instance = nil;
     if (!instance)

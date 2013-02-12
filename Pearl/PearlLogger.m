@@ -16,60 +16,54 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+const char *PearlLogLevelStr(PearlLogLevel level) {
+
+    switch (level) {
+        case PearlLogLevelTrace:
+            return "TRACE";
+        case PearlLogLevelDebug:
+            return "DEBUG";
+        case PearlLogLevelInfo:
+            return "INFO";
+        case PearlLogLevelWarn:
+            return "WARNING";
+        case PearlLogLevelError:
+            return "ERROR";
+        case PearlLogLevelFatal:
+            return "FATAL";
+    }
+
+    Throw(@"Formatting a message with a log level that is not understood.");
+}
+
 @implementation PearlLogMessage
 
-@synthesize message, occurance, level;
+@synthesize message, occurrence, level;
 
 
-+ (PearlLogMessage *)messageWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
++ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
+                         text:(NSString *)aMessage {
 
-    return [[self alloc] initWithMessage:aMessage at:anOccurance withLevel:aLevel];
+    return [[self alloc] initInFile:fileName atLine:lineNumber withLevel:aLevel text:aMessage];
 }
 
 
-- (id)initWithMessage:(NSString *)aMessage at:(NSDate *)anOccurance withLevel:(PearlLogLevel)aLevel {
+- (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
+            text:(NSString *)aMessage {
 
     if (!(self = [super init]))
         return nil;
 
-    self.message   = aMessage;
-    self.occurance = anOccurance;
-    self.level     = aLevel;
-
-    if (!self.occurance)
-        self.occurance = [NSDate date];
+    self.fileName   = fileName;
+    self.lineNumber = lineNumber;
+    self.level      = aLevel;
+    self.message    = aMessage;
+    self.occurrence = [NSDate date];
 
     return self;
 }
 
-- (NSString *)levelDescription {
-
-    switch (self.level) {
-        case PearlLogLevelTrace:
-            return @"TRACE-  ";
-            break;
-        case PearlLogLevelDebug:
-            return @"DEBUG-  ";
-            break;
-        case PearlLogLevelInfo:
-            return @"INFO-   ";
-            break;
-        case PearlLogLevelWarn:
-            return @"WARNING-";
-            break;
-        case PearlLogLevelError:
-            return @"ERROR-  ";
-            break;
-        case PearlLogLevelFatal:
-            return @"FATAL-  ";
-            break;
-        default:
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"Formatting a message with a log level that is not understood."];
-    }
-}
-
-- (NSString *)description {
+- (NSDateFormatter *)occurrenceFormatter {
 
     static NSDateFormatter *dateFormatter = nil;
     if (!dateFormatter) {
@@ -77,14 +71,18 @@
         [dateFormatter setDateFormat:@"DDD'-'HH':'mm':'ss"];
     }
 
-    return [NSString stringWithFormat:@"%@ %@",
-                                      [dateFormatter stringFromDate:self.occurance], [self messageDescription]];
+    return dateFormatter;
+}
+
+- (NSString *)description {
+
+    return [NSString stringWithFormat:@"%@ %@", [[self occurrenceFormatter] stringFromDate:self.occurrence], [self messageDescription]];
 }
 
 - (NSString *)messageDescription {
 
-    return [NSString stringWithFormat:@"%@ %@",
-                                      [self levelDescription], self.message];
+    return [NSString stringWithFormat:@"%25s:%-3ld | %-7s : %@", //
+                     self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr(self.level), self.message];
 }
 
 @end
@@ -92,34 +90,34 @@
 
 @interface PearlLogger ()
 
-@property (readwrite, retain) NSMutableArray *messages;
-@property (readwrite, retain) NSMutableArray *listeners;
+@property (nonatomic, readwrite, retain) NSMutableArray *messages;
+@property (nonatomic, readwrite, retain) NSMutableArray *listeners;
 
 @end
 
 
 @implementation PearlLogger
 
-@synthesize messages = _messages, listeners = _listeners, autoprintLevel = _autoprintLevel;
+@synthesize messages = _messages, listeners = _listeners, printLevel = _printLevel;
 
 - (id)init {
 
     if (!(self = [super init]))
         return nil;
 
-    self.messages       = [NSMutableArray arrayWithCapacity:20];
-    self.listeners      = [NSMutableArray array];
-    self.autoprintLevel = PearlLogLevelInfo;
+    self.messages   = [NSMutableArray arrayWithCapacity:20];
+    self.listeners  = [NSMutableArray array];
+    self.printLevel = PearlLogLevelInfo;
 
     return self;
 }
 
 
-+ (PearlLogger *)get {
++ (instancetype)get {
 
     static PearlLogger *instance = nil;
     if (!instance)
-        instance = [PearlLogger new];
+        instance = [self new];
 
     return instance;
 }
@@ -127,7 +125,7 @@
 
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
 
-    NSMutableString *formattedLog = [NSMutableString new];
+    NSMutableString      *formattedLog = [NSMutableString new];
     for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
             [formattedLog appendString:[message description]];
@@ -152,98 +150,105 @@
 }
 
 
-- (PearlLogger *)logWithLevel:(PearlLogLevel)aLevel andMessage:(NSString *)messageString {
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level text:(NSString *)text {
 
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
     if ([[threadLocals allKeys] containsObject:@"PearlDisableLog"])
         return self;
 
-    PearlLogMessage *message = [PearlLogMessage messageWithMessage:messageString at:nil withLevel:aLevel];
+    PearlLogMessage *message = [PearlLogMessage messageInFile:fileName atLine:lineNumber withLevel:level text:text];
     @try {
         @synchronized (self.listeners) {
             [threadLocals setObject:@"" forKey:@"PearlDisableLog"];
-            for (BOOL (^listener)(PearlLogMessage *message) in self.listeners)
+            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
                 if (!listener(message))
                     return self;
         }
-    } @finally {
+    }
+    @finally {
         [threadLocals removeObjectForKey:@"PearlDisableLog"];
     }
-    
-    if (aLevel >= self.autoprintLevel)
+
+    if (level >= self.printLevel)
         @synchronized (self) {
             fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
         }
-    if (message.level > PearlLogLevelTrace)
+    if (self.history && message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
 
     return self;
 }
 
 
-- (PearlLogger *)trc:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelTrace andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelTrace text:message];
 }
 
 
-- (PearlLogger *)dbg:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelDebug andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelDebug text:message];
 }
 
 
-- (PearlLogger *)inf:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelInfo andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelInfo text:message];
 }
 
 
-- (PearlLogger *)wrn:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelWarn andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelWarn text:message];
 }
 
 
-- (PearlLogger *)err:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelError andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelError text:message];
 }
 
 
-- (PearlLogger *)ftl:(NSString *)format, ... {
+- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
 
     va_list argList;
     va_start(argList, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
     va_end(argList);
 
-    return [self logWithLevel:PearlLogLevelFatal andMessage:message];
+    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+              withLevel:PearlLogLevelFatal text:message];
 }
 
 @end

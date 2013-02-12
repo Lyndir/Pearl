@@ -16,6 +16,7 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCFancyLayer.h"
 
 @interface PearlCCFancyLayer ()
 

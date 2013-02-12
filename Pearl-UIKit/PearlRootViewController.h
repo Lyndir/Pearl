@@ -19,12 +19,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface PearlRootViewController : UIViewController {
-
-    NSMutableArray *_supportedIterfaceOrientations;
-}
-
-@property (nonatomic, retain) NSMutableArray *supportedIterfaceOrientations;
+@interface PearlRootViewController : UIViewController
 
 - (id)initWithView:(UIView *)aView;
 

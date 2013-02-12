@@ -1,3 +1,10 @@
+Supported toggles for this module:
+    - PEARL_WITH_MESSAGEUI: Enables messaging UI wrappers, eg. PearlEMail
+
 I depend on the following external libraries:
 
     - uicolor-utilities
+
+I depend on the following externals:
+
+    - PEARL_WITH_MESSAGEUI: MessageUI.framework

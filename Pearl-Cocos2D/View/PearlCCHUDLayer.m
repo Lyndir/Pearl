@@ -16,11 +16,11 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCHUDLayer.h"
 #ifdef PEARL_MEDIA
-
 #import "PearlAudioController.h"
-
 #endif
+#import "PearlCocos2DAppDelegate.h"
 
 @interface PearlCCBarLayer ()
 
@@ -77,7 +77,7 @@
 
 - (void)reset {
 
-    [self.scoreCount setString:[NSString stringWithFormat:@"%04d", [self score]]];
+    [self.scoreCount setString:[NSString stringWithFormat:@"%04lld", [self score]]];
 }
 
 - (void)highlightGood:(BOOL)wasGood {

@@ -16,6 +16,11 @@
 //  Copyright 2008-2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCShadeLayer.h"
+#import "PearlGLUtils.h"
+#import "PearlCCMenuItemSymbolic.h"
+#import "PearlCocos2DAppDelegate.h"
+#import "PearlCCRemove.h"
 
 @interface PearlCCShadeLayer ()
 

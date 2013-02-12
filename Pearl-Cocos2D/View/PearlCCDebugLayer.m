@@ -16,11 +16,13 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCDebugLayer.h"
+#import "PearlGLUtils.h"
 
 @implementation PearlCCDebugLayer
 
 
-+ (PearlCCDebugLayer *)get {
++ (instancetype)get {
 
     static PearlCCDebugLayer *instance = nil;
     if (!instance)

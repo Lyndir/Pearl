@@ -16,6 +16,9 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlBoxView.h"
+#import "PearlLayout.h"
+#import "PearlUIUtils.h"
 
 @implementation PearlBoxView
 @synthesize color = _color, width = _width, filled = _filled;
@@ -26,12 +29,12 @@
     return view;
 }
 
-+ (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
++ (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor {
 
     return [self boxWithFrame:aFrame color:aColor width:2];
 }
 
-+ (PearlBoxView *)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
++ (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor width:(CGFloat)aWidth {
 
     return [[self alloc] initWithFrame:aFrame color:aColor width:aWidth];
 }

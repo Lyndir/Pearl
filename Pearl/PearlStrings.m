@@ -22,7 +22,7 @@
     return [super initWithTable:@"Pearl"];
 }
 
-+ (PearlStrings *)get {
++ (instancetype)get {
 
     static PearlStrings *instance = nil;
     if (!instance)
@@ -63,8 +63,8 @@
 @dynamic commonButtonThanks;
 @dynamic reviewTitle;
 @dynamic reviewMessage;
-@dynamic reviewLater;
-@dynamic reviewNow;
-@dynamic reviewNever;
+@dynamic reviewYes;
+@dynamic reviewComment;
+@dynamic reviewNo;
 
 @end

@@ -16,6 +16,10 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCScrollLayer.h"
+#import "PearlGLUtils.h"
+#import "PearlUIUtils.h"
+
 #define ScrollPerSecond     0.01f
 
 
@@ -50,13 +54,13 @@
 @synthesize delegate = _delegate;
 
 
-+ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
++ (instancetype)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction {
 
     return [[self alloc] initWithContentSize:contentSize direction:direction];
 }
 
 
-+ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction {
++ (instancetype)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction {
 
     PearlCCScrollLayer *scrollLayer = [self scrollWithContentSize:node.contentSize direction:direction];
     [scrollLayer addChild:node];

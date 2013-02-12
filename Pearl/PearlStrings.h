@@ -23,7 +23,7 @@
 
 }
 
-+ (PearlStrings *)get;
++ (instancetype)get;
 
 @property (nonatomic, readonly) NSString *timeDaySuffix;
 @property (nonatomic, readonly) NSString *timeDaySuffixOne;
@@ -57,8 +57,8 @@
 @property (nonatomic, readonly) NSString *commonButtonThanks;
 @property (nonatomic, readonly) NSString *reviewTitle;
 @property (nonatomic, readonly) NSString *reviewMessage;
-@property (nonatomic, readonly) NSString *reviewLater;
-@property (nonatomic, readonly) NSString *reviewNow;
-@property (nonatomic, readonly) NSString *reviewNever;
+@property (nonatomic, readonly) NSString *reviewYes;
+@property (nonatomic, readonly) NSString *reviewComment;
+@property (nonatomic, readonly) NSString *reviewNo;
 
 @end

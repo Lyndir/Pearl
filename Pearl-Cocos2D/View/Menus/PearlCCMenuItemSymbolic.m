@@ -15,16 +15,17 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlCCMenuItemSymbolic.h"
 
 @implementation PearlCCMenuItemSymbolic
 
 
-+ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol {
++ (instancetype)itemWithString:(NSString *)symbol {
 
     return [self itemWithString:symbol target:nil selector:nil];
 }
 
-+ (PearlCCMenuItemSymbolic *)itemWithString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
++ (instancetype)itemWithString:(NSString *)symbol target:(id)aTarget selector:(SEL)aSelector {
 
     return [[self alloc] initWithString:symbol target:aTarget selector:aSelector];
 }

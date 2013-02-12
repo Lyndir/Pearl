@@ -18,6 +18,7 @@
 //  http://stackoverflow.com/questions/603907/uiimage-resize-then-crop/605385#605385
 //
 
+#import "UIImage+PearlScaling.h"
 
 @implementation UIImage (PearlScaling)
 
@@ -87,6 +88,12 @@
 
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize {
 
+    CGFloat uiScale = [UIScreen mainScreen].scale;
+    targetSize = CGSizeApplyAffineTransform(targetSize, CGAffineTransformScale(CGAffineTransformIdentity, uiScale, uiScale));
+
+    if (CGSizeEqualToSize(self.size, targetSize))
+        return self;
+
     CGFloat widthFactor  = targetSize.width / self.size.width;
     CGFloat heightFactor = targetSize.height / self.size.height;
 
@@ -112,6 +119,9 @@
 
 
 - (UIImage *)imageByScalingAndCroppingToSize:(CGSize)targetSize {
+
+    CGFloat uiScale = [UIScreen mainScreen].scale;
+    targetSize = CGSizeApplyAffineTransform(targetSize, CGAffineTransformScale(CGAffineTransformIdentity, uiScale, uiScale));
 
     if (CGSizeEqualToSize(self.size, targetSize))
         return self;

@@ -59,8 +59,8 @@ typedef enum {
 @property (nonatomic, readwrite) CGSize                                           scrollContentSize;
 @property (nonatomic, readwrite, retain) id<NSObject, PearlCCScrollLayerDelegate> delegate;
 
-+ (PearlCCScrollLayer *)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
-+ (PearlCCScrollLayer *)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction;
++ (instancetype)scrollWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
++ (instancetype)scrollNode:(CCNode *)node direction:(PearlCCScrollContentDirection)direction;
 - (id)initWithContentSize:(CGSize)contentSize direction:(PearlCCScrollContentDirection)direction;
 
 - (void)scrollBy:(CGPoint)scrollOffset;

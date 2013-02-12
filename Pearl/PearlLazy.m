@@ -7,6 +7,7 @@
 //
 
 #import "PearlLazy.h"
+#import "PearlLogger.h"
 #import <objc/runtime.h>
 
 
@@ -73,8 +74,8 @@
         // FIXME: Handle non-object return values.
         id returnValue = nil;
         [anInvocation getReturnValue:&returnValue];
-        
-        inf(@"-[%@ %s] with %@ returns: %@", [loadedObject class], [anInvocation selector], arguments, returnValue);
+
+        inf(@"-[%@ %@] with %@ returns: %@", [loadedObject class], NSStringFromSelector([anInvocation selector]), arguments, returnValue);
     }
 }
 

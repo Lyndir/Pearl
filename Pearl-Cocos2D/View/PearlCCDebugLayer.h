@@ -23,6 +23,6 @@
 
 }
 
-+ (PearlCCDebugLayer *)get;
++ (instancetype)get;
 
 @end

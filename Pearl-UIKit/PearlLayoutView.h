@@ -31,12 +31,12 @@ __END_DECLS
 
 }
 
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                             gravity:(PearlLayoutGravity)gravity;
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                             gravity:(PearlLayoutGravity)gravity;
-+ (PearlLayoutView *)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                             gravity:(PearlLayoutGravity)gravity;
++ (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
+                        gravity:(PearlLayoutGravity)gravity;
++ (instancetype)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
+                        gravity:(PearlLayoutGravity)gravity;
++ (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
+                        gravity:(PearlLayoutGravity)gravity;
 
 - (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity;
 

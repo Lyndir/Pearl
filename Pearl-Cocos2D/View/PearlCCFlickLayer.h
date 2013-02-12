@@ -26,8 +26,8 @@
     CCMenuItem *_right, *_left;
 }
 
-+ (id)flickSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
-+ (id)flickSpritesFromArray:(NSArray *)sprites;
++ (instancetype)flickSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
++ (instancetype)flickSpritesFromArray:(NSArray *)sprites;
 
 - (id)initWithSprites:(CCSprite *)firstSprite, ... NS_REQUIRES_NIL_TERMINATION;
 - (id)initWithSpritesFromArray:(NSArray *)sprites;

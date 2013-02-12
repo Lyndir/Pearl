@@ -50,13 +50,13 @@
 
 @property (nonatomic, readwrite, retain) id<NSObject, PearlCCConfigMenuDelegate> configDelegate;
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
-                                        logo:(CCMenuItem *)aLogo
-                                    settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
+                            logo:(CCMenuItem *)aLogo
+                        settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;
 
-+ (PearlCCConfigMenuLayer *)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
-                                        logo:(CCMenuItem *)aLogo
-                           settingsFromArray:(NSArray *)settings;
++ (instancetype)menuWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate
+                            logo:(CCMenuItem *)aLogo
+               settingsFromArray:(NSArray *)settings;
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate, PearlCCConfigMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo
               settings:(SEL)setting, ... NS_REQUIRES_NIL_TERMINATION;

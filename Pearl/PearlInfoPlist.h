@@ -110,6 +110,8 @@ __END_DECLS
 /** specifies whether Core Animation sublayers inherit the opacity of their superlayer. */
 @property (nonatomic, readonly) NSNumber     *UIViewGroupOpacity;
 
-+ (PearlInfoPlist *)get;
++ (instancetype)get;
+
+- (id)objectForKeyPath:(NSString *)keyPath;
 
 @end

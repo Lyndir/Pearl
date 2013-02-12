@@ -6,7 +6,23 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		DA3EE97D1601C3FB00C68F6D /* LinkDependencies */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DA3EE97E1601C3FB00C68F6D /* Build configuration list for PBXAggregateTarget "LinkDependencies" */;
+			buildPhases = (
+				DA3EE9851601C44E00C68F6D /* Run Script: Copy libraries */,
+			);
+			dependencies = (
+			);
+			name = LinkDependencies;
+			productName = LinkDependencies;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		93D39560B9BAA9FEC56C2EF8 /* NSTimer+PearlBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */; };
+		93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */; };
 		DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972314F438C300EB000C /* PearlInfoPlist.h */; };
 		DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10972414F438C300EB000C /* PearlInfoPlist.m */; };
 		DA10974F14F438C300EB000C /* Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA10972B14F438C300EB000C /* Pearl.h */; };
@@ -118,6 +134,9 @@
 		DA109F4014F464EC00EB000C /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109F3D14F464EC00EB000C /* Reachability.h */; };
 		DA109F4114F464EC00EB000C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F3E14F464EC00EB000C /* Reachability.m */; };
 		DA109F4214F464EC00EB000C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109F3E14F464EC00EB000C /* Reachability.m */; };
+		DA35097E15EE1A2900C14A8E /* PearlEMail.h in Headers */ = {isa = PBXBuildFile; fileRef = DA35097C15EE1A2900C14A8E /* PearlEMail.h */; };
+		DA35097F15EE1A2900C14A8E /* PearlEMail.m in Sources */ = {isa = PBXBuildFile; fileRef = DA35097D15EE1A2900C14A8E /* PearlEMail.m */; };
+		DA35098115EE1A3A00C14A8E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA35098015EE1A3A00C14A8E /* MessageUI.framework */; };
 		DA3EF1C115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */; };
 		DA3EF1C215A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */; };
 		DA3EF1C315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */; };
@@ -162,6 +181,10 @@
 		DA4425991555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */; };
 		DA44259A1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
 		DA44259B1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
+		DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4416BAC40100F14463 /* NSArray+Indexing.h */; };
+		DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = DA692D4516BAC40100F14463 /* NSArray+Indexing.m */; };
+		DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */; };
+		DA692D4B16BAC40100F14463 /* NSDictionary+Indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */; };
 		DAAD427C15286E9800AADDBD /* PearlCocos2DAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */; };
 		DAAD427D15286E9800AADDBD /* PearlCCAutoTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976C14F438D400EB000C /* PearlCCAutoTween.m */; };
 		DAAD427E15286E9800AADDBD /* PearlCCRemove.m in Sources */ = {isa = PBXBuildFile; fileRef = DA10976E14F438D400EB000C /* PearlCCRemove.m */; };
@@ -626,6 +649,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+PearlBlock.h"; sourceTree = "<group>"; };
+		93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+PearlBlock.m"; sourceTree = "<group>"; };
+		93D39BCB12419257FE3264AC /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Pearl.strings; sourceTree = "<group>"; };
 		DA10972314F438C300EB000C /* PearlInfoPlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlInfoPlist.h; sourceTree = "<group>"; };
 		DA10972414F438C300EB000C /* PearlInfoPlist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlInfoPlist.m; sourceTree = "<group>"; };
 		DA10972B14F438C300EB000C /* Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pearl.h; sourceTree = "<group>"; };
@@ -1872,6 +1898,9 @@
 		DA109F3D14F464EC00EB000C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		DA109F3E14F464EC00EB000C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		DA109F6514F4686400EB000C /* scrypt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = scrypt.xcodeproj; path = External/iOSPorts/ports/security/scrypt/scrypt.xcodeproj; sourceTree = "<group>"; };
+		DA35097C15EE1A2900C14A8E /* PearlEMail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlEMail.h; sourceTree = "<group>"; };
+		DA35097D15EE1A2900C14A8E /* PearlEMail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlEMail.m; sourceTree = "<group>"; };
+		DA35098015EE1A3A00C14A8E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+PearlMutableInfo.h"; sourceTree = "<group>"; };
 		DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+PearlMutableInfo.m"; sourceTree = "<group>"; };
 		DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+RFC3339.h"; sourceTree = "<group>"; };
@@ -1912,6 +1941,10 @@
 		DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_vert.h; sourceTree = "<group>"; };
 		DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAppDelegate.h; sourceTree = "<group>"; };
 		DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAppDelegate.m; sourceTree = "<group>"; };
+		DA692D4416BAC40100F14463 /* NSArray+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Indexing.h"; sourceTree = "<group>"; };
+		DA692D4516BAC40100F14463 /* NSArray+Indexing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Indexing.m"; sourceTree = "<group>"; };
+		DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Indexing.h"; sourceTree = "<group>"; };
+		DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Indexing.m"; sourceTree = "<group>"; };
 		DAAD42371528648000AADDBD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		DAAD423A1528648000AADDBD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		DAAD423B1528648000AADDBD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -2221,6 +2254,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA35098115EE1A3A00C14A8E /* MessageUI.framework in Frameworks */,
 				DAAD43A11529026C00AADDBD /* libPearl.a in Frameworks */,
 				DAAD42AD15286E9800AADDBD /* libASIHttpRequest.a in Frameworks */,
 				DAAD42AE15286E9800AADDBD /* libcocos2d.a in Frameworks */,
@@ -2298,6 +2332,7 @@
 			isa = PBXGroup;
 			children = (
 				DA10974314F438C300EB000C /* Pearl.strings */,
+				93D392D41C7E3ED80B5EE67E /* Pearl.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2471,6 +2506,8 @@
 		DA1097DD14F438D400EB000C /* Pearl-UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				DA35097C15EE1A2900C14A8E /* PearlEMail.h */,
+				DA35097D15EE1A2900C14A8E /* PearlEMail.m */,
 				DA3EF1DA15A4CEF9003ABF4E /* Pearl-UIKit.m */,
 				DA3EF1DB15A4CEF9003ABF4E /* UIControl+PearlBlocks.h */,
 				DA3EF1DC15A4CEF9003ABF4E /* UIControl+PearlBlocks.m */,
@@ -3986,6 +4023,7 @@
 		DADD1E2114F3BE5500413D09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA35098015EE1A3A00C14A8E /* MessageUI.framework */,
 				DAAD44141529C38800AADDBD /* AVFoundation.framework */,
 				DAAD44121529C37700AADDBD /* MobileCoreServices.framework */,
 				DAAD44101529C32000AADDBD /* OpenGLES.framework */,
@@ -4011,6 +4049,10 @@
 		DADD1E2414F3BE5500413D09 /* Pearl */ = {
 			isa = PBXGroup;
 			children = (
+				DA692D4416BAC40100F14463 /* NSArray+Indexing.h */,
+				DA692D4516BAC40100F14463 /* NSArray+Indexing.m */,
+				DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */,
+				DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */,
 				DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */,
 				DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */,
 				DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */,
@@ -4052,6 +4094,8 @@
 				DA10974214F438C300EB000C /* Resources */,
 				DA10974514F438C300EB000C /* PearlStringUtils.h */,
 				DA10974614F438C300EB000C /* PearlStringUtils.m */,
+				93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */,
+				93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */,
 			);
 			path = Pearl;
 			sourceTree = "<group>";
@@ -4480,6 +4524,7 @@
 				DA3EF1E615A4CEF9003ABF4E /* UIControl+PearlSelect.h in Headers */,
 				DA3EF1E815A4CEF9003ABF4E /* UIImage+PearlScaling.h in Headers */,
 				DA3EF1EA15A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.h in Headers */,
+				DA35097E15EE1A2900C14A8E /* PearlEMail.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4524,6 +4569,9 @@
 				DA3EF1CB15A4CE6A003ABF4E /* NSString+PearlSEL.h in Headers */,
 				DA3EF1CE15A4CE6A003ABF4E /* PearlLazy.h in Headers */,
 				DA3EF1D015A4CE6A003ABF4E /* PearlQueue.h in Headers */,
+				93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */,
+				DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */,
+				DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4797,6 +4845,7 @@
 				DA109E7B14F45FAE00EB000C /* TouchJSON */,
 				DA109EB814F45FF500EB000C /* jrswizzle */,
 				DA109F1114F4604000EB000C /* uicolor-utilities */,
+				DA3EE97D1601C3FB00C68F6D /* LinkDependencies */,
 			);
 		};
 /* End PBXProject section */
@@ -4845,6 +4894,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DA3EE9851601C44E00C68F6D /* Run Script: Copy libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script: Copy libraries";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -x\n\n# scrypt\ncd \"$PROJECT_DIR/External/iOSPorts/ports/security/scrypt\"\nxcodebuild -sdk iphonesimulator -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk iphoneos        -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk macosx          -target scrypt SYMROOT=\"$SYMROOT\" clean build\ncd \"$PROJECT_DIR\"\nlipo \"$BUILD_DIR/Release-iphoneos/libscryptenc.a\" \"$BUILD_DIR/Release-iphonesimulator/libscryptenc.a\" -create -output Pearl-Crypto/libscryptenc-ios.a\ncp \"$BUILD_DIR/Release/libscryptenc.a\" Pearl-Crypto/libscryptenc-osx.a\n\n# openssl\nlipo \"$BUILD_DIR/Release-iphoneos/libcrypto.a\" \"$BUILD_DIR/Release-iphonesimulator/libcrypto.a\" -create -output Pearl-Crypto/libopensslcrypto-ios.a\ncp \"$BUILD_DIR/Release/libcrypto.a\" Pearl-Crypto/libopensslcrypto-osx.a\n";
+		};
 		DAAD430315286F4400AADDBD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5081,6 +5144,7 @@
 				DA3EF1E715A4CEF9003ABF4E /* UIControl+PearlSelect.m in Sources */,
 				DA3EF1E915A4CEF9003ABF4E /* UIImage+PearlScaling.m in Sources */,
 				DA3EF1EB15A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.m in Sources */,
+				DA35097F15EE1A2900C14A8E /* PearlEMail.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5142,6 +5206,9 @@
 				DA3EF1D115A4CE6A003ABF4E /* PearlQueue.m in Sources */,
 				DA3EF1D915A4CECF003ABF4E /* Pearl-Media.m in Sources */,
 				DA3EF1ED15A4CF07003ABF4E /* Pearl-WS.m in Sources */,
+				93D39560B9BAA9FEC56C2EF8 /* NSTimer+PearlBlock.m in Sources */,
+				DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */,
+				DA692D4B16BAC40100F14463 /* NSDictionary+Indexing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5231,6 +5298,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		93D392D41C7E3ED80B5EE67E /* Pearl.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93D39BCB12419257FE3264AC /* nl */,
+			);
+			name = Pearl.strings;
+			sourceTree = "<group>";
+		};
 		DA10974314F438C300EB000C /* Pearl.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -5372,16 +5447,65 @@
 			};
 			name = "Release-iOS";
 		};
+		DA3EE97F1601C3FB00C68F6D /* Debug-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug-iOS";
+		};
+		DA3EE9801601C3FB00C68F6D /* Debug-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug-OSX";
+		};
+		DA3EE9811601C3FB00C68F6D /* Release-iOS */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release-iOS";
+		};
+		DA3EE9821601C3FB00C68F6D /* Release-OSX */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release-OSX";
+		};
 		DAAD42501528652F00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ANALYZER_DEADCODE_DEADSTORES = YES;
+				CLANG_ANALYZER_GCD = YES;
+				CLANG_ANALYZER_MALLOC = YES;
+				CLANG_ANALYZER_OBJC_ATSYNC = YES;
+				CLANG_ANALYZER_OBJC_CFNUMBER = YES;
+				CLANG_ANALYZER_OBJC_COLLECTIONS = YES;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
+				CLANG_ANALYZER_OBJC_NSCFERROR = YES;
+				CLANG_ANALYZER_OBJC_RETAIN_COUNT = YES;
+				CLANG_ANALYZER_OBJC_SELF_INIT = YES;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK = YES;
+				CLANG_ANALYZER_SECURITY_KEYCHAIN_API = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -5417,7 +5541,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
@@ -5480,11 +5604,32 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ANALYZER_DEADCODE_DEADSTORES = YES;
+				CLANG_ANALYZER_GCD = YES;
+				CLANG_ANALYZER_MALLOC = YES;
+				CLANG_ANALYZER_OBJC_ATSYNC = YES;
+				CLANG_ANALYZER_OBJC_CFNUMBER = YES;
+				CLANG_ANALYZER_OBJC_COLLECTIONS = YES;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
+				CLANG_ANALYZER_OBJC_NSCFERROR = YES;
+				CLANG_ANALYZER_OBJC_RETAIN_COUNT = YES;
+				CLANG_ANALYZER_OBJC_SELF_INIT = YES;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK = YES;
+				CLANG_ANALYZER_SECURITY_KEYCHAIN_API = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -5854,11 +5999,32 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ANALYZER_DEADCODE_DEADSTORES = YES;
+				CLANG_ANALYZER_GCD = YES;
+				CLANG_ANALYZER_MALLOC = YES;
+				CLANG_ANALYZER_OBJC_ATSYNC = YES;
+				CLANG_ANALYZER_OBJC_CFNUMBER = YES;
+				CLANG_ANALYZER_OBJC_COLLECTIONS = YES;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
+				CLANG_ANALYZER_OBJC_NSCFERROR = YES;
+				CLANG_ANALYZER_OBJC_RETAIN_COUNT = YES;
+				CLANG_ANALYZER_OBJC_SELF_INIT = YES;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK = YES;
+				CLANG_ANALYZER_SECURITY_KEYCHAIN_API = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -5894,7 +6060,7 @@
 				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
@@ -5914,11 +6080,32 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ANALYZER_DEADCODE_DEADSTORES = YES;
+				CLANG_ANALYZER_GCD = YES;
+				CLANG_ANALYZER_MALLOC = YES;
+				CLANG_ANALYZER_OBJC_ATSYNC = YES;
+				CLANG_ANALYZER_OBJC_CFNUMBER = YES;
+				CLANG_ANALYZER_OBJC_COLLECTIONS = YES;
+				CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES = YES;
+				CLANG_ANALYZER_OBJC_NSCFERROR = YES;
+				CLANG_ANALYZER_OBJC_RETAIN_COUNT = YES;
+				CLANG_ANALYZER_OBJC_SELF_INIT = YES;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK = YES;
+				CLANG_ANALYZER_SECURITY_KEYCHAIN_API = YES;
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6064,6 +6251,17 @@
 				DAAD42571528652F00AADDBD /* Debug-OSX */,
 				DA109F1C14F4604000EB000C /* Release-iOS */,
 				DAAD425F1528653800AADDBD /* Release-OSX */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-OSX";
+		};
+		DA3EE97E1601C3FB00C68F6D /* Build configuration list for PBXAggregateTarget "LinkDependencies" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA3EE97F1601C3FB00C68F6D /* Debug-iOS */,
+				DA3EE9801601C3FB00C68F6D /* Debug-OSX */,
+				DA3EE9811601C3FB00C68F6D /* Release-iOS */,
+				DA3EE9821601C3FB00C68F6D /* Release-OSX */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-OSX";

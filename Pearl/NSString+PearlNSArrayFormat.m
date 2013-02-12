@@ -24,28 +24,20 @@
     @try {
         [arguments getObjects:argList];
 
-#if TARGET_OS_IPHONE
-        return [self initWithFormat:format arguments:(va_list)(void *)argList];
-#else
-        return [self initWithFormat:format arguments:(__va_list_tag *)(void *)argList];
-#endif
+        return [self initWithFormat:format arguments:(void *)argList];
     }
     @finally {
         free(argList);
     }
 }
 
-+ (NSString *)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
++ (instancetype)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
 
     __unsafe_unretained id *argList = (typeof(argList))calloc([arguments count], sizeof(id));
     @try {
         [arguments getObjects:argList];
 
-#if TARGET_OS_IPHONE
-        return [[NSString alloc] initWithFormat:format arguments:(va_list)(void *)argList];
-#else
-        return [[NSString alloc] initWithFormat:format arguments:(__va_list_tag *)(void *)argList];
-#endif
+        return [[self alloc] initWithFormat:format arguments:(void *)argList];
     }
     @finally {
         free(argList);

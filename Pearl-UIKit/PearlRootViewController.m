@@ -16,9 +16,16 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlRootViewController.h"
+#import "PearlUIUtils.h"
+#import "PearlAppDelegate.h"
 
+@interface PearlRootViewController ()
+
+@property (nonatomic, retain) NSMutableArray *mySupportedIterfaceOrientations;
+
+@end
 @implementation PearlRootViewController
-@synthesize supportedIterfaceOrientations = _supportedIterfaceOrientations;
 
 static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orientation) {
 
@@ -45,7 +52,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!self.title)
         self.title = @"Root View Controller";
 
-    self.supportedIterfaceOrientations = [NSMutableArray array];
+    self.mySupportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
         [self supportInterfaceOrientationString:interfaceOrientation];
@@ -71,7 +78,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!self.title)
         self.title = @"Root View Controller";
 
-    self.supportedIterfaceOrientations = [NSMutableArray array];
+    self.mySupportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
         [self supportInterfaceOrientationString:interfaceOrientation];
@@ -87,7 +94,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     if (!self.title)
         self.title = @"Root View Controller";
 
-    self.supportedIterfaceOrientations = [NSMutableArray array];
+    self.mySupportedIterfaceOrientations = [NSMutableArray array];
     [self supportInterfaceOrientationString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"UIInterfaceOrientation"]];
     for (NSString *interfaceOrientation in [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UISupportedInterfaceOrientations"])
         [self supportInterfaceOrientationString:interfaceOrientation];
@@ -120,7 +127,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 
 - (BOOL)isInterfaceOrientationSupported:(UIInterfaceOrientation)interfaceOrientation {
 
-    for (NSNumber *supportedInterfaceOrientation in self.supportedIterfaceOrientations)
+    for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
         if ([supportedInterfaceOrientation unsignedIntValue] == interfaceOrientation)
             return YES;
 
@@ -145,24 +152,30 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 - (void)supportInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
     if (![self isInterfaceOrientationSupported:interfaceOrientation])
-        [self.supportedIterfaceOrientations addObject:[NSNumber numberWithUnsignedInt:interfaceOrientation]];
+        [self.mySupportedIterfaceOrientations addObject:[NSNumber numberWithUnsignedInt:interfaceOrientation]];
 }
 
 - (void)rejectInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-    for (NSNumber *supportedInterfaceOrientation in self.supportedIterfaceOrientations)
+    for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
         if ([supportedInterfaceOrientation unsignedIntValue] == interfaceOrientation) {
-            [self.supportedIterfaceOrientations removeObject:supportedInterfaceOrientation];
+            [self.mySupportedIterfaceOrientations removeObject:supportedInterfaceOrientation];
             return;
         }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (NSUInteger)supportedInterfaceOrientations {
+    
+    NSUInteger supportedInterfaceOrientations = 0;
+    for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
+        supportedInterfaceOrientations |= [supportedInterfaceOrientation unsignedIntegerValue];
+    
+    return supportedInterfaceOrientations;
+}
 
-    BOOL rotate = [self isInterfaceOrientationSupported:interfaceOrientation];
-    dbg(@"shouldAutorotateTo: %@ = %@", NSStringFromUIInterfaceOrientation(interfaceOrientation), rotate? @"YES": @"NO");
-
-    return rotate;
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    
+    return (UIInterfaceOrientation)[[self.mySupportedIterfaceOrientations objectAtIndex:0] unsignedIntegerValue];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

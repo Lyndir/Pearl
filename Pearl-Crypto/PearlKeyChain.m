@@ -17,8 +17,10 @@
 //
 //  See http://www.cocoadev.com/index.pl?BaseSixtyFour
 
+#import <CommonCrypto/CommonHMAC.h>
+#import "PearlKeyChain.h"
 #import "PearlCryptUtils.h"
-
+#import "PearlLogger.h"
 
 @implementation NSString (PearlKeyChain)
 
@@ -72,6 +74,10 @@
     // Malloc a buffer to hold signature.
     size_t signedHashBytesSize = SecKeyGetBlockSize(privateKey);
     uint8_t *signedHashBytes = calloc(signedHashBytesSize, sizeof(uint8_t));
+    if (!signedHashBytes) {
+        err(@"Couldn't allocate signed hash bytes: %@", errstr());
+        return nil;
+    }
 
     // Sign the SHA1 hash.
     status = SecKeyRawSign(privateKey, padding,
@@ -80,13 +86,13 @@
     CFRelease(privateKey);
     if (status != errSecSuccess) {
         err(@"During data signing: %@", NSStringFromErrSec(status));
+        free(signedHashBytes);
         return nil;
     }
 
     // Build up signed SHA1 blob.
     NSData *signedData = [NSData dataWithBytes:signedHashBytes length:signedHashBytesSize];
-    if (signedHashBytes)
-        free(signedHashBytes);
+    free(signedHashBytes);
 
     return signedData;
 }
@@ -161,6 +167,7 @@
 + (OSStatus)deleteItemForQuery:(NSDictionary *)query {
 
     OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
+    trc(@"SecItemDelete(%@) = %@", query, NSStringFromErrSec(status));
     if (status != noErr && status != errSecItemNotFound)
     err(@"While deleting keychain item: %@: %@",
     query, NSStringFromErrSec(status));
@@ -181,6 +188,9 @@
 + (NSDictionary *)createQueryForClass:(CFTypeRef)kSecClassValue
                            attributes:(NSDictionary *)kSecAttrDictionary
                               matches:(NSDictionary *)kSecMatchDictionary {
+
+    if (![kSecAttrDictionary count])
+        wrn(@"No attributes when creating keychain query.");
 
     NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:(__bridge id)kSecClassValue forKey:(__bridge id)kSecClass];
     [query addEntriesFromDictionary:kSecAttrDictionary];
@@ -210,6 +220,11 @@
 
 + (NSData *)persistentItemForQuery:(NSDictionary *)query {
 
+    if (![query count]) {
+        wrn(@"Missing query.");
+        return nil;
+    }
+    
     return (NSData *)[self runQuery:query returnType:kSecReturnPersistentRef];
 }
 
@@ -220,6 +235,11 @@
 
 + (NSData *)dataOfItemForQuery:(NSDictionary *)query {
 
+    if (![query count]) {
+        wrn(@"Missing query.");
+        return nil;
+    }
+    
     return (NSData *)[self runQuery:query returnType:kSecReturnData];
 }
 

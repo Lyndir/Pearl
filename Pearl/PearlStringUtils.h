@@ -20,12 +20,8 @@
 
 __BEGIN_DECLS
 extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
-
-#define PearlLocalize(key, ...) \
-    PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:nil table:nil] , ##__VA_ARGS__)
-
-#define PearlLocalizeTable(tableName, key, ...) \
-    PearlString([[NSBundle mainBundle] localizedStringForKey:(key) value:nil table:tableName] , ##__VA_ARGS__)
+extern NSString *PearlLocalize(NSString *format, ...) NS_FORMAT_FUNCTION(1, 0);
+extern NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION(2, 0);
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 extern NSString *RPad(const NSString *string, NSUInteger l);

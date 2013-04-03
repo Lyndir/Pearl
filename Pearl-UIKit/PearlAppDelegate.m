@@ -122,7 +122,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
 #ifdef PEARL_UIKIT
-    [[PearlAlert activeAlerts] makeObjectsPerformSelector:@selector(dismissAlert)];
+    [[PearlAlert activeAlerts] makeObjectsPerformSelector:@selector(cancelAlert)];
 #endif
 }
 

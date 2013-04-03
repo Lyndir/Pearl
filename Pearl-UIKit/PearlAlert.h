@@ -29,10 +29,9 @@
 @private
     UIAlertView *alertView;
     UITextField *alertField;
-
-    void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
 }
 
+@property (nonatomic, copy) void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
 @property (nonatomic, retain) UIAlertView *alertView;
 @property (nonatomic, retain) UITextField *alertField;
 
@@ -74,7 +73,8 @@
 * Show an alert that contains only an activity indicator (no message and no buttons).
 */
 + (instancetype)showActivityWithTitle:(NSString *)title;
-+ (instancetype)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock;
++ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message;
++ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message initAlert:(void (^)(UIAlertView *alert))initBlock;
 
 /**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
@@ -96,8 +96,13 @@
 - (PearlAlert *)showAlert;
 
 /**
+ * @return YES if the alert view is currently visible.
+ */
+- (BOOL)isVisible;
+
+/**
  * Dismiss the alert managed by this view controller as though the back button had been tapped.
  */
-- (PearlAlert *)dismissAlert;
+- (PearlAlert *)cancelAlert;
 
 @end

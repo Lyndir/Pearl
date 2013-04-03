@@ -60,7 +60,7 @@
     if (!(self = [super init]))
         return self;
 
-    tappedButtonBlock = [aTappedButtonBlock copy];
+    self.tappedButtonBlock = aTappedButtonBlock;
     alertView         = [[UIAlertView alloc] initWithTitle:title message:message delegate:self
                                          cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
 
@@ -167,25 +167,27 @@
 
 + (instancetype)showActivityWithTitle:(NSString *)title {
 
-    return [self showAlertWithTitle:title message:@"\n\n" viewStyle:UIAlertViewStyleDefault initAlert:
-     ^(UIAlertView *alert, UITextField *firstField) {
-         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-         activityIndicator.center = CGPointMake(140, 90);
-         [activityIndicator startAnimating];
-         [alert addSubview:activityIndicator];
-     }            tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
+    return [self showActivityWithTitle:title message:nil initAlert:nil];
 }
 
-+ (instancetype)showActivityWithTitle:(NSString *)title initAlert:(void (^)(UIAlertView *alert))initBlock {
++ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message {
 
-    return [self showAlertWithTitle:title message:@"\n\n" viewStyle:UIAlertViewStyleDefault initAlert:
+    return [self showActivityWithTitle:title message:message initAlert:nil];
+}
+
++ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message
+                            initAlert:(void (^)(UIAlertView *alert))initBlock {
+
+    return [self showAlertWithTitle:title message:PearlString( @"\n\n%@", message? PearlString( @"\n\n%@", message ): @"" )
+                          viewStyle:UIAlertViewStyleDefault initAlert:
      ^(UIAlertView *alert, UITextField *firstField) {
          UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-         activityIndicator.center = CGPointMake(140, 90);
+         activityIndicator.center = CGPointMake( 142, 90 );
          [activityIndicator startAnimating];
          [alert addSubview:activityIndicator];
 
-         initBlock(alert);
+         if (initBlock)
+            initBlock(alert);
      }            tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
 }
 
@@ -203,11 +205,15 @@
     return self;
 }
 
+- (BOOL)isVisible {
 
-- (PearlAlert *)dismissAlert {
+    return [alertView isVisible];
+}
+
+- (PearlAlert *)cancelAlert {
 
     PearlMainThread(^{
-        [alertView dismissWithClickedButtonIndex:0 animated:YES];
+        [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:YES];
     });
 
     return self;
@@ -216,8 +222,8 @@
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    if (tappedButtonBlock)
-        tappedButtonBlock(self.alertView, buttonIndex);
+    if (self.tappedButtonBlock)
+        self.tappedButtonBlock(self.alertView, buttonIndex);
 }
 
 - (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

@@ -128,6 +128,10 @@
     return self;
 }
 
+- (BOOL)isVisible {
+
+    return [sheetView isVisible];
+}
 
 - (PearlSheet *)dismissSheet {
 

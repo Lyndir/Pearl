@@ -78,6 +78,11 @@
 - (PearlSheet *)showSheet;
 
 /**
+ * @return YES if the sheet is currently visible.
+ */
+- (BOOL)isVisible;
+
+/**
  * Dismiss the sheet managed by this controller.
  *
  * @return  self, for chaining.

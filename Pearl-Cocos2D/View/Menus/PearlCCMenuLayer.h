@@ -24,7 +24,7 @@ typedef enum {
     PearlCCMenuLayoutVertical,
     PearlCCMenuLayoutColumns,
     PearlCCMenuLayoutCustomColumns,
-    PearlCCMenuLayoutCustomRows,
+    PearlCCMenuLayoutCustomRows
 } PearlCCMenuLayout;
 
 @class PearlCCMenuLayer;

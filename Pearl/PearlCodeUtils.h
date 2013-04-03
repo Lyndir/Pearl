@@ -29,7 +29,7 @@ typedef enum {
     PearlHashSHA256,
     PearlHashSHA384,
     PearlHashSHA512,
-    PearlHashCount,
+    PearlHashCount
 } PearlHash;
 
 PearlHash PearlHashFromNSString(NSString *hash);

@@ -26,6 +26,26 @@ NSString *PearlString(NSString *format, ...) {
 
     return string;
 }
+NSString *PearlLocalize(NSString *format, ...) {
+    
+    va_list argList;
+    va_start(argList, format);
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
+                                           arguments:argList];
+    va_end(argList);
+    
+    return msg;
+}
+NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) {
+    
+    va_list argList;
+    va_start(argList, format);
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
+                                           arguments:argList];
+    va_end(argList);
+    
+    return msg;
+}
 
 NSString *RPad(const NSString *string, const NSUInteger l) {
 

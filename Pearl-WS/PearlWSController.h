@@ -25,13 +25,13 @@ typedef enum {
     /** Submit the parameters in a www-form encoded HTTP-POST request. */
      PearlWSRequestMethodPOST_REST,
     /** Submit the parameters in a JSON encoded HTTP-POST request. */
-     PearlWSRequestMethodPOST_JSON,
+     PearlWSRequestMethodPOST_JSON
 } PearlWSRequestMethod;
 
 typedef enum {
     PearlJSONResultCodeSuccess        = 0,
     PearlJSONResultCodeGenericFailure = -1,
-    PearlJSONResultCodeUpdateRequired = -2,
+    PearlJSONResultCodeUpdateRequired = -2
 } PearlJSONResultCode;
 __END_DECLS
 

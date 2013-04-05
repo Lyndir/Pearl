@@ -71,6 +71,17 @@
                     dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
 
+#define PearlAssociatedObjectProperty(__type, __name, __getter)                                 \
+            PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, OBJC_ASSOCIATION_RETAIN)
+#define PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, __association)       \
+            static char __name ## Key;                                                          \
+            - (void)set ## __name :( __type ) __name {                                          \
+                objc_setAssociatedObject( self, & __name ## Key, __name, __association );       \
+            }                                                                                   \
+            - ( __type ) __getter {                                                             \
+                return objc_getAssociatedObject( self, & __name ## Key );                       \
+            }
+
 @interface PearlObjectUtils : NSObject
 
 + (id)getNil;

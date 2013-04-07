@@ -10,9 +10,9 @@
 
 #ifdef PEARL_WITH_OPENSSL
 
-#include <openssl/err.h>
-#include <openssl/ssl.h>
-#include <openssl/pkcs12.h>
+#include "openssl/err.h"
+#include "openssl/ssl.h"
+#include "openssl/pkcs12.h"
 
 #define rsaKey ((RSA *)_key)
 #define rsaKeyIn ((RSA **)&_key)

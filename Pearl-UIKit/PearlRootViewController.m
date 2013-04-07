@@ -122,7 +122,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
             break;
     }
 
-    self.view.center = CGPointFromCGSizeCenter(self.view.frame.size);
+    self.view.center = CGPointMultiply(CGPointFromCGSize(self.view.frame.size), 0.5);
 }
 
 - (BOOL)isInterfaceOrientationSupported:(UIInterfaceOrientation)interfaceOrientation {

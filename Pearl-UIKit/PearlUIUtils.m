@@ -17,6 +17,7 @@
 //
 
 #import <objc/runtime.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import "PearlUIUtils.h"
 #import "PearlBoxView.h"
 
@@ -110,9 +111,52 @@ CGSize CGSizeFromCGPoint(const CGPoint point) {
     return CGSizeMake(point.x, point.y);
 }
 
-CGRect CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size) {
+CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size) {
 
-    return CGRectMake(point.x, point.y, size.width, size.height);
+    return CGRectMake( origin.x, origin.y, size.width, size.height);
+}
+
+CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size) {
+
+    return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height);
+}
+
+CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
+
+    if (size.width == CGFLOAT_MAX) {
+        if (left == CGFLOAT_MAX && right == CGFLOAT_MAX)
+            left = right = size.width = parent.size.width / 3;
+        else if (left == CGFLOAT_MAX)
+            left = size.width = (parent.size.width - right) / 2;
+        else if (right == CGFLOAT_MAX)
+            right = size.width = (parent.size.width - left) / 2;
+        else
+            size.width = parent.size.width - left - right;
+    }
+    if (size.height == CGFLOAT_MAX) {
+        if (top == CGFLOAT_MAX && bottom == CGFLOAT_MAX)
+            top = bottom = size.height = parent.size.height / 3;
+        else if (top == CGFLOAT_MAX)
+            top = size.height = (parent.size.height - bottom) / 2;
+        else if (bottom == CGFLOAT_MAX)
+            bottom = size.height = (parent.size.height - top) / 2;
+        else
+            size.height = parent.size.height - top - bottom;
+    }
+    if (top == CGFLOAT_MAX) {
+        if (bottom == CGFLOAT_MAX)
+            top = (parent.size.height - size.height) / 2;
+        else
+            top = parent.size.height - size.height - bottom;
+    }
+    if (left == CGFLOAT_MAX) {
+        if (right == CGFLOAT_MAX)
+            left = (parent.size.width - size.width) / 2;
+        else
+            left = parent.size.width - size.width - right;
+    }
+
+    return CGRectFromOriginWithSize( CGPointMake( parent.origin.x + left, parent.origin.y + top ), size );
 }
 
 CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract) {
@@ -125,6 +169,15 @@ CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add) {
     return CGPointMake(origin.x + add.x, origin.y + add.y);
 }
 
+CGPoint CGPointMultiply(const CGPoint origin, const CGFloat multiply) {
+
+    return CGPointMake( origin.x * multiply, origin.y * multiply );
+}
+
+CGPoint CGPointMultiplyCGPoint(const CGPoint origin, const CGPoint multiply) {
+
+    return CGPointMake( origin.x * multiply.x, origin.y * multiply.y );
+}
 
 CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
@@ -156,14 +209,14 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 @synthesize keyboardScrollViewOriginalFrame = _keyboardScrollViewOriginalFrame;
 
 - (id)init {
-    
+
     if (!(self = [super init])) {
         return nil;
     }
-    
+
     self.keyboardScrollViewOriginalFrame = CGRectNull;
     self.keyboardScrollViewOriginalOffset = CGPointZero;
-    
+
     return self;
 }
 
@@ -188,7 +241,7 @@ static NSMutableSet *dismissableResponders;
 
 - (UIImage *)highlightedImage {
 
-    const CGRect bounds = CGRectFromCGPointAndCGSize(CGPointZero, self.size);
+    const CGRect bounds = CGRectFromOriginWithSize(CGPointZero, self.size);
     UIColor *color = [[UIColor alloc] initWithWhite:1 alpha:0.7f];
 
     UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
@@ -289,7 +342,7 @@ static NSMutableSet *dismissableResponders;
                            selector:@selector(keyboardWillHide:)
                                name:UIKeyboardWillHideNotification
                              object:nil];
-    
+
     if (nil == keyboardScrollViews) {
         keyboardScrollViews = [[NSMutableArray alloc] initWithCapacity:1];
     }
@@ -301,7 +354,7 @@ static NSMutableSet *dismissableResponders;
         }
     }
     if (!found) {
-     
+
         PearlUIUtilsKeyboardScrollView *pearlKBSV = [[PearlUIUtilsKeyboardScrollView alloc] init];
         pearlKBSV.keyboardScrollView = self;
         [keyboardScrollViews addObject:pearlKBSV];
@@ -311,6 +364,16 @@ static NSMutableSet *dismissableResponders;
 @end
 
 @implementation UIView (PearlUIUtils)
+
+- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+
+    [self setFrameFromSize:self.frame.size andParentPaddingTop:top right:right bottom:bottom left:left];
+}
+
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+
+    self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, size, top, right, bottom, left );
+}
 
 - (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
 
@@ -624,12 +687,12 @@ static NSMutableSet *dismissableResponders;
 @implementation UIViewController (PearlUIUtils)
 
 - (UIViewController *)localizeProperties {
-    
+
     // VC properties
     self.title = [PearlUIUtils applyLocalization:self.title];
     self.navigationItem.title = [PearlUIUtils applyLocalization:self.navigationItem.title];
     [self.navigationItem.titleView localizeProperties];
-    
+
     // Toolbar items
     for (UIBarButtonItem *item in [self toolbarItems]) {
         NSSet *titles = [item possibleTitles];
@@ -638,7 +701,7 @@ static NSMutableSet *dismissableResponders;
             [localizedTitles addObject:[PearlUIUtils applyLocalization:title]];
         [item setPossibleTitles:localizedTitles];
     }
-    
+
     // VC view hierarchy
     [self.view localizeProperties];
 
@@ -716,26 +779,26 @@ static NSMutableSet *dismissableResponders;
 }
 
 + (void)keyboardWillShow:(NSNotification *)n {
-    
+
     UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
     if (!responder)
      // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
      // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
-    
+
     // Find the active scrollview in our dictionary
     PearlUIUtilsKeyboardScrollView *activePearlKBSV = nil;
     if (nil != keyboardScrollViews && [keyboardScrollViews count] > 0) {
-        
+
         for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
             if ([responder isDescendantOfView:pearlKBSV.keyboardScrollView]) {
                 activePearlKBSV = pearlKBSV;
             }
         }
     }
-       
+
     keyboardScrollView_shouldHide = NO;
-    
+
     if (nil == activePearlKBSV) {
         // Make sure the responder is a descendant of the current view.
         return;
@@ -751,7 +814,7 @@ static NSMutableSet *dismissableResponders;
 
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
     keyboardScrollView_resized = activePearlKBSV.keyboardScrollView;
-    
+
     NSDictionary *userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect scrollRect   = [keyboardScrollView_resized frameInWindow];
@@ -779,7 +842,7 @@ static NSMutableSet *dismissableResponders;
      // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
         keyboardScrollNewFrame = CGRectNull;
     }
-    
+
     if (!CGRectIsNull(keyboardScrollNewFrame)) {
         UIScrollView *animatingScrollView = keyboardScrollView_resized;
         [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
@@ -810,7 +873,7 @@ static NSMutableSet *dismissableResponders;
         err(@"No PearlKBSV found in dictionary yet got keyboardWillHide notification...");
         return;
     }
-    
+
     CGRect  animatingScrollView_originalFrame  = currentPearlKBSV.keyboardScrollViewOriginalFrame;
     CGPoint animatingScrollView_originalOffset = currentPearlKBSV.keyboardScrollViewOriginalOffset;
     keyboardScrollView_shouldHide = YES;
@@ -818,7 +881,7 @@ static NSMutableSet *dismissableResponders;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!keyboardScrollView_shouldHide)
             return;
-        
+
         currentPearlKBSV.keyboardScrollViewOriginalFrame = CGRectNull;
         currentPearlKBSV.keyboardScrollViewOriginalOffset = CGPointZero;
 
@@ -839,7 +902,7 @@ static NSMutableSet *dismissableResponders;
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {
-    
+
     if (!localizableValue)
         return nil;
 
@@ -857,13 +920,13 @@ static NSMutableSet *dismissableResponders;
              if (NSEqualRanges(localizationKeyRange,
                                NSMakeRange(NSNotFound, 0)))
                  return;
-             
+
              NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
              NSString *defaultValue    = nil;
              if (!NSEqualRanges(defaultValueRange,
                                 NSMakeRange(NSNotFound, 0)))
                  defaultValue = [localizableValue substringWithRange:defaultValueRange];
-             
+
              localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
          }
      }];

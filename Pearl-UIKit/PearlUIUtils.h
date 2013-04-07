@@ -39,10 +39,15 @@ extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 extern CGPoint CGPointFromCGSize(const CGSize size);
 extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
 extern CGSize  CGSizeFromCGPoint(const CGPoint point);
-extern CGRect  CGRectFromCGPointAndCGSize(const CGPoint point, const CGSize size);
+extern CGRect  CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
+extern CGRect  CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
+/** Use CGFLOAT_MAX in size or padding for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
+extern CGRect  CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
 
 extern CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract);
 extern CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add);
+extern CGPoint CGPointMultiply(const CGPoint origin, const CGFloat multiply);
+extern CGPoint CGPointMultiplyCGPoint(const CGPoint origin, const CGPoint multiply);
 
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
@@ -100,6 +105,9 @@ __END_DECLS
 @end
 
 @interface UIView (PearlUIUtils)
+
+- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 
 - (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;

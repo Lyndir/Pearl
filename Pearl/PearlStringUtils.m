@@ -26,6 +26,13 @@ NSString *PearlString(NSString *format, ...) {
 
     return string;
 }
+
+NSAttributedString *PearlAttributeString(NSString *string, NSRange range, NSDictionary *attributes) {
+
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    [attributedString setAttributes:attributes range:range];
+    return (id)attributedString;
+}
 NSString *PearlLocalize(NSString *format, ...) {
     
     va_list argList;

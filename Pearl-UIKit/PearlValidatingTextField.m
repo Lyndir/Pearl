@@ -33,6 +33,8 @@
     if (!(self = [super initWithCoder:aDecoder]))
         return self;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     _validView   = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accept.png"]];
     _invalidView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"exclamation.png"]];
     self.rightViewMode = UITextFieldViewModeAlways;

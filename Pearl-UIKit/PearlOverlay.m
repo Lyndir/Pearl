@@ -43,6 +43,8 @@ static __strong PearlOverlay *activeOverlay = nil;
     if (!(self = [super init]))
         return nil;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
 
     _title = title;

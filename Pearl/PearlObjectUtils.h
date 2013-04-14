@@ -71,6 +71,17 @@
                     dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
 
+#define PEARL_MAIN_THREAD_START                                                                 \
+            ({                                                                                  \
+                dispatch_block_t __pearl_main_thread_block = ^{
+#define PEARL_MAIN_THREAD_END                                                                   \
+                };                                                                              \
+                if ([NSThread isMainThread])                                                    \
+                    __pearl_main_thread_block();                                                \
+                else                                                                            \
+                    dispatch_async(dispatch_get_main_queue(), __pearl_main_thread_block);       \
+            });
+
 #define PearlAssociatedObjectProperty(__type, __name, __getter)                                 \
             PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, OBJC_ASSOCIATION_RETAIN)
 #define PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, __association)       \

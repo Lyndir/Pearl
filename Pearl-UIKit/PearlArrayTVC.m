@@ -41,6 +41,8 @@
     if (!(self = [super initWithCoder:aDecoder]))
         return self;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     _sections = [NSMutableArray new];
 
     return self;

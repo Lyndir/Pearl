@@ -60,6 +60,8 @@
     if (!(self = [super init]))
         return self;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     self.tappedButtonBlock = aTappedButtonBlock;
     alertView         = [[UIAlertView alloc] initWithTitle:title message:message delegate:self
                                          cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
@@ -90,7 +92,6 @@
 
             [self.alertView addSubview:alertLabel];
             [self.alertView addSubview:self.alertField];
-            [alertField becomeFirstResponder];
         }
 
     if (firstOtherTitle) {
@@ -101,6 +102,8 @@
 
     if (initBlock)
         initBlock(alertView, alertField);
+
+    [self.alertField becomeFirstResponder];
 
     return self;
 }

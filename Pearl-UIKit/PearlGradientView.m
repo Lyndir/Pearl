@@ -27,6 +27,8 @@
     if (!(self = [super init]))
         return nil;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     CGFloat newComponents[2 * 4] = {
      topColor.red, topColor.green, topColor.blue, topColor.alpha,
      bottomColor.red, bottomColor.green, bottomColor.blue, bottomColor.alpha,

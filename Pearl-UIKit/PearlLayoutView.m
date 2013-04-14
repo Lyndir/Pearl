@@ -47,6 +47,8 @@
     if (!(self = [super initWithFrame:CGRectMake(0, 0, width, height)]))
         return self;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     CGSize  size = contentView.frame.size;
     CGFloat x    = 0, y = 0;
     switch (gravity) {

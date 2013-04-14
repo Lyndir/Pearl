@@ -48,6 +48,8 @@
     if (!(self = [super init]))
         return self;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
     CGRect contentFrame     = applicationFrame;
     contentFrame.origin = CGPointZero;

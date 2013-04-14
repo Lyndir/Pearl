@@ -66,6 +66,8 @@
     if (!(self = [super init]))
         return nil;
 
+    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+
     self.composer = [MFMailComposeViewController new];
     [self.composer setMailComposeDelegate:self];
     if (recipient)

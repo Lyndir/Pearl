@@ -101,7 +101,21 @@
     if ([vc presentedViewController])
         wrn(@"Won't be able to show composer, given VC is already presenting something.");
     
-    [vc presentViewController:self.composer animated:YES completion:nil];
+    // Remove custom font for navigation bar: Causes a bug in iOS when presenting the MFMailComposeViewController.
+    NSMutableDictionary *navBarTitleAttributes = [[UINavigationBar appearance] titleTextAttributes].mutableCopy;
+    UIFont *navBarTitleFont = navBarTitleAttributes[UITextAttributeFont];
+    navBarTitleAttributes[UITextAttributeFont] = [UIFont systemFontOfSize:navBarTitleFont.pointSize];
+    [[UINavigationBar appearance] setTitleTextAttributes:navBarTitleAttributes];
+
+    // Present the MFMailComposeViewController.
+    [vc presentViewController:self.composer animated:YES completion:^{
+        // Add back our custom font.
+        if (navBarTitleFont) {
+            navBarTitleAttributes[UITextAttributeFont] = navBarTitleFont;
+            [[UINavigationBar appearance] setTitleTextAttributes:navBarTitleAttributes];
+        }
+    }];
+
     [[PearlEMail activeComposers] addObject:self];
 }
 

@@ -24,16 +24,11 @@
  *
  * The user is presented with a message in an alert dialog and (a) configurable button(s).
  */
-@interface PearlAlert : NSObject<UIAlertViewDelegate> {
-
-@private
-    UIAlertView *alertView;
-    UITextField *alertField;
-}
+@interface PearlAlert : NSObject<UIAlertViewDelegate>
 
 @property (nonatomic, copy) void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
-@property (nonatomic, retain) UIAlertView *alertView;
-@property (nonatomic, retain) UITextField *alertField;
+@property (nonatomic, strong) UIAlertView *alertView;
+@property (nonatomic, strong) UITextField *alertField;
 
 
 #pragma mark ###############################
@@ -103,6 +98,6 @@
 /**
  * Dismiss the alert managed by this view controller as though the back button had been tapped.
  */
-- (PearlAlert *)cancelAlert;
+- (PearlAlert *)cancelAlertAnimated:(BOOL)animated;
 
 @end

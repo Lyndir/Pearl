@@ -18,6 +18,16 @@
 
 #import <Foundation/Foundation.h>
 
+
+#define va_list_array(__list)                                                                   \
+            ({                                                                                  \
+                NSMutableArray *__array = [NSMutableArray array];                               \
+                for (id __object; (__object = va_arg(__list, id));)                             \
+                    [__array addObject:__object];                                               \
+                va_end(__list);                                                                 \
+                __array;                                                                        \
+            })
+
 #define va_array(__firstParameter)                                                              \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -71,11 +81,11 @@
                     dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
             })
 
-#define PEARL_MAIN_THREAD_START                                                                 \
+#define PearlMainThreadStart                                                                 \
             ({                                                                                  \
-                dispatch_block_t __pearl_main_thread_block = ^{
-#define PEARL_MAIN_THREAD_END                                                                   \
-                };                                                                              \
+                dispatch_block_t __pearl_main_thread_block = ^
+#define PearlMainThreadEnd                                                                   \
+                ;                                                                              \
                 if ([NSThread isMainThread])                                                    \
                     __pearl_main_thread_block();                                                \
                 else                                                                            \

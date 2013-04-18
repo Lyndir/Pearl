@@ -16,10 +16,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2009. All rights reserved.
 //
 
-#import "PearlSheet.h"
-
 @implementation PearlSheet
-@synthesize sheetView;
 
 + (NSMutableArray *)activeSheets {
 
@@ -36,8 +33,7 @@
 
 - (id)initWithTitle:(NSString *)title cancelTitle:(NSString *)cancelTitle {
 
-    return [self initWithTitle:title viewStyle:UIActionSheetStyleAutomatic initSheet:nil tappedButtonBlock:nil
-                   cancelTitle:cancelTitle
+    return [self initWithTitle:title viewStyle:UIActionSheetStyleAutomatic initSheet:nil tappedButtonBlock:nil cancelTitle:cancelTitle
               destructiveTitle:nil otherTitles:nil];
 }
 
@@ -66,21 +62,24 @@
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    tappedButtonBlock = [aTappedButtonBlock copy];
-    sheetView         = [[UIActionSheet alloc] initWithTitle:title delegate:self
-                                           cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle,
-                                                                                                                           nil];
-    sheetView.actionSheetStyle = viewStyle;
+    _tappedButtonBlock = [aTappedButtonBlock copy];
+    _sheetView = [[UIActionSheet alloc] initWithTitle:title delegate:self
+                                    cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle,
+                                                                                                                    nil];
+    _sheetView.actionSheetStyle = viewStyle;
 
     if (firstOtherTitle) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
-            [sheetView addButtonWithTitle:otherTitle];
+            [_sheetView addButtonWithTitle:otherTitle];
         va_end(otherTitlesList);
     }
-    if (initBlock)
-        initBlock(sheetView);
-    if (cancelTitle)
-        sheetView.cancelButtonIndex = [sheetView addButtonWithTitle:cancelTitle];
+
+    PearlMainThreadStart {
+        if (initBlock)
+            initBlock( _sheetView );
+        if (cancelTitle)
+            _sheetView.cancelButtonIndex = [_sheetView addButtonWithTitle:cancelTitle];
+    } PearlMainThreadEnd
 
     return self;
 }
@@ -116,7 +115,11 @@
 
 - (PearlSheet *)showSheet {
 
+    UIActionSheet *sheetView = self.sheetView;
     PearlMainThread(^{
+        if (!sheetView)
+            return;
+
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         if (!window)
             window = [[UIApplication sharedApplication].windows objectAtIndex:0];
@@ -132,29 +135,28 @@
 
 - (BOOL)isVisible {
 
-    return [sheetView isVisible];
+    return [self.sheetView isVisible];
 }
 
-- (PearlSheet *)dismissSheet {
+- (PearlSheet *)cancelSheetAnimated:(BOOL)animated {
 
+    __weak UIActionSheet *sheet = self.sheetView;
     PearlMainThread(^{
-        [sheetView dismissWithClickedButtonIndex:0 animated:YES];
+        [sheet dismissWithClickedButtonIndex:[sheet cancelButtonIndex] animated:animated];
     });
 
     return self;
 }
 
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    if (tappedButtonBlock)
-        tappedButtonBlock(self.sheetView, buttonIndex);
+    if (self.tappedButtonBlock)
+        self.tappedButtonBlock( self.sheetView, buttonIndex );
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     [((NSMutableArray *)[PearlSheet activeSheets]) removeObject:self];
 }
-
 
 @end

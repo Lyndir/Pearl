@@ -24,15 +24,10 @@
  *
  * The user is presented with a message in small font at the bottom of the screen along with some buttons that let him choose an action.
  */
-@interface PearlSheet : NSObject<UIActionSheetDelegate> {
+@interface PearlSheet : NSObject<UIActionSheetDelegate>
 
-@private
-    UIActionSheet *sheetView;
-
-    void (^tappedButtonBlock)(UIActionSheet *sheet, NSInteger buttonIndex);
-}
-
-@property (nonatomic, retain) UIActionSheet *sheetView;
+@property(nonatomic, copy) void (^tappedButtonBlock)(UIActionSheet *sheet, NSInteger buttonIndex);
+@property(nonatomic, strong) UIActionSheet *sheetView;
 
 
 #pragma mark ###############################
@@ -87,6 +82,6 @@
  *
  * @return  self, for chaining.
  */
-- (PearlSheet *)dismissSheet;
+- (PearlSheet *)cancelSheetAnimated:(BOOL)animated;
 
 @end

@@ -16,10 +16,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "PearlAlert.h"
-
 @implementation PearlAlert
-@synthesize alertView, alertField;
 
 + (NSMutableArray *)activeAlerts {
 
@@ -60,50 +57,51 @@
     if (!(self = [super init]))
         return self;
 
-    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
-
     self.tappedButtonBlock = aTappedButtonBlock;
-    alertView         = [[UIAlertView alloc] initWithTitle:title message:message delegate:self
-                                         cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
-
-    if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
-        // iOS 5+
-        alertView.alertViewStyle = viewStyle;
-        if (viewStyle != UIAlertViewStyleDefault)
-            self.alertField      = [self.alertView textFieldAtIndex:0];
-    } else
-        if (viewStyle != UIAlertViewStyleDefault) {
-            // iOS <5
-            UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(12, 40, 260, 25)];
-            alertLabel.font            = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-            alertLabel.textColor       = [UIColor whiteColor];
-            alertLabel.backgroundColor = [UIColor clearColor];
-            alertLabel.shadowColor     = [UIColor blackColor];
-            alertLabel.shadowOffset    = CGSizeMake(0, -1);
-            alertLabel.textAlignment   = NSTextAlignmentCenter;
-            alertLabel.text            = message;
-            self.alertView.message     = @"\n\n\n";
-
-            self.alertField                = [[UITextField alloc] initWithFrame:CGRectMake(16, 83, 252, 25)];
-            alertField.keyboardAppearance  = UIKeyboardAppearanceAlert;
-            alertField.borderStyle         = UITextBorderStyleRoundedRect;
-            if (viewStyle == UIAlertViewStyleSecureTextInput)
-                alertField.secureTextEntry = YES;
-
-            [self.alertView addSubview:alertLabel];
-            [self.alertView addSubview:self.alertField];
-        }
+    _alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self
+                                  cancelButtonTitle:cancelTitle otherButtonTitles:firstOtherTitle, nil];
 
     if (firstOtherTitle) {
         for (NSString *otherTitle; (otherTitle = va_arg(otherTitlesList, id));)
-            [alertView addButtonWithTitle:otherTitle];
+            [_alertView addButtonWithTitle:otherTitle];
         va_end(otherTitlesList);
     }
 
-    if (initBlock)
-        initBlock(alertView, alertField);
+    PearlMainThreadStart
+    {
+        if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
+            // iOS 5+
+            _alertView.alertViewStyle = viewStyle;
+            if (viewStyle != UIAlertViewStyleDefault)
+                _alertField = [self.alertView textFieldAtIndex:0];
+        }
+        else if (viewStyle != UIAlertViewStyleDefault) {
+            // iOS <5
+            UILabel *alertLabel = [[UILabel alloc] initWithFrame:CGRectMake( 12, 40, 260, 25 )];
+            alertLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+            alertLabel.textColor = [UIColor whiteColor];
+            alertLabel.backgroundColor = [UIColor clearColor];
+            alertLabel.shadowColor = [UIColor blackColor];
+            alertLabel.shadowOffset = CGSizeMake( 0, -1 );
+            alertLabel.textAlignment = NSTextAlignmentCenter;
+            alertLabel.text = message;
+            _alertView.message = @"\n\n\n";
 
-    [self.alertField becomeFirstResponder];
+            _alertField = [[UITextField alloc] initWithFrame:CGRectMake( 16, 83, 252, 25 )];
+            _alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+            _alertField.borderStyle = UITextBorderStyleRoundedRect;
+            if (viewStyle == UIAlertViewStyleSecureTextInput)
+                _alertField.secureTextEntry = YES;
+
+            [_alertView addSubview:alertLabel];
+            [_alertView addSubview:self.alertField];
+        }
+
+        if (initBlock)
+            initBlock( _alertView, _alertField );
+
+        [_alertField becomeFirstResponder];
+    } PearlMainThreadEnd
 
     return self;
 }
@@ -124,7 +122,7 @@
     return [self showAlertWithTitle:[PearlStrings get].commonTitleError message:message viewStyle:UIAlertViewStyleDefault
                           initAlert:nil tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonOkay otherTitle:otherTitles
-                        :otherTitlesList];
+            :otherTitlesList];
 }
 
 + (instancetype)showNotice:(NSString *)message {
@@ -182,16 +180,17 @@
                             initAlert:(void (^)(UIAlertView *alert))initBlock {
 
     return [self showAlertWithTitle:title message:PearlString( @"\n\n%@", message? PearlString( @"\n\n%@", message ): @"" )
-                          viewStyle:UIAlertViewStyleDefault initAlert:
-     ^(UIAlertView *alert, UITextField *firstField) {
-         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-         activityIndicator.center = CGPointMake( 142, 90 );
-         [activityIndicator startAnimating];
-         [alert addSubview:activityIndicator];
+                              viewStyle:UIAlertViewStyleDefault initAlert:
+                    ^(UIAlertView *alert, UITextField *firstField) {
+                        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc]
+                                initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                        activityIndicator.center = CGPointMake( 142, 90 );
+                        [activityIndicator startAnimating];
+                        [alert addSubview:activityIndicator];
 
-         if (initBlock)
-            initBlock(alert);
-     }            tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
+                        if (initBlock)
+                            initBlock( alert );
+                    } tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
 }
 
 
@@ -200,7 +199,11 @@
 
 - (PearlAlert *)showAlert {
 
+    __weak UIAlertView *alertView = self.alertView;
     PearlMainThread(^{
+        if (!alertView)
+            return;
+
         [alertView show];
         [((NSMutableArray *)[PearlAlert activeAlerts]) addObject:self];
     });
@@ -210,29 +213,28 @@
 
 - (BOOL)isVisible {
 
-    return [alertView isVisible];
+    return [self.alertView isVisible];
 }
 
-- (PearlAlert *)cancelAlert {
+- (PearlAlert *)cancelAlertAnimated:(BOOL)animated {
 
+    __weak UIAlertView *alertView = self.alertView;
     PearlMainThread(^{
-        [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:YES];
+        [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:animated];
     });
 
     return self;
 }
 
-
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock)
-        self.tappedButtonBlock(self.alertView, buttonIndex);
+        self.tappedButtonBlock( self.alertView, buttonIndex );
 }
 
 - (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     [((NSMutableArray *)[PearlAlert activeAlerts]) removeObject:self];
 }
-
 
 @end

@@ -16,11 +16,7 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlGradientView.h"
-#import "UIColor+Expanded.h"
-
 @implementation PearlGradientView
-
 
 - (id)initWithTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor {
 
@@ -30,11 +26,11 @@
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
     CGFloat newComponents[2 * 4] = {
-     topColor.red, topColor.green, topColor.blue, topColor.alpha,
-     bottomColor.red, bottomColor.green, bottomColor.blue, bottomColor.alpha,
+            topColor.red, topColor.green, topColor.blue, topColor.alpha,
+            bottomColor.red, bottomColor.green, bottomColor.blue, bottomColor.alpha,
     };
 
-    components = calloc(2 * 4, sizeof(CGFloat));
+    components = calloc( 2 * 4, sizeof(CGFloat) );
     memcpy(components, newComponents, sizeof(newComponents));
 
     return self;
@@ -48,16 +44,16 @@
 - (void)drawRect:(CGRect)rect {
 
     CGColorSpaceRef newColorSpace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef   newGradient   = CGGradientCreateWithColorComponents(newColorSpace, components, NULL, 2);
-    CGColorSpaceRelease(newColorSpace);
+    CGGradientRef newGradient = CGGradientCreateWithColorComponents( newColorSpace, components, NULL, 2 );
+    CGColorSpaceRelease( newColorSpace );
 
-    CGContextDrawLinearGradient(UIGraphicsGetCurrentContext(), newGradient, CGPointZero, CGPointMake(0, rect.size.height), 0);
-    CGGradientRelease(newGradient);
+    CGContextDrawLinearGradient( UIGraphicsGetCurrentContext(), newGradient, CGPointZero, CGPointMake( 0, rect.size.height ), 0 );
+    CGGradientRelease( newGradient );
 }
 
 - (void)dealloc {
-    
-    free(components);
+
+    free( components );
 }
 
 @end

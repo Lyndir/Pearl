@@ -34,23 +34,22 @@
     return [NSMethodSignature signatureWithObjCTypes:"@@:"];
 }
 
-
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
     static NSRegularExpression *newWord = nil, *endAcronym = nil;
     if (!newWord)
-        newWord    = [[NSRegularExpression alloc] initWithPattern:@"(\\p{Ll})(?=\\p{Lu})" options:0 error:nil];
+        newWord = [[NSRegularExpression alloc] initWithPattern:@"(\\p{Ll})(?=\\p{Lu})" options:0 error:nil];
     if (!endAcronym)
         endAcronym = [[NSRegularExpression alloc] initWithPattern:@"(\\p{Lu}\\p{Lu})(?=\\p{Lu}\\p{Ll})" options:0 error:nil];
 
-    NSString *selector = NSStringFromSelector(anInvocation.selector);
-    NSString *key      = [newWord stringByReplacingMatchesInString:selector options:0 range:NSMakeRange(0, [selector length])
-                                                                            withTemplate:@"$1."];
-    key = [endAcronym stringByReplacingMatchesInString:key options:0 range:NSMakeRange(0, [key length])
-                                                           withTemplate:@"$1."];
+    NSString *selector = NSStringFromSelector( anInvocation.selector );
+    NSString *key = [newWord stringByReplacingMatchesInString:selector options:0 range:NSMakeRange( 0, [selector length] )
+                                                 withTemplate:@"$1."];
+    key = [endAcronym stringByReplacingMatchesInString:key options:0 range:NSMakeRange( 0, [key length] )
+                                          withTemplate:@"$1."];
     key = [key lowercaseString];
     id tableValue = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:self.tableName];
-    id value      = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
+    id value = [[NSBundle mainBundle] localizedStringForKey:key value:tableValue table:nil];
 
     __autoreleasing id returnValue = value;
     [anInvocation setReturnValue:&returnValue];

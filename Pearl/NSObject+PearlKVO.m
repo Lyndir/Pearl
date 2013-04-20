@@ -16,8 +16,6 @@
 //
 
 #import <objc/runtime.h>
-#import "NSObject+PearlKVO.h"
-
 
 @interface PearlBlockObserver_NSObject : NSObject
 
@@ -43,20 +41,21 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
     if (block)
-        block(keyPath, object, change, context);
+        block( keyPath, object, change, context );
 }
 
 @end
 
-@implementation NSObject (PearlKVO)
+@implementation NSObject(PearlKVO)
+
 static char actionBlocksKey;
 
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
-              forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
+            forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
 
-    NSMutableArray *blockObservers = objc_getAssociatedObject(self, &actionBlocksKey);
+    NSMutableArray *blockObservers = objc_getAssociatedObject( self, &actionBlocksKey );
     if (!blockObservers)
-        objc_setAssociatedObject(self, &actionBlocksKey, blockObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject( self, &actionBlocksKey, blockObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
     PearlBlockObserver_NSObject *handler = [[PearlBlockObserver_NSObject alloc] initWithBlock:observerBlock];
     [self addObserver:handler forKeyPath:keyPath options:options context:context];

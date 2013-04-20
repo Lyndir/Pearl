@@ -18,8 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-@interface NSString (PearlSEL)
+@interface NSString(PearlSEL)
 
 - (BOOL)isGetter;
 - (BOOL)isSetter;

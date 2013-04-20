@@ -67,8 +67,7 @@
         va_end(otherTitlesList);
     }
 
-    PearlMainThreadStart
-    {
+    PearlMainThreadStart{
         if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
             // iOS 5+
             _alertView.alertViewStyle = viewStyle;

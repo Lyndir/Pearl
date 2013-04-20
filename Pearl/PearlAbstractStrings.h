@@ -17,7 +17,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface PearlAbstractStrings : NSObject {
 
     NSString *_tableName;
@@ -25,6 +24,6 @@
 
 - (id)initWithTable:(NSString *)tableName;
 
-@property (nonatomic, retain) NSString *tableName;
+@property(nonatomic, retain) NSString *tableName;
 
 @end

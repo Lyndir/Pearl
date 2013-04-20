@@ -32,6 +32,6 @@
     UIView *_validView, *_invalidView;
 }
 
-@property (nonatomic, WEAK_OR_UNRETAINED) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
+@property(nonatomic, WEAK_OR_UNRETAINED) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
 
 @end

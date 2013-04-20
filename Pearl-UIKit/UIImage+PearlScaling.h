@@ -18,8 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-
-@interface UIImage (PearlScaling)
+@interface UIImage(PearlScaling)
 
 + (UIImage *)imageNamed:(NSString *)imageName inSquareScalingHeight:(CGFloat)height;
 + (UIImage *)imageNamed:(NSString *)imageName inSquareScalingWidth:(CGFloat)width;

@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface PearlRootViewController : UIViewController
 
 - (id)initWithView:(UIView *)aView;

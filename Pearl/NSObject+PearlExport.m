@@ -18,8 +18,7 @@
 
 #import <objc/runtime.h>
 
-
-@implementation NSObject (PearlExport)
+@implementation NSObject(PearlExport)
 
 - (id<NSCoding, NSCopying>)exportToCodable {
 
@@ -27,7 +26,7 @@
 }
 
 - (NSDictionary *)exportToDictionary {
-    
+
     return [NSObject exportToDictionary:self];
 }
 
@@ -50,9 +49,9 @@
                 }
             if (!codable) {
                 NSMutableArray *codableObject = [NSMutableArray arrayWithCapacity:[(NSArray *)object count]];
-                for (NSObject  *child in object)
+                for (NSObject *child in object)
                     [codableObject addObject:[self exportToCodable:child]];
-                object                        = codableObject;
+                object = codableObject;
             }
         }
         if ([object isKindOfClass:[NSSet class]]) {
@@ -63,26 +62,26 @@
                     break;
                 }
             if (!codable) {
-                NSMutableSet  *codableObject = [NSMutableSet setWithCapacity:[(NSSet *)object count]];
+                NSMutableSet *codableObject = [NSMutableSet setWithCapacity:[(NSSet *)object count]];
                 for (NSObject *child in object)
                     [codableObject addObject:[self exportToCodable:child]];
-                object                       = codableObject;
+                object = codableObject;
             }
         }
         if ([object isKindOfClass:[NSDictionary class]]) {
             BOOL codable = YES;
             for (NSObject *key in object)
                 if (![key conformsToProtocol:@protocol(NSCoding)] ||
-                 ![[(NSDictionary *)object objectForKey:key] conformsToProtocol:@protocol(NSCoding)]) {
+                    ![[(NSDictionary *)object objectForKey:key] conformsToProtocol:@protocol(NSCoding)]) {
                     codable = NO;
                     break;
                 }
             if (!codable) {
                 NSMutableDictionary *codableObject = [NSMutableDictionary dictionaryWithCapacity:[(NSDictionary *)object count]];
-                for (NSObject       *key in object)
+                for (NSObject *key in object)
                     [codableObject setObject:[self exportToCodable:[(NSDictionary *)object objectForKey:key]]
-                                   forKey:[self exportToCodable:key]];
-                object                             = codableObject;
+                                      forKey:[self exportToCodable:key]];
+                object = codableObject;
             }
         }
 
@@ -97,24 +96,24 @@
 
     if ([object isKindOfClass:[NSDictionary class]])
         return object;
-    
+
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    
+
     for (Class hierarchyClass = [object class]; [hierarchyClass superclass]; hierarchyClass = [hierarchyClass superclass]) {
         unsigned int propertiesCount;
-        objc_property_t *properties = class_copyPropertyList(hierarchyClass, &propertiesCount);
-        
+        objc_property_t *properties = class_copyPropertyList( hierarchyClass, &propertiesCount );
+
         for (NSUInteger p = 0; p < propertiesCount; p++) {
             objc_property_t property = properties[p];
-            NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-            
+            NSString *propertyName = [[NSString alloc] initWithCString:property_getName( property ) encoding:NSUTF8StringEncoding];
+
             id propertyValue = [self exportToCodable:[object valueForKey:propertyName]];
             [dictionary setObject:propertyValue forKey:propertyName];
         }
-        
-        free(properties);
+
+        free( properties );
     }
-    
+
     return dictionary;
 }
 

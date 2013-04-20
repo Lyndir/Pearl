@@ -16,19 +16,17 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlUIDebug.h"
-
 @implementation PearlUIDebug
 
 static CGFloat autoWidth = 5;
 
 + (void)printFonts {
-    
+
     dbg(@"Fonts:");
     for (NSString *family in [UIFont familyNames]) {
         dbg(@"  Family: %@", family);
         for (NSString *name in [UIFont fontNamesForFamilyName:family])
-            dbg(@"    - %@", name);
+                dbg(@"    - %@", name);
     }
 }
 
@@ -40,8 +38,8 @@ static CGFloat autoWidth = 5;
     if (!instance) {
         [window addSubview:instance = [[UIView alloc] initWithFrame:window.bounds]];
         instance.userInteractionEnabled = NO;
-        instance.opaque                 = NO;
-        instance.alpha                  = 0.7f;
+        instance.opaque = NO;
+        instance.alpha = 0.7f;
         [self clear];
     }
 
@@ -59,7 +57,7 @@ static CGFloat autoWidth = 5;
 
 + (PearlBoxView *)showRect:(CGRect)rect color:(UIColor *)color {
 
-    autoWidth = fmaxf(autoWidth - 1, 1);
+    autoWidth = fmaxf( autoWidth - 1, 1 );
 
     return [self showRect:rect color:color width:autoWidth];
 }
@@ -76,7 +74,7 @@ static CGFloat autoWidth = 5;
 
     PearlBoxView *box = [self showRect:rect color:color];
     box.filled = YES;
-    box.alpha  = 0.7f;
+    box.alpha = 0.7f;
 
     return box;
 }

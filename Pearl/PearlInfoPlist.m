@@ -21,10 +21,10 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
     NSArray *bundleVersion2Components = [bundleVersion2 componentsSeparatedByString:@"."];
     for (NSUInteger i = 0; i < MAX([bundleVersion1Components count], [bundleVersion2Components count]); ++i) {
         if (i >= [bundleVersion1Components count])
-            // 1 has too few elements.
+                // 1 has too few elements.
             return NSOrderedAscending;
         if (i >= [bundleVersion2Components count])
-            // 2 has too few elements.
+                // 2 has too few elements.
             return NSOrderedDescending;
 
         NSString *bundleVersion1Element = [bundleVersion1Components objectAtIndex:i];
@@ -95,13 +95,12 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
 
 - (id)objectForKeyPath:(NSString *)keyPath {
 
-    id value    = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:keyPath];
+    id value = [[[NSBundle mainBundle] localizedInfoDictionary] valueForKeyPath:keyPath];
     if (!value)
         value = [[[NSBundle mainBundle] infoDictionary] valueForKeyPath:keyPath];
 
     return value;
 }
-
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
 
@@ -110,7 +109,7 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
-    __autoreleasing id returnValue = [self objectForKeyPath:NSStringFromSelector(anInvocation.selector)];
+    __autoreleasing id returnValue = [self objectForKeyPath:NSStringFromSelector( anInvocation.selector )];
     [anInvocation setReturnValue:&returnValue];
 }
 

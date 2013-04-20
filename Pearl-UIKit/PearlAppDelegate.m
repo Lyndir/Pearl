@@ -16,20 +16,13 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "PearlAppDelegate.h"
 #import "PearlLogger.h"
-#import "PearlConfig.h"
 #ifdef PEARL_MEDIA
 #import "PearlAudioController.h"
 #endif
-#import "PearlResettable.h"
 #ifdef PEARL_UIKIT
-#import "PearlAlert.h"
-#import "PearlRootViewController.h"
 #endif
-#import "PearlCodeUtils.h"
 #ifdef PEARL_WITH_MESSAGEUI
-#import "PearlEMail.h"
 #endif
 
 #ifndef ITMS_REVIEW_URL
@@ -42,6 +35,7 @@
 #endif
 
 @implementation PearlAppDelegate
+
 @synthesize window = _window, navigationController = _navigationController;
 
 - (id)init {
@@ -57,16 +51,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     // Log application details.
-    NSString *name        = [PearlInfoPlist get].CFBundleName;
+    NSString *name = [PearlInfoPlist get].CFBundleName;
     NSString *displayName = [PearlInfoPlist get].CFBundleDisplayName;
-    NSString *build       = [PearlInfoPlist get].CFBundleVersion;
-    NSString *version     = [PearlInfoPlist get].CFBundleShortVersionString;
+    NSString *build = [PearlInfoPlist get].CFBundleVersion;
+    NSString *version = [PearlInfoPlist get].CFBundleShortVersionString;
     NSString *description = [PearlInfoPlist get].GITDescription;
 
     if (!name)
-        name    = displayName;
+        name = displayName;
     if (displayName && ![displayName isEqualToString:name])
-        name    = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
+        name = [NSString stringWithFormat:@"%@ (%@)", displayName, name];
     if (!version)
         version = build;
     if (build && ![build isEqualToString:version])
@@ -86,7 +80,6 @@
 
     return NO;
 }
-
 
 - (void)preSetup {
 
@@ -110,11 +103,9 @@
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {
-
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-
 }
 
 - (void)restart {
@@ -131,7 +122,7 @@
 - (void)showFeedback {
 
 #ifdef PEARL_WITH_MESSAGEUI
-    [PearlEMail sendEMailTo:nil subject:PearlString(@"Feedback for %@", [PearlInfoPlist get].CFBundleName) body:nil];
+    [PearlEMail sendEMailTo:nil subject:PearlString( @"Feedback for %@", [PearlInfoPlist get].CFBundleName ) body:nil];
 #endif
 }
 
@@ -144,7 +135,6 @@
 }
 
 - (void)shutdown:(id)caller {
-
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -152,34 +142,33 @@
 #ifdef PEARL_UIKIT
     [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
     if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
-        if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
-            if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
-                    [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
-                                           message:PearlString([PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName)
-                                         viewStyle:UIAlertViewStyleDefault
-                                         initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
-                        if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
-                            // Comment
-                            [self showFeedback];
-                            return;
-                        }
+    if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
+    if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
+        [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
+                               message:PearlString( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
+                             viewStyle:UIAlertViewStyleDefault
+                             initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
+            if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
+                // Comment
+                [self showFeedback];
+                return;
+            }
 
-                        [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
-                        if (buttonIndex_ == [alert_ cancelButtonIndex])
-                            // No
-                            return;
+            [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+            if (buttonIndex_ == [alert_ cancelButtonIndex])
+                    // No
+                return;
 
-                        if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
-                            // Yes
-                            [self showReview];
-                        }
-                    }                  cancelTitle:[PearlStrings get].reviewNo
-                                       otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
+            if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
+                // Yes
+                [self showReview];
+            }
+        }                  cancelTitle:[PearlStrings get].reviewNo
+                           otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
 #endif
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
@@ -203,28 +192,22 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-
 }
 
 - (void)applicationSignificantTimeChange:(UIApplication *)application {
-
 }
 
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation
            duration:(NSTimeInterval)duration {
-
 }
 
 - (void)application:(UIApplication *)application didChangeStatusBarOrientation:(UIInterfaceOrientation)oldStatusBarOrientation {
-
 }
 
 - (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
-
 }
 
 - (void)application:(UIApplication *)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame {
-
 }
 
 #ifdef PEARL_WITH_APNS
@@ -252,23 +235,18 @@
 #endif
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
-
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
-
 }
 
 - (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application {
-
 }
 
 - (void)applicationProtectedDataDidBecomeAvailable:(UIApplication *)application {
-
 }
 
 + (instancetype)get {
@@ -279,6 +257,5 @@
 
     return nil;
 }
-
 
 @end

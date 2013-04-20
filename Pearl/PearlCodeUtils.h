@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 __BEGIN_DECLS
 typedef enum {
     PearlHashNone,
@@ -33,10 +32,10 @@ typedef enum {
 } PearlHash;
 
 PearlHash PearlHashFromNSString(NSString *hash);
-uint64_t  PearlSecureRandom(void);
+uint64_t PearlSecureRandom(void);
 __END_DECLS
 
-@interface NSString (PearlCodeUtils)
+@interface NSString(PearlCodeUtils)
 
 /** Generate a hash for the string. */
 - (NSData *)hashWith:(PearlHash)hash;
@@ -56,7 +55,7 @@ __END_DECLS
 
 @end
 
-@interface NSData (PearlCodeUtils)
+@interface NSData(PearlCodeUtils)
 
 /**
  * Concatenate the given data objects.

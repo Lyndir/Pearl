@@ -17,108 +17,105 @@
 //
 
 #import <objc/runtime.h>
-#import <CoreGraphics/CoreGraphics.h>
-#import "PearlUIUtils.h"
-#import "PearlBoxView.h"
 
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
 
-    return (CGRect){{x, rect.origin.y}, {rect.size.width, rect.size.height}};
+    return (CGRect){ { x, rect.origin.y }, { rect.size.width, rect.size.height } };
 }
 
 CGRect CGRectSetY(CGRect rect, CGFloat y) {
 
-    return (CGRect){{rect.origin.x, y}, {rect.size.width, rect.size.height}};
+    return (CGRect){ { rect.origin.x, y }, { rect.size.width, rect.size.height } };
 }
 
 CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
 
-    return (CGRect){rect.origin, {width, rect.size.height}};
+    return (CGRect){ rect.origin, { width, rect.size.height } };
 }
 
 CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
 
-    return (CGRect){rect.origin, {rect.size.width, height}};
+    return (CGRect){ rect.origin, { rect.size.width, height } };
 }
 
 CGRect CGRectSetOrigin(CGRect rect, CGPoint origin) {
 
-    return (CGRect){origin, rect.size};
+    return (CGRect){ origin, rect.size };
 }
 
 CGRect CGRectSetSize(CGRect rect, CGSize size) {
 
-    return (CGRect){rect.origin, size};
+    return (CGRect){ rect.origin, size };
 }
 
 CGPoint CGPointFromCGRectCenter(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2);
+    return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2 );
 }
 
 CGPoint CGPointFromCGRectTop(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y);
+    return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y );
 }
 
 CGPoint CGPointFromCGRectRight(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2);
+    return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2 );
 }
 
 CGPoint CGPointFromCGRectBottom(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height);
+    return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height );
 }
 
 CGPoint CGPointFromCGRectLeft(CGRect rect) {
 
-    return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height / 2);
+    return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height / 2 );
 }
 
 CGPoint CGPointFromCGRectTopLeft(CGRect rect) {
 
-    return CGPointMake(rect.origin.x, rect.origin.y);
+    return CGPointMake( rect.origin.x, rect.origin.y );
 }
 
 CGPoint CGPointFromCGRectTopRight(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y);
+    return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y );
 }
 
 CGPoint CGPointFromCGRectBottomRight(CGRect rect) {
 
-    return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+    return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y + rect.size.height );
 }
 
 CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
 
-    return CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
+    return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height );
 }
 
 CGPoint CGPointFromCGSize(const CGSize size) {
 
-    return CGPointMake(size.width, size.height);
+    return CGPointMake( size.width, size.height );
 }
 
 CGPoint CGPointFromCGSizeCenter(const CGSize size) {
 
-    return CGPointMake(size.width / 2, size.height / 2);
+    return CGPointMake( size.width / 2, size.height / 2 );
 }
 
 CGSize CGSizeFromCGPoint(const CGPoint point) {
 
-    return CGSizeMake(point.x, point.y);
+    return CGSizeMake( point.x, point.y );
 }
 
 CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size) {
 
-    return CGRectMake( origin.x, origin.y, size.width, size.height);
+    return CGRectMake( origin.x, origin.y, size.width, size.height );
 }
 
 CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size) {
 
-    return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height);
+    return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height );
 }
 
 CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
@@ -161,12 +158,12 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
 
 CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract) {
 
-    return CGPointMake(origin.x - subtract.x, origin.y - subtract.y);
+    return CGPointMake( origin.x - subtract.x, origin.y - subtract.y );
 }
 
 CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add) {
 
-    return CGPointMake(origin.x + add.x, origin.y + add.y);
+    return CGPointMake( origin.x + add.x, origin.y + add.y );
 }
 
 CGPoint CGPointMultiply(const CGPoint origin, const CGFloat multiply) {
@@ -181,24 +178,24 @@ CGPoint CGPointMultiplyCGPoint(const CGPoint origin, const CGPoint multiply) {
 
 CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
-    return CGPointMinusCGPoint(to, from);
+    return CGPointMinusCGPoint( to, from );
 }
 
 CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
 
-    return powf(to.x - from.x, 2) + powf(to.y - from.y, 2);
+    return powf( to.x - from.x, 2 ) + powf( to.y - from.y, 2 );
 }
 
 CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
-    return sqrtf(DistanceBetweenCGPointsSq(from, to));
+    return sqrtf( DistanceBetweenCGPointsSq( from, to ) );
 }
 
 @interface PearlUIUtilsKeyboardScrollView : NSObject
 
-@property (nonatomic, retain) UIScrollView *keyboardScrollView;
-@property (nonatomic)         CGPoint       keyboardScrollViewOriginalOffset;
-@property (nonatomic)         CGRect        keyboardScrollViewOriginalFrame;
+@property(nonatomic, retain) UIScrollView *keyboardScrollView;
+@property(nonatomic) CGPoint keyboardScrollViewOriginalOffset;
+@property(nonatomic) CGRect keyboardScrollViewOriginalFrame;
 
 @end
 
@@ -223,42 +220,41 @@ CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 @end
 
 // TODO: dont hold strong references to the scrollviews
-static NSMutableArray      *keyboardScrollViews;
-static UIScrollView        *keyboardScrollView_resized;
-static BOOL                 keyboardScrollView_shouldHide;
+static NSMutableArray *keyboardScrollViews;
+static UIScrollView *keyboardScrollView_resized;
+static BOOL keyboardScrollView_shouldHide;
 
 static NSMutableSet *dismissableResponders;
 
-
-@interface PearlUIUtils ()
+@interface PearlUIUtils()
 
 + (void)keyboardWillHide:(NSNotification *)n;
 + (void)keyboardWillShow:(NSNotification *)n;
 
 @end
 
-@implementation UIImage (PearlUIUtils)
+@implementation UIImage(PearlUIUtils)
 
 - (UIImage *)highlightedImage {
 
-    const CGRect bounds = CGRectFromOriginWithSize(CGPointZero, self.size);
+    const CGRect bounds = CGRectFromOriginWithSize( CGPointZero, self.size );
     UIColor *color = [[UIColor alloc] initWithWhite:1 alpha:0.7f];
 
-    UIGraphicsBeginImageContextWithOptions(bounds.size, FALSE, 0);
+    UIGraphicsBeginImageContextWithOptions( bounds.size, FALSE, 0 );
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     // transform CG* coords to UI* coords
-    CGContextTranslateCTM(context, 0, bounds.size.height);
-    CGContextScaleCTM(context, 1, -1);
+    CGContextTranslateCTM( context, 0, bounds.size.height );
+    CGContextScaleCTM( context, 1, -1 );
 
     // draw original image
-    CGContextDrawImage(context, bounds, self.CGImage);
+    CGContextDrawImage( context, bounds, self.CGImage );
 
     // draw highlight overlay
-    CGContextClipToMask(context, bounds, self.CGImage);
-    CGContextSetBlendMode(context, kCGBlendModeOverlay);
-    CGContextSetFillColorWithColor(context, color.CGColor);
-    CGContextFillRect(context, bounds);
+    CGContextClipToMask( context, bounds, self.CGImage );
+    CGContextSetBlendMode( context, kCGBlendModeOverlay );
+    CGContextSetFillColorWithColor( context, color.CGColor );
+    CGContextFillRect( context, bounds );
 
     // finish image context
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
@@ -269,17 +265,17 @@ static NSMutableSet *dismissableResponders;
 
 @end
 
-@implementation UILabel (PearlUIUtils)
+@implementation UILabel(PearlUIUtils)
 
 - (void)autoSize {
 
-    self.frame = CGRectSetHeight(self.frame, [self textRectForBounds:CGRectSetHeight(self.frame, CGFLOAT_MAX)
-                                              limitedToNumberOfLines:self.numberOfLines].size.height);
+    self.frame = CGRectSetHeight( self.frame, [self textRectForBounds:CGRectSetHeight( self.frame, CGFLOAT_MAX )
+                                               limitedToNumberOfLines:self.numberOfLines].size.height );
 }
 
 @end
 
-@implementation UIScrollView (PearlUIUtils)
+@implementation UIScrollView(PearlUIUtils)
 
 - (void)autoSizeContent {
 
@@ -314,40 +310,42 @@ static NSMutableSet *dismissableResponders;
         CGRect subviewContent = [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray];
         subviewContent = [self convertRect:subviewContent fromView:subview];
 
-        if (CGRectIsNull(contentRect))
+        if (CGRectIsNull( contentRect ))
             contentRect = subviewContent;
         else
-            contentRect = CGRectUnion(contentRect, subviewContent);
+            contentRect = CGRectUnion( contentRect, subviewContent );
     }
-    if (CGRectEqualToRect(contentRect, CGRectNull))
-     // No subviews inside the scroll area.
-        contentRect    = CGRectZero;
+    if (CGRectEqualToRect( contentRect, CGRectNull ))
+            // No subviews inside the scroll area.
+        contentRect = CGRectZero;
 
     // Add right/bottom padding by adding left/top offset to the size (but no more than 20pt if limitPadding).
-    CGSize originPadding = CGSizeMake(MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y));
-    CGRect paddedRect    = (CGRect){CGPointZero,
-     CGSizeMake(contentRect.size.width + originPadding.width + (limitPadding? MIN(20, originPadding.width): originPadding.width),
-                contentRect.size.height + originPadding.height + (limitPadding? MIN(20, originPadding.height): originPadding.height))};
+    CGSize originPadding = CGSizeMake( MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y) );
+    CGRect paddedRect = (CGRect){
+            CGPointZero,
+            CGSizeMake( contentRect.size.width + originPadding.width + (limitPadding? MIN(20, originPadding.width): originPadding.width),
+                    contentRect.size.height + originPadding.height + (limitPadding? MIN(20, originPadding.height): originPadding.height) )
+    };
 
     // Apply rect to scrollView's content definition.
     self.contentOffset = CGPointZero;
-    self.contentSize   = paddedRect.size;
+    self.contentSize = paddedRect.size;
 
     // === Step 2: Manage the scroll view on keyboard notifications.
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                           selector:@selector(keyboardWillShow:)
-                               name:UIKeyboardWillShowNotification
-                             object:nil];
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                           selector:@selector(keyboardWillHide:)
-                               name:UIKeyboardWillHideNotification
-                             object:nil];
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 
     if (nil == keyboardScrollViews) {
         keyboardScrollViews = [[NSMutableArray alloc] initWithCapacity:1];
     }
     bool found = false;
-    for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+    for (PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
         if (pearlKBSV.keyboardScrollView == self) {
             found = true;
             break;
@@ -363,7 +361,7 @@ static NSMutableSet *dismissableResponders;
 
 @end
 
-@implementation UIView (PearlUIUtils)
+@implementation UIView(PearlUIUtils)
 
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
 
@@ -379,7 +377,7 @@ static NSMutableSet *dismissableResponders;
 
     for (UIView *subview in self.subviews) {
         BOOL stop = NO, recurse = recurseDefault;
-        block(subview, &stop, &recurse);
+        block( subview, &stop, &recurse );
         if (recurse)
             [subview enumerateSubviews:block recurse:recurseDefault];
         if (stop)
@@ -391,7 +389,8 @@ static NSMutableSet *dismissableResponders;
 
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
-        dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", view.tag, view.alpha, @(view.hidden), [view debugDescription]);
+        dbg(PearlString( @"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@",
+                indent ), "", view.tag, view.alpha, @(view.hidden), [view debugDescription]);
         indent += 4;
     }
 }
@@ -403,7 +402,7 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg(PearlString(@"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent), "", self.tag, self.alpha, @(self.hidden), [self debugDescription]);
+    dbg(PearlString( @"%%%ds - t:%%d, a:%%0.1f, h:%%@, %%@", indent ), "", self.tag, self.alpha, @(self.hidden), [self debugDescription]);
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];
@@ -425,10 +424,10 @@ static NSMutableSet *dismissableResponders;
     if (!self.clipsToBounds)
         for (UIView *subview in self.subviews)
             if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
-                contentRect = CGRectUnion(contentRect,
-                                          [self convertRect:
-                                                 [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
-                                                fromView:subview]);
+                contentRect = CGRectUnion( contentRect,
+                        [self convertRect:
+                                [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
+                                 fromView:subview] );
 
     return contentRect;
 }
@@ -441,7 +440,7 @@ static NSMutableSet *dismissableResponders;
 - (void)showBoundingBoxOfColor:(UIColor *)color {
 
     dbg(@"Showing bounding box for view: %@", self);
-    PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){CGPointZero, self.bounds.size} color:color];
+    PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){ CGPointZero, self.bounds.size } color:color];
     [self addSubview:box];
     [self addObserver:box forKeyPath:@"bounds" options:0 context:nil];
 }
@@ -456,7 +455,7 @@ static NSMutableSet *dismissableResponders;
     if (self.isFirstResponder)
         return self;
 
-    UIView      *firstResponder = nil;
+    UIView *firstResponder = nil;
     for (UIView *subView in self.subviews)
         if ((firstResponder = [subView findFirstResponderInHierarchy]))
             break;
@@ -475,9 +474,9 @@ static NSMutableSet *dismissableResponders;
     NSMutableArray *properties = [NSMutableArray array];
 
     // Recursively clone subviews only if this is a container-style view (ie. a UIView or UIScrollView subclass)
-    BOOL       recurse = YES;
-    for (Class class   = [self class]; class && class != [UIView class]; class = class_getSuperclass(class)) {
-        if ([NSStringFromClass([self class]) hasPrefix:@"UI"]) {
+    BOOL recurse = YES;
+    for (Class class = [self class]; class && class != [UIView class]; class = class_getSuperclass( class )) {
+        if ([NSStringFromClass( [self class] ) hasPrefix:@"UI"]) {
             if ([self class] != [UIView class] && [self class] != [UIScrollView class])
                 recurse = NO;
             break;
@@ -537,7 +536,7 @@ static NSMutableSet *dismissableResponders;
             if (target != [NSNull null])
                 for (NSUInteger c = 0; c < 32; ++c)
                     for (NSString *action in [(UIControl *)self actionsForTarget:target forControlEvent:1 << c])
-                        [copy addTarget:target action:NSSelectorFromString(action) forControlEvents:1 << c];
+                        [copy addTarget:target action:NSSelectorFromString( action ) forControlEvents:1 << c];
     }
 
     // UITextField
@@ -574,21 +573,21 @@ static NSMutableSet *dismissableResponders;
         [properties addObject:@"showsTouchWhenHighlighted"];
         [properties addObject:@"tintColor"];
         for (NSNumber *state in [NSArray arrayWithObjects:
-                                          PearlUnsignedInteger(UIControlStateNormal),
-                                          PearlUnsignedInteger(UIControlStateHighlighted),
-                                          PearlUnsignedInteger(UIControlStateDisabled),
-                                          PearlUnsignedInteger(UIControlStateSelected),
-                                          PearlUnsignedInteger(UIControlStateApplication),
-                                          PearlUnsignedInteger(UIControlStateReserved),
-                                          nil]) {
+                PearlUnsignedInteger(UIControlStateNormal),
+                PearlUnsignedInteger(UIControlStateHighlighted),
+                PearlUnsignedInteger(UIControlStateDisabled),
+                PearlUnsignedInteger(UIControlStateSelected),
+                PearlUnsignedInteger(UIControlStateApplication),
+                PearlUnsignedInteger(UIControlStateReserved),
+                nil]) {
             UIControlState controlState = [state unsignedIntegerValue];
 
-            UIButton *selfButton      = (UIButton *)self;
-            NSString *title           = [selfButton titleForState:controlState];
-            UIColor  *titleColor      = [selfButton titleColorForState:controlState];
-            UIColor  *shadowColor     = [selfButton titleShadowColorForState:controlState];
-            UIImage  *backgroundImage = [selfButton backgroundImageForState:controlState];
-            UIImage  *image           = [selfButton imageForState:controlState];
+            UIButton *selfButton = (UIButton *)self;
+            NSString *title = [selfButton titleForState:controlState];
+            UIColor *titleColor = [selfButton titleColorForState:controlState];
+            UIColor *shadowColor = [selfButton titleShadowColorForState:controlState];
+            UIImage *backgroundImage = [selfButton backgroundImageForState:controlState];
+            UIImage *image = [selfButton imageForState:controlState];
 
             if (controlState == UIControlStateNormal || title != [selfButton titleForState:UIControlStateNormal])
                 [copy setTitle:title forState:controlState];
@@ -637,7 +636,7 @@ static NSMutableSet *dismissableResponders;
 
     // Load localization for each of the view's supported properties.
     for (NSString *localizableProperty in localizableProperties) {
-        if ([self respondsToSelector:NSSelectorFromString(localizableProperty)]) {
+        if ([self respondsToSelector:NSSelectorFromString( localizableProperty )]) {
             id value = [self valueForKey:localizableProperty];
             if ([value isKindOfClass:[NSString class]])
                 [self setValue:[PearlUIUtils applyLocalization:value] forKey:localizableProperty];
@@ -651,14 +650,15 @@ static NSMutableSet *dismissableResponders;
         // Localize titles of segments.
         for (NSUInteger segment = 0; segment < [segmentView numberOfSegments]; ++segment)
             [segmentView setTitle:[PearlUIUtils applyLocalization:[segmentView titleForSegmentAtIndex:segment]]
-                         forSegmentAtIndex:segment];
+                forSegmentAtIndex:segment];
     }
     if ([self isKindOfClass:[UIButton class]]) {
         UIButton *button = (UIButton *)self;
 
         // Localize titles of segments.
-        UIControlState  states[] = {UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication};
-        for (NSUInteger s        = 0; s < 5; ++s) {
+        UIControlState states[]
+                = { UIControlStateNormal, UIControlStateHighlighted, UIControlStateDisabled, UIControlStateSelected, UIControlStateApplication };
+        for (NSUInteger s = 0; s < 5; ++s) {
             UIControlState state = states[s];
             NSString *title = [button titleForState:state];
             if (title)
@@ -679,10 +679,9 @@ static NSMutableSet *dismissableResponders;
     return self;
 }
 
-
 @end
 
-@implementation UIViewController (PearlUIUtils)
+@implementation UIViewController(PearlUIUtils)
 
 - (UIViewController *)localizeProperties {
 
@@ -714,7 +713,6 @@ static NSMutableSet *dismissableResponders;
 
 @implementation PearlUIUtils
 
-
 + (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... {
 
     return [self viewClosestTo:point ofArray:va_array(views)];
@@ -728,10 +726,10 @@ static NSMutableSet *dismissableResponders;
         if (view.hidden || !view.alpha)
             continue;
 
-        CGFloat distance = DistanceBetweenCGPointsSq(view.center, point);
+        CGFloat distance = DistanceBetweenCGPointsSq( view.center, point );
         if (!closestDistance || distance < closestDistance) {
             closestDistance = distance;
-            closestView     = view;
+            closestView = view;
         }
     }
 
@@ -740,12 +738,12 @@ static NSMutableSet *dismissableResponders;
 
 + (CGRect)frameForItem:(UITabBarItem *)item inTabBar:(UITabBar *)tabBar {
 
-    CGFloat    tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
-    NSUInteger tabIndex     = [tabBar.items indexOfObject:item];
+    CGFloat tabItemWidth = tabBar.frame.size.width / tabBar.items.count;
+    NSUInteger tabIndex = [tabBar.items indexOfObject:item];
     if (tabIndex == NSNotFound)
         return CGRectNull;
 
-    return CGRectMake(tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height);
+    return CGRectMake( tabIndex * tabItemWidth, 0, tabItemWidth, tabBar.bounds.size.height );
 }
 
 + (void)makeDismissable:(UIView *)views, ... {
@@ -763,7 +761,7 @@ static NSMutableSet *dismissableResponders;
 
 + (UIWindow *)findWindow {
 
-    UIWindow          *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
     if (!window)
         for (UIWindow *aWindow in [UIApplication sharedApplication].windows)
             if ([aWindow findFirstResponderInHierarchy]) {
@@ -771,7 +769,7 @@ static NSMutableSet *dismissableResponders;
                 break;
             }
     if (!window)
-        window                = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
 
     return window;
 }
@@ -780,15 +778,15 @@ static NSMutableSet *dismissableResponders;
 
     UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
     if (!responder)
-     // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
-     // Don't know why but since no keyboard actually appears in this case, ignore them.
+            // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
+            // Don't know why but since no keyboard actually appears in this case, ignore them.
         return;
 
     // Find the active scrollview in our dictionary
     PearlUIUtilsKeyboardScrollView *activePearlKBSV = nil;
     if (nil != keyboardScrollViews && [keyboardScrollViews count] > 0) {
 
-        for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+        for (PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
             if ([responder isDescendantOfView:pearlKBSV.keyboardScrollView]) {
                 activePearlKBSV = pearlKBSV;
             }
@@ -815,13 +813,13 @@ static NSMutableSet *dismissableResponders;
 
     NSDictionary *userInfo = [n userInfo];
     CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect scrollRect   = [keyboardScrollView_resized frameInWindow];
-    CGRect hiddenRect   = CGRectIntersection(scrollRect, keyboardRect);
+    CGRect scrollRect = [keyboardScrollView_resized frameInWindow];
+    CGRect hiddenRect = CGRectIntersection( scrollRect, keyboardRect );
 
     // store initial scrollview frame when needed
-    if (CGRectIsNull(activePearlKBSV.keyboardScrollViewOriginalFrame)) {
+    if (CGRectIsNull( activePearlKBSV.keyboardScrollViewOriginalFrame )) {
         activePearlKBSV.keyboardScrollViewOriginalOffset = keyboardScrollView_resized.contentOffset;
-        activePearlKBSV.keyboardScrollViewOriginalFrame  = keyboardScrollView_resized.frame;
+        activePearlKBSV.keyboardScrollViewOriginalFrame = keyboardScrollView_resized.frame;
     }
     CGPoint keyboardScrollNewOffset = activePearlKBSV.keyboardScrollViewOriginalOffset;
     keyboardScrollNewOffset.y += keyboardRect.size.height / 2;
@@ -832,23 +830,22 @@ static NSMutableSet *dismissableResponders;
 
     if (responderRect.origin.y < keyboardScrollNewOffset.y)
         keyboardScrollNewOffset.y = 0;
-    else
-        if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
-            keyboardScrollNewOffset.y = responderRect.origin.y;
+    else if (responderRect.origin.y > keyboardScrollNewOffset.y + keyboardScrollNewFrame.size.height)
+        keyboardScrollNewOffset.y = responderRect.origin.y;
 
-    if (CGRectEqualToRect(keyboardScrollView_resized.frame, keyboardScrollNewFrame)) {
-     // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
+    if (CGRectEqualToRect( keyboardScrollView_resized.frame, keyboardScrollNewFrame )) {
+        // Don't change the frame if not needed.  Frame changes easily interfere with external animations.
         keyboardScrollNewFrame = CGRectNull;
     }
 
-    if (!CGRectIsNull(keyboardScrollNewFrame)) {
+    if (!CGRectIsNull( keyboardScrollNewFrame )) {
         UIScrollView *animatingScrollView = keyboardScrollView_resized;
         [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                  animations:^{
-                      animatingScrollView.contentOffset = keyboardScrollNewOffset;
-                  } completion:^(BOOL finished) {
-            if (!CGRectIsNull(keyboardScrollNewFrame))
+                              delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+                animations:^{
+                    animatingScrollView.contentOffset = keyboardScrollNewOffset;
+                } completion:^(BOOL finished) {
+            if (!CGRectIsNull( keyboardScrollNewFrame ))
                 animatingScrollView.frame = keyboardScrollNewFrame;
         }];
     }
@@ -857,46 +854,45 @@ static NSMutableSet *dismissableResponders;
 + (void)keyboardWillHide:(NSNotification *)n {
 
     if (!keyboardScrollView_resized)
-     // Don't do any scrollview animation when no scrollview is active.
+            // Don't do any scrollview animation when no scrollview is active.
         return;
 
     UIScrollView *animatingScrollView = keyboardScrollView_resized;
     PearlUIUtilsKeyboardScrollView *currentPearlKBSV;
-    for(PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
+    for (PearlUIUtilsKeyboardScrollView *pearlKBSV in keyboardScrollViews) {
         if (pearlKBSV.keyboardScrollView == keyboardScrollView_resized) {
             currentPearlKBSV = pearlKBSV;
         }
     }
-    if(nil == currentPearlKBSV) {
+    if (nil == currentPearlKBSV) {
         err(@"No PearlKBSV found in dictionary yet got keyboardWillHide notification...");
         return;
     }
 
-    CGRect  animatingScrollView_originalFrame  = currentPearlKBSV.keyboardScrollViewOriginalFrame;
+    CGRect animatingScrollView_originalFrame = currentPearlKBSV.keyboardScrollViewOriginalFrame;
     CGPoint animatingScrollView_originalOffset = currentPearlKBSV.keyboardScrollViewOriginalOffset;
     keyboardScrollView_shouldHide = YES;
 
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async( dispatch_get_main_queue(), ^{
         if (!keyboardScrollView_shouldHide)
             return;
 
         currentPearlKBSV.keyboardScrollViewOriginalFrame = CGRectNull;
         currentPearlKBSV.keyboardScrollViewOriginalOffset = CGPointZero;
 
-
         CGPoint currentOffset = animatingScrollView.contentOffset;
-        animatingScrollView.frame         = animatingScrollView_originalFrame;
+        animatingScrollView.frame = animatingScrollView_originalFrame;
         animatingScrollView.contentOffset = currentOffset;
 
         [UIView animateWithDuration:[[n.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
-                  animations:^{
-                      animatingScrollView.contentOffset = animatingScrollView_originalOffset;
-                  } completion:^(BOOL finished) {
+                              delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+                animations:^{
+                    animatingScrollView.contentOffset = animatingScrollView_originalOffset;
+                } completion:^(BOOL finished) {
         }];
 
         keyboardScrollView_resized = nil;
-    });
+    } );
 }
 
 + (NSString *)applyLocalization:(NSString *)localizableValue {
@@ -909,25 +905,27 @@ static NSMutableSet *dismissableResponders;
         UIUtils_localizableSyntax = [[NSRegularExpression alloc] initWithPattern:@"^\\{([^:]*)(?::(.*))?\\}$" options:0 error:nil];
 
     __block NSString *localizedValue = localizableValue;
-    [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange(0, [localizableValue length])
+    [UIUtils_localizableSyntax enumerateMatchesInString:localizableValue options:0 range:NSMakeRange( 0, [localizableValue length] )
                                              usingBlock:
-     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-         if (result) {
-             NSRange localizationKeyRange = [result rangeAtIndex:1];
-             NSRange defaultValueRange    = [result rangeAtIndex:2];
-             if (NSEqualRanges(localizationKeyRange,
-                               NSMakeRange(NSNotFound, 0)))
-                 return;
+                                                     ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                                                         if (result) {
+                                                             NSRange localizationKeyRange = [result rangeAtIndex:1];
+                                                             NSRange defaultValueRange = [result rangeAtIndex:2];
+                                                             if (NSEqualRanges( localizationKeyRange,
+                                                                     NSMakeRange( NSNotFound, 0 ) ))
+                                                                 return;
 
-             NSString *localizationKey = [localizableValue substringWithRange:localizationKeyRange];
-             NSString *defaultValue    = nil;
-             if (!NSEqualRanges(defaultValueRange,
-                                NSMakeRange(NSNotFound, 0)))
-                 defaultValue = [localizableValue substringWithRange:defaultValueRange];
+                                                             NSString *localizationKey
+                                                                     = [localizableValue substringWithRange:localizationKeyRange];
+                                                             NSString *defaultValue = nil;
+                                                             if (!NSEqualRanges( defaultValueRange,
+                                                                     NSMakeRange( NSNotFound, 0 ) ))
+                                                                 defaultValue = [localizableValue substringWithRange:defaultValueRange];
 
-             localizedValue = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
-         }
-     }];
+                                                             localizedValue
+                                                                     = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+                                                         }
+                                                     }];
 
     return localizedValue;
 }

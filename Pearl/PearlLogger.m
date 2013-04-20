@@ -40,13 +40,11 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
 @synthesize message, occurrence, level;
 
-
 + (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
                          text:(NSString *)aMessage {
 
     return [[self alloc] initInFile:fileName atLine:lineNumber withLevel:aLevel text:aMessage];
 }
-
 
 - (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
             text:(NSString *)aMessage {
@@ -54,10 +52,10 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     if (!(self = [super init]))
         return nil;
 
-    self.fileName   = fileName;
+    self.fileName = fileName;
     self.lineNumber = lineNumber;
-    self.level      = aLevel;
-    self.message    = aMessage;
+    self.level = aLevel;
+    self.message = aMessage;
     self.occurrence = [NSDate date];
 
     return self;
@@ -82,19 +80,17 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 - (NSString *)messageDescription {
 
     return [NSString stringWithFormat:@"%25s:%-3ld | %-7s : %@", //
-                     self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr(self.level), self.message];
+                                      self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr( self.level ), self.message];
 }
 
 @end
 
+@interface PearlLogger()
 
-@interface PearlLogger ()
-
-@property (nonatomic, readwrite, retain) NSMutableArray *messages;
-@property (nonatomic, readwrite, retain) NSMutableArray *listeners;
+@property(nonatomic, readwrite, retain) NSMutableArray *messages;
+@property(nonatomic, readwrite, retain) NSMutableArray *listeners;
 
 @end
-
 
 @implementation PearlLogger
 
@@ -105,13 +101,12 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     if (!(self = [super init]))
         return nil;
 
-    self.messages   = [NSMutableArray arrayWithCapacity:20];
-    self.listeners  = [NSMutableArray array];
+    self.messages = [NSMutableArray arrayWithCapacity:20];
+    self.listeners = [NSMutableArray array];
     self.printLevel = PearlLogLevelInfo;
 
     return self;
 }
-
 
 + (instancetype)get {
 
@@ -122,10 +117,9 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     return instance;
 }
 
-
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
 
-    NSMutableString      *formattedLog = [NSMutableString new];
+    NSMutableString *formattedLog = [NSMutableString new];
     for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
             [formattedLog appendString:[message description]];
@@ -133,14 +127,12 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     return formattedLog;
 }
 
-
 - (void)printAllWithLevel:(PearlLogLevel)level {
 
     for (PearlLogMessage *message in self.messages)
         if (message.level >= level)
-            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
+            fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
 }
-
 
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener {
 
@@ -148,7 +140,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
         [self.listeners addObject:listener];
     }
 }
-
 
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level text:(NSString *)text {
 
@@ -160,8 +151,10 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     @try {
         @synchronized (self.listeners) {
             [threadLocals setObject:@"" forKey:@"PearlDisableLog"];
-            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
-                if (!listener(message))
+            for (
+                    BOOL (^listener)(PearlLogMessage *)
+                    in self.listeners)
+                if (!listener( message ))
                     return self;
         }
     }
@@ -171,14 +164,13 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     if (level >= self.printLevel)
         @synchronized (self) {
-            fprintf(stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding]);
+            fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
         }
     if (self.history && message.level > PearlLogLevelTrace)
         [self.messages addObject:message];
 
     return self;
 }
-
 
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
 
@@ -191,7 +183,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
               withLevel:PearlLogLevelTrace text:message];
 }
 
-
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
 
     va_list argList;
@@ -202,7 +193,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
               withLevel:PearlLogLevelDebug text:message];
 }
-
 
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
 
@@ -215,7 +205,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
               withLevel:PearlLogLevelInfo text:message];
 }
 
-
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
 
     va_list argList;
@@ -227,7 +216,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
               withLevel:PearlLogLevelWarn text:message];
 }
 
-
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
 
     va_list argList;
@@ -238,7 +226,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
               withLevel:PearlLogLevelError text:message];
 }
-
 
 - (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
 
@@ -252,7 +239,6 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 }
 
 @end
-
 
 NSString *errstr() {
 

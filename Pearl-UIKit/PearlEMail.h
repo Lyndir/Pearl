@@ -22,9 +22,9 @@
 
 @interface PearlEMailAttachment : NSObject
 
-@property (nonatomic, strong) NSData   *content;
-@property (nonatomic, strong) NSString *mimeType;
-@property (nonatomic, strong) NSString *fileName;
+@property(nonatomic, strong) NSData *content;
+@property(nonatomic, strong) NSString *mimeType;
+@property(nonatomic, strong) NSString *fileName;
 
 - (id)initWithContent:(NSData *)content mimeType:(NSString *)mimeType fileName:(NSString *)fileName;
 
@@ -32,7 +32,7 @@
 
 @interface PearlEMail : NSObject
 
-@property (nonatomic, strong) MFMailComposeViewController *composer;
+@property(nonatomic, strong) MFMailComposeViewController *composer;
 
 + (BOOL)canSendMail;
 

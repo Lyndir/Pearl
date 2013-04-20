@@ -18,8 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-@interface NSString (PearlNSArrayFormat)
+@interface NSString(PearlNSArrayFormat)
 
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments;
 

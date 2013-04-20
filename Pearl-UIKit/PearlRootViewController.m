@@ -16,15 +16,12 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlRootViewController.h"
-#import "PearlUIUtils.h"
-#import "PearlAppDelegate.h"
+@interface PearlRootViewController()
 
-@interface PearlRootViewController ()
-
-@property (nonatomic, retain) NSMutableArray *mySupportedIterfaceOrientations;
+@property(nonatomic, retain) NSMutableArray *mySupportedIterfaceOrientations;
 
 @end
+
 @implementation PearlRootViewController
 
 static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orientation) {
@@ -109,20 +106,20 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     self.view.transform = CGAffineTransformIdentity;
     switch ([UIApplication sharedApplication].statusBarOrientation) {
         case UIInterfaceOrientationLandscapeLeft:
-            self.view.transform = CGAffineTransformMakeRotation((CGFloat)M_PI_2);
+            self.view.transform = CGAffineTransformMakeRotation( (CGFloat)M_PI_2 );
             break;
         case UIInterfaceOrientationLandscapeRight:
-            self.view.transform = CGAffineTransformMakeRotation((CGFloat)-M_PI_2);
+            self.view.transform = CGAffineTransformMakeRotation( (CGFloat)-M_PI_2 );
             break;
         case UIInterfaceOrientationPortraitUpsideDown:
-            self.view.transform = CGAffineTransformMakeRotation((CGFloat)M_PI);
+            self.view.transform = CGAffineTransformMakeRotation( (CGFloat)M_PI );
             break;
         default:
-            self.view.transform = CGAffineTransformMakeRotation(0.0f);
+            self.view.transform = CGAffineTransformMakeRotation( 0.0f );
             break;
     }
 
-    self.view.center = CGPointMultiply(CGPointFromCGSize(self.view.frame.size), 0.5);
+    self.view.center = CGPointMultiply( CGPointFromCGSize( self.view.frame.size ), 0.5 );
 }
 
 - (BOOL)isInterfaceOrientationSupported:(UIInterfaceOrientation)interfaceOrientation {
@@ -138,15 +135,12 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 
     if ([@"UIInterfaceOrientationPortrait" isEqualToString:interfaceOrientation])
         [self supportInterfaceOrientation:UIInterfaceOrientationPortrait];
-    else
-        if ([@"UIInterfaceOrientationPortraitUpsideDown" isEqualToString:interfaceOrientation])
-            [self supportInterfaceOrientation:UIInterfaceOrientationPortraitUpsideDown];
-        else
-            if ([@"UIInterfaceOrientationLandscapeLeft" isEqualToString:interfaceOrientation])
-                [self supportInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
-            else
-                if ([@"UIInterfaceOrientationLandscapeRight" isEqualToString:interfaceOrientation])
-                    [self supportInterfaceOrientation:UIInterfaceOrientationLandscapeRight];
+    else if ([@"UIInterfaceOrientationPortraitUpsideDown" isEqualToString:interfaceOrientation])
+        [self supportInterfaceOrientation:UIInterfaceOrientationPortraitUpsideDown];
+    else if ([@"UIInterfaceOrientationLandscapeLeft" isEqualToString:interfaceOrientation])
+        [self supportInterfaceOrientation:UIInterfaceOrientationLandscapeLeft];
+    else if ([@"UIInterfaceOrientationLandscapeRight" isEqualToString:interfaceOrientation])
+        [self supportInterfaceOrientation:UIInterfaceOrientationLandscapeRight];
 }
 
 - (void)supportInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -165,23 +159,23 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
-    
+
     NSUInteger supportedInterfaceOrientations = 0;
     for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
         supportedInterfaceOrientations |= [supportedInterfaceOrientation unsignedIntegerValue];
-    
+
     return supportedInterfaceOrientations;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    
+
     return (UIInterfaceOrientation)[[self.mySupportedIterfaceOrientations objectAtIndex:0] unsignedIntegerValue];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
-    dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation(fromInterfaceOrientation), NSStringFromUIInterfaceOrientation(
-     [UIApplication sharedApplication].statusBarOrientation));
+    dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation( fromInterfaceOrientation ), NSStringFromUIInterfaceOrientation(
+            [UIApplication sharedApplication].statusBarOrientation ));
     [[PearlAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 

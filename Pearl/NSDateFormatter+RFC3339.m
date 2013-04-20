@@ -15,10 +15,7 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "NSDateFormatter+RFC3339.h"
-
-
-@implementation NSDateFormatter (RFC3339)
+@implementation NSDateFormatter(RFC3339)
 
 + (instancetype)rfc3339DateFormatter {
 

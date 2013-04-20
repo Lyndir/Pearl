@@ -18,9 +18,7 @@
 //  http://stackoverflow.com/questions/603907/uiimage-resize-then-crop/605385#605385
 //
 
-#import "UIImage+PearlScaling.h"
-
-@implementation UIImage (PearlScaling)
+@implementation UIImage(PearlScaling)
 
 + (UIImage *)imageNamed:(NSString *)imageName inSquareScalingHeight:(CGFloat)height {
 
@@ -49,22 +47,22 @@
 
 - (UIImage *)imageInSquareScalingHeight:(CGFloat)height {
 
-    return [self imageInSizeScalingHeight:CGSizeMake(height, height)];
+    return [self imageInSizeScalingHeight:CGSizeMake( height, height )];
 }
 
 - (UIImage *)imageInSquareScalingWidth:(CGFloat)width {
 
-    return [self imageInSizeScalingWidth:CGSizeMake(width, width)];
+    return [self imageInSizeScalingWidth:CGSizeMake( width, width )];
 }
 
 - (UIImage *)imageInSizeScalingHeight:(CGSize)size {
 
-    return [self imageScaledInto:CGSizeMake(CGFLOAT_MAX, size.height) cropTo:size];
+    return [self imageScaledInto:CGSizeMake( CGFLOAT_MAX, size.height ) cropTo:size];
 }
 
 - (UIImage *)imageInSizeScalingWidth:(CGSize)size {
 
-    return [self imageScaledInto:CGSizeMake(size.width, CGFLOAT_MAX) cropTo:size];
+    return [self imageScaledInto:CGSizeMake( size.width, CGFLOAT_MAX ) cropTo:size];
 }
 
 - (UIImage *)imageScaledInto:(CGSize)scaleSize cropTo:(CGSize)cropSize {
@@ -75,10 +73,10 @@
             imageCache = [NSCache new];
     }
 
-    NSString *imageSourceKey = [[(__bridge_transfer NSData *)CGDataProviderCopyData(CGImageGetDataProvider(self.CGImage))
-     hashWith:PearlHashMD4] encodeBase64];
-    NSString *imageKey       = PearlString(@"%@_%@_%@", imageSourceKey, NSStringFromCGSize(scaleSize), NSStringFromCGSize(cropSize));
-    UIImage  *image          = [imageCache objectForKey:imageKey];
+    NSString *imageSourceKey = [[(__bridge_transfer NSData *)CGDataProviderCopyData( CGImageGetDataProvider( self.CGImage ) )
+            hashWith:PearlHashMD4] encodeBase64];
+    NSString *imageKey = PearlString( @"%@_%@_%@", imageSourceKey, NSStringFromCGSize( scaleSize ), NSStringFromCGSize( cropSize ) );
+    UIImage *image = [imageCache objectForKey:imageKey];
     if (!image)
         [imageCache setObject:image = [[self imageByScalingAndFittingInSize:scaleSize] imageByScalingAndCroppingToSize:cropSize]
                        forKey:imageKey];
@@ -89,22 +87,22 @@
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize {
 
     CGFloat uiScale = [UIScreen mainScreen].scale;
-    targetSize = CGSizeApplyAffineTransform(targetSize, CGAffineTransformScale(CGAffineTransformIdentity, uiScale, uiScale));
+    targetSize = CGSizeApplyAffineTransform( targetSize, CGAffineTransformScale( CGAffineTransformIdentity, uiScale, uiScale ) );
 
-    if (CGSizeEqualToSize(self.size, targetSize))
+    if (CGSizeEqualToSize( self.size, targetSize ))
         return self;
 
-    CGFloat widthFactor  = targetSize.width / self.size.width;
+    CGFloat widthFactor = targetSize.width / self.size.width;
     CGFloat heightFactor = targetSize.height / self.size.height;
 
-    CGFloat scaleFactor = fminf(widthFactor, heightFactor);
-    CGSize  scaledSize  = CGSizeMake(self.size.width * scaleFactor,
-                                     self.size.height * scaleFactor);
-    UIGraphicsBeginImageContext(scaledSize);
+    CGFloat scaleFactor = fminf( widthFactor, heightFactor );
+    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
+            self.size.height * scaleFactor );
+    UIGraphicsBeginImageContext( scaledSize );
 
     CGRect thumbnailRect;
     thumbnailRect.origin = CGPointZero;
-    thumbnailRect.size   = scaledSize;
+    thumbnailRect.size = scaledSize;
 
     [self drawInRect:thumbnailRect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -117,35 +115,33 @@
     return newImage;
 }
 
-
 - (UIImage *)imageByScalingAndCroppingToSize:(CGSize)targetSize {
 
     CGFloat uiScale = [UIScreen mainScreen].scale;
-    targetSize = CGSizeApplyAffineTransform(targetSize, CGAffineTransformScale(CGAffineTransformIdentity, uiScale, uiScale));
+    targetSize = CGSizeApplyAffineTransform( targetSize, CGAffineTransformScale( CGAffineTransformIdentity, uiScale, uiScale ) );
 
-    if (CGSizeEqualToSize(self.size, targetSize))
+    if (CGSizeEqualToSize( self.size, targetSize ))
         return self;
 
-    CGFloat widthFactor  = targetSize.width / self.size.width;
+    CGFloat widthFactor = targetSize.width / self.size.width;
     CGFloat heightFactor = targetSize.height / self.size.height;
 
-    CGFloat scaleFactor = fmaxf(widthFactor, heightFactor);
-    CGSize  scaledSize  = CGSizeMake(self.size.width * scaleFactor,
-                                     self.size.height * scaleFactor);
+    CGFloat scaleFactor = fmaxf( widthFactor, heightFactor );
+    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
+            self.size.height * scaleFactor );
 
     // center the image
     CGPoint thumbnailPoint = CGPointZero;
     if (widthFactor > heightFactor)
         thumbnailPoint.y = (targetSize.height - scaledSize.height) / 2;
-    else
-        if (widthFactor < heightFactor)
-            thumbnailPoint.x = (targetSize.width - scaledSize.width) / 2;
+    else if (widthFactor < heightFactor)
+        thumbnailPoint.x = (targetSize.width - scaledSize.width) / 2;
 
-    UIGraphicsBeginImageContext(targetSize); // this will crop
+    UIGraphicsBeginImageContext( targetSize ); // this will crop
 
     CGRect thumbnailRect;
     thumbnailRect.origin = thumbnailPoint;
-    thumbnailRect.size   = scaledSize;
+    thumbnailRect.size = scaledSize;
 
     [self drawInRect:thumbnailRect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();

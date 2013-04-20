@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSBundle (PearlMutableInfo)
+@interface NSBundle(PearlMutableInfo)
 
 - (NSMutableDictionary *)mutableInfoDictionary;
 - (NSMutableDictionary *)mutableLocalizedInfoDictionary;

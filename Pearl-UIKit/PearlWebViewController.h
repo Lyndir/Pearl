@@ -17,12 +17,11 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface PearlWebViewController : UIViewController<UIWebViewDelegate> {
 
     UIWebView *webView;
 }
 
-@property (nonatomic, retain) IBOutlet UIWebView *webView;
+@property(nonatomic, retain) IBOutlet UIWebView *webView;
 
 @end

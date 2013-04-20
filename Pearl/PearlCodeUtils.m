@@ -50,7 +50,7 @@ uint64_t PearlSecureRandom() {
 
     uint64_t random = 0;
 #if TARGET_OS_IPHONE
-    SecRandomCopyBytes(kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random);
+    SecRandomCopyBytes( kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random );
 #else
     FILE *fp = fopen("/dev/random", "r");
     if (!fp) {
@@ -65,8 +65,7 @@ uint64_t PearlSecureRandom() {
     return random;
 }
 
-
-@implementation NSString (PearlCodeUtils)
+@implementation NSString(PearlCodeUtils)
 
 - (NSData *)hashWith:(PearlHash)hash {
 
@@ -77,12 +76,12 @@ uint64_t PearlSecureRandom() {
 
     NSMutableData *data = [NSMutableData dataWithLength:self.length / 2];
     for (NSUInteger i = 0; i < self.length; i += 2) {
-        NSString  *hex     = [self substringWithRange:NSMakeRange(i, 2)];
+        NSString *hex = [self substringWithRange:NSMakeRange( i, 2 )];
         NSScanner *scanner = [NSScanner scannerWithString:hex];
         unsigned intValue;
 
         if (![scanner scanHexInt:&intValue])
-            // Not a HEX string.
+                // Not a HEX string.
             return nil;
         [data appendBytes:&intValue length:1];
     }
@@ -97,7 +96,7 @@ uint64_t PearlSecureRandom() {
 
     static char *decodingTable = NULL;
     if (decodingTable == NULL) {
-        decodingTable = malloc(256);
+        decodingTable = malloc( 256 );
         if (decodingTable == NULL)
             return nil;
 
@@ -108,27 +107,27 @@ uint64_t PearlSecureRandom() {
 
     const char *characters = [self cStringUsingEncoding:NSASCIIStringEncoding];
     if (characters == NULL)
-     //  Not an ASCII string!
+            //  Not an ASCII string!
         return nil;
 
-    char *bytes = malloc((([self length] + 3) / 4) * 3);
+    char *bytes = malloc( (([self length] + 3) / 4) * 3 );
     if (bytes == NULL)
         return nil;
 
     NSUInteger length = 0, i = 0;
     while (YES) {
-        char  buffer[4];
+        char buffer[4];
         short bufferLength;
         for (bufferLength = 0; bufferLength < 4; i++) {
             if (characters[i] == '\0')
                 break;
-            if (isspace(characters[i]) || characters[i] == '=')
+            if (isspace( characters[i] ) || characters[i] == '=')
                 continue;
 
             buffer[bufferLength] = decodingTable[(short)characters[i]];
             if (buffer[bufferLength++] == CHAR_MAX) {
                 // Illegal character!
-                free(bytes);
+                free( bytes );
                 return nil;
             }
         }
@@ -137,27 +136,27 @@ uint64_t PearlSecureRandom() {
             break;
         if (bufferLength == 1) {
             //  At least two characters are needed to produce one byte!
-            free(bytes);
+            free( bytes );
             return nil;
         }
 
         //  Decode the characters in the buffer to bytes.
-        bytes[length++]     = (char)(buffer[0] << 2) | (buffer[1] >> 4);
+        bytes[length++] = (char)(buffer[0] << 2) | (buffer[1] >> 4);
         if (bufferLength > 2)
             bytes[length++] = (char)(buffer[1] << 4) | (buffer[2] >> 2);
         if (bufferLength > 3)
             bytes[length++] = (char)(buffer[2] << 6) | buffer[3];
     }
 
-    realloc(bytes, length);
+    realloc( bytes, length );
     return [NSData dataWithBytesNoCopy:bytes length:length];
 }
 
 - (NSString *)encodeURL {
 
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)self, NULL,
-     CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
-                                                                                 kCFStringEncodingUTF8);
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes( kCFAllocatorDefault, (__bridge CFStringRef)self, NULL,
+            CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
+            kCFStringEncodingUTF8 );
 }
 
 - (NSString *)inject:(NSString *)injection interval:(NSUInteger)interval {
@@ -184,10 +183,9 @@ uint64_t PearlSecureRandom() {
     return [self wrapAt:64];
 }
 
-
 @end
 
-@implementation NSData (PearlCodeUtils)
+@implementation NSData(PearlCodeUtils)
 
 + (NSData *)dataByConcatenatingDatas:(NSData *)datas, ... {
 
@@ -197,7 +195,7 @@ uint64_t PearlSecureRandom() {
         capacity += data.length;
 
     NSMutableData *concatenated = [NSMutableData dataWithCapacity:capacity];
-    for (NSData   *data in datasArray)
+    for (NSData *data in datasArray)
         [concatenated appendData:data];
 
     return concatenated;
@@ -236,20 +234,20 @@ uint64_t PearlSecureRandom() {
     if ([self length] == 0)
         return @"";
 
-    char *characters = malloc((([self length] + 2) / 3) * 4);
+    char *characters = malloc( (([self length] + 2) / 3) * 4 );
     if (characters == NULL)
         return nil;
 
     NSUInteger length = 0, i = 0;
     while (i < [self length]) {
-        char  buffer[3]    = {0, 0, 0};
+        char buffer[3] = { 0, 0, 0 };
         short bufferLength = 0;
         while (bufferLength < 3 && i < [self length])
             buffer[bufferLength++] = ((char *)[self bytes])[i++];
 
         //  Encode the bytes in the buffer to four characters, including padding "=" characters if necessary.
-        characters[length++]     = CodeUtils_Base64EncodingTable[(buffer[0] & 0xFC) >> 2];
-        characters[length++]     = CodeUtils_Base64EncodingTable[((buffer[0] & 0x03) << 4) | ((buffer[1] & 0xF0) >> 4)];
+        characters[length++] = CodeUtils_Base64EncodingTable[(buffer[0] & 0xFC) >> 2];
+        characters[length++] = CodeUtils_Base64EncodingTable[((buffer[0] & 0x03) << 4) | ((buffer[1] & 0xF0) >> 4)];
         if (bufferLength > 1)
             characters[length++] = CodeUtils_Base64EncodingTable[((buffer[1] & 0x0F) << 2) | ((buffer[2] & 0xC0) >> 6)];
         else
@@ -270,43 +268,43 @@ uint64_t PearlSecureRandom() {
             return self;
         case PearlHashMD4: {
             unsigned char result[CC_MD4_DIGEST_LENGTH];
-            CC_MD4(self.bytes, (CC_LONG)self.length, result);
+            CC_MD4( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
-            CC_MD5(self.bytes, (CC_LONG)self.length, result);
+            CC_MD5( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA1: {
             unsigned char result[CC_SHA1_DIGEST_LENGTH];
-            CC_SHA1(self.bytes, (CC_LONG)self.length, result);
+            CC_SHA1( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA224: {
             unsigned char result[CC_SHA224_DIGEST_LENGTH];
-            CC_SHA224(self.bytes, (CC_LONG)self.length, result);
+            CC_SHA224( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA256: {
             unsigned char result[CC_SHA256_DIGEST_LENGTH];
-            CC_SHA256(self.bytes, (CC_LONG)self.length, result);
+            CC_SHA256( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA384: {
             unsigned char result[CC_SHA384_DIGEST_LENGTH];
-            CC_SHA384(self.bytes, (CC_LONG)self.length, result);
+            CC_SHA384( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA512: {
             unsigned char result[CC_SHA512_DIGEST_LENGTH];
-            CC_SHA512(self.bytes, (CC_LONG)self.length, result);
+            CC_SHA512( self.bytes, (CC_LONG)self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
@@ -327,37 +325,37 @@ uint64_t PearlSecureRandom() {
             break;
         case PearlHashMD5: {
             unsigned char result[CC_MD5_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgMD5, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgMD5, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA1: {
             unsigned char result[CC_SHA1_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgSHA1, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgSHA1, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA224: {
             unsigned char result[CC_SHA224_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgSHA224, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgSHA224, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA256: {
             unsigned char result[CC_SHA256_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgSHA256, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgSHA256, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA384: {
             unsigned char result[CC_SHA384_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgSHA384, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgSHA384, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
         case PearlHashSHA512: {
             unsigned char result[CC_SHA512_DIGEST_LENGTH];
-            CCHmac(kCCHmacAlgSHA512, key.bytes, key.length, self.bytes, self.length, result);
+            CCHmac( kCCHmacAlgSHA512, key.bytes, key.length, self.bytes, self.length, result );
 
             return [NSData dataWithBytes:result length:sizeof(result)];
         }
@@ -398,12 +396,12 @@ uint64_t PearlSecureRandom() {
 
 + (NSString *)randomUUID {
 
-    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    CFUUIDRef uuid = CFUUIDCreate( kCFAllocatorDefault );
     @try {
-        return (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+        return (__bridge_transfer NSString *)CFUUIDCreateString( kCFAllocatorDefault, uuid );
     }
     @finally {
-        CFRelease(uuid);
+        CFRelease( uuid );
     }
 }
 

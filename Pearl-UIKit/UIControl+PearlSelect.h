@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIControl (PearlSelect)
+@interface UIControl(PearlSelect)
 
 - (BOOL)selectionInSuperviewCandidate;
 - (BOOL)selectionInSuperviewClearable;

@@ -15,9 +15,7 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "UIScrollView+PearlFlashingIndicators.h"
-
-@implementation UIScrollView (PearlFlashingIndicators)
+@implementation UIScrollView(PearlFlashingIndicators)
 
 - (void)flashScrollIndicatorsContinuously {
 
@@ -29,11 +27,10 @@
     __weak UIScrollView *wSelf = self;
     if (!(self.tracking || self.dragging || self.decelerating))
         [self flashScrollIndicators];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [wSelf flashScrollIndicatorsContinuouslyAfterSeconds:seconds];
-    });
-}
 
+    dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), dispatch_get_main_queue(), ^{
+        [wSelf flashScrollIndicatorsContinuouslyAfterSeconds:seconds];
+    } );
+}
 
 @end

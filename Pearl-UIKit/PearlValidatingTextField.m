@@ -16,16 +16,14 @@
 //  Copyright, lhunath (Maarten Billemont) 2010. All rights reserved.
 //
 
-#import "PearlValidatingTextField.h"
-
-@interface PearlValidatingTextField ()
+@interface PearlValidatingTextField()
 
 - (void)textFieldDidChange;
 
 @end
 
-
 @implementation PearlValidatingTextField
+
 @synthesize validationDelegate;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -35,7 +33,7 @@
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    _validView   = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accept.png"]];
+    _validView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accept.png"]];
     _invalidView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"exclamation.png"]];
     self.rightViewMode = UITextFieldViewModeAlways;
 
@@ -53,12 +51,12 @@
     if (!(self = [super initWithFrame:frame]))
         return self;
 
-    _validView   = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accept.png"]];
+    _validView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accept.png"]];
     _invalidView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"exclamation.png"]];
 
-    self.borderStyle              = UITextBorderStyleRoundedRect;
+    self.borderStyle = UITextBorderStyleRoundedRect;
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.rightViewMode            = UITextFieldViewModeAlways;
+    self.rightViewMode = UITextFieldViewModeAlways;
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textFieldDidChange)
@@ -89,7 +87,7 @@
         valid &= _isValid();
 
     if (!self.validationDelegate && !_isValid)
-     // No validators, default action is to check whether the field is non-empty.
+            // No validators, default action is to check whether the field is non-empty.
         valid = self.text.length > 0;
 
     self.rightView = valid? _validView: _invalidView;

@@ -16,41 +16,39 @@
 //  Copyright 2011 Lhunath. All rights reserved.
 //
 
-#import "PearlLayoutView.h"
-
 @implementation PearlLayoutView
 
 + (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth
-                             gravity:(PearlLayoutGravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
 
     return [self viewWithContent:contentView padWidth:padWidth padHeight:0 gravity:gravity];
 }
 
 + (instancetype)viewWithContent:(UIView *)contentView padHeight:(CGFloat)padHeight
-                             gravity:(PearlLayoutGravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
 
     return [self viewWithContent:contentView padWidth:0 padHeight:padHeight gravity:gravity];
 }
 
 + (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth padHeight:(CGFloat)padHeight
-                             gravity:(PearlLayoutGravity)gravity {
+                        gravity:(PearlLayoutGravity)gravity {
 
     return [[self alloc]
-                  initWithContent:contentView
-                            width:contentView.frame.size.width + padWidth
-                           height:contentView.frame.size.height + padHeight
-                          gravity:gravity];
+            initWithContent:contentView
+                      width:contentView.frame.size.width + padWidth
+                     height:contentView.frame.size.height + padHeight
+                    gravity:gravity];
 }
 
 - (id)initWithContent:(UIView *)contentView width:(CGFloat)width height:(CGFloat)height gravity:(PearlLayoutGravity)gravity {
 
-    if (!(self = [super initWithFrame:CGRectMake(0, 0, width, height)]))
+    if (!(self = [super initWithFrame:CGRectMake( 0, 0, width, height )]))
         return self;
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    CGSize  size = contentView.frame.size;
-    CGFloat x    = 0, y = 0;
+    CGSize size = contentView.frame.size;
+    CGFloat x = 0, y = 0;
     switch (gravity) {
         case PearlLayoutGravityNorth:
             break;
@@ -65,7 +63,7 @@
     }
 
     [self addSubview:contentView];
-    contentView.frame = (CGRect){CGPointMake(x, y), size};
+    contentView.frame = (CGRect){ CGPointMake( x, y ), size };
 
     return self;
 }

@@ -35,8 +35,8 @@
 
 @private
     UIScrollView *_scrollView;
-    UIView       *_contentView;
-    UIView       *_lastChild;
+    UIView *_contentView;
+    UIView *_lastChild;
 }
 
 
@@ -48,7 +48,7 @@
  *
  * This is the view to which all views are added using the add methods.
  */
-@property (nonatomic, readonly, retain) UIScrollView *scrollView;
+@property(nonatomic, readonly, retain) UIScrollView *scrollView;
 
 
 #pragma mark ###############################

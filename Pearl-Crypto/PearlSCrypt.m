@@ -13,12 +13,12 @@
 #import "crypto_scrypt.h"
 #import "scryptenc.h"
 
-@interface PearlSCrypt ()
-
+@interface PearlSCrypt()
 
 @end
 
 @implementation PearlSCrypt
+
 @synthesize fractionOfAvailableMemory = _fractionOfAvailableMemory, maximumMemory = _maximumMemory, time = _time;
 
 - (id)init {
@@ -35,8 +35,8 @@
         return nil;
 
     self.fractionOfAvailableMemory = fractionOfAvailableMemory;
-    self.maximumMemory             = maximumMemory;
-    self.time                      = time;
+    self.maximumMemory = maximumMemory;
+    self.time = time;
 
     return self;
 }
@@ -95,10 +95,10 @@ static BOOL checkResult(int resultCode) {
                       usingSalt:(NSData *)salt N:(uint64_t)N r:(uint32_t)r p:(uint32_t)p {
 
     size_t outbuflen = keyLength;
-    uint8_t *outbuf = malloc(outbuflen);
-    if (crypto_scrypt(password.bytes, password.length,
-                      salt.bytes, salt.length, N, r, p,
-                      outbuf, outbuflen) < 0) {
+    uint8_t *outbuf = malloc( outbuflen );
+    if (crypto_scrypt( password.bytes, password.length,
+            salt.bytes, salt.length, N, r, p,
+            outbuf, outbuflen ) < 0) {
         err(@"crypto_scrypt: %@", errstr());
         return nil;
     }
@@ -119,8 +119,8 @@ static BOOL checkResult(int resultCode) {
 - (BOOL)determineParametersN:(uint64_t *)N r:(uint32_t *)r p:(uint32_t *)p {
 
     int logN;
-    if (!checkResult(pickparams(self.maximumMemory, self.fractionOfAvailableMemory, self.time,
-                                &logN, r, p)))
+    if (!checkResult( pickparams( self.maximumMemory, self.fractionOfAvailableMemory, self.time,
+            &logN, r, p ) ))
         return NO;
 
     *N = (uint64_t)(1) << logN;
@@ -130,9 +130,9 @@ static BOOL checkResult(int resultCode) {
 - (NSData *)encrypt:(NSData *)plain withPassword:(NSData *)password {
 
     size_t outbuflen = plain.length + 128;
-    uint8_t *outbuf = malloc(outbuflen);
-    if (!checkResult(scryptenc_buf(plain.bytes, plain.length, outbuf, password.bytes, password.length,
-                                   self.maximumMemory, self.fractionOfAvailableMemory, self.time)))
+    uint8_t *outbuf = malloc( outbuflen );
+    if (!checkResult( scryptenc_buf( plain.bytes, plain.length, outbuf, password.bytes, password.length,
+            self.maximumMemory, self.fractionOfAvailableMemory, self.time ) ))
         return nil;
 
     return [NSData dataWithBytes:outbuf length:outbuflen];
@@ -141,9 +141,9 @@ static BOOL checkResult(int resultCode) {
 - (NSData *)decrypt:(NSData *)encrypted withPassword:(NSData *)password {
 
     size_t outbuflen = encrypted.length;
-    uint8_t *outbuf = malloc(outbuflen);
-    if (!checkResult(scryptdec_buf(encrypted.bytes, encrypted.length, outbuf, &outbuflen, (uint8_t *)password.bytes, password.length,
-                                   self.maximumMemory, self.fractionOfAvailableMemory, self.time)))
+    uint8_t *outbuf = malloc( outbuflen );
+    if (!checkResult( scryptdec_buf( encrypted.bytes, encrypted.length, outbuf, &outbuflen, (uint8_t *)password.bytes, password.length,
+            self.maximumMemory, self.fractionOfAvailableMemory, self.time ) ))
         return nil;
 
     return [NSData dataWithBytes:outbuf length:outbuflen];

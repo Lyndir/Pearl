@@ -52,28 +52,33 @@ NSString *NSStringFromErrSec(OSStatus status) {
         case errSecUnimplemented:
             return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", (long)status];
         case errSecParam:
-            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).", (long)status];
+            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).",
+                                              (long)status];
         case errSecAllocate:
             return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", (long)status];
         case errSecNotAvailable:
-            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).", (long)status];
+            return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).",
+                                              (long)status];
         case errSecDuplicateItem:
-            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %ld).", (long)status];
+            return [NSString stringWithFormat:@"The specified item already exists in the keychain (errSecDuplicateItem: %ld).",
+                                              (long)status];
         case errSecItemNotFound:
-            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %ld).", (long)status];
+            return [NSString stringWithFormat:@"The specified item could not be found in the keychain (errSecItemNotFound: %ld).",
+                                              (long)status];
         case errSecInteractionNotAllowed:
             return [NSString stringWithFormat:@"User interaction is not allowed (errSecInteractionNotAllowed: %ld).", (long)status];
         case errSecDecode:
             return [NSString stringWithFormat:@"Unable to decode the provided data (errSecDecode: %ld).", (long)status];
         case errSecAuthFailed:
-            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).", (long)status];
+            return [NSString stringWithFormat:@"The user name or passphrase you entered is not correct (errSecAuthFailed: %ld).",
+                                              (long)status];
         default:
             wrn(@"Security Error status code not known: %ld", (long)status);
-            return PearlString(@"Unknown status (%ld).", (long)status);
+            return PearlString( @"Unknown status (%ld).", (long)status );
     }
 }
 
-@implementation NSString (PearlCryptUtils)
+@implementation NSString(PearlCryptUtils)
 
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding {
 
@@ -87,7 +92,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
 
 @end
 
-@implementation NSData (PearlCryptUtils)
+@implementation NSData(PearlCryptUtils)
 
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding {
 
@@ -125,23 +130,23 @@ NSString *NSStringFromErrSec(OSStatus status) {
     }
 
     // Encrypt / Decrypt
-    void *buffer = malloc(self.length + PearlCryptBlockSize);
+    void *buffer = malloc( self.length + PearlCryptBlockSize );
     @try {
-        size_t          movedBytes;
-        CCCryptorStatus ccStatus = CCCrypt(encryptOrDecrypt, PearlCryptAlgorithm, options,
-                                           symmetricKey.bytes, symmetricKey.length,
-         nil, self.bytes, self.length,
-                                           buffer, self.length + PearlCryptBlockSize, &movedBytes);
+        size_t movedBytes;
+        CCCryptorStatus ccStatus = CCCrypt( encryptOrDecrypt, PearlCryptAlgorithm, options,
+                symmetricKey.bytes, symmetricKey.length,
+                nil, self.bytes, self.length,
+                buffer, self.length + PearlCryptBlockSize, &movedBytes );
         if (ccStatus != kCCSuccess) {
             err(@"Problem during %@: %@",
-            encryptOrDecrypt == kCCEncrypt? @"encryption": @"decryption", NSStringFromCCCryptorStatus(ccStatus));
+            encryptOrDecrypt == kCCEncrypt? @"encryption": @"decryption", NSStringFromCCCryptorStatus( ccStatus ));
             return nil;
         }
 
         return [NSData dataWithBytes:buffer length:movedBytes];
     }
     @finally {
-        free(buffer);
+        free( buffer );
     }
 }
 
@@ -153,24 +158,24 @@ NSString *NSStringFromErrSec(OSStatus status) {
                       otpLength:(NSUInteger)otpLength otpAlpha:(BOOL)otpAlpha {
 
     // RFC4226, 5.1: Factor must be 8 bytes.
-    factor = [factor subdataWithRange:NSMakeRange(0, 8)];
+    factor = [factor subdataWithRange:NSMakeRange( 0, 8 )];
 
     // Result buffer.
-    char *hmac = malloc(CC_SHA1_DIGEST_LENGTH);
+    char *hmac = malloc( CC_SHA1_DIGEST_LENGTH );
 
     // Calculate the HMAC-SHA-1 of the moving factor with the key.
-    CCHmac(kCCHmacAlgSHA1, key.bytes, key.length, factor.bytes, factor.length, hmac);
+    CCHmac( kCCHmacAlgSHA1, key.bytes, key.length, factor.bytes, factor.length, hmac );
 
     // Truncate the result: Extract a 4-byte dynamic binary code from a 160-bit (20-byte) HMAC-SHA-1 result.
     int offset = hmac[CC_SHA1_DIGEST_LENGTH - 1] & 0xf;
-    int otp    = (hmac[offset + 0] & 0x7f) << 24 | //
-     (hmac[offset + 1] & 0xff) << 16 | //
-     (hmac[offset + 2] & 0xff) << 8 | //
-     (hmac[offset + 3] & 0xff) << 0;
-    free(hmac);
+    int otp = (hmac[offset + 0] & 0x7f) << 24 | //
+              (hmac[offset + 1] & 0xff) << 16 | //
+              (hmac[offset + 2] & 0xff) << 8 | //
+              (hmac[offset + 3] & 0xff) << 0;
+    free( hmac );
 
     // Extract otpLength digits out of the OTP data.
-    return PearlString(PearlString(@"%%0%lud", (long)otpLength), otp % (int)powf(10, otpLength));
+    return PearlString( PearlString( @"%%0%lud", (long)otpLength ), otp % (int)powf( 10, otpLength ) );
 }
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42
@@ -196,9 +201,9 @@ static size_t DEREncodeLength(unsigned char *buf, size_t length) {
 + (NSData *)derEncodeRSAKey:(NSData *)key {
 
     static const unsigned char _encodedRSAEncryptionOID[15] = {
-     /* Sequence of length 0xd made up of OID followed by NULL */
-     0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
-     0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00
+            /* Sequence of length 0xd made up of OID followed by NULL */
+            0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
+            0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00
     };
 
     NSMutableData *encKey = [NSMutableData data];
@@ -216,7 +221,7 @@ static size_t DEREncodeLength(unsigned char *buf, size_t length) {
     // Build up overall size made up of -
     // size of OID + size of bitstring encoding + size of actual key
     size_t i = sizeof(_encodedRSAEncryptionOID) + 2 + bitstringEncLength + key.length;
-    size_t j = DEREncodeLength(&builder[1], i);
+    size_t j = DEREncodeLength( &builder[1], i );
     [encKey appendBytes:builder length:j + 1];
 
     // First part of the sequence is the OID
@@ -224,7 +229,7 @@ static size_t DEREncodeLength(unsigned char *buf, size_t length) {
 
     // Now add the bitstring
     builder[0] = 0x03;
-    j = DEREncodeLength(&builder[1], key.length + 1);
+    j = DEREncodeLength( &builder[1], key.length + 1 );
     builder[j + 1] = 0x00;
     [encKey appendBytes:builder length:j + 2];
 

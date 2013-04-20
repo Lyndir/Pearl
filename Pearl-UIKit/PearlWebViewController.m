@@ -15,16 +15,14 @@
 //  Copyright 2010 Lhunath. All rights reserved.
 //
 
-#import "PearlWebViewController.h"
-
-@interface PearlWebViewController ()
+@interface PearlWebViewController()
 
 - (void)updateWebOrientation;
 
 @end
 
-
 @implementation PearlWebViewController
+
 @synthesize webView;
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -49,22 +47,22 @@
     switch (self.interfaceOrientation) {
         case UIDeviceOrientationPortrait:
             [self.webView stringByEvaluatingJavaScriptFromString:
-                           @"window.__defineGetter__('orientation',function(){return 0;});window.onorientationchange();"];
+                    @"window.__defineGetter__('orientation',function(){return 0;});window.onorientationchange();"];
             break;
 
         case UIDeviceOrientationLandscapeLeft:
             [self.webView stringByEvaluatingJavaScriptFromString:
-                           @"window.__defineGetter__('orientation',function(){return -90;});window.onorientationchange();"];
+                    @"window.__defineGetter__('orientation',function(){return -90;});window.onorientationchange();"];
             break;
 
         case UIDeviceOrientationLandscapeRight:
             [self.webView stringByEvaluatingJavaScriptFromString:
-                           @"window.__defineGetter__('orientation',function(){return 90;});window.onorientationchange();"];
+                    @"window.__defineGetter__('orientation',function(){return 90;});window.onorientationchange();"];
             break;
 
         case UIDeviceOrientationPortraitUpsideDown:
             [self.webView stringByEvaluatingJavaScriptFromString:
-                           @"window.__defineGetter__('orientation',function(){return 180;});window.onorientationchange();"];
+                    @"window.__defineGetter__('orientation',function(){return 180;});window.onorientationchange();"];
             break;
     }
 }

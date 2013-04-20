@@ -6,12 +6,9 @@
 //  Copyright (c) 2012 Lyndir. All rights reserved.
 //
 
-#import "PearlLazy.h"
-#import "PearlLogger.h"
 #import <objc/runtime.h>
 
-
-@interface PearlLazy () {
+@interface PearlLazy() {
 
     BOOL _trace;
     id _object;
@@ -28,7 +25,7 @@
 }
 
 + (id)lazyObjectLoadedFrom:(id(^)(void))loadObject trace:(BOOL)trace {
-    
+
     return [[PearlLazy alloc] initLoadedFrom:loadObject trace:trace];
 }
 
@@ -56,9 +53,8 @@
     return [[self loadedObject_PearlLazy] methodSignatureForSelector:aSelector];
 }
 
-
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
-    
+
     id loadedObject = [self loadedObject_PearlLazy];
     [anInvocation invokeWithTarget:loadedObject];
 
@@ -70,12 +66,12 @@
             [anInvocation getArgument:&argument atIndex:(signed)a];
             [arguments addObject:argument];
         }
-        
+
         // FIXME: Handle non-object return values.
         id returnValue = nil;
         [anInvocation getReturnValue:&returnValue];
 
-        inf(@"-[%@ %@] with %@ returns: %@", [loadedObject class], NSStringFromSelector([anInvocation selector]), arguments, returnValue);
+        inf(@"-[%@ %@] with %@ returns: %@", [loadedObject class], NSStringFromSelector( [anInvocation selector] ), arguments, returnValue);
     }
 }
 

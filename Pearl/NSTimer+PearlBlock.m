@@ -15,10 +15,6 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <objc/runtime.h>
-#import "NSTimer+PearlBlock.h"
-
-
 @interface PearlBlock_NSTimer : NSObject
 
 - (id)initWithBlock:(void (^)(id userInfo))block;
@@ -42,12 +38,13 @@
 
 - (void)triggerWithUserInfo:(id)userInfo {
 
-    block(userInfo);
+    block( userInfo );
 }
 
 @end
 
-@implementation NSTimer (PearlBlock)
+@implementation NSTimer(PearlBlock)
+
 static char blockTriggersKey;
 
 + (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo {
@@ -55,7 +52,7 @@ static char blockTriggersKey;
     PearlBlock_NSTimer *blockTrigger = [[PearlBlock_NSTimer alloc] initWithBlock:block];
     NSTimer *timer = [self timerWithTimeInterval:ti target:blockTrigger selector:@selector(triggerWithUserInfo:)
                                         userInfo:userInfo repeats:yesOrNo];
-    objc_setAssociatedObject(timer, &blockTriggersKey, blockTrigger, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject( timer, &blockTriggersKey, blockTrigger, OBJC_ASSOCIATION_RETAIN );
 
     return timer;
 }

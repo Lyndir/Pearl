@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 /**
  * A box view is a plain view that renders a bounding box.
  */
@@ -26,12 +25,12 @@
 
     UIColor *_color;
     CGFloat _width;
-    BOOL    _filled;
+    BOOL _filled;
 }
 
-@property (nonatomic, retain) UIColor *color;
-@property (nonatomic, assign) CGFloat width;
-@property (nonatomic, assign) BOOL    filled;
+@property(nonatomic, retain) UIColor *color;
+@property(nonatomic, assign) CGFloat width;
+@property(nonatomic, assign) BOOL filled;
 
 + (id)boxed:(id)view;
 + (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;

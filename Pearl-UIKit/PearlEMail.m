@@ -16,15 +16,13 @@
 //
 
 #ifdef PEARL_WITH_MESSAGEUI
-#import "PearlEMail.h"
 
-
-@interface PearlEMail ()<MFMailComposeViewControllerDelegate>
+@interface PearlEMail()<MFMailComposeViewControllerDelegate>
 @end
 
 @implementation PearlEMail {
-
 }
+
 @synthesize composer = _composer;
 
 + (BOOL)canSendMail {
@@ -51,12 +49,14 @@
     [self sendEMailTo:recipient subject:subject body:body attachments:nil];
 }
 
-+ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body attachments:(PearlEMailAttachment *)attachment, ... {
++ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body
+        attachments:(PearlEMailAttachment *)attachment, ... {
 
     [[[self alloc] initForEMailTo:recipient subject:subject body:body attachmentsArray:va_array(attachment)] showComposer];
 }
 
-- (id)initForEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body attachments:(PearlEMailAttachment *)attachments, ... {
+- (id)initForEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body
+         attachments:(PearlEMailAttachment *)attachments, ... {
 
     return [self initForEMailTo:recipient subject:subject body:body attachmentsArray:va_array(attachments)];
 }
@@ -71,14 +71,14 @@
     self.composer = [MFMailComposeViewController new];
     [self.composer setMailComposeDelegate:self];
     if (recipient)
-        [self.composer setToRecipients:@[recipient]];
+        [self.composer setToRecipients:@[ recipient ]];
     [self.composer setSubject:subject];
     [self.composer setMessageBody:body isHTML:NO];
 
     for (PearlEMailAttachment *attachment in attachments)
         [self.composer addAttachmentData:attachment.content
-                           mimeType:attachment.mimeType
-                           fileName:attachment.fileName];
+                                mimeType:attachment.mimeType
+                                fileName:attachment.fileName];
 
     return self;
 }
@@ -99,8 +99,8 @@
             vc = [vc presentedViewController];
     }
     if ([vc presentedViewController])
-        wrn(@"Won't be able to show composer, given VC is already presenting something.");
-    
+    wrn(@"Won't be able to show composer, given VC is already presenting something.");
+
     // Remove custom font for navigation bar: Causes a bug in iOS when presenting the MFMailComposeViewController.
     NSMutableDictionary *navBarTitleAttributes = [[UINavigationBar appearance] titleTextAttributes].mutableCopy;
     UIFont *navBarTitleFont = navBarTitleAttributes[UITextAttributeFont];

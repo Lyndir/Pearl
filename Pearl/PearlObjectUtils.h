@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -38,7 +37,6 @@
                 va_end(__list);                                                                 \
                 __array;                                                                        \
             })
-
 
 #define NilToNSNull(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })

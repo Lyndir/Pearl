@@ -33,24 +33,26 @@ NSAttributedString *PearlAttributeString(NSString *string, NSRange range, NSDict
     [attributedString setAttributes:attributes range:range];
     return (id)attributedString;
 }
+
 NSString *PearlLocalize(NSString *format, ...) {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
                                            arguments:argList];
     va_end(argList);
-    
+
     return msg;
 }
+
 NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) {
-    
+
     va_list argList;
     va_start(argList, format);
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
                                            arguments:argList];
     va_end(argList);
-    
+
     return msg;
 }
 
@@ -63,7 +65,6 @@ NSString *RPad(const NSString *string, const NSUInteger l) {
     return newString;
 }
 
-
 NSString *LPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];
@@ -73,18 +74,15 @@ NSString *LPad(const NSString *string, const NSUInteger l) {
     return newString;
 }
 
-
 NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *prefix) {
 
     NSString *suffix = [PearlStrings get].timeDaySuffix;
     if (number % 10 == 1 && number != 11)
         suffix = [PearlStrings get].timeDaySuffixOne;
-    else
-        if (number % 10 == 2 && number != 12)
-            suffix = [PearlStrings get].timeDaySuffixTwo;
-        else
-            if (number % 10 == 3 && number != 13)
-                suffix = [PearlStrings get].timeDaySuffixThree;
+    else if (number % 10 == 2 && number != 12)
+        suffix = [PearlStrings get].timeDaySuffixTwo;
+    else if (number % 10 == 3 && number != 13)
+        suffix = [PearlStrings get].timeDaySuffixThree;
 
     return [NSString stringWithFormat:@"%@%@", prefix, suffix];
 }
@@ -100,7 +98,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     return numbers;
 }
 
-@implementation NSString (PearlStringUtils)
+@implementation NSString(PearlStringUtils)
 
 - (NSString *)stringByDeletingMatchesOf:(NSString *)pattern {
 
@@ -135,7 +133,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
 
 - (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression withTemplate:(NSString *)templ {
 
-    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, self.length) withTemplate:templ];
+    return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange( 0, self.length ) withTemplate:templ];
 }
 
 @end

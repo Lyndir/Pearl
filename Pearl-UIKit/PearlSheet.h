@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 /**
  * The sheet view controller manages a view that displays a short message and choices to the user.
  *

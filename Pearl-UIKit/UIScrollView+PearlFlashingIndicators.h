@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIScrollView (PearlFlashingIndicators)
+@interface UIScrollView(PearlFlashingIndicators)
 
 - (void)flashScrollIndicatorsContinuously;
 - (void)flashScrollIndicatorsContinuouslyAfterSeconds:(float)seconds;

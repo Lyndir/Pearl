@@ -18,21 +18,19 @@
 
 #import "PearlLayout.h"
 
-@interface PearlLayout ()
+@interface PearlLayout()
 
-@property (nonatomic, readwrite, retain) UIScrollView *scrollView;
-@property (nonatomic, readwrite, retain) UIView       *contentView;
-@property (nonatomic, readwrite, retain) UIView       *lastChild;
+@property(nonatomic, readwrite, retain) UIScrollView *scrollView;
+@property(nonatomic, readwrite, retain) UIView *contentView;
+@property(nonatomic, readwrite, retain) UIView *lastChild;
 
 @end
-
 
 @implementation PearlLayout
 
 @synthesize scrollView = _scrollView;
 @synthesize contentView = _contentView;
 @synthesize lastChild = _lastChild;
-
 
 - (id)init {
 
@@ -42,7 +40,6 @@
     return self;
 }
 
-
 - (id)initWithView:(UIView *)aView {
 
     if (!(self = [super init]))
@@ -51,12 +48,12 @@
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
     CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
-    CGRect contentFrame     = applicationFrame;
+    CGRect contentFrame = applicationFrame;
     contentFrame.origin = CGPointZero;
 
-    self.scrollView                   = [[UIScrollView alloc] initWithFrame:applicationFrame];
-    self.contentView                  = aView;
-    self.contentView.frame            = contentFrame;
+    self.scrollView = [[UIScrollView alloc] initWithFrame:applicationFrame];
+    self.contentView = aView;
+    self.contentView.frame = contentFrame;
     self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     [self.scrollView addSubview:self.contentView];
@@ -64,42 +61,36 @@
     return self;
 }
 
-
 - (PearlLayout *)addLogo {
 
     return [self addLogo:nil];
 }
 
-
 - (PearlLayout *)addLogo:(UIImage *)logoImage {
 
     UIImageView *logo = [[UIImageView alloc] initWithImage:logoImage];
-    [logo setCenter:CGPointMake(self.contentView.frame.size.width / 2, logo.frame.size.height / 2)];
+    [logo setCenter:CGPointMake( self.contentView.frame.size.width / 2, logo.frame.size.height / 2 )];
     [logo setAutoresizingMask:
-           UIViewAutoresizingFlexibleLeftMargin |
+            UIViewAutoresizingFlexibleLeftMargin |
             UIViewAutoresizingFlexibleRightMargin];
 
     return [self add:logo];
 }
-
 
 - (PearlLayout *)addMax:(UIView *)newView {
 
     return [self addMax:newView top:-1];
 }
 
-
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top {
 
     return [self addMax:newView top:top minus:0];
 }
 
-
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus {
 
     return [self addMax:newView top:top minus:minus usingDefault:-1];
 }
-
 
 - (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)d {
 
@@ -111,27 +102,24 @@
             y = 20;
     }
 
-    [newView setFrame:CGRectMake(0,
-                                 y,
-                                 self.contentView.frame.size.width,
-                                 self.scrollView.frame.size.height / 1 - y - PearlLayoutPadding - minus)];
+    [newView setFrame:CGRectMake( 0,
+            y,
+            self.contentView.frame.size.width,
+            self.scrollView.frame.size.height / 1 - y - PearlLayoutPadding - minus )];
 
     return [self add:newView usingDefault:-1];
 }
 
-
 - (PearlLayout *)addSpace:(CGFloat)space {
 
-    UIView *spaceView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, space)];
+    UIView *spaceView = [[UIView alloc] initWithFrame:CGRectMake( 0, 0, 0, space )];
     return [self add:spaceView];
 }
-
 
 - (PearlLayout *)add:(UIView *)newView {
 
     return [self add:newView usingDefault:0];
 }
-
 
 - (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)d {
 
@@ -153,7 +141,7 @@
             y = 20;
     }
 
-    newView.frame = CGRectMake(x, y, w, h);
+    newView.frame = CGRectMake( x, y, w, h );
     [self.contentView addSubview:newView];
 
     self.lastChild = newView;

@@ -16,31 +16,31 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-@implementation NSString (PearlNSArrayFormat)
+@implementation NSString(PearlNSArrayFormat)
 
 - (id)initWithFormat:(NSString *)format array:(NSArray *)arguments {
 
-    __unsafe_unretained id *argList = (typeof(argList))calloc([arguments count], sizeof(id));
+    __unsafe_unretained id *argList = (typeof (argList))calloc( [arguments count], sizeof(id) );
     @try {
         [arguments getObjects:argList];
 
         return [self initWithFormat:format arguments:(void *)argList];
     }
     @finally {
-        free(argList);
+        free( argList );
     }
 }
 
 + (instancetype)stringWithFormat:(NSString *)format array:(NSArray *)arguments {
 
-    __unsafe_unretained id *argList = (typeof(argList))calloc([arguments count], sizeof(id));
+    __unsafe_unretained id *argList = (typeof (argList))calloc( [arguments count], sizeof(id) );
     @try {
         [arguments getObjects:argList];
 
         return [[self alloc] initWithFormat:format arguments:(void *)argList];
     }
     @finally {
-        free(argList);
+        free( argList );
     }
 }
 

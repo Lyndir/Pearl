@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIControl (PearlBlocks)
+@interface UIControl(PearlBlocks)
 
 - (void)addTargetBlock:(void (^)(id sender, UIControlEvents event))block forControlEvents:(UIControlEvents)controlEvents;
 

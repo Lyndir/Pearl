@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (PearlKVO)
+@interface NSObject(PearlKVO)
 
 /**
  * Add an observer block to the receiver that observes changes to value at the receiver's keyPath.
@@ -27,6 +27,6 @@
   *                     change is a dictionary that describes the change and context is the context given to this method.
 */
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
-              forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
+            forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
 
 @end

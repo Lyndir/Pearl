@@ -16,9 +16,7 @@
 //  Copyright, lhunath (Maarten Billemont) 2013. All rights reserved.
 //
 
-#import "PearlOverlay.h"
 #import <QuartzCore/QuartzCore.h>
-#import <CoreGraphics/CoreGraphics.h>
 
 @interface PearlOverlay()
 

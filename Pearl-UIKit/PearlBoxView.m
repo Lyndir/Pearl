@@ -16,11 +16,8 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlBoxView.h"
-#import "PearlLayout.h"
-#import "PearlUIUtils.h"
-
 @implementation PearlBoxView
+
 @synthesize color = _color, width = _width, filled = _filled;
 
 + (id)boxed:(id)view {
@@ -56,11 +53,11 @@
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    self.color                  = aColor;
-    self.width                  = aWidth;
+    self.color = aColor;
+    self.width = aWidth;
     self.userInteractionEnabled = NO;
-    self.opaque                 = NO;
-    self.backgroundColor        = [UIColor clearColor];
+    self.opaque = NO;
+    self.backgroundColor = [UIColor clearColor];
 
     return self;
 }
@@ -68,27 +65,28 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
     if (object == self.superview && [keyPath isEqualToString:@"bounds"])
-        self.frame = (CGRect){CGPointZero, self.superview.bounds.size};
+        self.frame = (CGRect){ CGPointZero, self.superview.bounds.size };
 }
 
 - (void)drawRect:(CGRect)rect {
 
     /* If created by means of XIB deserialization, -init isn't called. */
     if (!self.color) {
-        self.color                  = [UIColor redColor];
-        self.width                  = 2;
+        self.color = [UIColor redColor];
+        self.width = 2;
         self.userInteractionEnabled = NO;
-        self.opaque                 = NO;
-        self.backgroundColor        = [UIColor clearColor];
+        self.opaque = NO;
+        self.backgroundColor = [UIColor clearColor];
     }
 
     /* Draw our content box. */
     if (self.filled) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
-        CGContextFillRect(UIGraphicsGetCurrentContext(), self.bounds);
-    } else {
-        CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), self.color.CGColor);
-        CGContextStrokeRectWithWidth(UIGraphicsGetCurrentContext(), self.bounds, self.width);
+        CGContextSetFillColorWithColor( UIGraphicsGetCurrentContext(), self.color.CGColor );
+        CGContextFillRect( UIGraphicsGetCurrentContext(), self.bounds );
+    }
+    else {
+        CGContextSetStrokeColorWithColor( UIGraphicsGetCurrentContext(), self.color.CGColor );
+        CGContextStrokeRectWithWidth( UIGraphicsGetCurrentContext(), self.bounds, self.width );
     }
 }
 

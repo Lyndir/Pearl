@@ -38,11 +38,11 @@ extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
 extern CGPoint CGPointFromCGSize(const CGSize size);
 extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
-extern CGSize  CGSizeFromCGPoint(const CGPoint point);
-extern CGRect  CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
-extern CGRect  CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
+extern CGSize CGSizeFromCGPoint(const CGPoint point);
+extern CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
+extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
 /** Use CGFLOAT_MAX in size or padding for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
-extern CGRect  CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
+extern CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
 
 extern CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract);
 extern CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add);
@@ -54,7 +54,7 @@ extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
 __END_DECLS
 
-@interface UIImage (PearlUIUtils)
+@interface UIImage(PearlUIUtils)
 
 /**
 * Create a new image that represents this image, with a white overlay at 0.7 alpha on top.
@@ -63,7 +63,7 @@ __END_DECLS
 
 @end
 
-@interface UILabel (PearlUIUtils)
+@interface UILabel(PearlUIUtils)
 
 /**
  * Automatically determines the size required to show all the text contents and resizes the view's frame accordingly.
@@ -73,7 +73,7 @@ __END_DECLS
 
 @end
 
-@interface UIScrollView (PearlUIUtils)
+@interface UIScrollView(PearlUIUtils)
 
 /**
  * @see -autoSizeContent:ignoreSubviewsArray:
@@ -104,7 +104,7 @@ __END_DECLS
 
 @end
 
-@interface UIView (PearlUIUtils)
+@interface UIView(PearlUIUtils)
 
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
@@ -183,7 +183,7 @@ __END_DECLS
 
 @end
 
-@interface UIViewController (PearlUIUtils)
+@interface UIViewController(PearlUIUtils)
 
 /**
  * Expands localization keys to values in the given view controller's properties and view hierarchy.
@@ -193,7 +193,6 @@ __END_DECLS
 @end
 
 @interface PearlUIUtils : NSObject {
-
 }
 
 /**

@@ -17,13 +17,12 @@
 //
 
 
-@implementation NSString (PearlSEL)
+@implementation NSString(PearlSEL)
 
 - (BOOL)isGetter {
 
     return ![self isSetter];
 }
-
 
 - (BOOL)isSetter {
 
@@ -31,9 +30,8 @@
     if (!setterPattern)
         setterPattern = [NSRegularExpression regularExpressionWithPattern:@"^set[[:upper:]]" options:0 error:nil];
 
-    return [setterPattern numberOfMatchesInString:self options:0 range:NSMakeRange(0, self.length)] > 0;
+    return [setterPattern numberOfMatchesInString:self options:0 range:NSMakeRange( 0, self.length )] > 0;
 }
-
 
 - (NSString *)getterToSetter {
 
@@ -42,15 +40,14 @@
 
     NSRange firstChar, rest;
     firstChar.location = 0;
-    firstChar.length   = 1;
-    rest.location      = 1;
-    rest.length        = self.length - 1;
+    firstChar.length = 1;
+    rest.location = 1;
+    rest.length = self.length - 1;
 
     return [NSString stringWithFormat:@"set%@%@:",
                                       [[self substringWithRange:firstChar] uppercaseString],
                                       [self substringWithRange:rest]];
 }
-
 
 - (NSString *)setterToGetter {
 
@@ -59,9 +56,9 @@
 
     NSRange firstChar, rest;
     firstChar.location = 3;
-    firstChar.length   = 1;
-    rest.location      = 4;
-    rest.length        = self.length - 5;
+    firstChar.length = 1;
+    rest.location = 4;
+    rest.length = self.length - 5;
 
     return [NSString stringWithFormat:@"%@%@",
                                       [[self substringWithRange:firstChar] lowercaseString],

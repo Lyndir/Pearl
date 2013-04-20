@@ -19,10 +19,10 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCryptor.h>
 
-
-@interface NSString (PearlKeyChain)
+@interface NSString(PearlKeyChain)
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
 /** Create a signature for this object using the assymetric key in the given tag.
  *
  * The method checks the amount of bytes in the object to guess at what it is.
@@ -36,9 +36,10 @@
 
 @end
 
-@interface NSData (PearlKeyChain)
+@interface NSData(PearlKeyChain)
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
 /** Create a signature for this object using the assymetric key in the given tag.
  *
  * The method checks the amount of bytes in the object to guess at what it is.
@@ -54,7 +55,6 @@
 
 @interface PearlKeyChain : NSObject {
 @private
-
 }
 
 /**

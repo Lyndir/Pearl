@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 /**
  * The alert view controller manages a view that displays an alert to the user.
  *
@@ -26,9 +25,9 @@
  */
 @interface PearlAlert : NSObject<UIAlertViewDelegate>
 
-@property (nonatomic, copy) void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
-@property (nonatomic, strong) UIAlertView *alertView;
-@property (nonatomic, strong) UITextField *alertField;
+@property(nonatomic, copy) void (^tappedButtonBlock)(UIAlertView *alert, NSInteger buttonIndex);
+@property(nonatomic, strong) UIAlertView *alertView;
+@property(nonatomic, strong) UITextField *alertField;
 
 
 #pragma mark ###############################

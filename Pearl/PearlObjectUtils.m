@@ -51,33 +51,33 @@ static char facadeBlockKey, facadedObjectKey;
 
     // Create a clone of this class that uses the given superClass.
     static NSUInteger classCloneCounter = 0;
-    NSString *classCloneName = [NSStringFromClass(superClass) stringByAppendingFormat:@"_PearlBlock%lu", (long)classCloneCounter++];
-    Class classClone = objc_allocateClassPair(superClass, classCloneName.UTF8String, 0);
+    NSString *classCloneName = [NSStringFromClass( superClass ) stringByAppendingFormat:@"_PearlBlock%lu", (long)classCloneCounter++];
+    Class classClone = objc_allocateClassPair( superClass, classCloneName.UTF8String, 0 );
 
     unsigned int outCount = 0;
-    Method *methods = class_copyMethodList([self class], &outCount);
+    Method *methods = class_copyMethodList( [self class], &outCount );
     for (NSUInteger m = 0; m < outCount; ++m) {
-        SEL methodName = method_getName(methods[m]);
-            if (!class_addMethod(classClone, methodName, method_getImplementation(methods[m]), method_getTypeEncoding(methods[m]))) {
-                err(@"Failed to add method to proxy class.");
-                return nil;
-            }
+        SEL methodName = method_getName( methods[m] );
+        if (!class_addMethod( classClone, methodName, method_getImplementation( methods[m] ), method_getTypeEncoding( methods[m] ) )) {
+            err(@"Failed to add method to proxy class.");
+            return nil;
+        }
     }
-    free(methods);
+    free( methods );
 
-    objc_registerClassPair(classClone);
+    objc_registerClassPair( classClone );
     if (!(self = [classClone alloc]))
         return nil;
 
-    objc_setAssociatedObject(self, &facadeBlockKey, facadeBlock, OBJC_ASSOCIATION_COPY);
-    objc_setAssociatedObject(self, &facadedObjectKey, facadedObject, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject( self, &facadeBlockKey, facadeBlock, OBJC_ASSOCIATION_COPY );
+    objc_setAssociatedObject( self, &facadedObjectKey, facadedObject, OBJC_ASSOCIATION_RETAIN );
 
     return self;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
 
-    id facadedObject = objc_getAssociatedObject(self, &facadedObjectKey);
+    id facadedObject = objc_getAssociatedObject( self, &facadedObjectKey );
 
     // If we have a facade object and it knows this selector, use its signature.
     NSMethodSignature *facadeObjectSignature = [facadedObject methodSignatureForSelector:aSelector];
@@ -85,7 +85,7 @@ static char facadeBlockKey, facadedObjectKey;
         return facadeObjectSignature;
 
     // Method doesn't exist.  If the selector looks like a setter, create a signature that takes an object and returns void.
-    if ([NSStringFromSelector(aSelector) isSetter])
+    if ([NSStringFromSelector( aSelector ) isSetter])
         return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
 
     // Default method signature, just create a signature that returns an object and takes no arguments.
@@ -94,21 +94,20 @@ static char facadeBlockKey, facadedObjectKey;
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
 
-    id facadedObject = objc_getAssociatedObject(self, &facadedObjectKey);
-    void (^facadeBlock)(SEL message, id *result, id argument, NSInvocation *invocation) = objc_getAssociatedObject(self, &facadeBlockKey);
+    id facadedObject = objc_getAssociatedObject( self, &facadedObjectKey );
+    void (^facadeBlock)(SEL message, id *result, id argument, NSInvocation *invocation) = objc_getAssociatedObject( self, &facadeBlockKey );
 
     __autoreleasing id result = nil, argument = nil;
     if ([[anInvocation methodSignature] numberOfArguments] > 2)
         [anInvocation getArgument:&argument atIndex:2];
 
-    facadeBlock(anInvocation.selector, &result, argument, anInvocation);
+    facadeBlock( anInvocation.selector, &result, argument, anInvocation );
 
     if ([[anInvocation methodSignature] methodReturnLength])
         [anInvocation setReturnValue:&result];
 
-    if (!result)
-        if ([facadedObject methodSignatureForSelector:anInvocation.selector])
-            [anInvocation invokeWithTarget:facadedObject];
+    if (!result) if ([facadedObject methodSignatureForSelector:anInvocation.selector])
+        [anInvocation invokeWithTarget:facadedObject];
 }
 
 - (id)valueForKey:(NSString *)key {

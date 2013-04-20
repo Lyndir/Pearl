@@ -16,9 +16,8 @@
 //  Copyright 2009 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlQueue.h"
-
 @implementation PearlQueue
+
 @synthesize array = _array, maximumCapacity = _maximumCapacity, overflowStrategy = _overflowStrategy;
 
 - (id)initWithMaximumCapacity:(NSUInteger)maximumCapacity
@@ -27,9 +26,9 @@
     if (!(self = [super init]))
         return nil;
 
-    _maximumCapacity  = maximumCapacity;
+    _maximumCapacity = maximumCapacity;
     _overflowStrategy = overflowStrategy;
-    _array            = [[NSMutableArray alloc] initWithCapacity:maximumCapacity];
+    _array = [[NSMutableArray alloc] initWithCapacity:maximumCapacity];
 
     return self;
 }
@@ -98,6 +97,5 @@
         [self.array removeAllObjects];
     }
 }
-
 
 @end

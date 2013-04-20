@@ -18,7 +18,6 @@
 
 #include <sys/sysctl.h>
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
 #endif
 
 @implementation PearlDeviceUtils
@@ -26,13 +25,13 @@
 + (NSString *)platform {
 
     size_t size;
-    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    sysctlbyname( "hw.machine", NULL, &size, NULL, 0 );
 
-    char *machine = malloc(size);
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    char *machine = malloc( size );
+    sysctlbyname( "hw.machine", machine, &size, NULL, 0 );
 
     NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
-    free(machine);
+    free( machine );
 
     return platform;
 }
@@ -41,7 +40,6 @@
 
     return [PearlDeviceUtils deviceTokenAsHex:[PearlConfig get].deviceToken];
 }
-
 
 + (NSString *)deviceTokenAsHex:(NSData *)deviceToken {
 
@@ -53,24 +51,20 @@
     return deviceTokenHex;
 }
 
-
 + (BOOL)isIPod {
 
     return [[self platform] hasPrefix:@"iPod"];
 }
-
 
 + (BOOL)isIPad {
 
     return [[self platform] hasPrefix:@"iPad"];
 }
 
-
 + (BOOL)isIPhone {
 
     return [[self platform] hasPrefix:@"iPhone"];
 }
-
 
 + (BOOL)isSimulator {
 

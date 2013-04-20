@@ -28,9 +28,9 @@ __END_DECLS
 
 @interface PearlQueue : NSObject
 
-@property (nonatomic, strong) NSMutableArray *array;
-@property (nonatomic, assign) NSUInteger         maximumCapacity;
-@property (nonatomic, assign) PearlQueueOverflow overflowStrategy;
+@property(nonatomic, strong) NSMutableArray *array;
+@property(nonatomic, assign) NSUInteger maximumCapacity;
+@property(nonatomic, assign) PearlQueueOverflow overflowStrategy;
 
 - (id)initWithMaximumCapacity:(NSUInteger)maximumCapacity
         usingOverflowStrategy:(PearlQueueOverflow)overflowStrategy;

@@ -16,10 +16,10 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "PearlMessageView.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation PearlMessageView
+
 @synthesize corners = _corners, fill = _fill, radii = _radii;
 
 - (id)initWithFrame:(CGRect)aFrame {
@@ -42,8 +42,8 @@
         self.layer.shadowOpacity = 0.5f;
 
         self.corners = UIRectCornerAllCorners;
-        self.fill    = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5f];
-        self.radii   = CGSizeMake(10, 10);
+        self.fill = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5f];
+        self.radii = CGSizeMake( 10, 10 );
 
         _initialized = YES;
     }

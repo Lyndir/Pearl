@@ -15,8 +15,6 @@
 //  Copyright 2010 Lhunath. All rights reserved.
 //
 
-#import "PearlArrayTVC.h"
-
 #define PearlATVCCellID         @"Pearl.ArrayTVC.cell"
 #define PearlATVCRowName        @"Pearl.ArrayTVC.name"
 #define PearlATVCRowDetail      @"Pearl.ArrayTVC.detail"
@@ -26,7 +24,7 @@
 #define PearlATVCRowContext     @"Pearl.ArrayTVC.context"
 #define PearlATVCCellStyle      @"Pearl.ArrayTVC.cellstyle"
 
-@interface PearlArrayTVC (Private)
+@interface PearlArrayTVC(Private)
 
 - (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle
               rowStyle:(PearlArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
@@ -68,7 +66,7 @@
 
             for (NSDictionary *row in sectionRows)
                 if ((aName == nil && [row objectForKey:PearlATVCRowName] == [NSNull null]) ||
-                 [[row objectForKey:PearlATVCRowName] isEqualToString:aName]) {
+                    [[row objectForKey:PearlATVCRowName] isEqualToString:aName]) {
                     [sectionRows removeObject:row];
                     return;
                 }
@@ -89,10 +87,8 @@
         }
 }
 
-
 - (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
           withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext {
-
 
     [self addRowWithName:aName withDetail:nil cellStyle:UITableViewCellStyleDefault rowStyle:aStyle toggled:isToggled toSection:aSection
             withDelegate:aDelegate context:aContext];
@@ -110,7 +106,7 @@
               rowStyle:(PearlArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
           withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext {
 
-    NSMutableArray    *sectionRows = nil;
+    NSMutableArray *sectionRows = nil;
     for (NSDictionary *section in _sections)
         if ([[[section allKeys] lastObject] isEqualToString:aSection]) {
             sectionRows = [[section allValues] lastObject];
@@ -120,18 +116,17 @@
         [_sections addObject:[NSDictionary dictionaryWithObject:sectionRows = [NSMutableArray array] forKey:aSection]];
 
     [sectionRows addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                 NilToNSNull(aName), PearlATVCRowName,
-                                                 NilToNSNull(aDetail), PearlATVCRowDetail,
-                                                 [NSNumber numberWithUnsignedInt:aRowStyle], PearlATVCRowStyle,
-                                                 [NSNumber numberWithUnsignedInt:aCellStyle], PearlATVCCellStyle,
-                                                 [NSNumber numberWithBool:isToggled], PearlATVCRowToggled,
-                                                 NilToNSNull(aDelegate), PearlATVCRowDelegate,
-                                                 NilToNSNull(aContext), PearlATVCRowContext,
-                                                 nil]];
+            NilToNSNull(aName),                          PearlATVCRowName,
+            NilToNSNull(aDetail),                        PearlATVCRowDetail,
+            [NSNumber numberWithUnsignedInt:aRowStyle],  PearlATVCRowStyle,
+            [NSNumber numberWithUnsignedInt:aCellStyle], PearlATVCCellStyle,
+            [NSNumber numberWithBool:isToggled],         PearlATVCRowToggled,
+            NilToNSNull(aDelegate),                      PearlATVCRowDelegate,
+            NilToNSNull(aContext),                       PearlATVCRowContext,
+            nil]];
 }
 
 - (void)customizeCell:(UITableViewCell *)cell forRow:(NSDictionary *)row withContext:(id)context {
-
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -151,21 +146,20 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSArray      *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
-    NSDictionary *row         = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
+    NSArray *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
+    NSDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
 
     UITableViewCellStyle cellStyle = (UITableViewCellStyle)[NSNullToNil([row objectForKey:PearlATVCCellStyle]) integerValue];
-    NSString        *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
-    UITableViewCell *cell       = [tableView dequeueReusableCellWithIdentifier:identifier];
+    NSString *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:identifier];
 
-
-    cell.textLabel.text       = NSNullToNil([row objectForKey:PearlATVCRowName]);
+    cell.textLabel.text = NSNullToNil([row objectForKey:PearlATVCRowName]);
     cell.detailTextLabel.text = NSNullToNil([row objectForKey:PearlATVCRowDetail]);
-    cell.selectionStyle       = UITableViewCellSelectionStyleNone;
-    cell.accessoryType        = UITableViewCellAccessoryNone;
-    cell.accessoryView        = nil;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.accessoryView = nil;
     switch ([NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
         case PearlArrayTVCRowStylePlain:
             break;
@@ -175,20 +169,20 @@
         }
         case PearlArrayTVCRowStyleDisclosure: {
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-            cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;
         }
         case PearlArrayTVCRowStyleCheck: {
-            cell.selectionStyle    = UITableViewCellSelectionStyleGray;
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
             if ([[row objectForKey:PearlATVCRowToggled] boolValue])
                 cell.accessoryType = UITableViewCellAccessoryCheckmark;
             break;
         }
         case PearlArrayTVCRowStyleToggle: {
             UISwitch *switchView = [[UISwitch alloc] init];
-            switchView.on       = [[row objectForKey:PearlATVCRowToggled] boolValue];
+            switchView.on = [[row objectForKey:PearlATVCRowToggled] boolValue];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            cell.accessoryView  = switchView;
+            cell.accessoryView = switchView;
             break;
         }
     }
@@ -200,15 +194,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSString            *sectionName = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allKeys] lastObject];
-    NSArray             *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
-    NSMutableDictionary *row         = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
+    NSString *sectionName = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allKeys] lastObject];
+    NSArray *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
+    NSMutableDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
 
     BOOL newToggled = ![[row objectForKey:PearlATVCRowToggled] boolValue];
     if ([NSNullToNil([row objectForKey:PearlATVCRowDelegate]) shouldActivateRowNamed:NSNullToNil([row objectForKey:PearlATVCRowName])
-                                                              inSection:sectionName
-                                                            withContext:NSNullToNil([row objectForKey:PearlATVCRowContext])
-                                                            toggleTo:newToggled]) {
+                                                                           inSection:sectionName
+                                                                         withContext:NSNullToNil([row objectForKey:PearlATVCRowContext])
+                                                                            toggleTo:newToggled]) {
         [row setObject:[NSNumber numberWithBool:newToggled] forKey:PearlATVCRowToggled];
         switch ([NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
             case PearlArrayTVCRowStyleToggle: {

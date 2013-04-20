@@ -30,18 +30,18 @@ __BEGIN_DECLS
 /** Levels that determine the importance of logging events. */
 typedef enum {
     /** Trace internal operations. */
-     PearlLogLevelTrace,
+            PearlLogLevelTrace,
     /** Inform the developer of certain events and information. */
-     PearlLogLevelDebug,
+            PearlLogLevelDebug,
     /** General notice to the user and developer that something took place. */
-     PearlLogLevelInfo,
+            PearlLogLevelInfo,
     /** Notice that something unexpected happened but was dealt with as best as possible. */
-     PearlLogLevelWarn,
+            PearlLogLevelWarn,
     /** Notice that something went wrong that should be fixed. */
-     PearlLogLevelError,
+            PearlLogLevelError,
     /** Notice that something went wrong from which could not be recovered, causing the operation to abort. */
-     PearlLogLevelFatal
-}               PearlLogLevel;
+            PearlLogLevelFatal
+} PearlLogLevel;
 
 extern const char *PearlLogLevelStr(PearlLogLevel level);
 extern NSString *errstr(void);
@@ -49,12 +49,11 @@ __END_DECLS
 
 @interface PearlLogMessage : NSObject
 
-
-@property (nonatomic, readwrite, strong) NSString *fileName;
-@property (nonatomic, readwrite) NSInteger lineNumber;
-@property (nonatomic, readwrite, copy) NSString *message;
-@property (nonatomic, readwrite, strong) NSDate   *occurrence;
-@property (nonatomic, readwrite) PearlLogLevel level;
+@property(nonatomic, readwrite, strong) NSString *fileName;
+@property(nonatomic, readwrite) NSInteger lineNumber;
+@property(nonatomic, readwrite, copy) NSString *message;
+@property(nonatomic, readwrite, strong) NSDate *occurrence;
+@property(nonatomic, readwrite) PearlLogLevel level;
 
 + (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
                          text:(NSString *)aMessage;
@@ -74,10 +73,10 @@ __END_DECLS
 @interface PearlLogger : NSObject
 
 /** Starting from which level messages are written to the console when they are logged. */
-@property (nonatomic, assign) PearlLogLevel printLevel;
+@property(nonatomic, assign) PearlLogLevel printLevel;
 
 /** Whether or not to keep a history of messages recorded while the app is running (level > trace). */
-@property (nonatomic, assign) BOOL history;
+@property(nonatomic, assign) BOOL history;
 
 /** Obtain the shared Logger instance. */
 + (instancetype)get;

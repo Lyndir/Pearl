@@ -16,10 +16,9 @@
 //
 
 #import <objc/runtime.h>
-#import "UIControl+PearlSelect.h"
-#import "UIControl+PearlBlocks.h"
 
-@implementation UIControl (PearlSelect)
+@implementation UIControl(PearlSelect)
+
 static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
 
 - (NSMutableSet *)Pearl_controlsForSuperview {
@@ -28,7 +27,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     if (!superviewsControls)
         superviewsControls = [NSMutableDictionary dictionary];
 
-    NSValue      *key               = [NSValue valueWithNonretainedObject:self.superview];
+    NSValue *key = [NSValue valueWithNonretainedObject:self.superview];
     NSMutableSet *superviewControls = [superviewsControls objectForKey:key];
     if (!superviewControls)
         [superviewsControls setObject:superviewControls = [NSMutableSet set] forKey:key];
@@ -38,12 +37,12 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
 
 - (BOOL)selectionInSuperviewCandidate {
 
-    return [objc_getAssociatedObject(self, &selectionInSuperviewCandidateKey) boolValue];
+    return [objc_getAssociatedObject( self, &selectionInSuperviewCandidateKey ) boolValue];
 }
 
 - (BOOL)selectionInSuperviewClearable {
 
-    return [objc_getAssociatedObject(self, &selectionInSuperviewClearableKey) boolValue];
+    return [objc_getAssociatedObject( self, &selectionInSuperviewClearableKey ) boolValue];
 }
 
 - (void)setSelectionInSuperviewCandidate:(BOOL)providesSelection isClearable:(BOOL)clearable {
@@ -51,10 +50,11 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     if (providesSelection) {
         if (self.superview)
             [[self Pearl_controlsForSuperview] addObject:[NSValue valueWithNonretainedObject:self]];
-    } else
+    }
+    else
         [[self Pearl_controlsForSuperview] removeObject:[NSValue valueWithNonretainedObject:self]];
 
-    if (!objc_getAssociatedObject(self, &selectionInSuperviewCandidateKey))
+    if (!objc_getAssociatedObject( self, &selectionInSuperviewCandidateKey ))
         [self addTargetBlock:^(id sender, UIControlEvents event) {
             UIControl *const senderControl = (UIControl *)sender;
             if (!senderControl.selectionInSuperviewCandidate)
@@ -64,12 +64,12 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
                 // Already selected, clear selection if clearable
                 if (senderControl.selectionInSuperviewClearable)
                     senderControl.selected = NO;
-
-            } else {
+            }
+            else {
                 for (NSValue *controlValue in [senderControl Pearl_controlsForSuperview]) {
                     UIControl *siblingControl = [controlValue nonretainedObjectValue];
                     if (siblingControl.superview != senderControl.superview)
-                     // This siblingControl no longer exists in the superview.
+                            // This siblingControl no longer exists in the superview.
                         continue;
 
                     if (siblingControl.selected)
@@ -77,12 +77,12 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
                 }
                 senderControl.selected = YES;
             }
-        } forControlEvents:UIControlEventTouchUpInside];
+        }   forControlEvents:UIControlEventTouchUpInside];
 
-    objc_setAssociatedObject(self, &selectionInSuperviewCandidateKey, [NSNumber numberWithBool:providesSelection],
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self, &selectionInSuperviewClearableKey, [NSNumber numberWithBool:clearable],
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject( self, &selectionInSuperviewCandidateKey, [NSNumber numberWithBool:providesSelection],
+            OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    objc_setAssociatedObject( self, &selectionInSuperviewClearableKey, [NSNumber numberWithBool:clearable],
+            OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 }
 
 - (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {
@@ -91,12 +91,12 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
         UIControl *const senderControl = (UIControl *)object;
 
-        block(senderControl.highlighted, senderControl.selected);
+        block( senderControl.highlighted, senderControl.selected );
     }           forKeyPath:@"highlighted" options:options context:nil];
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
         UIControl *const senderControl = (UIControl *)object;
 
-        block(senderControl.highlighted, senderControl.selected);
+        block( senderControl.highlighted, senderControl.selected );
     }           forKeyPath:@"selected" options:options context:nil];
 }
 
@@ -106,7 +106,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
         UIControl *const senderControl = (UIControl *)object;
 
-        block(senderControl.highlighted);
+        block( senderControl.highlighted );
     }           forKeyPath:@"highlighted" options:options context:nil];
 }
 
@@ -116,7 +116,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
         UIControl *const senderControl = (UIControl *)object;
 
-        block(senderControl.selected);
+        block( senderControl.selected );
     }           forKeyPath:@"selected" options:options context:nil];
 }
 

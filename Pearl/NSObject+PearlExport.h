@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject (PearlExport)
+@interface NSObject(PearlExport)
 
 - (id<NSCoding, NSCopying>)exportToCodable;
 - (NSDictionary *)exportToDictionary;

@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 /**
  * A gradient view is a plain view that renders a gradient shading from top to bottom in its content area.
  */

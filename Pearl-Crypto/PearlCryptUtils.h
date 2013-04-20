@@ -34,7 +34,7 @@ NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status);
 NSString *NSStringFromErrSec(OSStatus status);
 __END_DECLS
 
-@interface NSString (PearlCryptUtils)
+@interface NSString(PearlCryptUtils)
 
 /** Encrypt this plain-text string object with the given key. */
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding;
@@ -44,7 +44,7 @@ __END_DECLS
 
 @end
 
-@interface NSData (PearlCryptUtils)
+@interface NSData(PearlCryptUtils)
 
 /** Encrypt this plain-data object using the given key, yielding an encrypted-data object. */
 - (NSData *)encryptWithSymmetricKey:(NSData *)symmetricKey padding:(BOOL)padding;

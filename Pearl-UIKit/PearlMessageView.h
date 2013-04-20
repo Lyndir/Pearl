@@ -18,20 +18,19 @@
 
 #import <UIKit/UIKit.h>
 
-
 /**
  * A message view is a plain view that renders a backdrop suitable for displaying a message in.
  */
 @interface PearlMessageView : UIView {
 
-    BOOL         _initialized;
+    BOOL _initialized;
     UIRectCorner _corners;
     UIColor *_fill;
     CGSize _radii;
 }
 
-@property (nonatomic, assign) UIRectCorner corners;
-@property (nonatomic, retain) UIColor *fill;
-@property (nonatomic, assign) CGSize radii;
+@property(nonatomic, assign) UIRectCorner corners;
+@property(nonatomic, retain) UIColor *fill;
+@property(nonatomic, assign) CGSize radii;
 
 @end

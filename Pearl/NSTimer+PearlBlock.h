@@ -17,8 +17,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSTimer (PearlBlock)
+@interface NSTimer(PearlBlock)
 
-+ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void(^)(id userInfo))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo;
++ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id userInfo))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo;
 
 @end

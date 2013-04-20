@@ -34,7 +34,7 @@ extern NSString *AppendOrdinalPrefix(const NSInteger number, const NSString *pre
 extern NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterStyle style);
 __END_DECLS
 
-@interface NSString (PearlStringUtils)
+@interface NSString(PearlStringUtils)
 
 - (NSString *)stringByDeletingMatchesOf:(NSString *)pattern;
 - (NSString *)stringByDeletingMatchesOfExpression:(NSRegularExpression *)expression;

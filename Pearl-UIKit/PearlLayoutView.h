@@ -28,7 +28,6 @@ typedef enum {
 __END_DECLS
 
 @interface PearlLayoutView : UIView {
-
 }
 
 + (instancetype)viewWithContent:(UIView *)contentView padWidth:(CGFloat)padWidth

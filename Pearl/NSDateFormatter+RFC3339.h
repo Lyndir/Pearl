@@ -17,7 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSDateFormatter (RFC3339)
+@interface NSDateFormatter(RFC3339)
 
 + (instancetype)rfc3339DateFormatter;
 

@@ -18,9 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface PearlDeviceUtils : NSObject {
-
 }
 
 /** Generates a string that very specifically identifies the exact platform.  This is a more detailed version of UIDevice-model. */

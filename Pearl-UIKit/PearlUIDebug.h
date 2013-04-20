@@ -19,9 +19,7 @@
 #import <UIKit/UIKit.h>
 #import "PearlBoxView.h"
 
-
 @interface PearlUIDebug : NSObject {
-
 }
 
 + (void)printFonts;

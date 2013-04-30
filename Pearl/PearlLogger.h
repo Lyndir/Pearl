@@ -75,8 +75,8 @@ __END_DECLS
 /** Starting from which level messages are written to the console when they are logged. */
 @property(nonatomic, assign) PearlLogLevel printLevel;
 
-/** Whether or not to keep a history of messages recorded while the app is running (level > trace). */
-@property(nonatomic, assign) BOOL history;
+/** Starting from which level messages are recorded in memory when they are logged. */
+@property(nonatomic, assign) PearlLogLevel historyLevel;
 
 /** Obtain the shared Logger instance. */
 + (instancetype)get;

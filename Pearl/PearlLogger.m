@@ -104,6 +104,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     self.messages = [NSMutableArray arrayWithCapacity:20];
     self.listeners = [NSMutableArray array];
     self.printLevel = PearlLogLevelInfo;
+    self.historyLevel = PearlLogLevelWarn;
 
     return self;
 }
@@ -121,8 +122,10 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     NSMutableString *formattedLog = [NSMutableString new];
     for (PearlLogMessage *message in self.messages)
-        if (message.level >= level)
+        if (message.level >= level) {
             [formattedLog appendString:[message description]];
+            [formattedLog appendString:@"\n"];
+        }
 
     return formattedLog;
 }
@@ -166,7 +169,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
         @synchronized (self) {
             fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
         }
-    if (self.history && message.level > PearlLogLevelTrace)
+    if (message.level >= self.historyLevel)
         [self.messages addObject:message];
 
     return self;

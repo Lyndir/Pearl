@@ -68,7 +68,7 @@
     if (description)
         version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
 
-    inf(@"%@ %@", name, version);
+    inf(@"%@ %@ on platform: %@", name, version, [PearlDeviceUtils platform]);
 
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])

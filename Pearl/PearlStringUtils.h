@@ -24,6 +24,9 @@ extern NSAttributedString *PearlAttributeString(NSString *string, NSRange range,
 extern NSString *PearlLocalize(NSString *format, ...) NS_FORMAT_FUNCTION(1, 0);
 extern NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION(2, 0);
 
+extern NSString *PearlStringB(BOOL value);
+extern NSString *PearlStringNSB(NSNumber *value);
+
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 extern NSString *RPad(const NSString *string, NSUInteger l);
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the left side. */

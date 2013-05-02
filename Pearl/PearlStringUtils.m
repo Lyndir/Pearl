@@ -56,6 +56,14 @@ NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) {
     return msg;
 }
 
+NSString *PearlStringB(BOOL value) {
+    return value? @"YES": @"NO";
+}
+
+NSString *PearlStringNSB(NSNumber *value) {
+    return PearlStringB([value boolValue]);
+}
+
 NSString *RPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];

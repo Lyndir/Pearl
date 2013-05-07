@@ -56,7 +56,7 @@
 @property(nonatomic, readonly) NSString *reviewTitle;
 @property(nonatomic, readonly) NSString *reviewMessage;
 @property(nonatomic, readonly) NSString *reviewYes;
-@property(nonatomic, readonly) NSString *reviewComment;
+@property(nonatomic, readonly) NSString *reviewIssue;
 @property(nonatomic, readonly) NSString *reviewNo;
 
 @end

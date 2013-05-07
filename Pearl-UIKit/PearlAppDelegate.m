@@ -164,7 +164,7 @@
                 [self showReview];
             }
         }                  cancelTitle:[PearlStrings get].reviewNo
-                           otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewComment, nil];
+                           otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewIssue, nil];
 #endif
 }
 

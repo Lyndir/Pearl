@@ -64,7 +64,7 @@
 @dynamic reviewTitle;
 @dynamic reviewMessage;
 @dynamic reviewYes;
-@dynamic reviewComment;
+@dynamic reviewIssue;
 @dynamic reviewNo;
 
 @end

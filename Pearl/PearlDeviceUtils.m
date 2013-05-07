@@ -17,8 +17,7 @@
 //
 
 #include <sys/sysctl.h>
-#if TARGET_OS_IPHONE
-#endif
+#import <mach-o/ldsyms.h>
 
 @implementation PearlDeviceUtils
 
@@ -36,19 +35,23 @@
     return platform;
 }
 
-+ (NSString *)currentDeviceTokenAsHex {
++ (BOOL)isAppEncrypted {
 
-    return [PearlDeviceUtils deviceTokenAsHex:[PearlConfig get].deviceToken];
+    const uint8_t *command = (const uint8_t *) (&_mh_execute_header + 1);
+    for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx)
+        if (((const struct load_command *) command)->cmd == LC_ENCRYPTION_INFO) {
+            struct encryption_info_command *crypt_cmd = (struct encryption_info_command *) command;
+            return crypt_cmd->cryptid != 0;
+        }
+        else
+            command += ((const struct load_command *) command)->cmdsize;
+
+    return NO;
 }
 
-+ (NSString *)deviceTokenAsHex:(NSData *)deviceToken {
++ (BOOL)isJailbroken {
 
-    NSMutableString *deviceTokenHex = [NSMutableString stringWithCapacity:deviceToken.length * 2];
-
-    for (NSUInteger b = 0; b < deviceToken.length; ++b)
-        [deviceTokenHex appendFormat:@"%02hhX", ((const char *)deviceToken.bytes)[b]];
-
-    return deviceTokenHex;
+    return system("") == 0;
 }
 
 + (BOOL)isIPod {

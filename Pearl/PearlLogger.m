@@ -179,7 +179,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
@@ -190,7 +199,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
@@ -201,7 +219,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
@@ -212,7 +239,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
@@ -223,7 +259,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
@@ -234,7 +279,16 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
     va_list argList;
     va_start(argList, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:argList];
+    NSString *message;
+    @try {
+        message = [[NSString alloc] initWithFormat:format arguments:argList];
+    } @catch (id exception) {
+        @try {
+            message = PearlString(@"Error formatting message: %@", exception);
+        } @catch (id exception) {
+            message = @"Error formatting message.";
+        }
+    }
     va_end(argList);
 
     return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber

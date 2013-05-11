@@ -17,6 +17,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 @interface PearlOverlay()
 
@@ -78,7 +79,15 @@ static __strong PearlOverlay *activeOverlay = nil;
 - (PearlOverlay *)showOverlay {
 
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    window.userInteractionEnabled = NO;
     [window addSubview:self.overlayView];
+
+    self.overlayView.alpha = 0;
+    self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y + 10 );
+    [UIView animateWithDuration:0.3f animations:^{
+        self.overlayView.alpha = 1;
+        self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y - 10 );
+    }];
 
     return self;
 }
@@ -88,9 +97,21 @@ static __strong PearlOverlay *activeOverlay = nil;
     return self.overlayView.superview != nil;
 }
 
-- (PearlOverlay *)cancelOverlay {
+- (PearlOverlay *)cancelOverlayAnimated:(BOOL)animated {
 
-    [self.overlayView removeFromSuperview];
+    UIView *view = [self.overlayView superview];
+    view.userInteractionEnabled = YES;
+
+    if (!animated)
+        [self.overlayView removeFromSuperview];
+    else {
+        [UIView animateWithDuration:0.3f animations:^{
+            self.overlayView.alpha = 0;
+            self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y + 10 );
+        } completion:^(BOOL finished) {
+            [self.overlayView removeFromSuperview];
+        }];
+    }
 
     return self;
 }

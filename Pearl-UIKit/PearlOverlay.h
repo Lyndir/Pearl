@@ -56,6 +56,6 @@
 /**
  * Dismiss the overlay managed by this view controller.
  */
-- (PearlOverlay *)cancelOverlay;
+- (PearlOverlay *)cancelOverlayAnimated:(BOOL)animated;
 
 @end

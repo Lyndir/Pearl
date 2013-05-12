@@ -38,4 +38,9 @@
  */
 @property(nonatomic, assign) NSUInteger supportedInterfaceOrientations;
 
+/**
+ * -[UIViewController (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation]
+ */
+@property(nonatomic, assign) UIInterfaceOrientation preferredInterfaceOrientationForPresentation;
+
 @end

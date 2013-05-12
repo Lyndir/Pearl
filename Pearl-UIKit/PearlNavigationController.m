@@ -75,16 +75,25 @@
 
     self.shouldAutorotate = [super shouldAutorotate];
     self.supportedInterfaceOrientations = [super supportedInterfaceOrientations];
+    self.preferredInterfaceOrientationForPresentation = [super preferredInterfaceOrientationForPresentation];
 }
 
 - (BOOL)shouldAutorotate {
 
-    return self.forwardInterfaceRotation? [self.topViewController shouldAutorotate]: _shouldAutorotate;
+    return self.forwardInterfaceRotation && self.topViewController?
+           [self.topViewController shouldAutorotate]: _shouldAutorotate;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
 
-    return self.forwardInterfaceRotation? [self.topViewController supportedInterfaceOrientations]: _supportedInterfaceOrientations;
+    return self.forwardInterfaceRotation && self.topViewController?
+           [self.topViewController supportedInterfaceOrientations]: _supportedInterfaceOrientations;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+
+    return self.forwardInterfaceRotation && self.topViewController?
+           [self.topViewController preferredInterfaceOrientationForPresentation]: _preferredInterfaceOrientationForPresentation;
 }
 
 @end

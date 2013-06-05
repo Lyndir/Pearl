@@ -116,7 +116,7 @@
                                attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 #if TARGET_OS_IPHONE
                                        (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly, kSecAttrAccessible,
-                                       #endif
+#endif
                                        @"deviceIdentifier",                                 kSecAttrAccount,
                                        @"com.lyndir.Pearl",                                 kSecAttrService,
                                        nil]
@@ -124,10 +124,9 @@
 
     NSData *deviceIdentifier = [self dataOfItemForQuery:query];
     if (!deviceIdentifier)
-        [self addOrUpdateItemForQuery:query
-                       withAttributes:[NSDictionary dictionaryWithObject:deviceIdentifier = [[PearlCodeUtils randomUUID]
-                               dataUsingEncoding:NSUTF8StringEncoding]
-                                                                  forKey:(__bridge id)kSecValueData]];
+        [self addOrUpdateItemForQuery:query withAttributes:@{
+                (__bridge id)kSecValueData : deviceIdentifier = [[PearlCodeUtils randomUUID] dataUsingEncoding:NSUTF8StringEncoding]
+        }];
 
     return deviceIdentifierString = [[NSString alloc] initWithBytes:deviceIdentifier.bytes length:deviceIdentifier.length
                                                            encoding:NSUTF8StringEncoding];

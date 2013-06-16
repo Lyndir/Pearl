@@ -35,7 +35,7 @@
 @implementation PearlConfig {
 
     unsigned *_gameRandomSeeds;
-    NSUInteger *_gameRandomCounters;
+    unsigned *_gameRandomCounters;
 
     BOOL _notificationsChecked;
     BOOL _notificationsSupported;
@@ -310,8 +310,8 @@
         srandom( aSeed );
         free( _gameRandomSeeds );
         free( _gameRandomCounters );
-        _gameRandomSeeds = calloc( PearlMaxGameRandom, sizeof(NSUInteger) );
-        _gameRandomCounters = calloc( PearlMaxGameRandom, sizeof(NSUInteger) );
+        _gameRandomSeeds = calloc( PearlMaxGameRandom, sizeof(unsigned) );
+        _gameRandomCounters = calloc( PearlMaxGameRandom, sizeof(unsigned) );
         for (NSUInteger s = 0; s < PearlMaxGameRandom; ++s) {
             _gameRandomSeeds[s] = (unsigned)random();
             _gameRandomCounters[s] = 0;

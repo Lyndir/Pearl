@@ -178,7 +178,7 @@
     return status;
 }
 
-+ (OSStatus)findItemForQuery:(NSDictionary *)query into:(id *)result {
++ (OSStatus)findItemForQuery:(NSDictionary *)query into:(__strong id *)result {
 
     CFTypeRef cfResult = NULL;
     OSStatus status = SecItemCopyMatching( (__bridge CFDictionaryRef)query, &cfResult );

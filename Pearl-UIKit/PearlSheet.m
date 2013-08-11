@@ -1,3 +1,8 @@
+@interface PearlSheet()
+
+@property(nonatomic) BOOL handlingClick;
+@end
+
 /**
  * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
@@ -140,9 +145,11 @@
 
 - (PearlSheet *)cancelSheetAnimated:(BOOL)animated {
 
+    __weak PearlSheet *wSelf = self;
     __weak UIActionSheet *sheet = self.sheetView;
     PearlMainThread(^{
-        [sheet dismissWithClickedButtonIndex:[sheet cancelButtonIndex] animated:animated];
+        if (wSelf && !wSelf.handlingClick)
+            [sheet dismissWithClickedButtonIndex:[sheet cancelButtonIndex] animated:animated];
     });
 
     return self;
@@ -150,8 +157,11 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    if (self.tappedButtonBlock)
+    if (self.tappedButtonBlock) {
+        self.handlingClick = YES;
         self.tappedButtonBlock( self.sheetView, buttonIndex );
+        self.handlingClick = NO;
+    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {

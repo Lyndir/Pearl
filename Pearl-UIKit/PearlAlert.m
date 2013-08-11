@@ -1,3 +1,8 @@
+@interface PearlAlert()
+
+@property(nonatomic) BOOL handlingClick;
+@end
+
 /**
  * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
@@ -217,9 +222,11 @@
 
 - (PearlAlert *)cancelAlertAnimated:(BOOL)animated {
 
+    __weak PearlAlert *wSelf = self;
     __weak UIAlertView *alertView = self.alertView;
     PearlMainThread(^{
-        [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:animated];
+        if (wSelf && !wSelf.handlingClick)
+            [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:animated];
     });
 
     return self;
@@ -227,8 +234,11 @@
 
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    if (self.tappedButtonBlock)
+    if (self.tappedButtonBlock) {
+        self.handlingClick = YES;
         self.tappedButtonBlock( self.alertView, buttonIndex );
+        self.handlingClick = NO;
+    }
 }
 
 - (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

@@ -38,6 +38,8 @@ NSString *NSStringFromCCCryptorStatus(CCCryptorStatus status) {
             return [NSString stringWithFormat:@"Input data did not decode or decrypt properly (kCCDecodeError: %d).", status];
         case kCCUnimplemented:
             return [NSString stringWithFormat:@"Function not implemented for the current algorithm (kCCUnimplemented: %d).", status];
+        case kCCOverflow:
+            return [NSString stringWithFormat:@"[No documentation] (kCCOverflow: %d).", status];
     }
 
     wrn(@"Common Crypto status code not known: %d", status);
@@ -51,11 +53,21 @@ NSString *NSStringFromErrSec(OSStatus status) {
             return [NSString stringWithFormat:@"No error (errSecSuccess: %ld).", (long)status];
         case errSecUnimplemented:
             return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", (long)status];
+        case errSecIO:
+            return [NSString stringWithFormat:@"I/O error (bummers) (errSecIO: %ld).", (long)status];
+        case errSecOpWr:
+            return [NSString stringWithFormat:@"file already open with with write permission (errSecOpWr: %ld).", (long)status];
         case errSecParam:
             return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).",
                                               (long)status];
         case errSecAllocate:
             return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", (long)status];
+        case errSecUserCanceled:
+            return [NSString stringWithFormat:@"User canceled the operation (errSecUserCanceled: %ld).", (long)status];
+        case errSecBadReq:
+            return [NSString stringWithFormat:@"Bad parameter or invalid state for operation (errSecBadReq: %ld).", (long)status];
+        case errSecInternalComponent:
+            return [NSString stringWithFormat:@"[No documentation] (errSecInternalComponent: %ld).", (long)status];
         case errSecNotAvailable:
             return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).",
                                               (long)status];

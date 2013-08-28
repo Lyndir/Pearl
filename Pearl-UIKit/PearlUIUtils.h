@@ -95,7 +95,7 @@ __END_DECLS
  * We also listen for keyboard events.  When the keyboard appears, the latest scroll view that was passed to this method will get shrunk to fit above the keyboard and restored after the keyboard is dismissed.
  * You should call this method in your view controllers' -viewWillAppear method.
  *
- * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ * @param ignoredSubviewsArray These subviews are ignored when determining the bounds of the scroll view's content.
  */
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
                     ignoreInvisible:(BOOL)ignoreInvisible
@@ -130,7 +130,7 @@ __END_DECLS
  * Calculate the bounds of the content of the given view by recursively iterating and checking the content bounds
  * of its subviews, so long as it does not clip them.
  *
- * @param ignoredSubviews These subviews are ignored when determining the bounds of the scroll view's content.
+ * @param ignoredSubviewsArray These subviews are ignored when determining the bounds of the scroll view's content.
  */
 - (CGRect)contentBoundsIgnoringSubviewsArray:(NSArray *)ignoredSubviewsArray;
 

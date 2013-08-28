@@ -44,21 +44,21 @@
 
 - (id)initWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
           initSheet:(void (^)(UIActionSheet *sheet))initBlock
-  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))tappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
         otherTitles:(NSString *)otherTitles, ... {
 
     va_list otherTitlesList;
     va_start(otherTitlesList, otherTitles);
 
-    return [self initWithTitle:title viewStyle:viewStyle initSheet:initBlock tappedButtonBlock:aTappedButtonBlock
+    return [self initWithTitle:title viewStyle:viewStyle initSheet:initBlock tappedButtonBlock:tappedButtonBlock
                    cancelTitle:cancelTitle destructiveTitle:destructiveTitle
                     otherTitle:otherTitles :otherTitlesList];
 }
 
 - (id)initWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
           initSheet:(void (^)(UIActionSheet *sheet))initBlock
-  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))tappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
          otherTitle:(NSString *)firstOtherTitle :(va_list)otherTitlesList {
 
@@ -67,7 +67,7 @@
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    _tappedButtonBlock = [aTappedButtonBlock copy];
+    _tappedButtonBlock = [tappedButtonBlock copy];
     _sheetView = [[UIActionSheet alloc] initWithTitle:title delegate:self
                                     cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle,
                                                                                                                     nil];

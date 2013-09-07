@@ -64,6 +64,20 @@ __END_DECLS
 
 /**
  * Add a row to the table with the given name as label in the given section.
+ * When tapped, the activationBlock will be invoked.
+ */
+- (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
+       activationBlock:(BOOL(^)(BOOL))activationBlock;
+
+/**
+ * Add a row to the table of style UITableViewCellStyleValue1 where aName is used for the left aligned label and aDetail for the detailTextLabel.
+ * When tapped, the activationBlock will be invoked.
+ */
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection
+       activationBlock:(BOOL (^)(BOOL))activationBlock;
+
+/**
+ * Add a row to the table with the given name as label in the given section.
  * When tapped, activateRowNamed:inSection:withContext: will be invoked on the given delegate.
  */
 - (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection

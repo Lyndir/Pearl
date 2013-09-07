@@ -20,26 +20,46 @@
 #define PearlATVCRowDetail      @"Pearl.ArrayTVC.detail"
 #define PearlATVCRowStyle       @"Pearl.ArrayTVC.style"
 #define PearlATVCRowToggled     @"Pearl.ArrayTVC.toggled"
-#define PearlATVCRowDelegate    @"Pearl.ArrayTVC.delegate"
+#define PearlATVCRowActivation  @"Pearl.ArrayTVC.activation"
 #define PearlATVCRowContext     @"Pearl.ArrayTVC.context"
 #define PearlATVCCellStyle      @"Pearl.ArrayTVC.cellstyle"
 
-@interface PearlArrayTVC(Private)
-
-- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle
-              rowStyle:(PearlArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
-          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext;
-
-@end
-
 @implementation PearlArrayTVC
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (id)init {
 
-    if (!(self = [super initWithCoder:aDecoder]))
-        return self;
+    if (!(self = [super init]))
+        return nil;
 
-    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+    _sections = [NSMutableArray new];
+
+    return self;
+}
+
+- (id)initWithStyle:(UITableViewStyle)style {
+
+    if (!(self = [super initWithStyle:style]))
+        return nil;
+
+    _sections = [NSMutableArray new];
+
+    return self;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+
+    if (!(self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
+        return nil;
+
+    _sections = [NSMutableArray new];
+
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+
+    if (!(self = [super initWithCoder:coder]))
+        return nil;
 
     _sections = [NSMutableArray new];
 
@@ -90,21 +110,38 @@
 - (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
           withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext {
 
-    [self addRowWithName:aName withDetail:nil cellStyle:UITableViewCellStyleDefault rowStyle:aStyle toggled:isToggled toSection:aSection
-            withDelegate:aDelegate context:aContext];
+    [self addRowWithName:aName style:aStyle toggled:isToggled toSection:aSection
+         activationBlock:^BOOL(BOOL wasToggled) {
+             return [aDelegate shouldActivateRowNamed:aName inSection:aSection withContext:aContext toggleTo:wasToggled];
+         }];
 }
 
 - (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection
-          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate
-               context:(id)aContext {
+          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext {
+
+    [self addRowWithName:aName withDetail:aDetail toSection:aSection
+         activationBlock:^BOOL(BOOL wasToggled) {
+             return [aDelegate shouldActivateRowNamed:aName inSection:aSection withContext:aContext toggleTo:wasToggled];
+         }];
+}
+
+- (void)addRowWithName:(NSString *)aName style:(PearlArrayTVCRowStyle)aStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
+       activationBlock:(BOOL(^)(BOOL wasToggled))activationBlock {
+
+    [self addRowWithName:aName withDetail:nil cellStyle:UITableViewCellStyleDefault rowStyle:aStyle toggled:isToggled toSection:aSection
+         activationBlock:activationBlock];
+}
+
+- (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail toSection:(NSString *)aSection
+       activationBlock:(BOOL (^)(BOOL wasToggled))activationBlock {
 
     [self addRowWithName:aName withDetail:aDetail cellStyle:UITableViewCellStyleValue1 rowStyle:PearlArrayTVCRowStylePlain toggled:NO
-               toSection:aSection withDelegate:aDelegate context:aContext];
+               toSection:aSection activationBlock:activationBlock];
 }
 
 - (void)addRowWithName:(NSString *)aName withDetail:(NSString *)aDetail cellStyle:(UITableViewCellStyle)aCellStyle
               rowStyle:(PearlArrayTVCRowStyle)aRowStyle toggled:(BOOL)isToggled toSection:(NSString *)aSection
-          withDelegate:(id<PearlArrayTVCDelegate>)aDelegate context:(id)aContext {
+       activationBlock:(BOOL (^)(BOOL wasToggled))activationBlock {
 
     NSMutableArray *sectionRows = nil;
     for (NSDictionary *section in _sections)
@@ -121,8 +158,7 @@
             [NSNumber numberWithUnsignedInt:aRowStyle],  PearlATVCRowStyle,
             [NSNumber numberWithUnsignedInt:aCellStyle], PearlATVCCellStyle,
             [NSNumber numberWithBool:isToggled],         PearlATVCRowToggled,
-            NilToNSNull(aDelegate),                      PearlATVCRowDelegate,
-            NilToNSNull(aContext),                       PearlATVCRowContext,
+            NilToNSNull([activationBlock copy]),         PearlATVCRowActivation,
             nil]];
 }
 
@@ -160,7 +196,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
-    switch ([NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
+    switch ((PearlArrayTVCRowStyle)[NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
         case PearlArrayTVCRowStylePlain:
             break;
         case PearlArrayTVCRowStyleLink: {
@@ -194,15 +230,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSString *sectionName = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allKeys] lastObject];
     NSArray *sectionRows = [[[_sections objectAtIndex:(NSUInteger)indexPath.section] allValues] lastObject];
     NSMutableDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
 
     BOOL newToggled = ![[row objectForKey:PearlATVCRowToggled] boolValue];
-    if ([NSNullToNil([row objectForKey:PearlATVCRowDelegate]) shouldActivateRowNamed:NSNullToNil([row objectForKey:PearlATVCRowName])
-                                                                           inSection:sectionName
-                                                                         withContext:NSNullToNil([row objectForKey:PearlATVCRowContext])
-                                                                            toggleTo:newToggled]) {
+    BOOL (^activationBlock)(BOOL) = NSNullToNil([row objectForKey:PearlATVCRowActivation]);
+
+    if (activationBlock( newToggled)) {
         [row setObject:[NSNumber numberWithBool:newToggled] forKey:PearlATVCRowToggled];
         switch ([NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
             case PearlArrayTVCRowStyleToggle: {

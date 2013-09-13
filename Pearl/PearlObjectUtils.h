@@ -17,6 +17,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \

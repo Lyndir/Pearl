@@ -15,8 +15,6 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <objc/runtime.h>
-
 @implementation UIControl(PearlSelect)
 
 static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;

@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Lyndir. All rights reserved.
 //
 
-#import <objc/runtime.h>
-
 @interface PearlLazy() {
 
     BOOL _trace;

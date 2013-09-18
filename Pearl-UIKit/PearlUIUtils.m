@@ -761,15 +761,15 @@ static NSMutableSet *dismissableResponders;
 
 + (UIWindow *)findWindow {
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = UIApp.keyWindow;
     if (!window)
-        for (UIWindow *aWindow in [UIApplication sharedApplication].windows)
+        for (UIWindow *aWindow in UIApp.windows)
             if ([aWindow findFirstResponderInHierarchy]) {
                 window = aWindow;
                 break;
             }
     if (!window)
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        window = [UIApp.windows objectAtIndex:0];
 
     return window;
 }

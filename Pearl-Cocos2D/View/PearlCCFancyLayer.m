@@ -72,8 +72,8 @@
 - (void)update {
 
     CGFloat barHeight = 0;
-    if (![[UIApplication sharedApplication] isStatusBarHidden])
-        barHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    if (![UIApp isStatusBarHidden])
+        barHeight = [UIApp statusBarFrame].size.height;
 
     CGSize winSize = [CCDirector sharedDirector].winSize;
     self.contentSize = CGSizeMake(winSize.width, winSize.height - barHeight);

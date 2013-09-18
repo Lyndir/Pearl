@@ -44,7 +44,7 @@ static __strong PearlOverlay *activeOverlay = nil;
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = UIApp.keyWindow;
 
     _title = title;
     _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
@@ -78,7 +78,7 @@ static __strong PearlOverlay *activeOverlay = nil;
 
 - (PearlOverlay *)showOverlay {
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = UIApp.keyWindow;
     window.userInteractionEnabled = NO;
     [window addSubview:self.overlayView];
 

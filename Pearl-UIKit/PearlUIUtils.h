@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define UIApp [UIApplication sharedApplication]
+
 __BEGIN_DECLS
 extern CGRect CGRectSetX(CGRect rect, CGFloat x);
 extern CGRect CGRectSetY(CGRect rect, CGFloat y);

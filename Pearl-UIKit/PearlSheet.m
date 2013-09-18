@@ -125,9 +125,9 @@
         if (!sheetView)
             return;
 
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        UIWindow *window = UIApp.keyWindow;
         if (!window)
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+            window = [UIApp.windows objectAtIndex:0];
         UIView *view = window.rootViewController.view;
         if (!view)
             view = window;

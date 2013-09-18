@@ -129,9 +129,9 @@
 - (void)showReview {
 
     if (NSNullToNil([PearlConfig get].iTunesID))
-        [[UIApplication sharedApplication] openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+        [UIApp openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
     else
-        [[UIApplication sharedApplication] openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+        [UIApp openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
 }
 
 - (void)shutdown:(id)caller {
@@ -251,7 +251,7 @@
 
 + (instancetype)get {
 
-    id delegate = [UIApplication sharedApplication].delegate;
+    id delegate = UIApp.delegate;
     if ([delegate isKindOfClass:[self class]])
         return delegate;
 

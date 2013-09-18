@@ -104,7 +104,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
     self.view.transform = CGAffineTransformIdentity;
-    switch ([UIApplication sharedApplication].statusBarOrientation) {
+    switch (UIApp.statusBarOrientation) {
         case UIInterfaceOrientationLandscapeLeft:
             self.view.transform = CGAffineTransformMakeRotation( (CGFloat)M_PI_2 );
             break;
@@ -175,7 +175,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
     dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation( fromInterfaceOrientation ), NSStringFromUIInterfaceOrientation(
-            [UIApplication sharedApplication].statusBarOrientation ));
+            UIApp.statusBarOrientation ));
     [[PearlAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 

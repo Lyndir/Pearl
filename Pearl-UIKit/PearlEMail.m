@@ -96,9 +96,9 @@
 - (void)showComposerForVC:(UIViewController *)vc {
 
     if (!vc) {
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        UIWindow *window = UIApp.keyWindow;
         if (!window || !window.rootViewController)
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+            window = [UIApp.windows objectAtIndex:0];
         vc = window.rootViewController;
         while ([vc presentedViewController])
             vc = [vc presentedViewController];

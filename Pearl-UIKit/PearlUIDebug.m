@@ -32,7 +32,7 @@ static CGFloat autoWidth = 5;
 
 + (UIView *)view {
 
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIWindow *window = UIApp.keyWindow;
 
     static UIView *instance;
     if (!instance) {

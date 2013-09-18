@@ -92,10 +92,10 @@
     return [self addMax:newView top:top minus:minus usingDefault:-1];
 }
 
-- (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)d {
+- (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)usingDefault {
 
     CGFloat y = top;
-    if (y == d) {
+    if (y == usingDefault) {
         if (self.lastChild)
             y = [self.lastChild frame].origin.y + [self.lastChild frame].size.height + PearlLayoutPadding;
         else
@@ -121,20 +121,20 @@
     return [self add:newView usingDefault:0];
 }
 
-- (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)d {
+- (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)usingDefault {
 
     // Calculate some defaults for frame values that are set to d.
     CGFloat x = newView.frame.origin.x;
     CGFloat y = newView.frame.origin.y;
     CGFloat w = newView.frame.size.width;
     CGFloat h = newView.frame.size.height;
-    if (w == d)
+    if (w == usingDefault)
         w = self.contentView.frame.size.width;
-    if (h == d)
+    if (h == usingDefault)
         h = 30;
-    if (x == d)
+    if (x == usingDefault)
         x = (self.contentView.bounds.size.width - w) / 2;
-    if (y == d) {
+    if (y == usingDefault) {
         if (self.lastChild)
             y = self.lastChild.frame.origin.y + self.lastChild.frame.size.height + PearlLayoutPadding;
         else

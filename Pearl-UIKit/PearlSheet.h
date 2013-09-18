@@ -47,7 +47,7 @@
  */
 - (id)initWithTitle:(NSString *)title viewStyle:(UIActionSheetStyle)viewStyle
           initSheet:(void (^)(UIActionSheet *sheet))initBlock
-  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))aTappedButtonBlock
+  tappedButtonBlock:(void (^)(UIActionSheet *sheet, NSInteger buttonIndex))tappedButtonBlock
         cancelTitle:(NSString *)cancelTitle destructiveTitle:(NSString *)destructiveTitle
         otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 

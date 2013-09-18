@@ -108,7 +108,7 @@
  * @param minus         This value determines how much space should be left below the given view when maximizing its height component.
  * @param usingDefault  Only used to compare against the top argument.
  */
-- (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)d;
+- (PearlLayout *)addMax:(UIView *)newView top:(CGFloat)top minus:(CGFloat)minus usingDefault:(CGFloat)usingDefault;
 
 /**
  * Add vertical space to the layout, pushing subsequently added children down.
@@ -137,6 +137,6 @@
  *
  * @param usingDefault  The value that is used to determine which components of the given view's frame should be defaulted.
  */
-- (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)d;
+- (PearlLayout *)add:(UIView *)newView usingDefault:(CGFloat)usingDefault;
 
 @end

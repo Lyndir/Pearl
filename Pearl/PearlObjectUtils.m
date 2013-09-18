@@ -16,8 +16,6 @@
 //  Copyright 2010 Lyndir. All rights reserved.
 //
 
-#import "objc/runtime.h"
-
 @implementation PearlObjectUtils
 
 + (id)getNil {

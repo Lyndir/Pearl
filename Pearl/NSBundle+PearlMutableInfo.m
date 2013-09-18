@@ -17,7 +17,6 @@
 //
 
 #import "JRSwizzle.h"
-#import <objc/runtime.h>
 
 @implementation NSBundle(PearlMutableInfo)
 

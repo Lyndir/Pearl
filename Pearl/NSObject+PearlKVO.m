@@ -15,8 +15,6 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <objc/runtime.h>
-
 @interface PearlBlockObserver_NSObject : NSObject
 
 - (id)initWithBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock;

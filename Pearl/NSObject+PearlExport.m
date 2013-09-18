@@ -16,8 +16,6 @@
 //  Copyright 2011 Lyndir. All rights reserved.
 //
 
-#import <objc/runtime.h>
-
 @implementation NSObject(PearlExport)
 
 - (id<NSCoding, NSCopying>)exportToCodable {

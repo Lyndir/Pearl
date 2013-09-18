@@ -16,8 +16,6 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import <objc/runtime.h>
-
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
 
     return (CGRect){ { x, rect.origin.y }, { rect.size.width, rect.size.height } };

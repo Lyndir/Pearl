@@ -74,7 +74,12 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
 - (NSString *)description {
 
-    return [NSString stringWithFormat:@"%@ %@", [[self occurrenceFormatter] stringFromDate:self.occurrence], [self messageDescription]];
+    return [NSString stringWithFormat:@"%@ %@", [self occurrenceDescription], [self messageDescription]];
+}
+
+- (NSString *)occurrenceDescription {
+
+    return [[self occurrenceFormatter] stringFromDate:self.occurrence];
 }
 
 - (NSString *)messageDescription {
@@ -118,14 +123,24 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     return instance;
 }
 
+- (NSArray *)messagesWithLevel:(PearlLogLevel)level {
+
+    NSMutableArray *messages = [self.messages mutableCopy];
+    [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
+            ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
+        return message.level >= level;
+    }]];
+
+    return messages;
+}
+
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
 
     NSMutableString *formattedLog = [NSMutableString new];
-    for (PearlLogMessage *message in self.messages)
-        if (message.level >= level) {
-            [formattedLog appendString:[message description]];
-            [formattedLog appendString:@"\n"];
-        }
+    for (PearlLogMessage *message in [self messagesWithLevel:level]) {
+        [formattedLog appendString:[message description]];
+        [formattedLog appendString:@"\n"];
+    }
 
     return formattedLog;
 }
@@ -154,9 +169,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     @try {
         @synchronized (self.listeners) {
             [threadLocals setObject:@"" forKey:@"PearlDisableLog"];
-            for (
-                    BOOL (^listener)(PearlLogMessage *)
-                    in self.listeners)
+            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
                 if (!listener( message ))
                     return self;
         }
@@ -297,7 +310,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 
 @end
 
-NSString *errstr() {
+const NSString *errstr() {
 
     switch (errno) {
         case 1:

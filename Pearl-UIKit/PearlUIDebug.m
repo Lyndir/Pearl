@@ -16,6 +16,9 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlUIDebug.h"
+#import "PearlUIUtils.h"
+
 @implementation PearlUIDebug
 
 static CGFloat autoWidth = 5;

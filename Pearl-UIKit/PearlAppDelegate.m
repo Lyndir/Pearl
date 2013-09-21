@@ -16,6 +16,9 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
+#import "PearlAppDelegate.h"
+#import "PearlUIUtils.h"
+
 #import "PearlLogger.h"
 #ifdef PEARL_MEDIA
 #import "PearlAudioController.h"
@@ -101,10 +104,6 @@
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
         self.navigationController = (UINavigationController *)self.window.rootViewController;
-
-#ifdef DEBUG
-    [[NSClassFromString( @"DCIntrospect" ) sharedIntrospector] start];
-#endif
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {

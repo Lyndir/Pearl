@@ -15,6 +15,8 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "UIControl+PearlBlocks.h"
+
 @interface PearlActionBlock_UIControl : NSObject
 
 - (id)initWithBlock:(void (^)(id sender, UIControlEvents event))block;

@@ -15,6 +15,8 @@
 //  Copyright 2010 Lhunath. All rights reserved.
 //
 
+#import "PearlArrayTVC.h"
+
 #define PearlATVCCellID         @"Pearl.ArrayTVC.cell"
 #define PearlATVCRowName        @"Pearl.ArrayTVC.name"
 #define PearlATVCRowDetail      @"Pearl.ArrayTVC.detail"

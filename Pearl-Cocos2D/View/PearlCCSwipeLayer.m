@@ -129,7 +129,7 @@
     CGPoint point = [touch locationInView:[touch view]];
 
     CGPoint swipePoint = ccp(point.y, point.x);
-    if (fabsf(self.swipeStart.x - swipePoint.x) > SwipeMinHorizontal && fabsf(self.swipeStart.y - swipePoint.y) < SwipeMaxVertical)
+    if (ABS(self.swipeStart.x - swipePoint.x) > SwipeMinHorizontal && ABS(self.swipeStart.y - swipePoint.y) < SwipeMaxVertical)
         self.swiped = YES;
 
     CGFloat swipeActionDuration = [[PearlConfig get].transitionDuration floatValue];

@@ -15,6 +15,9 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "UIControl+PearlSelect.h"
+#import "UIControl+PearlBlocks.h"
+
 @implementation UIControl(PearlSelect)
 
 static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;

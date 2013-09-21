@@ -225,7 +225,7 @@
 }
 
 
-- (BOOL)validateAndParseResponse:(NSData *)responseData into:(PearlJSONResult **)response popupOnError:(BOOL)popupOnError
+- (BOOL)validateAndParseResponse:(NSData *)responseData into:(__autoreleasing PearlJSONResult **)response popupOnError:(BOOL)popupOnError
                         requires:(NSString *)key, ... {
 
     *response = nil;

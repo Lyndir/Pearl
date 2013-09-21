@@ -53,9 +53,8 @@
     if (!(self = [super initWithFile:@"bar.png"]))
         return self;
 
-    [self setTextureRect:CGRectFromCGPointAndCGSize(CGPointZero,
-                                                    CGSizeMake([CCDirector sharedDirector].winSize.width,
-                                                               self.texture.contentSize.height))];
+    [self setTextureRect:CGRectFromOriginWithSize(CGPointZero, CGSizeMake([CCDirector sharedDirector].winSize.width,
+                                                                          self.texture.contentSize.height))];
 
     ccTexParams texParams = {GL_NEAREST, GL_NEAREST, GL_REPEAT, GL_CLAMP_TO_EDGE};
     [self.texture setTexParameters:&texParams];
@@ -108,7 +107,7 @@
         [self removeChild:self.messageLabel cleanup:YES];
 
     CGFloat fontSize = [[PearlConfig get].smallFontSize floatValue];
-    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize hAlignment:UITextAlignmentCenter
+    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize hAlignment:NSTextAlignmentCenter
                                            fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
 
     if (important) {

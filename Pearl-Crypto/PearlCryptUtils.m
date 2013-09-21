@@ -53,21 +53,25 @@ NSString *NSStringFromErrSec(OSStatus status) {
             return [NSString stringWithFormat:@"No error (errSecSuccess: %ld).", (long)status];
         case errSecUnimplemented:
             return [NSString stringWithFormat:@"Function or operation not implemented (errSecUnimplemented: %ld).", (long)status];
+#if TARGET_OS_IPHONE
         case errSecIO:
             return [NSString stringWithFormat:@"I/O error (bummers) (errSecIO: %ld).", (long)status];
         case errSecOpWr:
             return [NSString stringWithFormat:@"file already open with with write permission (errSecOpWr: %ld).", (long)status];
+#endif
         case errSecParam:
             return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).",
                                               (long)status];
         case errSecAllocate:
             return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", (long)status];
+#if TARGET_OS_IPHONE
         case errSecUserCanceled:
             return [NSString stringWithFormat:@"User canceled the operation (errSecUserCanceled: %ld).", (long)status];
         case errSecBadReq:
             return [NSString stringWithFormat:@"Bad parameter or invalid state for operation (errSecBadReq: %ld).", (long)status];
         case errSecInternalComponent:
             return [NSString stringWithFormat:@"[No documentation] (errSecInternalComponent: %ld).", (long)status];
+#endif
         case errSecNotAvailable:
             return [NSString stringWithFormat:@"No keychain is available. You may need to restart your computer (errSecNotAvailable: %ld).",
                                               (long)status];

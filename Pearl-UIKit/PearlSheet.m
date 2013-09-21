@@ -1,8 +1,3 @@
-@interface PearlSheet()
-
-@property(nonatomic) BOOL handlingClick;
-@end
-
 /**
  * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
@@ -20,6 +15,14 @@
 //  Created by Maarten Billemont on 08/08/09.
 //  Copyright, lhunath (Maarten Billemont) 2009. All rights reserved.
 //
+
+#import "PearlSheet.h"
+#import "PearlUIUtils.h"
+
+@interface PearlSheet()
+
+@property(nonatomic) BOOL handlingClick;
+@end
 
 @implementation PearlSheet
 

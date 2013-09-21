@@ -16,6 +16,10 @@
 //  Copyright 2010 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlRootViewController.h"
+#import "PearlUIUtils.h"
+#import "PearlAppDelegate.h"
+
 @interface PearlRootViewController()
 
 @property(nonatomic, retain) NSMutableArray *mySupportedIterfaceOrientations;

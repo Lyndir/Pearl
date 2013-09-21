@@ -36,7 +36,7 @@
 @property (readwrite, assign) ccTime smoothTimeElapsed;
 
 @property (readwrite, assign) CGPoint current;
-@property (readwrite, assign) CGFloat currentLength;
+@property (readwrite, assign) float currentLength;
 
 @end
 
@@ -99,7 +99,7 @@
 
 - (void)update:(ccTime)dt {
 
-    self.smoothTimeElapsed = fminf(SmoothingTime, self.smoothTimeElapsed + dt);
+    self.smoothTimeElapsed = MIN(SmoothingTime, self.smoothTimeElapsed + dt);
 
     CGFloat completion = self.smoothTimeElapsed / SmoothingTime;
     self.current = ccpAdd(self.current, ccpMult(ccpSub(self.target, self.current), completion));
@@ -148,8 +148,9 @@
     //GLfloat width = (GLfloat)body[bodyFrame]..contentSize.width * body[bodyFrame].maxS;
     //GLfloat height = (GLfloat)body[bodyFrame]..contentSize.height * body[bodyFrame].maxT;
 
-    CGFloat lengthPx          = self.currentLength; // * CC_CONTENT_SCALE_FACTOR();
-    GLfloat s                 = (lengthPx * 2 - self.tail.contentSize.width / 2 - self.head.contentSize.width / 2) / self.textureSize.width;
+    float lengthPx            = self.currentLength; // * CC_CONTENT_SCALE_FACTOR();
+    GLfloat s                 = (lengthPx * 2 - (float)self.tail.contentSize.width / 2 - (float)self.head.contentSize.width / 2) /
+                                (float)self.textureSize.width;
     GLfloat coordinates[3][8] = {
      /* head */ {
       0.0f, 1.0f,
@@ -171,20 +172,20 @@
 
     GLfloat vertices[3][12] = {
      /* head */ {
-      -self.textureSize.width / 2.0f + lengthPx, -self.textureSize.height / 2.0f, 0.0f,
-      self.textureSize.width / 2.0f + lengthPx, -self.textureSize.height / 2.0f, 0.0f,
-      -self.textureSize.width / 2.0f + lengthPx, self.textureSize.height / 2.0f, 0.0f,
-      self.textureSize.width / 2.0f + lengthPx, self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f + lengthPx, -(float)self.textureSize.height / 2.0f, 0.0f,
+      (float)self.textureSize.width / 2.0f + lengthPx, -(float)self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f + lengthPx, (float)self.textureSize.height / 2.0f, 0.0f,
+      (float)self.textureSize.width / 2.0f + lengthPx, (float)self.textureSize.height / 2.0f, 0.0f,
       /* body */ }, {
-      self.textureSize.width / 2.0f, -self.textureSize.height / 2.0f, 0.0f,
-      -self.textureSize.width / 2.0f + lengthPx, -self.textureSize.height / 2.0f, 0.0f,
-      self.textureSize.width / 2.0f, self.textureSize.height / 2.0f, 0.0f,
-      -self.textureSize.width / 2.0f + lengthPx, self.textureSize.height / 2.0f, 0.0f
+      (float)self.textureSize.width / 2.0f, -(float)self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f + lengthPx, -(float)self.textureSize.height / 2.0f, 0.0f,
+      (float)self.textureSize.width / 2.0f, (float)self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f + lengthPx, (float)self.textureSize.height / 2.0f, 0.0f
       /* tail */ }, {
-      -self.textureSize.width / 2.0f, -self.textureSize.height / 2.0f, 0.0f,
-      self.textureSize.width / 2.0f, -self.textureSize.height / 2.0f, 0.0f,
-      -self.textureSize.width / 2.0f, self.textureSize.height / 2.0f, 0.0f,
-      self.textureSize.width / 2.0f, self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f, -(float)self.textureSize.height / 2.0f, 0.0f,
+      (float)self.textureSize.width / 2.0f, -(float)self.textureSize.height / 2.0f, 0.0f,
+      -(float)self.textureSize.width / 2.0f, (float)self.textureSize.height / 2.0f, 0.0f,
+      (float)self.textureSize.width / 2.0f, (float)self.textureSize.height / 2.0f, 0.0f,
      }
     };
 

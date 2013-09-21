@@ -17,6 +17,7 @@
 //
 //  See http://www.cocoadev.com/index.pl?BaseSixtyFour
 
+#import "PearlKeyChain.h"
 #import "PearlCryptUtils.h"
 #import "PearlLogger.h"
 

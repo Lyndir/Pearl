@@ -273,8 +273,6 @@
 		DAAD430E15286F4500AADDBD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAD430C15286F4500AADDBD /* InfoPlist.strings */; };
 		DAAD431115286F4500AADDBD /* PearliOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAD431015286F4500AADDBD /* PearliOSTests.m */; };
 		DAAD431915286FAF00AADDBD /* libPearl-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD42FF15286E9800AADDBD /* libPearl-iOS.a */; };
-		DAAD436E1529013E00AADDBD /* libscryptenc-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43671529013E00AADDBD /* libscryptenc-ios.a */; };
-		DAAD4383152901A400AADDBD /* libscryptenc-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAD43681529013E00AADDBD /* libscryptenc-osx.a */; };
 		DAAD43A11529026C00AADDBD /* libPearl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E1F14F3BE5500413D09 /* libPearl.a */; };
 		DAAD43A21529027100AADDBD /* libPearl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADD1E1F14F3BE5500413D09 /* libPearl.a */; };
 		DAAD43A61529962600AADDBD /* PearlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DADD1E3F14F3BE5500413D09 /* PearlTests.m */; };
@@ -538,6 +536,17 @@
 		DAE2A5C91548A8E700589827 /* UIColor+Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE2A5C51548A8E700589827 /* UIColor+Expanded.m */; };
 		DAE2A5CA1548A8E700589827 /* UIColor+HSV.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE2A5C61548A8E700589827 /* UIColor+HSV.h */; };
 		DAE2A5CB1548A8E700589827 /* UIColor+HSV.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE2A5C71548A8E700589827 /* UIColor+HSV.m */; };
+		DAFFC62317ED44A1007BB020 /* crypto_aesctr.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61617ED44A1007BB020 /* crypto_aesctr.h */; };
+		DAFFC62417ED44A1007BB020 /* crypto_scrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61717ED44A1007BB020 /* crypto_scrypt.h */; };
+		DAFFC62517ED44A1007BB020 /* memlimit.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61817ED44A1007BB020 /* memlimit.h */; };
+		DAFFC62617ED44A1007BB020 /* readpass.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61917ED44A1007BB020 /* readpass.h */; };
+		DAFFC62717ED44A1007BB020 /* scryptenc.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61A17ED44A1007BB020 /* scryptenc.h */; };
+		DAFFC62817ED44A1007BB020 /* scryptenc_cpuperf.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61B17ED44A1007BB020 /* scryptenc_cpuperf.h */; };
+		DAFFC62917ED44A1007BB020 /* sha256.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61C17ED44A1007BB020 /* sha256.h */; };
+		DAFFC62A17ED44A1007BB020 /* sysendian.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61D17ED44A1007BB020 /* sysendian.h */; };
+		DAFFC62B17ED44A1007BB020 /* warn.h in Headers */ = {isa = PBXBuildFile; fileRef = DAFFC61E17ED44A1007BB020 /* warn.h */; };
+		DAFFC63217ED44B5007BB020 /* libscryptenc-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAFFC62117ED44A1007BB020 /* libscryptenc-ios.a */; };
+		DAFFC63317ED44B9007BB020 /* libscryptenc-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAFFC62217ED44A1007BB020 /* libscryptenc-osx.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -645,6 +654,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = A0511DED127788EC00DE46C4;
 			remoteInfo = "Makefile-scrypt";
+		};
+		DAFFC61017ED4476007BB020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA109F6514F4686400EB000C /* scrypt.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DABD3E841711E7D600CF925C;
+			remoteInfo = "scrypt-bin-ios";
+		};
+		DAFFC61217ED4476007BB020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA109F6514F4686400EB000C /* scrypt.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DABD3E9D1711E7E000CF925C;
+			remoteInfo = "scrypt-bin-osx";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1956,10 +1979,6 @@
 		DAAD430F15286F4500AADDBD /* PearliOSTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearliOSTests.h; sourceTree = "<group>"; };
 		DAAD431015286F4500AADDBD /* PearliOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearliOSTests.m; sourceTree = "<group>"; };
 		DAAD431215286F4500AADDBD /* PearliOSTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PearliOSTests-Prefix.pch"; sourceTree = "<group>"; };
-		DAAD43651529013E00AADDBD /* libcrypto-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-ios.a"; sourceTree = "<group>"; };
-		DAAD43661529013E00AADDBD /* libcrypto-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-osx.a"; sourceTree = "<group>"; };
-		DAAD43671529013E00AADDBD /* libscryptenc-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-ios.a"; sourceTree = "<group>"; };
-		DAAD43681529013E00AADDBD /* libscryptenc-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-osx.a"; sourceTree = "<group>"; };
 		DAAD43751529017E00AADDBD /* libPearl-OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPearl-OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAD43B01529994B00AADDBD /* PearlOSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearlOSXTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAD43B51529994B00AADDBD /* PearlOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PearlOSXTests-Info.plist"; sourceTree = "<group>"; };
@@ -2206,6 +2225,19 @@
 		DAE2A5C51548A8E700589827 /* UIColor+Expanded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Expanded.m"; sourceTree = "<group>"; };
 		DAE2A5C61548A8E700589827 /* UIColor+HSV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HSV.h"; sourceTree = "<group>"; };
 		DAE2A5C71548A8E700589827 /* UIColor+HSV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSV.m"; sourceTree = "<group>"; };
+		DAFFC61617ED44A1007BB020 /* crypto_aesctr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aesctr.h; sourceTree = "<group>"; };
+		DAFFC61717ED44A1007BB020 /* crypto_scrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_scrypt.h; sourceTree = "<group>"; };
+		DAFFC61817ED44A1007BB020 /* memlimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memlimit.h; sourceTree = "<group>"; };
+		DAFFC61917ED44A1007BB020 /* readpass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = readpass.h; sourceTree = "<group>"; };
+		DAFFC61A17ED44A1007BB020 /* scryptenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scryptenc.h; sourceTree = "<group>"; };
+		DAFFC61B17ED44A1007BB020 /* scryptenc_cpuperf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scryptenc_cpuperf.h; sourceTree = "<group>"; };
+		DAFFC61C17ED44A1007BB020 /* sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha256.h; sourceTree = "<group>"; };
+		DAFFC61D17ED44A1007BB020 /* sysendian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sysendian.h; sourceTree = "<group>"; };
+		DAFFC61E17ED44A1007BB020 /* warn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = warn.h; sourceTree = "<group>"; };
+		DAFFC61F17ED44A1007BB020 /* libopensslcrypto-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopensslcrypto-ios.a"; sourceTree = "<group>"; };
+		DAFFC62017ED44A1007BB020 /* libopensslcrypto-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopensslcrypto-osx.a"; sourceTree = "<group>"; };
+		DAFFC62117ED44A1007BB020 /* libscryptenc-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-ios.a"; sourceTree = "<group>"; };
+		DAFFC62217ED44A1007BB020 /* libscryptenc-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libscryptenc-osx.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2259,8 +2291,8 @@
 				DAAD42AD15286E9800AADDBD /* libASIHttpRequest.a in Frameworks */,
 				DAAD42AE15286E9800AADDBD /* libcocos2d.a in Frameworks */,
 				DAAD42B115286E9800AADDBD /* libuicolor-utilities.a in Frameworks */,
-				DAAD436E1529013E00AADDBD /* libscryptenc-ios.a in Frameworks */,
 				DAAD43D915299C5500AADDBD /* Security.framework in Frameworks */,
+				DAFFC63217ED44B5007BB020 /* libscryptenc-ios.a in Frameworks */,
 				DAAD43A8152998DE00AADDBD /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2291,8 +2323,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAAD43A21529027100AADDBD /* libPearl.a in Frameworks */,
-				DAAD4383152901A400AADDBD /* libscryptenc-osx.a in Frameworks */,
 				DAAD43D715299C3E00AADDBD /* Security.framework in Frameworks */,
+				DAFFC63317ED44B9007BB020 /* libscryptenc-osx.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2473,11 +2505,8 @@
 		DA1097CE14F438D400EB000C /* Pearl-Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				DAFFC61417ED44A1007BB020 /* lib */,
 				DA3EF1D415A4CEBB003ABF4E /* Pearl-Crypto.m */,
-				DAAD43651529013E00AADDBD /* libcrypto-ios.a */,
-				DAAD43661529013E00AADDBD /* libcrypto-osx.a */,
-				DAAD43671529013E00AADDBD /* libscryptenc-ios.a */,
-				DAAD43681529013E00AADDBD /* libscryptenc-osx.a */,
 				DA1097CF14F438D400EB000C /* PearlCryptUtils.h */,
 				DA1097D014F438D400EB000C /* PearlCryptUtils.m */,
 				DA1097D114F438D400EB000C /* PearlKeyChain.h */,
@@ -3913,6 +3942,8 @@
 				DA109F7614F4686600EB000C /* libscryptenc.a */,
 				DA109F7814F4686600EB000C /* libscryptcrypto.a */,
 				DA109F7A14F4686600EB000C /* libutil.a */,
+				DAFFC61117ED4476007BB020 /* libscrypt-bin-ios.a */,
+				DAFFC61317ED4476007BB020 /* libscrypt-bin-osx.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4272,6 +4303,34 @@
 			path = GL;
 			sourceTree = "<group>";
 		};
+		DAFFC61417ED44A1007BB020 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				DAFFC61517ED44A1007BB020 /* include */,
+				DAFFC61F17ED44A1007BB020 /* libopensslcrypto-ios.a */,
+				DAFFC62017ED44A1007BB020 /* libopensslcrypto-osx.a */,
+				DAFFC62117ED44A1007BB020 /* libscryptenc-ios.a */,
+				DAFFC62217ED44A1007BB020 /* libscryptenc-osx.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		DAFFC61517ED44A1007BB020 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				DAFFC61617ED44A1007BB020 /* crypto_aesctr.h */,
+				DAFFC61717ED44A1007BB020 /* crypto_scrypt.h */,
+				DAFFC61817ED44A1007BB020 /* memlimit.h */,
+				DAFFC61917ED44A1007BB020 /* readpass.h */,
+				DAFFC61A17ED44A1007BB020 /* scryptenc.h */,
+				DAFFC61B17ED44A1007BB020 /* scryptenc_cpuperf.h */,
+				DAFFC61C17ED44A1007BB020 /* sha256.h */,
+				DAFFC61D17ED44A1007BB020 /* sysendian.h */,
+				DAFFC61E17ED44A1007BB020 /* warn.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -4544,23 +4603,31 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAFFC62917ED44A1007BB020 /* sha256.h in Headers */,
+				DAFFC62817ED44A1007BB020 /* scryptenc_cpuperf.h in Headers */,
 				DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */,
 				DA10974F14F438C300EB000C /* Pearl.h in Headers */,
+				DAFFC62B17ED44A1007BB020 /* warn.h in Headers */,
 				DA10975014F438C300EB000C /* PearlAbstractStrings.h in Headers */,
 				DA10975414F438C300EB000C /* PearlCodeUtils.h in Headers */,
 				DA10975614F438C300EB000C /* PearlConfig.h in Headers */,
 				DA10975814F438C300EB000C /* PearlDeviceUtils.h in Headers */,
 				DA10975A14F438C300EB000C /* PearlLogger.h in Headers */,
+				DAFFC62317ED44A1007BB020 /* crypto_aesctr.h in Headers */,
+				DAFFC62417ED44A1007BB020 /* crypto_scrypt.h in Headers */,
 				DA10975C14F438C300EB000C /* PearlMathUtils.h in Headers */,
 				DA10975E14F438C300EB000C /* PearlObjectUtils.h in Headers */,
 				DA10976014F438C300EB000C /* PearlResettable.h in Headers */,
 				DA10976114F438C300EB000C /* PearlStrings.h in Headers */,
+				DAFFC62717ED44A1007BB020 /* scryptenc.h in Headers */,
 				DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */,
 				DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */,
 				DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */,
+				DAFFC62A17ED44A1007BB020 /* sysendian.h in Headers */,
 				DA109C5514F438D600EB000C /* PearlWSController.h in Headers */,
 				DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */,
 				DA109C5814F438D600EB000C /* PearlWSStrings.h in Headers */,
+				DAFFC62617ED44A1007BB020 /* readpass.h in Headers */,
 				DA3EF1C115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h in Headers */,
 				DA3EF1C315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h in Headers */,
 				DA3EF1C515A4CE6A003ABF4E /* NSObject+PearlExport.h in Headers */,
@@ -4570,6 +4637,7 @@
 				DA3EF1CE15A4CE6A003ABF4E /* PearlLazy.h in Headers */,
 				DA3EF1D015A4CE6A003ABF4E /* PearlQueue.h in Headers */,
 				93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */,
+				DAFFC62517ED44A1007BB020 /* memlimit.h in Headers */,
 				DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */,
 				DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */,
 			);
@@ -4872,6 +4940,20 @@
 			remoteRef = DA109F7914F4686600EB000C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DAFFC61117ED4476007BB020 /* libscrypt-bin-ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libscrypt-bin-ios.a";
+			remoteRef = DAFFC61017ED4476007BB020 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAFFC61317ED4476007BB020 /* libscrypt-bin-osx.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libscrypt-bin-osx.a";
+			remoteRef = DAFFC61217ED4476007BB020 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -4906,7 +4988,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# scrypt\ncd \"$PROJECT_DIR/External/iOSPorts/ports/security/scrypt\"\nxcodebuild -sdk iphonesimulator -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk iphoneos        -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk macosx          -target scrypt SYMROOT=\"$SYMROOT\" clean build\ncd \"$PROJECT_DIR\"\nlipo \"$BUILD_DIR/Release-iphoneos/libscryptenc.a\" \"$BUILD_DIR/Release-iphonesimulator/libscryptenc.a\" -create -output Pearl-Crypto/libscryptenc-ios.a\ncp \"$BUILD_DIR/Release/libscryptenc.a\" Pearl-Crypto/libscryptenc-osx.a\n\n# openssl\nlipo \"$BUILD_DIR/Release-iphoneos/libcrypto.a\" \"$BUILD_DIR/Release-iphonesimulator/libcrypto.a\" -create -output Pearl-Crypto/libopensslcrypto-ios.a\ncp \"$BUILD_DIR/Release/libcrypto.a\" Pearl-Crypto/libopensslcrypto-osx.a\n";
+			shellScript = "set -x\n\n# build libraries\ncd \"$PROJECT_DIR/External/iOSPorts/ports/security/scrypt\"\nxcodebuild -sdk iphonesimulator -configuration Release-iOS -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk iphoneos        -configuration Release-iOS -target scrypt SYMROOT=\"$SYMROOT\" clean build\nxcodebuild -sdk macosx          -configuration Release-OSX -target scrypt SYMROOT=\"$SYMROOT\" clean build\ncd \"$PROJECT_DIR\"\n\n# scrypt\nlipo \"$BUILD_DIR/Release-iOS-iphoneos/libscryptenc.a\" \"$BUILD_DIR/Release-iOS-iphonesimulator/libscryptenc.a\" -create -output Pearl-Crypto/lib/libscryptenc-ios.a\ncp \"$BUILD_DIR/Release-OSX/libscryptenc.a\" Pearl-Crypto/lib/libscryptenc-osx.a\n\n# openssl\nlipo \"$BUILD_DIR/Release-iOS-iphoneos/libcrypto.a\" \"$BUILD_DIR/Release-iOS-iphonesimulator/libcrypto.a\" -create -output Pearl-Crypto/lib/libopensslcrypto-ios.a\ncp \"$BUILD_DIR/Release-OSX/libcrypto.a\" Pearl-Crypto/lib/libopensslcrypto-osx.a\n";
 		};
 		DAAD430315286F4400AADDBD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5557,6 +5639,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "External/cocos2d-iphone/external/kazmath/include";
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -5570,7 +5653,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+				);
 			};
 			name = "Debug-OSX";
 		};
@@ -5686,6 +5773,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "External/cocos2d-iphone/external/kazmath/include";
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = macosx;
@@ -5699,7 +5787,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+				);
 			};
 			name = "Release-OSX";
 		};
@@ -5743,14 +5835,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5761,14 +5854,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5779,14 +5873,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5797,14 +5892,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5819,7 +5915,7 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -5836,7 +5932,7 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -5853,7 +5949,7 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -5870,7 +5966,7 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				INFOPLIST_FILE = "PearliOSTests/PearliOSTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
@@ -5883,14 +5979,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = macosx;
 			};
@@ -5901,14 +5998,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = macosx;
 			};
@@ -5919,14 +6017,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = macosx;
 			};
@@ -5937,14 +6036,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"External/iOSPorts/include/**",
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Pearl-Crypto\"",
+					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
 				);
 				SDKROOT = macosx;
 			};
@@ -5953,14 +6053,12 @@
 		DAAD43BE1529994B00AADDBD /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
@@ -5969,14 +6067,12 @@
 		DAAD43BF1529994B00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
@@ -5985,14 +6081,12 @@
 		DAAD43C01529994B00AADDBD /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
@@ -6001,14 +6095,12 @@
 		DAAD43C11529994B00AADDBD /* Release-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "PearlOSXTests/PearlOSXTests-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = octest;
 			};
@@ -6097,6 +6189,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "External/cocos2d-iphone/external/kazmath/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LLVM_LTO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -6183,6 +6276,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "External/cocos2d-iphone/external/kazmath/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LLVM_LTO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = iphoneos;
@@ -6196,7 +6290,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+				);
 			};
 			name = "Debug-iOS";
 		};
@@ -6205,7 +6303,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pearl-Prefix.pch";
+				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+				);
 			};
 			name = "Release-iOS";
 		};

@@ -32,7 +32,7 @@
     CGPoint _target;
 
     CGPoint _current;
-    CGFloat _currentLength;
+    float   _currentLength;
 
     CGSize     _textureSize;
     NSUInteger _uniformColor;

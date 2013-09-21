@@ -15,6 +15,8 @@
 //  Copyright 2010 Lhunath. All rights reserved.
 //
 
+#import "PearlWebViewController.h"
+
 @interface PearlWebViewController()
 
 - (void)updateWebOrientation;

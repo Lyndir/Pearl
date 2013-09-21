@@ -47,7 +47,7 @@ static inline PearlMargin PearlMarginMake(CGFloat top, CGFloat right, CGFloat bo
 @property (nonatomic, readwrite) ccColor4B   colorGradient;
 @property (nonatomic, readwrite) PearlMargin outerPadding;
 @property (nonatomic, readwrite) PearlMargin padding;
-@property (nonatomic, readwrite) float       innerRatio;
+@property (nonatomic, readwrite) GLfloat     innerRatio;
 
 - (void)update;
 

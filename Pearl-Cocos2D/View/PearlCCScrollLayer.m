@@ -137,8 +137,8 @@
 - (void)setScrollStep:(CGPoint)aScrollStep {
 
     // Scroll steps < 1 make no sense.
-    aScrollStep.x = fmaxf(aScrollStep.x, 1);
-    aScrollStep.y = fmaxf(aScrollStep.y, 1);
+    aScrollStep.x = MAX(aScrollStep.x, 1);
+    aScrollStep.y = MAX(aScrollStep.y, 1);
 
     _scrollStep = aScrollStep;
 }
@@ -161,23 +161,23 @@
 
 - (CGPoint)limitPoint:(CGPoint)point {
 
-    CGPoint scrollBound = ccp(fmaxf(self.scrollContentSize.width - self.contentSize.width, 0),
-    fmaxf(self.scrollContentSize.height - self.contentSize.height, 0));
+    CGPoint scrollBound = ccp(MAX(self.scrollContentSize.width - self.contentSize.width, 0),
+    MAX(self.scrollContentSize.height - self.contentSize.height, 0));
     CGPoint limitPoint  = point;
 
     if (self.scrollContentDirection & PearlCCScrollContentDirectionBottomToTop)
-        limitPoint.y = fminf(fmaxf(point.y, -scrollBound.y), 0);
+        limitPoint.y = MIN(MAX(point.y, -scrollBound.y), 0);
     else
         if (self.scrollContentDirection & PearlCCScrollContentDirectionTopToBottom)
-            limitPoint.y = fminf(fmaxf(point.y, 0), scrollBound.y);
+            limitPoint.y = MIN(MAX(point.y, 0), scrollBound.y);
         else
             limitPoint.y = 0;
 
     if (self.scrollContentDirection & PearlCCScrollContentDirectionLeftToRight)
-        limitPoint.x = fminf(fmaxf(point.x, -scrollBound.x), 0);
+        limitPoint.x = MIN(MAX(point.x, -scrollBound.x), 0);
     else
         if (self.scrollContentDirection & PearlCCScrollContentDirectionRightToLeft)
-            limitPoint.x = fminf(fmaxf(point.x, 0), scrollBound.x);
+            limitPoint.x = MIN(MAX(point.x, 0), scrollBound.x);
         else
             limitPoint.x = 0;
 
@@ -218,7 +218,7 @@
 - (CGRect)visibleRect {
 
     CGPoint visibleOrigin = ccpNeg(self.position);
-    return CGRectFromCGPointAndCGSize(visibleOrigin, self.contentSize);
+    return CGRectFromOriginWithSize(visibleOrigin, self.contentSize);
 }
 
 
@@ -283,8 +283,8 @@
     const CGSize  scrollContentSizePx = self.scrollContentSize;
     const CGSize  contentSizePx       = self.contentSize;
     const CGPoint positionPx          = self.position;
-    const CGPoint scrollBound         = ccp(fmaxf(scrollContentSizePx.width - contentSizePx.width, 0),
-    fmaxf(scrollContentSizePx.height - contentSizePx.height, 0));
+    const CGPoint scrollBound         = ccp(MAX(scrollContentSizePx.width - contentSizePx.width, 0),
+    MAX(scrollContentSizePx.height - contentSizePx.height, 0));
     const CGPoint scrollProgress      = ccp(scrollBound.x? positionPx.x / scrollBound.x: 0,
     scrollBound.y? positionPx.y / scrollBound.y: 0);
 

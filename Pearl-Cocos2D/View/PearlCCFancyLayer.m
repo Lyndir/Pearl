@@ -71,13 +71,9 @@
 
 - (void)update {
 
-    CGFloat barHeight = 0;
-    if (![UIApp isStatusBarHidden])
-        barHeight = [UIApp statusBarFrame].size.height;
-
     CGSize winSize = [CCDirector sharedDirector].winSize;
-    self.contentSize = CGSizeMake(winSize.width, winSize.height - barHeight);
-    CGFloat inner = self.contentSize.height * self.innerRatio;
+    self.contentSize = CGSizeMake(winSize.width, winSize.height);
+    GLfloat inner = (GLfloat)self.contentSize.height * self.innerRatio;
 
     /*
       pos.x + pad                                pos.x + width - pad - inner
@@ -102,26 +98,26 @@
     */
 
     GLfloat *vertices = calloc(10 * 2, sizeof(GLfloat));
-    vertices[0]  = self.contentSize.width / 2;                            // 0
-    vertices[1]  = self.contentSize.height / 2;
-    vertices[2]  = self.outerPadding.left + inner;                        // 1
-    vertices[3]  = self.outerPadding.bottom;
-    vertices[4]  = self.outerPadding.left;                                // 2
-    vertices[5]  = self.outerPadding.bottom + inner;
-    vertices[6]  = self.outerPadding.left;                                // 3
-    vertices[7]  = self.contentSize.height - self.outerPadding.top - inner;
-    vertices[8]  = self.outerPadding.left + inner;                        // 4
-    vertices[9]  = self.contentSize.height - self.outerPadding.top;
-    vertices[10] = self.contentSize.width - self.outerPadding.right - inner;   // 5
-    vertices[11] = self.contentSize.height - self.outerPadding.top;
-    vertices[12] = self.contentSize.width - self.outerPadding.right;           // 6
-    vertices[13] = self.contentSize.height - self.outerPadding.top - inner;
-    vertices[14] = self.contentSize.width - self.outerPadding.right;           // 7
-    vertices[15] = self.outerPadding.bottom + inner;
-    vertices[16] = self.contentSize.width - self.outerPadding.right - inner;   // 8
-    vertices[17] = self.outerPadding.bottom;
-    vertices[18] = self.outerPadding.left + inner;                        // 9
-    vertices[19] = self.outerPadding.bottom;
+    vertices[0]  = (GLfloat)self.contentSize.width / 2;                            // 0
+    vertices[1]  = (GLfloat)self.contentSize.height / 2;
+    vertices[2]  = (GLfloat)self.outerPadding.left + inner;                        // 1
+    vertices[3]  = (GLfloat)self.outerPadding.bottom;
+    vertices[4]  = (GLfloat)self.outerPadding.left;                                // 2
+    vertices[5]  = (GLfloat)self.outerPadding.bottom + inner;
+    vertices[6]  = (GLfloat)self.outerPadding.left;                                // 3
+    vertices[7]  = (GLfloat)self.contentSize.height - (GLfloat)self.outerPadding.top - inner;
+    vertices[8]  = (GLfloat)self.outerPadding.left + inner;                        // 4
+    vertices[9]  = (GLfloat)self.contentSize.height - (GLfloat)self.outerPadding.top;
+    vertices[10] = (GLfloat)self.contentSize.width - (GLfloat)self.outerPadding.right - inner;   // 5
+    vertices[11] = (GLfloat)self.contentSize.height - (GLfloat)self.outerPadding.top;
+    vertices[12] = (GLfloat)self.contentSize.width - (GLfloat)self.outerPadding.right;           // 6
+    vertices[13] = (GLfloat)self.contentSize.height - (GLfloat)self.outerPadding.top - inner;
+    vertices[14] = (GLfloat)self.contentSize.width - (GLfloat)self.outerPadding.right;           // 7
+    vertices[15] = (GLfloat)self.outerPadding.bottom + inner;
+    vertices[16] = (GLfloat)self.contentSize.width - (GLfloat)self.outerPadding.right - inner;   // 8
+    vertices[17] = (GLfloat)self.outerPadding.bottom;
+    vertices[18] = (GLfloat)self.outerPadding.left + inner;                        // 9
+    vertices[19] = (GLfloat)self.outerPadding.bottom;
 
     ccColor4B *colors = calloc(10, sizeof(ccColor4B));
     colors[1] = colors[2] = colors[7] = colors[8] = colors[9] = self.backColor;

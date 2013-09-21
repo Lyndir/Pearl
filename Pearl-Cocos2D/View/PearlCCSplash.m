@@ -60,7 +60,7 @@
         return self;
 
     self.texture     = [[CCTextureCache sharedTextureCache] addImage:@"splash.png"];
-    self.textureRect = CGRectFromCGPointAndCGSize(CGPointZero, self.texture.contentSize);
+    self.textureRect = CGRectFromOriginWithSize(CGPointZero, self.texture.contentSize);
     self.position    = ccp([self contentSize].width / 2, [self contentSize].height / 2);
 
     PearlCCBarSprite *loadingBar = [[PearlCCBarSprite alloc] initWithHead:@"aim.head.png" body:@"aim.body.%02d.png" withFrames:16

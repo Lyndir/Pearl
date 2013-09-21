@@ -117,7 +117,7 @@ __END_DECLS
  *        A pointer to where the response object should become available.  nil if the response data could not be parsed.
  * @param popupOnError
  *        Show popup dialogs when parsing errors occur, or the response contains a failure code.
- * @param requires
+ * @param key
  *        A list of keys that are required to be present in the result object.
  * @return A boolean indicating whether the response was successfully parsed, has a successful code and passed validation.
  */

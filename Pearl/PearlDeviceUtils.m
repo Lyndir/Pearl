@@ -16,6 +16,9 @@
 //  Copyright 2009, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 

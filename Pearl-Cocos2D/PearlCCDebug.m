@@ -71,14 +71,14 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
 
     NSNumber *drawOrder = [PearlCCDebugDrawOrder objectForKey:nodeValue];
 
-    dbg(@"%*s%@. [%c] %@", 4 * indent, "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription);
+    dbg(@"%*s%@. [%c] %@", (int)(4 * indent), "", drawOrder? [drawOrder description]: @"x", activityState, nodeDescription);
     for (CCNode *child in node.children)
         [self printStateForNode:child indent:indent + 1];
 }
 
 + (NSString *)describe:(CCNode *)node {
 
-    return [NSString stringWithFormat:@"z: %d, %@", node.zOrder, [node description]];
+    return [NSString stringWithFormat:@"z: %ld, %@", (long)node.zOrder, [node description]];
 }
 
 @end
@@ -121,7 +121,7 @@ static NSMutableDictionary *PearlCCDebugDrawOrder;
     if ([self isKindOfClass:[CCScene class]])
         order = 0;
 
-    [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInt:order++] forKey:[NSValue valueWithPointer:(void *)self]];
+    [PearlCCDebugDrawOrder setObject:[NSNumber numberWithUnsignedInteger:order++] forKey:[NSValue valueWithPointer:(void *)self]];
 
     [self draw_PearlCCDebug];
 }

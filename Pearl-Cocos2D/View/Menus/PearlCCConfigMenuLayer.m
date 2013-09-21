@@ -182,7 +182,7 @@
     if (self.configDelegate && [self.configDelegate respondsToSelector:@selector(valueForSetting:index:)])
         toggledValue = [self.configDelegate valueForSetting:s index:[toggle selectedIndex]];
     if (!toggledValue)
-        toggledValue = [NSNumber numberWithUnsignedInt:[toggle selectedIndex]];
+        toggledValue = [NSNumber numberWithUnsignedInteger:[toggle selectedIndex]];
     dbg(@"Setting %@ to %@", NSStringFromSelector(s), toggledValue);
 
     // Search t's class hierarchy for the selector.

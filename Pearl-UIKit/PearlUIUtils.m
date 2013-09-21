@@ -16,6 +16,9 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "PearlUIUtils.h"
+#import "PearlBoxView.h"
+
 CGRect CGRectSetX(CGRect rect, CGFloat x) {
 
     return (CGRect){ { x, rect.origin.y }, { rect.size.width, rect.size.height } };
@@ -181,12 +184,12 @@ CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
 CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to) {
 
-    return (CGFloat)((double)pow( to.x - from.x, (CGFloat)2 ) + (double)pow( to.y - from.y, 2 ));
+    return (CGFloat)( pow( to.x - from.x, 2 ) + pow( to.y - from.y, 2 ) );
 }
 
 CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to) {
 
-    return (CGFloat)(sqrt( (double)DistanceBetweenCGPointsSq( from, to ) ));
+    return (CGFloat)sqrt( DistanceBetweenCGPointsSq( from, to ) );
 }
 
 @interface PearlUIUtilsKeyboardScrollView : NSObject

@@ -34,7 +34,6 @@
 
 - (void)testSize {
 
-    inf(@"size GLfloat*: %u, size GLfloat: %u", sizeof(GLfloat *), sizeof(GLfloat));
 }
 
 @end

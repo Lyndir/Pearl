@@ -15,6 +15,8 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import "UIScrollView+PearlFlashingIndicators.h"
+
 @implementation UIScrollView(PearlFlashingIndicators)
 
 - (void)flashScrollIndicatorsContinuously {

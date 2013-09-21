@@ -17,6 +17,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "PearlMessageView.h"
 
 @implementation PearlMessageView
 

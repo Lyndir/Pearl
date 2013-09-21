@@ -37,7 +37,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
             return @"UIInterfaceOrientationLandscapeRight";
     }
 
-    err(@"Unsupported interface orientation: %d", orientation);
+    err(@"Unsupported interface orientation: %ld", (long)orientation);
     return nil;
 }
 

@@ -95,7 +95,7 @@
     CGFloat widthFactor = targetSize.width / self.size.width;
     CGFloat heightFactor = targetSize.height / self.size.height;
 
-    CGFloat scaleFactor = fminf( widthFactor, heightFactor );
+    CGFloat scaleFactor = MIN( widthFactor, heightFactor );
     CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
             self.size.height * scaleFactor );
     UIGraphicsBeginImageContext( scaledSize );
@@ -126,7 +126,7 @@
     CGFloat widthFactor = targetSize.width / self.size.width;
     CGFloat heightFactor = targetSize.height / self.size.height;
 
-    CGFloat scaleFactor = fmaxf( widthFactor, heightFactor );
+    CGFloat scaleFactor = MAX( widthFactor, heightFactor );
     CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
             self.size.height * scaleFactor );
 

@@ -57,7 +57,7 @@ static CGFloat autoWidth = 5;
 
 + (PearlBoxView *)showRect:(CGRect)rect color:(UIColor *)color {
 
-    autoWidth = fmaxf( autoWidth - 1, 1 );
+    autoWidth = MAX( autoWidth - 1, 1 );
 
     return [self showRect:rect color:color width:autoWidth];
 }

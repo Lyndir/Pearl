@@ -97,9 +97,14 @@
 #ifdef PEARL_UIKIT
         self.window.rootViewController = [PearlRootViewController new];
 #endif
+        [self.window makeKeyAndVisible];
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
         self.navigationController = (UINavigationController *)self.window.rootViewController;
+
+#ifdef DEBUG
+    [[NSClassFromString( @"DCIntrospect" ) sharedIntrospector] start];
+#endif
 }
 
 - (void)didUpdateConfigForKey:(SEL)configKey fromValue:(id)value {

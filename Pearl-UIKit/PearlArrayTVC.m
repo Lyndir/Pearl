@@ -186,7 +186,7 @@
     NSDictionary *row = [sectionRows objectAtIndex:(NSUInteger)indexPath.row];
 
     UITableViewCellStyle cellStyle = (UITableViewCellStyle)[NSNullToNil([row objectForKey:PearlATVCCellStyle]) integerValue];
-    NSString *identifier = [NSString stringWithFormat:@"%@-%d", PearlATVCCellID, cellStyle];
+    NSString *identifier = [NSString stringWithFormat:@"%@-%ld", PearlATVCCellID, (long)cellStyle];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:identifier];

@@ -44,7 +44,7 @@ typedef enum {
 } PearlLogLevel;
 
 extern const char *PearlLogLevelStr(PearlLogLevel level);
-extern NSString *errstr(void);
+extern const NSString *errstr(void);
 __END_DECLS
 
 @interface PearlLogMessage : NSObject
@@ -60,8 +60,9 @@ __END_DECLS
 
 - (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
             text:(NSString *)aMessage;
-- (NSString *)messageDescription;
 
+- (NSString *)occurrenceDescription;
+- (NSString *)messageDescription;
 @end
 
 /**
@@ -82,13 +83,16 @@ __END_DECLS
 + (instancetype)get;
 
 /** Obtain the logged events in a formatted string fit for display. Requires history to be enabled. */
+- (NSArray *)messagesWithLevel:(PearlLogLevel)level;
+
+/** Obtain the logged events in a formatted string fit for display. Requires history to be enabled. */
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level;
 
 /** Print all log messages of the given level or above to the console. Requires history to be enabled. */
 - (void)printAllWithLevel:(PearlLogLevel)level;
 
 /** Register a listener invoked for each message that gets logged.
- * 
+ *
  * @param listener A block that takes a message and returns YES if the message may be logged and passed to other listeners, or NO if its handling should be stopped and the message should not be logged. */
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener;
 

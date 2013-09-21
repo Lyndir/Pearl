@@ -4,13 +4,11 @@ cd "${BASH_SOURCE%/*}/.."
 shopt -s extglob
 
 
-## Pearl
-#
 ## Submodules that need to be checked out.
 dependencies=( External/jrswizzle )
 
 ## Custom migration.
-# Nothing yet.
+# None yet.
 
 
 ################################################################################
@@ -18,6 +16,9 @@ isCheckedOut() {
     local modulePath=$1
     ! git submodule status | grep -q "^-[^ ]* $modulePath"
 }
+
+# git submodule sync -- A bug causes this to init ALL external dependencies.
+git submodule sync $(git submodule status | awk '/^ / { print $2 }')
 
 
 # Check out our missing dependencies
@@ -29,8 +30,6 @@ done
 
 
 # Update our modules
-# git submodule sync -- A bug causes this to init ALL external dependencies.
-git submodule sync $(git submodule status | awk '/^ / { print $2 }')
 git submodule update
 
 

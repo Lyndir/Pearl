@@ -1978,14 +1978,12 @@
 		DAAD430D15286F4500AADDBD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DAAD430F15286F4500AADDBD /* PearliOSTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearliOSTests.h; sourceTree = "<group>"; };
 		DAAD431015286F4500AADDBD /* PearliOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearliOSTests.m; sourceTree = "<group>"; };
-		DAAD431215286F4500AADDBD /* PearliOSTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PearliOSTests-Prefix.pch"; sourceTree = "<group>"; };
 		DAAD43751529017E00AADDBD /* libPearl-OSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPearl-OSX.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAD43B01529994B00AADDBD /* PearlOSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PearlOSXTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAD43B51529994B00AADDBD /* PearlOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PearlOSXTests-Info.plist"; sourceTree = "<group>"; };
 		DAAD43B71529994B00AADDBD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DAAD43B91529994B00AADDBD /* PearlOSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PearlOSXTests.h; sourceTree = "<group>"; };
 		DAAD43BA1529994B00AADDBD /* PearlOSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PearlOSXTests.m; sourceTree = "<group>"; };
-		DAAD43BC1529994B00AADDBD /* PearlOSXTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PearlOSXTests-Prefix.pch"; sourceTree = "<group>"; };
 		DAAD43D615299C3E00AADDBD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		DAAD43D815299C5500AADDBD /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DAAD44001529C27B00AADDBD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -3984,7 +3982,6 @@
 			children = (
 				DAAD430B15286F4500AADDBD /* PearliOSTests-Info.plist */,
 				DAAD430C15286F4500AADDBD /* InfoPlist.strings */,
-				DAAD431215286F4500AADDBD /* PearliOSTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4004,7 +4001,6 @@
 			children = (
 				DAAD43B51529994B00AADDBD /* PearlOSXTests-Info.plist */,
 				DAAD43B61529994B00AADDBD /* InfoPlist.strings */,
-				DAAD43BC1529994B00AADDBD /* PearlOSXTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

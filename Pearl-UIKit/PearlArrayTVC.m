@@ -238,7 +238,7 @@
     BOOL newToggled = ![[row objectForKey:PearlATVCRowToggled] boolValue];
     BOOL (^activationBlock)(BOOL) = NSNullToNil([row objectForKey:PearlATVCRowActivation]);
 
-    if (activationBlock( newToggled)) {
+    if (activationBlock && activationBlock( newToggled)) {
         [row setObject:[NSNumber numberWithBool:newToggled] forKey:PearlATVCRowToggled];
         switch ([NSNullToNil([row objectForKey:PearlATVCRowStyle]) unsignedIntValue]) {
             case PearlArrayTVCRowStyleToggle: {

@@ -23,6 +23,8 @@ extern NSString *PearlString(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
 extern NSAttributedString *PearlAttributeString(NSString *string, NSRange range, NSDictionary *attributes);
 extern NSString *PearlLocalize(NSString *format, ...) NS_FORMAT_FUNCTION(1, 0);
 extern NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION(2, 0);
+extern NSString *PearlLocalizeDyn(NSString *format, ...);
+extern NSString *PearlLocalizeTableDyn(NSString *tableName, NSString *format, ...);
 
 extern NSString *PearlStringB(BOOL value);
 extern NSString *PearlStringNSB(NSNumber *value);

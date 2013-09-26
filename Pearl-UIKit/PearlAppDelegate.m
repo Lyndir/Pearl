@@ -98,7 +98,7 @@
     if (!self.window) {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef PEARL_UIKIT
-        self.window.rootViewController = [PearlRootViewController new];
+        //self.window.rootViewController = [PearlRootViewController new];
 #endif
         [self.window makeKeyAndVisible];
     }

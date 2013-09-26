@@ -55,8 +55,8 @@
     if (!(self = [super initWithColor:ccc4(0xff, 0x77, 0x88, 0x99)]))
         return self;
 #else
-	if (!(self = [super initWithColor:ccc4(0x00, 0x00, 0x00, 0xff)]))
-		return self;
+    if (!(self = [super initWithColor:ccc4(0x00, 0x00, 0x00, 0xff)]))
+        return self;
 #endif
 
     // Build internal structures.

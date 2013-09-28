@@ -144,7 +144,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 
 #ifdef PEARL_UIKIT
-    [PearlConfig get].launchCount = [NSNumber numberWithInt:[[PearlConfig get].launchCount intValue] + 1];
+    [PearlConfig get].launchCount = @([[PearlConfig get].launchCount intValue] + 1);
     if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
     if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
     if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?

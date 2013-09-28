@@ -574,14 +574,12 @@ static NSMutableSet *dismissableResponders;
         [properties addObject:@"adjustsImageWhenDisabled"];
         [properties addObject:@"showsTouchWhenHighlighted"];
         [properties addObject:@"tintColor"];
-        for (NSNumber *state in [NSArray arrayWithObjects:
-                PearlUnsignedInteger(UIControlStateNormal),
-                PearlUnsignedInteger(UIControlStateHighlighted),
-                PearlUnsignedInteger(UIControlStateDisabled),
-                PearlUnsignedInteger(UIControlStateSelected),
-                PearlUnsignedInteger(UIControlStateApplication),
-                PearlUnsignedInteger(UIControlStateReserved),
-                nil]) {
+        for (NSNumber *state in @[@(UIControlStateNormal),
+                @(UIControlStateHighlighted),
+                @(UIControlStateDisabled),
+                @(UIControlStateSelected),
+                @(UIControlStateApplication),
+                @(UIControlStateReserved)]) {
             UIControlState controlState = [state unsignedIntegerValue];
 
             UIButton *selfButton = (UIButton *)self;
@@ -634,7 +632,7 @@ static NSMutableSet *dismissableResponders;
 
     static NSArray *localizableProperties = nil;
     if (localizableProperties == nil)
-        localizableProperties = [[NSArray alloc] initWithObjects:@"text", @"placeholder", nil];
+        localizableProperties = @[@"text", @"placeholder"];
 
     // Load localization for each of the view's supported properties.
     for (NSString *localizableProperty in localizableProperties) {
@@ -771,7 +769,7 @@ static NSMutableSet *dismissableResponders;
                 break;
             }
     if (!window)
-        window = [UIApp.windows objectAtIndex:0];
+        window = (UIApp.windows)[0];
 
     return window;
 }
@@ -814,7 +812,7 @@ static NSMutableSet *dismissableResponders;
     keyboardScrollView_resized = activePearlKBSV.keyboardScrollView;
 
     NSDictionary *userInfo = [n userInfo];
-    CGRect keyboardRect = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect keyboardRect = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect scrollRect = [keyboardScrollView_resized frameInWindow];
     CGRect hiddenRect = CGRectIntersection( scrollRect, keyboardRect );
 
@@ -842,8 +840,8 @@ static NSMutableSet *dismissableResponders;
 
     if (!CGRectIsNull( keyboardScrollNewFrame )) {
         UIScrollView *animatingScrollView = keyboardScrollView_resized;
-        [UIView animateWithDuration:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                              delay:0 options:[[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+        [UIView animateWithDuration:[userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]
+                              delay:0 options:[userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                 animations:^{
                     animatingScrollView.contentOffset = keyboardScrollNewOffset;
                 } completion:^(BOOL finished) {
@@ -886,8 +884,8 @@ static NSMutableSet *dismissableResponders;
         animatingScrollView.frame = animatingScrollView_originalFrame;
         animatingScrollView.contentOffset = currentOffset;
 
-        [UIView animateWithDuration:[[n.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
-                              delay:0 options:[[n.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
+        [UIView animateWithDuration:[(n.userInfo)[UIKeyboardAnimationDurationUserInfoKey] doubleValue]
+                              delay:0 options:[(n.userInfo)[UIKeyboardAnimationCurveUserInfoKey] unsignedIntValue]
                 animations:^{
                     animatingScrollView.contentOffset = animatingScrollView_originalOffset;
                 } completion:^(BOOL finished) {

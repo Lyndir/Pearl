@@ -57,13 +57,12 @@
 
 - (NSData *)signWithAssymetricKeyChainKeyFromTag:(NSString *)tag usePadding:(SecPadding)padding {
 
-    NSDictionary *queryAttr = [NSDictionary dictionaryWithObjectsAndKeys:
-            (__bridge id)kSecClassKey, (__bridge id)kSecClass,
-            [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding],
-                                             (__bridge id)kSecAttrApplicationTag,
-            (__bridge id)kSecAttrKeyTypeRSA, (__bridge id)kSecAttrKeyType,
-            (id)kCFBooleanTrue,              (__bridge id)kSecReturnRef,
-            nil];
+    NSDictionary *queryAttr = @{
+            (__bridge id)kSecClass              : (__bridge id)kSecClassKey,
+            (__bridge id)kSecAttrApplicationTag : [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding],
+            (__bridge id)kSecAttrKeyType        : (__bridge id)kSecAttrKeyTypeRSA,
+            (__bridge id)kSecReturnRef          : (id)kCFBooleanTrue
+    };
 
     SecKeyRef privateKey = nil;
     OSStatus status = SecItemCopyMatching( (__bridge CFDictionaryRef)queryAttr, (CFTypeRef *)&privateKey );
@@ -114,13 +113,13 @@
     static NSDictionary *query = nil;
     if (!query)
         query = [self createQueryForClass:kSecClassGenericPassword
-                               attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                               attributes:@{
 #if TARGET_OS_IPHONE
-                                       (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly, kSecAttrAccessible,
+                                       (__bridge id)kSecAttrAccessible : (__bridge id)kSecAttrAccessibleAlwaysThisDeviceOnly,
 #endif
-                                       @"deviceIdentifier",                                 kSecAttrAccount,
-                                       @"com.lyndir.Pearl",                                 kSecAttrService,
-                                       nil]
+                                       (__bridge id)kSecAttrAccount    : @"deviceIdentifier",
+                                       (__bridge id)kSecAttrService    : @"com.lyndir.Pearl",
+                               }
                                   matches:nil];
 
     NSData *deviceIdentifier = [self dataOfItemForQuery:query];
@@ -146,7 +145,7 @@
 
 + (OSStatus)setData:(NSData *)data ofItemForQuery:(NSDictionary *)query {
 
-    return [self addOrUpdateItemForQuery:query withAttributes:[NSDictionary dictionaryWithObject:data forKey:(__bridge id)kSecValueData]];
+    return [self addOrUpdateItemForQuery:query withAttributes:@{ (__bridge id)kSecValueData : data }];
 }
 
 + (OSStatus)addOrUpdateItemForQuery:(NSDictionary *)query withAttributes:(NSDictionary *)attributes {
@@ -206,7 +205,7 @@
 + (id)runQuery:(NSDictionary *)query returnType:(CFTypeRef)kSecReturn {
 
     NSMutableDictionary *dataQuery = [query mutableCopy];
-    [dataQuery setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturn];
+    dataQuery[(__bridge id)kSecReturn] = @YES;
 
     id result = nil;
     OSStatus status = [self findItemForQuery:dataQuery into:&result];
@@ -250,18 +249,16 @@
 + (BOOL)generateKeyPairWithTag:(NSString *)tag {
 
 #if TARGET_OS_IPHONE
-    NSDictionary *privKeyAttr = [NSDictionary dictionaryWithObjectsAndKeys:
-            [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding],
-                    (__bridge id)kSecAttrApplicationTag,
-            nil];
-    NSDictionary *pubKeyAttr = [NSDictionary dictionaryWithObjectsAndKeys:
-            [[tag stringByAppendingString:@"-pub"] dataUsingEncoding:NSUTF8StringEncoding],
-                    (__bridge id)kSecAttrApplicationTag,
-            nil];
+    NSDictionary *privKeyAttr = @{
+            (__bridge id)kSecAttrApplicationTag : [[tag stringByAppendingString:@"-priv"] dataUsingEncoding:NSUTF8StringEncoding]
+    };
+    NSDictionary *pubKeyAttr = @{
+            (__bridge id)kSecAttrApplicationTag : [[tag stringByAppendingString:@"-pub"] dataUsingEncoding:NSUTF8StringEncoding]
+    };
 #endif
     NSDictionary *keyPairAttr = [NSDictionary dictionaryWithObjectsAndKeys:
             (__bridge id)kSecAttrKeyTypeRSA, (__bridge id)kSecAttrKeyType,
-            [NSNumber numberWithInt:1024],   (__bridge id)kSecAttrKeySizeInBits,
+            @1024,                           (__bridge id)kSecAttrKeySizeInBits,
             (id)kCFBooleanTrue,              (__bridge id)kSecAttrIsPermanent,
             #if TARGET_OS_IPHONE
             privKeyAttr,                     (__bridge id)kSecPrivateKeyAttrs,
@@ -289,12 +286,12 @@
 #else
     NSData *applicationTag = [tag dataUsingEncoding:NSUTF8StringEncoding];
 #endif
-    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
-            (__bridge id)kSecClassKey,       (__bridge id)kSecClass,
-            applicationTag,                  (__bridge id)kSecAttrApplicationTag,
-            (__bridge id)kSecAttrKeyTypeRSA, (__bridge id)kSecAttrKeyType,
-            (__bridge id)kCFBooleanTrue,     (__bridge id)kSecReturnData,
-            nil];
+    NSDictionary *query = @{
+            (__bridge id)kSecClass              : (__bridge id)kSecClassKey,
+            (__bridge id)kSecAttrApplicationTag : applicationTag,
+            (__bridge id)kSecAttrKeyType        : (__bridge id)kSecAttrKeyTypeRSA,
+            (__bridge id)kSecReturnData         : (__bridge id)kCFBooleanTrue
+    };
 
     // Get the key bits.
     CFTypeRef cfResult = NULL;

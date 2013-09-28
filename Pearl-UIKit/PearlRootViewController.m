@@ -150,7 +150,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 - (void)supportInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
     if (![self isInterfaceOrientationSupported:interfaceOrientation])
-        [self.mySupportedIterfaceOrientations addObject:[NSNumber numberWithUnsignedInt:interfaceOrientation]];
+        [self.mySupportedIterfaceOrientations addObject:@(interfaceOrientation)];
 }
 
 - (void)rejectInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -173,7 +173,7 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
 
-    return (UIInterfaceOrientation)[[self.mySupportedIterfaceOrientations objectAtIndex:0] unsignedIntegerValue];
+    return (UIInterfaceOrientation)[(self.mySupportedIterfaceOrientations)[0] unsignedIntegerValue];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

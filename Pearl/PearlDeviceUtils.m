@@ -32,7 +32,7 @@
     char *machine = malloc( size );
     sysctlbyname( "hw.machine", machine, &size, NULL, 0 );
 
-    NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
+    NSString *platform = @(machine);
     free( machine );
 
     return platform;

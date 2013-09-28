@@ -64,7 +64,7 @@
 - (id)popObject {
 
     @synchronized (self.array) {
-        id object = [self.array objectAtIndex:0];
+        id object = (self.array)[0];
         [self.array removeObjectAtIndex:0];
 
         return object;
@@ -87,7 +87,7 @@
 - (id)peekObject {
 
     @synchronized (self.array) {
-        return [self.array objectAtIndex:0];
+        return (self.array)[0];
     }
 }
 

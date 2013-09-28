@@ -37,9 +37,6 @@
 
     unsigned *_gameRandomSeeds;
     unsigned *_gameRandomCounters;
-
-    BOOL _notificationsChecked;
-    BOOL _notificationsSupported;
 }
 
 @dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewedVersion, iTunesID;
@@ -61,55 +58,48 @@
     [self setGameRandomSeed:arc4random()];
 
     self.defaults = [NSUserDefaults standardUserDefaults];
-    [self.defaults registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-            @"",                                                   NSStringFromSelector( @selector(build) ),
-            @"",                                                   NSStringFromSelector( @selector(version) ),
-            @"",                                                   NSStringFromSelector( @selector(copyright) ),
-            [NSNumber numberWithBool:YES],                         NSStringFromSelector( @selector(firstRun) ),
-            [NSNumber numberWithInt:0],                            NSStringFromSelector( @selector(launchCount) ),
-            [NSNumber numberWithBool:NO],                          NSStringFromSelector( @selector(askForReviews) ),
-            [NSNumber numberWithInt:10],                           NSStringFromSelector( @selector(reviewAfterLaunches) ),
+    [self.defaults registerDefaults:@{
+            NSStringFromSelector( @selector(build) )               : @"",
+            NSStringFromSelector( @selector(version) )             : @"",
+            NSStringFromSelector( @selector(copyright) )           : @"",
+            NSStringFromSelector( @selector(firstRun) )            : @YES,
+            NSStringFromSelector( @selector(launchCount) )         : @0,
+            NSStringFromSelector( @selector(askForReviews) )       : @NO,
+            NSStringFromSelector( @selector(reviewAfterLaunches) ) : @10,
 
-            [NSNumber numberWithInt:
-                    [[PearlStrings get].fontSizeNormal intValue]], NSStringFromSelector(
-                    @selector(fontSize) ),
-            [NSNumber numberWithInt:
-                    [[PearlStrings get].fontSizeLarge intValue]],  NSStringFromSelector(
-                    @selector(largeFontSize) ),
-            [NSNumber numberWithInt:
-                    [[PearlStrings get].fontSizeSmall intValue]],  NSStringFromSelector(
-                    @selector(smallFontSize) ),
-            [PearlStrings get].fontFamilyDefault,                  NSStringFromSelector( @selector(fontName) ),
-            [PearlStrings get].fontFamilyFixed,                    NSStringFromSelector( @selector(fixedFontName) ),
-            [PearlStrings get].fontFamilySymbolic,                 NSStringFromSelector( @selector(symbolicFontName) ),
+            NSStringFromSelector( @selector(fontSize) )            : @([[PearlStrings get].fontSizeNormal intValue]),
+            NSStringFromSelector( @selector(largeFontSize) )       : @([[PearlStrings get].fontSizeLarge intValue]),
+            NSStringFromSelector( @selector(smallFontSize) )       : @([[PearlStrings get].fontSizeSmall intValue]),
+            NSStringFromSelector( @selector(fontName) )            : [PearlStrings get].fontFamilyDefault,
+            NSStringFromSelector( @selector(fixedFontName) )       : [PearlStrings get].fontFamilyFixed,
+            NSStringFromSelector( @selector(symbolicFontName) )    : [PearlStrings get].fontFamilySymbolic,
 
-            [NSNumber numberWithLong:0x332222cc],                  NSStringFromSelector( @selector(shadeColor) ),
-            [NSNumber numberWithFloat:0.4f],                       NSStringFromSelector( @selector(transitionDuration) ),
+            NSStringFromSelector( @selector(shadeColor) )          : @0x332222ccL,
+            NSStringFromSelector( @selector(transitionDuration) )  : @0.4f,
 
-            [NSNumber numberWithBool:YES],                         NSStringFromSelector( @selector(soundFx) ),
-            [NSNumber numberWithBool:NO],                          NSStringFromSelector( @selector(voice) ),
-            [NSNumber numberWithBool:YES],                         NSStringFromSelector( @selector(vibration) ),
+            NSStringFromSelector( @selector(soundFx) )             : @YES,
+            NSStringFromSelector( @selector(voice) )               : @NO,
+            NSStringFromSelector( @selector(vibration) )           : @YES,
 
-            [NSArray arrayWithObjects:
+            NSStringFromSelector( @selector(tracks) )              : @[
                     @"sequential",
                     @"random",
-                    @"",
-                    nil],                                          NSStringFromSelector( @selector(tracks) ),
-            [NSArray arrayWithObjects:
+                    @""
+            ],
+            NSStringFromSelector( @selector(trackNames) )          : @[
                     [PearlStrings get].songSequential,
                     [PearlStrings get].songRandom,
-                    [PearlStrings get].songOff,
-                    nil],                                          NSStringFromSelector( @selector(trackNames) ),
-            @"sequential",                                         NSStringFromSelector( @selector(currentTrack) ),
-
-            nil]];
+                    [PearlStrings get].songOff
+            ],
+            NSStringFromSelector( @selector(currentTrack) )        : @"sequential"
+    }];
 
     self.resetTriggers = [NSMutableDictionary dictionary];
 
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    self.build = [info objectForKey:@"CFBundleVersion"];
-    self.version = [info objectForKey:@"CFBundleShortVersionString"];
-    self.copyright = [info objectForKey:@"NSHumanReadableCopyright"];
+    self.build = info[@"CFBundleVersion"];
+    self.version = info[@"CFBundleShortVersionString"];
+    self.copyright = info[@"NSHumanReadableCopyright"];
 
     NSString *notification;
 #if TARGET_OS_IPHONE
@@ -118,7 +108,7 @@
     notification = NSApplicationWillTerminateNotification;
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.firstRun = [NSNumber numberWithBool:NO];
+        self.firstRun = @NO;
         [[self class] flush];
     }];
 #if TARGET_OS_IPHONE
@@ -127,7 +117,7 @@
     notification = NSApplicationDidHideNotification;
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.firstRun = [NSNumber numberWithBool:NO];
+        self.firstRun = @NO;
         [[self class] flush];
     }];
 
@@ -196,7 +186,7 @@
             [self.delegate didUpdateConfigForKey:NSSelectorFromString( selector ) fromValue:currentValue];
 
 #ifdef PEARL_UIKIT
-        NSString *resetTriggerKey = [self.resetTriggers objectForKey:selector];
+        NSString *resetTriggerKey = (self.resetTriggers)[selector];
         if (resetTriggerKey)
             [(id<PearlResettable>)[[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
 #endif
@@ -217,7 +207,7 @@
     if ([self.tracks count] <= 3)
         return @"";
 
-    return [self.tracks objectAtIndex:0];
+    return (self.tracks)[0];
 }
 
 - (NSString *)randomTrack {
@@ -226,7 +216,7 @@
         return @"";
 
     NSUInteger realTracks = ([self.tracks count] - 3);
-    return [self.tracks objectAtIndex:arc4random() % realTracks];
+    return (self.tracks)[arc4random() % realTracks];
 }
 
 - (NSString *)nextTrack {
@@ -240,17 +230,17 @@
 
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:playingTrack];
     if (currentTrackIndex == NSNotFound)
-        currentTrackIndex = -1U;
+        currentTrackIndex = (NSUInteger)-1U;
 
     NSUInteger realTracks = [self.tracks count] - 3;
     assert(realTracks);
 
-    return [self.tracks objectAtIndex:MIN(currentTrackIndex + 1, realTracks) % realTracks];
+    return (self.tracks)[MIN(currentTrackIndex + 1, realTracks) % realTracks];
 }
 
 - (NSNumber *)music {
 
-    return [NSNumber numberWithBool:[self.currentTrack length] > 0];
+    return @([self.currentTrack length] > 0);
 }
 
 - (void)setMusic:(NSNumber *)aMusic {
@@ -286,7 +276,7 @@
         currentTrack = @"";
 
     NSUInteger currentTrackIndex = [[self tracks] indexOfObject:currentTrack];
-    return [[self trackNames] objectAtIndex:currentTrackIndex];
+    return [self trackNames][currentTrackIndex];
 }
 
 - (NSString *)playingTrackName {
@@ -296,10 +286,10 @@
         playingTrack = @"";
 
     NSUInteger playingTrackIndex = [[self tracks] indexOfObject:playingTrack];
-    if (playingTrackIndex == NSNotFound || ![[[self tracks] objectAtIndex:playingTrackIndex] length])
+    if (playingTrackIndex == NSNotFound || ![[self tracks][playingTrackIndex] length])
         return nil;
 
-    return [[self trackNames] objectAtIndex:playingTrackIndex];
+    return [self trackNames][playingTrackIndex];
 }
 
 
@@ -352,20 +342,20 @@
 
 - (NSNumber *)fontSize {
 
-    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
-            @selector(fontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return @((NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
+            @selector(fontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale]));
 }
 
 - (NSNumber *)largeFontSize {
 
-    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
-            @selector(largeFontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return @((NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
+            @selector(largeFontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale]));
 }
 
 - (NSNumber *)smallFontSize {
 
-    return [NSNumber numberWithUnsignedInteger:(NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
-            @selector(smallFontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale])];
+    return @((NSUInteger)([[self.defaults objectForKey:NSStringFromSelector(
+            @selector(smallFontSize) )] unsignedIntegerValue] * [PearlDeviceUtils uiScale]));
 }
 
 @end

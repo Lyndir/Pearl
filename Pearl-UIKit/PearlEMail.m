@@ -98,7 +98,7 @@
     if (!vc) {
         UIWindow *window = UIApp.keyWindow;
         if (!window || !window.rootViewController)
-            window = [UIApp.windows objectAtIndex:0];
+            window = (UIApp.windows)[0];
         vc = window.rootViewController;
         while ([vc presentedViewController])
             vc = [vc presentedViewController];

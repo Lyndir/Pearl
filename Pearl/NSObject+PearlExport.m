@@ -70,15 +70,14 @@
             BOOL codable = YES;
             for (NSObject *key in object)
                 if (![key conformsToProtocol:@protocol(NSCoding)] ||
-                    ![[(NSDictionary *)object objectForKey:key] conformsToProtocol:@protocol(NSCoding)]) {
+                    ![((NSDictionary *)object)[key] conformsToProtocol:@protocol(NSCoding)]) {
                     codable = NO;
                     break;
                 }
             if (!codable) {
                 NSMutableDictionary *codableObject = [NSMutableDictionary dictionaryWithCapacity:[(NSDictionary *)object count]];
                 for (NSObject *key in object)
-                    [codableObject setObject:[self exportToCodable:[(NSDictionary *)object objectForKey:key]]
-                                      forKey:[self exportToCodable:key]];
+                    codableObject[[self exportToCodable:key]] = [self exportToCodable:((NSDictionary *)object)[key]];
                 object = codableObject;
             }
         }
@@ -106,7 +105,7 @@
             NSString *propertyName = [[NSString alloc] initWithCString:property_getName( property ) encoding:NSUTF8StringEncoding];
 
             id propertyValue = [self exportToCodable:[object valueForKey:propertyName]];
-            [dictionary setObject:propertyValue forKey:propertyName];
+            dictionary[propertyName] = propertyValue;
         }
 
         free( properties );

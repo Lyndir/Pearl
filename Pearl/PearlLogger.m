@@ -168,7 +168,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     PearlLogMessage *message = [PearlLogMessage messageInFile:fileName atLine:lineNumber withLevel:level text:text];
     @try {
         @synchronized (self.listeners) {
-            [threadLocals setObject:@"" forKey:@"PearlDisableLog"];
+            threadLocals[@"PearlDisableLog"] = @"";
             for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
                 if (!listener( message ))
                     return self;
@@ -204,7 +204,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelTrace text:message];
 }
 
@@ -224,7 +224,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelDebug text:message];
 }
 
@@ -244,7 +244,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelInfo text:message];
 }
 
@@ -264,7 +264,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelWarn text:message];
 }
 
@@ -284,7 +284,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelError text:message];
 }
 
@@ -304,7 +304,7 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     }
     va_end(argList);
 
-    return [self inFile:[NSString stringWithCString:fileName encoding:NSASCIIStringEncoding] atLine:lineNumber
+    return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelFatal text:message];
 }
 

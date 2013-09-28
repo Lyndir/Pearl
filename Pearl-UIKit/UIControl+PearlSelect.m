@@ -29,9 +29,9 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
         superviewsControls = [NSMutableDictionary dictionary];
 
     NSValue *key = [NSValue valueWithNonretainedObject:self.superview];
-    NSMutableSet *superviewControls = [superviewsControls objectForKey:key];
+    NSMutableSet *superviewControls = superviewsControls[key];
     if (!superviewControls)
-        [superviewsControls setObject:superviewControls = [NSMutableSet set] forKey:key];
+        superviewsControls[key] = superviewControls = [NSMutableSet set];
 
     return superviewControls;
 }
@@ -80,9 +80,9 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
             }
         }   forControlEvents:UIControlEventTouchUpInside];
 
-    objc_setAssociatedObject( self, &selectionInSuperviewCandidateKey, [NSNumber numberWithBool:providesSelection],
+    objc_setAssociatedObject( self, &selectionInSuperviewCandidateKey, @(providesSelection),
             OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-    objc_setAssociatedObject( self, &selectionInSuperviewClearableKey, [NSNumber numberWithBool:clearable],
+    objc_setAssociatedObject( self, &selectionInSuperviewClearableKey, @(clearable),
             OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 }
 

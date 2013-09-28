@@ -27,8 +27,8 @@ NSComparisonResult PearlCFBundleVersionCompare(NSString *bundleVersion1, NSStrin
                 // 2 has too few elements.
             return NSOrderedDescending;
 
-        NSString *bundleVersion1Element = [bundleVersion1Components objectAtIndex:i];
-        NSString *bundleVersion2Element = [bundleVersion2Components objectAtIndex:i];
+        NSString *bundleVersion1Element = bundleVersion1Components[i];
+        NSString *bundleVersion2Element = bundleVersion2Components[i];
 
         NSComparisonResult comparison = [bundleVersion1Element compare:bundleVersion2Element];
         if (comparison != NSOrderedSame)

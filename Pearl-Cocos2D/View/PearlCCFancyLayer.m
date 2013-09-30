@@ -78,8 +78,6 @@
 
 - (void)update {
 
-    //CGSize winSize = [CCDirector sharedDirector].winSize;
-    //self.contentSize = CGSizeMake(winSize.width, winSize.height);
     GLfloat inner = (GLfloat)self.contentSize.height * self.innerRatio;
 
     /*

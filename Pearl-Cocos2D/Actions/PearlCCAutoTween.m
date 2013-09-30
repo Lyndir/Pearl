@@ -48,7 +48,7 @@
 
 - (void)startWithTarget:(id)aTarget {
 
-    originalTarget_ = target_ = aTarget;
+    _originalTarget = _target = aTarget;
 }
 
 - (void)tweenKeyPath:(NSString *)keyPath to:(float)to {

@@ -65,7 +65,7 @@
     self.swipeTo    = ccp(winSize.width, winSize.height);
     [self setTarget:t selector:s];
 
-    self.isTouchEnabled = YES;
+    self.touchEnabled = YES;
 
     return self;
 }

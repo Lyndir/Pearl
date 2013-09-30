@@ -45,7 +45,31 @@ NSString *PearlLocalize(NSString *format, ...) {
     return msg;
 }
 
+NSString *PearlLocalizeDyn(NSString *format, ...) {
+    // Identical but for dynamic format strings, no NS_FORMAT_FUNCTION to avoid compiler warning.
+
+    va_list argList;
+    va_start(argList, format);
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
+                                           arguments:argList];
+    va_end(argList);
+
+    return msg;
+}
+
 NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) {
+
+    va_list argList;
+    va_start(argList, format);
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
+                                           arguments:argList];
+    va_end(argList);
+
+    return msg;
+}
+
+NSString *PearlLocalizeTableDyn(NSString *tableName, NSString *format, ...) {
+    // Identical but for dynamic format strings, no NS_FORMAT_FUNCTION to avoid compiler warning.
 
     va_list argList;
     va_start(argList, format);

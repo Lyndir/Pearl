@@ -20,7 +20,6 @@
 
 @interface PearlCCFancyLayer ()
 
-@property (nonatomic, readwrite, assign) CGSize contentSize;
 @property (readwrite, assign) ccColor4B         backColor;
 
 @property (readwrite, assign) GLuint vertexBuffer;
@@ -31,7 +30,6 @@
 
 @implementation PearlCCFancyLayer
 
-@synthesize contentSize = _contentSize;
 @synthesize outerPadding = _outerPadding;
 @synthesize padding = _padding;
 @synthesize innerRatio = _innerRatio;
@@ -60,6 +58,15 @@
     return self;
 }
 
+- (void)dealloc {
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
+    glDeleteBuffers(1, &_vertexBuffer);
+    glDeleteBuffers(1, &_colorBuffer);
+    _vertexBuffer = 0;
+    _colorBuffer = 0;
+    CHECK_GL_ERROR_DEBUG();
+}
+
 
 - (void)onEnter {
 
@@ -71,8 +78,6 @@
 
 - (void)update {
 
-    CGSize winSize = [CCDirector sharedDirector].winSize;
-    self.contentSize = CGSizeMake(winSize.width, winSize.height);
     GLfloat inner = (GLfloat)self.contentSize.height * self.innerRatio;
 
     /*
@@ -125,6 +130,7 @@
     colors[0]                                                                                     = self.backColor;
 
     // Push our window data into VBOs.
+    ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
     glDeleteBuffers(1, &_vertexBuffer);
     glDeleteBuffers(1, &_colorBuffer);
     glGenBuffers(1, &_vertexBuffer);
@@ -134,6 +140,7 @@
     glBindBuffer(GL_ARRAY_BUFFER, self.colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(ccColor4B) * 10, colors, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    CHECK_GL_ERROR_DEBUG();
 
     // Free the clientside window data.
     free(vertices);
@@ -190,6 +197,37 @@
     [self update];
 }
 
+- (ccColor3B)displayedColor {
+
+    return self.color;
+}
+
+- (BOOL)isCascadeColorEnabled {
+
+    return NO;
+}
+
+- (void)setCascadeColorEnabled:(BOOL)cascadeColorEnabled {
+}
+
+- (void)updateDisplayedColor:(ccColor3B)color {
+}
+
+- (GLubyte)displayedOpacity {
+
+    return self.opacity;
+}
+
+- (BOOL)isCascadeOpacityEnabled {
+
+    return NO;
+}
+
+- (void)setCascadeOpacityEnabled:(BOOL)cascadeOpacityEnabled {
+}
+
+- (void)updateDisplayedOpacity:(GLubyte)opacity {
+}
 
 - (void)draw {
 
@@ -198,11 +236,11 @@
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCFancyLayer - draw");
     CC_NODE_DRAW_SETUP();
 
-//	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-//	//glEnableClientState(GL_VERTEX_ARRAY);
-//	//glEnableClientState(GL_COLOR_ARRAY);
-//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-//	glDisable(GL_TEXTURE_2D);
+//    // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+//    //glEnableClientState(GL_VERTEX_ARRAY);
+//    //glEnableClientState(GL_COLOR_ARRAY);
+//    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//    glDisable(GL_TEXTURE_2D);
     ccGLEnableVertexAttribs(kCCVertexAttribFlag_Position | kCCVertexAttribFlag_Color);
 
     // Tell OpenGL about our data.

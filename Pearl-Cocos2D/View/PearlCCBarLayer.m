@@ -107,8 +107,8 @@
         [self removeChild:self.messageLabel cleanup:YES];
 
     CGFloat fontSize = [[PearlConfig get].smallFontSize floatValue];
-    self.messageLabel = [CCLabelTTF labelWithString:msg dimensions:self.contentSize hAlignment:NSTextAlignmentCenter
-                                           fontName:[PearlConfig get].fixedFontName fontSize:fontSize];
+    self.messageLabel = [CCLabelTTF labelWithString:msg fontName:[PearlConfig get].fixedFontName fontSize:fontSize
+                                         dimensions:self.contentSize hAlignment:kCCTextAlignmentCenter];
 
     if (important) {
         self.renderColor = 0x993333FF;

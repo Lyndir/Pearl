@@ -63,7 +63,7 @@
     self.visible            = NO;
     self.animatedTargetting = anAnimatedTargetting;
     self.shaderProgram      = [[CCShaderCache sharedShaderCache] programForKey:kCCShader_PositionTexture_uColor];
-    self.uniformColor       = glGetUniformLocation(shaderProgram_->program_, "u_color");
+    self.uniformColor       = glGetUniformLocation(_shaderProgram->_program, "u_color");
 
     if (bundleHeadReference)
         self.head = [[CCTextureCache sharedTextureCache] addImage:bundleHeadReference];
@@ -138,7 +138,7 @@
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, @"PearlCCBarSprite - draw");
     CC_NODE_DRAW_SETUP();
 
-//	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+//    // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 //    //glEnableClientState(GL_VERTEX_ARRAY);
 //    glDisableClientState(GL_COLOR_ARRAY);
 //    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);

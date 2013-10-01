@@ -240,8 +240,10 @@
     [self addChild:self.background z:-1];
 
     // Automatically set correct position of texture nodes.
-    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[CCSprite class]])
+    if (CGPointEqualToPoint(self.background.position, CGPointZero) && [self.background isKindOfClass:[CCSprite class]]) {
         self.backgroundOffset = ccp(self.contentSize.width / 2, self.contentSize.height / 2);
+        self.position = self.position;
+    }
 }
 
 

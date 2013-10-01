@@ -78,4 +78,6 @@ typedef enum {
                  items:(CCMenuItem *)menuItem, ... NS_REQUIRES_NIL_TERMINATION;
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:(CCMenuItem *)aLogo itemsFromArray:(NSArray *)menuItems;
 
+- (void)doLoad;
+
 @end

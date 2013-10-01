@@ -23,6 +23,7 @@
 
 }
 
++ (instancetype)itemWithSize:(NSUInteger)size;
 + (instancetype)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;
 
 - (id)initWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;

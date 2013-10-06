@@ -17,25 +17,30 @@
 //
 
 #import "PearlAppDelegate.h"
-#import "PearlUIUtils.h"
-
 #import "PearlLogger.h"
+
 #ifdef PEARL_MEDIA
 #import "PearlAudioController.h"
 #endif
 #ifdef PEARL_UIKIT
-#endif
-#ifdef PEARL_WITH_MESSAGEUI
-#endif
-
+#import <StoreKit/StoreKit.h>
+#import "PearlUIUtils.h"
 #ifndef ITMS_REVIEW_URL
-#define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat:\
-@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", __id]]
+#define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat: \
+SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
+? @"itms-apps://itunes.apple.com/app/id%@" \
+: @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software&id=%@", __id]]
 #endif
 #ifndef ITMS_APP_URL
 #define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
 @"itms://itunes.com/apps/%@", __app]]
 #endif
+#endif
+#ifdef PEARL_WITH_MESSAGEUI
+#endif
+
+@interface PearlAppDelegate()<SKStoreProductViewControllerDelegate>
+@end
 
 @implementation PearlAppDelegate
 
@@ -132,10 +137,25 @@
 
 - (void)showReview {
 
-    if (NSNullToNil([PearlConfig get].iTunesID))
+    if (NSClassFromString( @"SKStoreProductViewController" )) {
+        inf(@"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID);
+        SKStoreProductViewController *storeViewController = [SKStoreProductViewController new];
+        storeViewController.delegate = self;
+        [storeViewController loadProductWithParameters:@{
+                SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].iTunesID
+        }                              completionBlock:nil];
+        [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
+        return;
+    }
+
+    if (NSNullToNil([PearlConfig get].iTunesID)) {
+        inf(@"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID);
         [UIApp openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
-    else
+    }
+    else {
+        inf(@"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID);
         [UIApp openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+    }
 }
 
 - (void)shutdown:(id)caller {
@@ -145,9 +165,9 @@
 
 #ifdef PEARL_UIKIT
     [PearlConfig get].launchCount = @([[PearlConfig get].launchCount intValue] + 1);
-    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
-    if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
-    if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
+//    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
+//    if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
+//    if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
         [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
                                message:PearlString( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
                              viewStyle:UIAlertViewStyleDefault
@@ -260,6 +280,14 @@
         return delegate;
 
     return nil;
+}
+
+#pragma mark - SKStoreProductViewControllerDelegate
+
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+
+    dbg(@"Done with in-app product view.");
+    [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

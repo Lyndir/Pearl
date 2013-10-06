@@ -26,6 +26,8 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
+static NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotification";
+
 @interface PearlConfig()
 
 @property(nonatomic, readwrite, retain) NSUserDefaults *defaults;
@@ -190,6 +192,7 @@
         if (resetTriggerKey)
             [(id<PearlResettable>)[[PearlAppDelegate get] valueForKeyPath:resetTriggerKey] reset];
 #endif
+        [[NSNotificationCenter defaultCenter] postNotificationName:PearlConfigChangedNotification object:selector];
     }
 
     else {

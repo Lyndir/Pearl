@@ -79,7 +79,7 @@
     self.scrollPerSecond        = ScrollPerSecond;
     self.scrollContentSize      = contentSize;
     self.scrollContentDirection = direction;
-    self.isTouchEnabled         = YES;
+    self.touchEnabled           = YES;
 
     [self schedule:@selector(tick:)];
 

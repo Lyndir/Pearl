@@ -103,7 +103,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
     if (!self.window) {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef PEARL_UIKIT
-        self.window.rootViewController = [PearlRootViewController new];
+        //self.window.rootViewController = [PearlRootViewController new];
 #endif
         [self.window makeKeyAndVisible];
     }

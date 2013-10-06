@@ -30,8 +30,7 @@
 - (id)initWithGameScene:(CCScene *)uiScene {
 
     if (!(self = [super initWithDuration:[[PearlConfig get].transitionDuration floatValue]
-                        scene:uiScene
-                  orientation:kOrientationDownOver]))
+                        scene:uiScene orientation:kCCTransitionOrientationDownOver]))
         return nil;
 
     return self;

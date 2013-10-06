@@ -21,6 +21,12 @@
 @implementation PearlCCMenuItemBlock
 
 
++ (instancetype)itemWithSize:(NSUInteger)size {
+
+    return [[self alloc] initWithSize:size target:self selector:@selector(nothing:)];
+}
+
+
 + (instancetype)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector {
 
     return [[self alloc] initWithSize:size target:target selector:selector];
@@ -52,6 +58,9 @@
     CHECK_GL_ERROR_DEBUG();
     CC_INCREMENT_GL_DRAWS(1);
     CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
+}
+
+- (void)nothing:(id)sender {
 }
 
 @end

@@ -58,6 +58,7 @@
 
 @property (nonatomic, readwrite, assign) BOOL layoutDirty;
 
+@property(nonatomic) BOOL loading;
 @end
 
 @implementation PearlCCMenuLayer
@@ -102,15 +103,17 @@
 
 - (id)initWithDelegate:(id<NSObject, PearlCCMenuDelegate>)aDelegate logo:aLogo items:(CCMenuItem *)menuItem, ... {
 
-    va_list list;
-    va_start(list, menuItem);
-    CCMenuItem     *item;
     NSMutableArray *menuItems = [[NSMutableArray alloc] initWithCapacity:5];
-    [menuItems addObject:menuItem];
-
-    while ((item = va_arg(list, CCMenuItem*)))
-        [menuItems addObject:item];
-    va_end(list);
+    if (menuItem) {
+        va_list list;
+        va_start(list, menuItem);
+        CCMenuItem     *item;
+        [menuItems addObject:menuItem];
+        
+        while ((item = va_arg(list, CCMenuItem*)))
+            [menuItems addObject:item];
+        va_end(list);
+    }
 
     return [self initWithDelegate:aDelegate logo:aLogo itemsFromArray:menuItems];
 }
@@ -134,7 +137,8 @@
 
     _items = [newItems copy];
 
-    [self reset];
+    if (!self.loading)
+        [self reset];
 }
 
 
@@ -142,7 +146,8 @@
 
     _logo = aLogo;
 
-    [self reset];
+    if (!self.loading)
+        [self reset];
 }
 
 
@@ -157,12 +162,14 @@
 
     _layout = newLayout;
 
-    [self reset];
+    if (!self.loading)
+        [self reset];
 }
 
 
 - (void)onEnter {
 
+    self.loading = YES;
     [self doLoad];
 
     if (self.layoutDirty) {
@@ -186,6 +193,7 @@
         self.menu = nil;
     }
 
+    self.loading = YES;
     [self doLoad];
 }
 
@@ -210,6 +218,7 @@
         [self.delegate didLoad:self];
 
     self.layoutDirty = YES;
+    self.loading = NO;
 }
 
 - (void)doLayout {

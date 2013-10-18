@@ -74,16 +74,17 @@ uint64_t PearlSecureRandom() {
 
 - (NSData *)decodeHex {
 
-    NSMutableData *data = [NSMutableData dataWithLength:self.length / 2];
+    NSMutableData *data = [NSMutableData dataWithCapacity:self.length / 2];
     for (NSUInteger i = 0; i < self.length; i += 2) {
-        NSString *hex = [self substringWithRange:NSMakeRange( i, 2 )];
-        NSScanner *scanner = [NSScanner scannerWithString:hex];
-        unsigned intValue;
+        NSString *hexValue = [self substringWithRange:NSMakeRange( i, 2 )];
 
-        if (![scanner scanHexInt:&intValue])
+        unsigned int intValue;
+        if (![[NSScanner scannerWithString:hexValue] scanHexInt:&intValue])
                 // Not a HEX string.
             return nil;
-        [data appendBytes:&intValue length:1];
+
+        char byteValue = (char)intValue;
+        [data appendBytes:&byteValue length:1];
     }
 
     return data;

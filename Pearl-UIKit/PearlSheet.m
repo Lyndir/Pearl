@@ -123,7 +123,7 @@
 
 - (PearlSheet *)showSheet {
 
-    UIActionSheet *sheetView = self.sheetView;
+    __weak UIActionSheet *sheetView = self.sheetView;
     PearlMainThread(^{
         if (!sheetView)
             return;

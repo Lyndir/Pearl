@@ -137,14 +137,26 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 - (void)showReview {
 
-    if (NSClassFromString( @"SKStoreProductViewController" )) {
+    [self showReview:YES];
+}
+
+- (void)showReview:(BOOL)allowInApp {
+
+    if (allowInApp && NSClassFromString( @"SKStoreProductViewController" )) {
         inf(@"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID);
         SKStoreProductViewController *storeViewController = [SKStoreProductViewController new];
         storeViewController.delegate = self;
         [storeViewController loadProductWithParameters:@{
                 SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].iTunesID
-        }                              completionBlock:nil];
-        [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
+        }                              completionBlock:^(BOOL result, NSError *error) {
+            if (!result) {
+                err(@"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, error);
+                [self showReview:NO];
+                return;
+            }
+
+            [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
+        }];
         return;
     }
 

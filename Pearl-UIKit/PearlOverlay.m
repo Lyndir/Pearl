@@ -44,11 +44,9 @@ static __strong PearlOverlay *activeOverlay = nil;
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
-    UIWindow *window = UIApp.keyWindow;
-
     _title = title;
     _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
-            window.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
+            UIApp.keyWindow.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
     _overlayView.backgroundColor = [UIColor colorWithRGBAHex:0x000000AA];
     _overlayView.layer.cornerRadius = 10;
 
@@ -78,16 +76,18 @@ static __strong PearlOverlay *activeOverlay = nil;
 
 - (PearlOverlay *)showOverlay {
 
-    UIWindow *window = UIApp.keyWindow;
-    window.userInteractionEnabled = NO;
-    [window addSubview:self.overlayView];
+    __weak UIView *overlayView = self.overlayView;
+    PearlMainThread(^{
+        [UIApp.keyWindow addSubview:overlayView];
+        overlayView.superview.userInteractionEnabled = NO;
 
-    self.overlayView.alpha = 0;
-    self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y + 10 );
-    [UIView animateWithDuration:0.3f animations:^{
-        self.overlayView.alpha = 1;
-        self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y - 10 );
-    }];
+        overlayView.alpha = 0;
+        overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+        [UIView animateWithDuration:0.3f animations:^{
+            overlayView.alpha = 1;
+            overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y - 10 );
+        }];
+    });
 
     return self;
 }
@@ -99,19 +99,21 @@ static __strong PearlOverlay *activeOverlay = nil;
 
 - (PearlOverlay *)cancelOverlayAnimated:(BOOL)animated {
 
-    UIView *view = [self.overlayView superview];
-    view.userInteractionEnabled = YES;
+    __weak UIView *overlayView = self.overlayView;
+    PearlMainThread(^{
+        overlayView.superview.userInteractionEnabled = YES;
 
-    if (!animated)
-        [self.overlayView removeFromSuperview];
-    else {
-        [UIView animateWithDuration:0.3f animations:^{
-            self.overlayView.alpha = 0;
-            self.overlayView.frame = CGRectSetY( self.overlayView.frame, self.overlayView.frame.origin.y + 10 );
-        } completion:^(BOOL finished) {
-            [self.overlayView removeFromSuperview];
-        }];
-    }
+        if (!animated)
+            [overlayView removeFromSuperview];
+        else {
+            [UIView animateWithDuration:0.3f animations:^{
+                overlayView.alpha = 0;
+                overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+            }                completion:^(BOOL finished) {
+                [overlayView removeFromSuperview];
+            }];
+        }
+    });
 
     return self;
 }

@@ -171,34 +171,6 @@
                         cancelTitle:cancelTitle otherTitle:otherTitles :otherTitlesList];
 }
 
-+ (instancetype)showActivityWithTitle:(NSString *)title {
-
-    return [self showActivityWithTitle:title message:nil initAlert:nil];
-}
-
-+ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message {
-
-    return [self showActivityWithTitle:title message:message initAlert:nil];
-}
-
-+ (instancetype)showActivityWithTitle:(NSString *)title message:(NSString *)message
-                            initAlert:(void (^)(UIAlertView *alert))initBlock {
-
-    return [self showAlertWithTitle:title message:PearlString( @"\n\n%@", message? PearlString( @"\n\n%@", message ): @"" )
-                              viewStyle:UIAlertViewStyleDefault initAlert:
-                    ^(UIAlertView *alert, UITextField *firstField) {
-                        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc]
-                                initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                        activityIndicator.center = CGPointMake( 142, 90 );
-                        [activityIndicator startAnimating];
-                        [alert addSubview:activityIndicator];
-
-                        if (initBlock)
-                            initBlock( alert );
-                    } tappedButtonBlock:nil cancelTitle:nil otherTitles:nil];
-}
-
-
 #pragma mark ###############################
 #pragma mark Behaviors
 

@@ -177,7 +177,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 #ifdef PEARL_UIKIT
     [PearlConfig get].launchCount = @([[PearlConfig get].launchCount intValue] + 1);
-    if ([[PearlConfig get].askForReviews boolValue]) // Review asking enabled?
+    if ([[PearlConfig get].askForReviews boolValue] && [PearlConfig get].iTunesID) // Review asking enabled?
     if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
     if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
         [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle

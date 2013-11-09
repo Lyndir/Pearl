@@ -19,9 +19,7 @@
 #import "cocos2d.h"
 
 
-@interface PearlCCMenuItemBlock : CCMenuItem {
-
-}
+@interface PearlCCMenuItemBlock : CCMenuItem
 
 + (instancetype)itemWithSize:(NSUInteger)size;
 + (instancetype)itemWithSize:(NSUInteger)size target:(id)target selector:(SEL)selector;

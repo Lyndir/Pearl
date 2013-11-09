@@ -52,7 +52,9 @@
 
     if (!self.isEnabled) {
         ccDrawColor4B(0xff, 0xff, 0xff, 0xff);
-        ccDrawLine(CGPointZero, CGPointFromCGSize(self.contentSize)); // make 5 thick?
+        glLineWidth( 5 );
+        ccDrawLine(CGPointZero, CGPointFromCGSize(self.contentSize));
+        glLineWidth( 1 );
     }
 
     CHECK_GL_ERROR_DEBUG();

@@ -41,7 +41,7 @@ static NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNoti
     unsigned *_gameRandomCounters;
 }
 
-@dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewedVersion, iTunesID;
+@dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewInApp, reviewedVersion, iTunesID;
 @dynamic supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
@@ -68,6 +68,7 @@ static NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNoti
             NSStringFromSelector( @selector(launchCount) )         : @0,
             NSStringFromSelector( @selector(askForReviews) )       : @NO,
             NSStringFromSelector( @selector(reviewAfterLaunches) ) : @10,
+            NSStringFromSelector( @selector(reviewInApp) )         : @YES,
 
             NSStringFromSelector( @selector(fontSize) )            : @([[PearlStrings get].fontSizeNormal intValue]),
             NSStringFromSelector( @selector(largeFontSize) )       : @([[PearlStrings get].fontSizeLarge intValue]),

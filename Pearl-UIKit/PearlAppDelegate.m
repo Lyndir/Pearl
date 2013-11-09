@@ -96,7 +96,8 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         // Restart sequentially from the start.
         [PearlConfig get].playingTrack = nil;
         [[PearlAudioController get] playTrack:@"sequential"];
-    } else
+    }
+    else
         [[PearlAudioController get] playTrack:[PearlConfig get].currentTrack];
 #endif
 
@@ -137,12 +138,24 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 - (void)showReview {
 
-    [self showReview:YES];
+    [self showReview:[[PearlConfig get].reviewInApp boolValue]];
 }
 
 - (void)showReview:(BOOL)allowInApp {
 
-    if (allowInApp && NSClassFromString( @"SKStoreProductViewController" )) {
+    if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" )) {
+        if (NSNullToNil([PearlConfig get].iTunesID)) {
+            inf(@"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID);
+            [UIApp openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+        }
+        else {
+            inf(@"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID);
+            [UIApp openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+        }
+        return;
+    }
+
+    @try {
         inf(@"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID);
         SKStoreProductViewController *storeViewController = [SKStoreProductViewController new];
         storeViewController.delegate = self;
@@ -154,19 +167,12 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
                 [self showReview:NO];
                 return;
             }
-
-            [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
         }];
-        return;
+        [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
     }
-
-    if (NSNullToNil([PearlConfig get].iTunesID)) {
-        inf(@"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID);
-        [UIApp openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
-    }
-    else {
-        inf(@"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID);
-        [UIApp openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+    @catch (NSException *exception) {
+        err(@"Exception while loading in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, exception);
+        [self showReview:NO];
     }
 }
 

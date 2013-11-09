@@ -60,6 +60,7 @@ static NSString *const PearlConfigChangedNotification;
 @property(nonatomic, readwrite, retain) NSNumber *launchCount;
 @property(nonatomic, readwrite, retain) NSNumber *askForReviews;
 @property(nonatomic, readwrite, retain) NSNumber *reviewAfterLaunches;
+@property(nonatomic, readwrite, retain) NSNumber *reviewInApp;
 @property(nonatomic, readwrite, retain) NSString *reviewedVersion;
 @property(nonatomic, readwrite, retain) NSString *iTunesID;
 @property(nonatomic, readwrite, retain) NSNumber *supportedNotifications;

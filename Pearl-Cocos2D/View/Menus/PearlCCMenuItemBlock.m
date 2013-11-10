@@ -62,7 +62,7 @@
     CC_PROFILER_STOP_CATEGORY(kCCProfilerCategorySprite, @"PearlCCMenuItemBlock - draw");
 }
 
-- (void)nothing:(id)sender {
++ (void)nothing:(id)sender {
 }
 
 @end

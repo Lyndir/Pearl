@@ -16,9 +16,8 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "PearlAlert.h"
-
 @interface PearlAlert()
+
 @property(nonatomic) BOOL handlingClick;
 @end
 
@@ -147,6 +146,40 @@
                           initAlert:nil tappedButtonBlock:aTappedButtonBlock
                         cancelTitle:[PearlStrings get].commonButtonThanks
                          otherTitle:otherTitles :otherTitlesList];
+}
+
++ (instancetype)showParentalGate:(void (^)(BOOL continuing))completion {
+
+    int a = random() % 6, b = random() % 6;
+    int solution;
+    NSString *operator;
+    switch (random() % 2) {
+        case 0: {
+            solution = a + b;
+            operator = PearlString(@"What's the sum of %d and %d?", a, b );
+            break;
+        }
+        case 1: {
+            solution = a * b;
+            operator = PearlString(@"What's the product of %d and %d?", a, b);
+            break;
+        }
+        default:
+            @throw [[NSException alloc] initWithName:NSInternalInconsistencyException reason:@"Unsupported operator." userInfo:nil];
+    }
+
+    return [self showAlertWithTitle:@"Parents Only"
+                            message:@"To proceed, first get the help of your parents."
+                          viewStyle:UIAlertViewStylePlainTextInput
+                          initAlert:^(UIAlertView *alert, UITextField *firstField) { firstField.placeholder = operator; }
+                  tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
+                      BOOL continuing = NO;
+                      if (buttonIndex == [alert firstOtherButtonIndex])
+                          continuing = [[alert textFieldAtIndex:0].text integerValue] == solution;
+                      dbg(@"a:%d, b:%d, solution:%d, input:%@ -> %@", a, b, solution, [alert textFieldAtIndex:0].text, @(continuing));
+                      completion( continuing );
+                  }
+                        cancelTitle:[PearlStrings get].commonButtonCancel otherTitles:[PearlStrings get].commonButtonContinue, nil];
 }
 
 + (instancetype)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle

@@ -65,6 +65,14 @@
                otherTitles:(NSString *)otherTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 /**
+ * This shows an alert which tells the user that only parents are allowed to proceed beyond this point.
+ * A simple math question is asked as a deterrent.
+ * If the user passes the gate, the block is fired with continuing set to YES.
+ * If the user fails to pass the gate (either due to cancelling or failing the test), the block is fired with continuing set to NO.
+ */
++ (instancetype)showParentalGate:(void (^)(BOOL continuing))completion;
+
+/**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:
  */
 + (instancetype)showAlertWithTitle:(NSString *)title message:(NSString *)message viewStyle:(UIAlertViewStyle)viewStyle

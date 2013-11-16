@@ -16,9 +16,6 @@
 //  Copyright, lhunath (Maarten Billemont) 2013. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
-#import <CoreGraphics/CoreGraphics.h>
-
 @interface PearlOverlay()
 
 @property(nonatomic, strong) NSString *title;
@@ -42,29 +39,29 @@ static __strong PearlOverlay *activeOverlay = nil;
     if (!(self = [super init]))
         return nil;
 
-    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
+    PearlMainThread(^{
+        _title = title;
+        _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
+                UIApp.keyWindow.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
+        _overlayView.backgroundColor = [UIColor colorWithRGBAHex:0x000000AA];
+        _overlayView.layer.cornerRadius = 10;
 
-    _title = title;
-    _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
-            UIApp.keyWindow.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
-    _overlayView.backgroundColor = [UIColor colorWithRGBAHex:0x000000AA];
-    _overlayView.layer.cornerRadius = 10;
+        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [_overlayView addSubview:_activityIndicator];
+        [_activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:20 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
+        [_activityIndicator startAnimating];
 
-    _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [_overlayView addSubview:_activityIndicator];
-    [_activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:20 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
-    [_activityIndicator startAnimating];
-
-    _titleView = [UITextView new];
-    [_overlayView addSubview:_titleView];
-    CGPoint activityIndicatorBottom = CGPointFromCGRectBottom( _activityIndicator.frame );
-    [_titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MAX )
-             andParentPaddingTop:activityIndicatorBottom.y + 10 right:20 bottom:20 left:20];
-    _titleView.text = title;
-    _titleView.textColor = [UIColor whiteColor];
-    _titleView.textAlignment = NSTextAlignmentCenter;
-    _titleView.font = [UIFont boldSystemFontOfSize:16];
-    _titleView.backgroundColor = [UIColor clearColor];
+        _titleView = [UITextView new];
+        [_overlayView addSubview:_titleView];
+        CGPoint activityIndicatorBottom = CGPointFromCGRectBottom( _activityIndicator.frame );
+        [_titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MAX )
+                 andParentPaddingTop:activityIndicatorBottom.y + 10 right:20 bottom:20 left:20];
+        _titleView.text = title;
+        _titleView.textColor = [UIColor whiteColor];
+        _titleView.textAlignment = NSTextAlignmentCenter;
+        _titleView.font = [UIFont boldSystemFontOfSize:16];
+        _titleView.backgroundColor = [UIColor clearColor];
+    });
 
     return self;
 }

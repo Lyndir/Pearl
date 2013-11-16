@@ -68,8 +68,6 @@
     if (!(self = [super init]))
         return self;
 
-    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
-
     _tappedButtonBlock = [tappedButtonBlock copy];
     _sheetView = [[UIActionSheet alloc] initWithTitle:title delegate:self
                                     cancelButtonTitle:nil destructiveButtonTitle:destructiveTitle otherButtonTitles:firstOtherTitle,

@@ -76,7 +76,31 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
     if (description)
         version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
 
-    inf(@"%@ %@ on platform: %@", name, version, [PearlDeviceUtils platform]);
+    NSString *profileString;
+    NSData *provisioningProfileData = [NSData dataWithContentsOfFile:
+            [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"]];
+    if (!provisioningProfileData)
+        profileString = @"No profile.";
+    else {
+        NSRange startRange = [provisioningProfileData rangeOfData:[@"<?xml" dataUsingEncoding:NSASCIIStringEncoding] options:0
+                                                            range:NSMakeRange( 0, [provisioningProfileData length] )];
+        NSRange endRange = [provisioningProfileData rangeOfData:[@"</plist>" dataUsingEncoding:NSASCIIStringEncoding] options:0
+                                                          range:NSMakeRange( 0, [provisioningProfileData length] )];
+        provisioningProfileData = [provisioningProfileData subdataWithRange:
+                NSMakeRange( startRange.location, endRange.location + endRange.length - startRange.location )];
+
+        NSString *profileError = nil;
+        NSDictionary *provisioningProfile = [NSPropertyListSerialization propertyListFromData:provisioningProfileData
+                                                                             mutabilityOption:NSPropertyListImmutable
+                                                                                       format:nil errorDescription:&profileError];
+        if (profileError)
+            profileString = profileError;
+        else
+            profileString = PearlString( @"%@ (%@, devices: %d, UUID: %@)", provisioningProfile[@"Name"],
+                    [provisioningProfile[@"Entitlements"][@"get-task-allow"] boolValue]? @"debug": @"release",
+                    [provisioningProfile[@"ProvisionedDevices"] count], provisioningProfile[@"UUID"] );
+    }
+    inf(@"%@ %@ on platform: %@, profile: %@", name, version, [PearlDeviceUtils platform], profileString);
 
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])

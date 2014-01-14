@@ -103,7 +103,7 @@ uint64_t PearlSecureRandom() {
 
         memset(decodingTable, CHAR_MAX, 256);
         for (char i = 0; i < 64; i++)
-            decodingTable[CodeUtils_Base64EncodingTable[i]] = i;
+            decodingTable[(int)CodeUtils_Base64EncodingTable[(int)i]] = i;
     }
 
     const char *characters = [self cStringUsingEncoding:NSASCIIStringEncoding];

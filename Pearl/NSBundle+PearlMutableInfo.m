@@ -16,7 +16,11 @@
 //  Copyright 2011 Lyndir. All rights reserved.
 //
 
-#import "JRSwizzle.h"
+@interface NSObject(JRSwizzle)
+
++ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError**)error_;
+
+@end
 
 @implementation NSBundle(PearlMutableInfo)
 

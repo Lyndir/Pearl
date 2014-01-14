@@ -17,7 +17,6 @@
 //
 
 #import "PearlGradientView.h"
-#import "UIColor+Expanded.h"
 
 @implementation PearlGradientView
 
@@ -28,9 +27,12 @@
 
     NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
+    CGFloat tR, tG, tB, tA, bR, bG, bB, bA;
+    [topColor getRed:&tR green:&tG blue:&tB alpha:&tA];
+    [bottomColor getRed:&bR green:&bG blue:&bB alpha:&bA];
     CGFloat newComponents[2 * 4] = {
-            topColor.red, topColor.green, topColor.blue, topColor.alpha,
-            bottomColor.red, bottomColor.green, bottomColor.blue, bottomColor.alpha,
+            tR, tG, tB, tA,
+            bR, bG, bB, bA,
     };
 
     components = calloc( 2 * 4, sizeof(CGFloat) );

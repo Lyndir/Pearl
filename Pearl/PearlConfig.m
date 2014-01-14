@@ -26,7 +26,7 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
-static NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotification";
+NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotification";
 
 @interface PearlConfig()
 

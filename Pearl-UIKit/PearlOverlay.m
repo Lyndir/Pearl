@@ -43,7 +43,7 @@ static __strong PearlOverlay *activeOverlay = nil;
         _title = title;
         _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
                 UIApp.keyWindow.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
-        _overlayView.backgroundColor = [UIColor colorWithRGBAHex:0x000000AA];
+        _overlayView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.66f];
         _overlayView.layer.cornerRadius = 10;
 
         _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];

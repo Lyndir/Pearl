@@ -79,10 +79,10 @@ static __strong PearlOverlay *activeOverlay = nil;
         overlayView.superview.userInteractionEnabled = NO;
 
         overlayView.alpha = 0;
-        overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+        CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
         [UIView animateWithDuration:0.3f animations:^{
             overlayView.alpha = 1;
-            overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y - 10 );
+            CGRectSetY( overlayView.frame, overlayView.frame.origin.y - 10 );
         }];
     });
 
@@ -105,7 +105,7 @@ static __strong PearlOverlay *activeOverlay = nil;
         else {
             [UIView animateWithDuration:0.3f animations:^{
                 overlayView.alpha = 0;
-                overlayView.frame = CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+                CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
             }                completion:^(BOOL finished) {
                 [overlayView removeFromSuperview];
             }];

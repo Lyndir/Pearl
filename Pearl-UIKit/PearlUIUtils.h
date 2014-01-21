@@ -25,14 +25,24 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-__BEGIN_DECLS
-extern CGRect CGRectSetX(CGRect rect, CGFloat x);
-extern CGRect CGRectSetY(CGRect rect, CGFloat y);
-extern CGRect CGRectSetWidth(CGRect rect, CGFloat width);
-extern CGRect CGRectSetHeight(CGRect rect, CGFloat height);
-extern CGRect CGRectSetOrigin(CGRect rect, CGPoint origin);
-extern CGRect CGRectSetSize(CGRect rect, CGSize size);
+// Modify the variable (of type CGRect) such that it contains a new CGRect derived from the original.
+#define CGRectSetX(_rect, _v)                       _rect = CGRectWithX(_rect, _v)
+#define CGRectSetY(_rect, _v)                       _rect = CGRectWithY(_rect, _v)
+#define CGRectSetWidth(_rect, _v)                   _rect = CGRectWithWidth(_rect, _v)
+#define CGRectSetHeight(_rect, _v)                  _rect = CGRectWithHeight(_rect, _v)
+#define CGRectSetOrigin(_rect, _v)                  _rect = CGRectWithOrigin(_rect, _v)
+#define CGRectSetSize(_rect, _v)                    _rect = CGRectWithSize(_rect, _v)
 
+__BEGIN_DECLS
+// Create a new CGRect derived from the original.
+extern CGRect CGRectWithX(CGRect rect, CGFloat x);
+extern CGRect CGRectWithY(CGRect rect, CGFloat y);
+extern CGRect CGRectWithWidth(CGRect rect, CGFloat width);
+extern CGRect CGRectWithHeight(CGRect rect, CGFloat height);
+extern CGRect CGRectWithOrigin(CGRect rect, CGPoint origin);
+extern CGRect CGRectWithSize(CGRect rect, CGSize size);
+
+// Calculate the point of a certain part of a CGRect.
 extern CGPoint CGPointFromCGRectCenter(CGRect rect);
 extern CGPoint CGPointFromCGRectTop(CGRect rect);
 extern CGPoint CGPointFromCGRectRight(CGRect rect);
@@ -43,19 +53,24 @@ extern CGPoint CGPointFromCGRectTopRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
+// CGPoint <-> CGSize.
 extern CGPoint CGPointFromCGSize(const CGSize size);
 extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
 extern CGSize CGSizeFromCGPoint(const CGPoint point);
+
+// Creating a CGRect.
 extern CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
 extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
 /** Use CGFLOAT_MAX in size or padding for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
 extern CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
 
+// Create a new CGPoint by applying an operation to an original CGPoint.
 extern CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract);
 extern CGPoint CGPointPlusCGPoint(const CGPoint origin, const CGPoint add);
 extern CGPoint CGPointMultiply(const CGPoint origin, const CGFloat multiply);
 extern CGPoint CGPointMultiplyCGPoint(const CGPoint origin, const CGPoint multiply);
 
+// Getting the distance between CGPoints.
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);

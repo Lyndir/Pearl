@@ -19,32 +19,32 @@
 #import "PearlUIUtils.h"
 #import "PearlBoxView.h"
 
-CGRect CGRectSetX(CGRect rect, CGFloat x) {
+CGRect CGRectWithX(CGRect rect, CGFloat x) {
 
     return (CGRect){ { x, rect.origin.y }, { rect.size.width, rect.size.height } };
 }
 
-CGRect CGRectSetY(CGRect rect, CGFloat y) {
+CGRect CGRectWithY(CGRect rect, CGFloat y) {
 
     return (CGRect){ { rect.origin.x, y }, { rect.size.width, rect.size.height } };
 }
 
-CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
+CGRect CGRectWithWidth(CGRect rect, CGFloat width) {
 
     return (CGRect){ rect.origin, { width, rect.size.height } };
 }
 
-CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
+CGRect CGRectWithHeight(CGRect rect, CGFloat height) {
 
     return (CGRect){ rect.origin, { rect.size.width, height } };
 }
 
-CGRect CGRectSetOrigin(CGRect rect, CGPoint origin) {
+CGRect CGRectWithOrigin(CGRect rect, CGPoint origin) {
 
     return (CGRect){ origin, rect.size };
 }
 
-CGRect CGRectSetSize(CGRect rect, CGSize size) {
+CGRect CGRectWithSize(CGRect rect, CGSize size) {
 
     return (CGRect){ rect.origin, size };
 }
@@ -270,8 +270,8 @@ static NSMutableSet *dismissableResponders;
 
 - (void)autoSize {
 
-    self.frame = CGRectSetHeight( self.frame, [self textRectForBounds:CGRectSetHeight( self.frame, CGFLOAT_MAX )
-                                               limitedToNumberOfLines:self.numberOfLines].size.height );
+    self.frame = CGRectWithHeight(self.frame, [self textRectForBounds:CGRectWithHeight(self.frame, CGFLOAT_MAX)
+                                               limitedToNumberOfLines:self.numberOfLines].size.height);
 }
 
 @end

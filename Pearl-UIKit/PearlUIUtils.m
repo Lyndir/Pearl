@@ -374,6 +374,14 @@ static NSMutableSet *dismissableResponders;
     self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, size, top, right, bottom, left );
 }
 
+- (BOOL)isOrHasSuperviewOfKind:(Class)kind {
+  for (UIView *view = self; view; view = [view superview])
+    if ([view isKindOfClass:kind])
+      return YES;
+
+  return NO;
+}
+
 - (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
 
     for (UIView *subview in self.subviews) {

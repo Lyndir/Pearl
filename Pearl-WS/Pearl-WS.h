@@ -3,5 +3,5 @@
 #endif
 
 #import "Pearl.h"
-#import "PearlWSStrings.h"
 #import "PearlWSController.h"
+#import "PearlWSStrings.h"

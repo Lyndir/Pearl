@@ -3,7 +3,16 @@
 #endif
 
 #import "Pearl.h"
+#import "crypto_aesctr.h"
+#import "crypto_scrypt.h"
+#import "memlimit.h"
+#import "readpass.h"
+#import "scryptenc.h"
+#import "scryptenc_cpuperf.h"
+#import "sha256.h"
+#import "sysendian.h"
+#import "warn.h"
+#import "PearlCryptUtils.h"
 #import "PearlKeyChain.h"
 #import "PearlRSAKey.h"
-#import "PearlCryptUtils.h"
 #import "PearlSCrypt.h"

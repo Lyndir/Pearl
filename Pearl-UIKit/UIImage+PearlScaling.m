@@ -88,6 +88,11 @@
 
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize {
 
+    return [self imageByScalingAndFittingInSize:targetSize forceSize:NO];
+}
+
+- (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize forceSize:(BOOL)forceSize {
+
     CGFloat uiScale = [UIScreen mainScreen].scale;
     targetSize = CGSizeApplyAffineTransform( targetSize, CGAffineTransformScale( CGAffineTransformIdentity, uiScale, uiScale ) );
 
@@ -98,12 +103,12 @@
     CGFloat heightFactor = targetSize.height / self.size.height;
 
     CGFloat scaleFactor = MIN( widthFactor, heightFactor );
-    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
-            self.size.height * scaleFactor );
-    UIGraphicsBeginImageContext( scaledSize );
+    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor, self.size.height * scaleFactor );
+    UIGraphicsBeginImageContext( targetSize );
 
     CGRect thumbnailRect;
-    thumbnailRect.origin = CGPointZero;
+    thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2,
+        (targetSize.height - scaledSize.height) / 2);
     thumbnailRect.size = scaledSize;
 
     [self drawInRect:thumbnailRect];

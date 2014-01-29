@@ -34,8 +34,11 @@
 
 /** Scale an image such that its entire content fits in the given size.
  *
- * We scale until either the width or the height fills the image while the other either also fills the image or is smaller. */
+ * We scale until either the width or the height fills the image while the other either also fills the image or is smaller.
+ *
+ * The size of the output image is the size of the scaled image.  If forceSize is YES, the scaled image is centered in the target size. */
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize;
+- (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize forceSize:(BOOL)forceSize;
 /** Scale an image such that its entire content fills the given size.
  *
  * We scale until either the width or the height fills the image while the other either also fills the image or is larger and cropping the excess. */

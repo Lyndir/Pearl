@@ -1,3 +1,6 @@
+[![Gittip](http://img.shields.io/gittip/lhunath.png)](https://www.gittip.com/lhunath/)
+[![Travis CI](http://img.shields.io/travis-ci/Lyndir/Pearl.png)](https://travis-ci.org/Lyndir/Pearl)
+
 Getting Started
 ===============
 

@@ -7,6 +7,7 @@
 !/.idea/inspectionProfiles
 !/.idea/projectCodeStyle.xml
 !/.idea/validation.xml
+!/.idea/workspace.xml
 *.iml
 /*.ipr
 /*.iws

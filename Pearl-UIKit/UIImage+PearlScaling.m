@@ -93,9 +93,6 @@
 
 - (UIImage *)imageByScalingAndFittingInSize:(CGSize)targetSize forceSize:(BOOL)forceSize {
 
-    CGFloat uiScale = [UIScreen mainScreen].scale;
-    targetSize = CGSizeApplyAffineTransform( targetSize, CGAffineTransformScale( CGAffineTransformIdentity, uiScale, uiScale ) );
-
     if (CGSizeEqualToSize( self.size, targetSize ))
         return self;
 
@@ -104,7 +101,7 @@
 
     CGFloat scaleFactor = MIN( widthFactor, heightFactor );
     CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor, self.size.height * scaleFactor );
-    UIGraphicsBeginImageContext( targetSize );
+    UIGraphicsBeginImageContextWithOptions( targetSize, NO, self.scale );
 
     CGRect thumbnailRect;
     thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2,
@@ -124,9 +121,6 @@
 
 - (UIImage *)imageByScalingAndCroppingToSize:(CGSize)targetSize {
 
-    CGFloat uiScale = [UIScreen mainScreen].scale;
-    targetSize = CGSizeApplyAffineTransform( targetSize, CGAffineTransformScale( CGAffineTransformIdentity, uiScale, uiScale ) );
-
     if (CGSizeEqualToSize( self.size, targetSize ))
         return self;
 
@@ -134,8 +128,7 @@
     CGFloat heightFactor = targetSize.height / self.size.height;
 
     CGFloat scaleFactor = MAX( widthFactor, heightFactor );
-    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor,
-            self.size.height * scaleFactor );
+    CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor, self.size.height * scaleFactor );
 
     // center the image
     CGPoint thumbnailPoint = CGPointZero;
@@ -144,7 +137,7 @@
     else if (widthFactor < heightFactor)
         thumbnailPoint.x = (targetSize.width - scaledSize.width) / 2;
 
-    UIGraphicsBeginImageContext( targetSize ); // this will crop
+    UIGraphicsBeginImageContextWithOptions( targetSize, NO, self.scale ); // this will crop
 
     CGRect thumbnailRect;
     thumbnailRect.origin = thumbnailPoint;

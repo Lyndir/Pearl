@@ -4,6 +4,7 @@
 
 #import "Pearl-UIKit-Dependencies.h"
 #import "Pearl.h"
+#import "NSLayoutConstraint+PearlUIKit.h"
 #import "PearlAlert.h"
 #import "PearlAppDelegate.h"
 #import "PearlArrayTVC.h"

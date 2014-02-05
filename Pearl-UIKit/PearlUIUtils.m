@@ -364,6 +364,36 @@ static NSMutableSet *dismissableResponders;
 
 @implementation UIView(PearlUIUtils)
 
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
+  return [self firstConstraintForAttribute:attribute otherView:nil];
+}
+
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
+  NSLayoutConstraint *constraint = [self.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
+    if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
+      return obj.firstAttribute == attribute;
+    if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))
+      return obj.secondAttribute == attribute;
+
+    return NO;
+  }];
+  if (constraint)
+    return constraint;
+
+  for (UIView *superview = self.superview; superview != nil; superview = superview.superview)
+    if ((constraint = (NSLayoutConstraint *) [superview.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
+      if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
+        return obj.firstAttribute == attribute;
+      if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))
+        return obj.secondAttribute == attribute;
+
+      return NO;
+    }]))
+      return constraint;
+
+  return nil;
+}
+
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
 
     [self setFrameFromSize:self.frame.size andParentPaddingTop:top right:right bottom:bottom left:left];

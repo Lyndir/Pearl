@@ -128,6 +128,8 @@ __END_DECLS
 
 @interface UIView(PearlUIUtils)
 
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 

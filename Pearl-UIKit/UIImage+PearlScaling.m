@@ -105,20 +105,22 @@
 
     CGRect thumbnailRect = { .origin = CGPointZero, .size = scaledSize };
     if (forceSize)
-        thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2, (targetSize.height - scaledSize.height) / 2);
+        thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2,
+                                           (targetSize.height - scaledSize.height) / 2);
 
     [self drawInRect:thumbnailRect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
     if (newImage == nil)
-        Throw(@"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize(targetSize));
+        Throw( @"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize( targetSize ) );
 
     return newImage;
 }
 
-- (UIImage *)imageByScalingAndCroppingToSize:(CGSize)targetSize {
+- (UIImage *)imageByScalingAndCroppingToSize:(CGSize)cropSize {
 
+    CGSize targetSize = CGSizeMake( MIN( self.size.width, cropSize.width ), MIN( self.size.height, cropSize.height ) );
     if (CGSizeEqualToSize( self.size, targetSize ))
         return self;
 
@@ -146,7 +148,7 @@
     UIGraphicsEndImageContext();
 
     if (newImage == nil)
-        Throw(@"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize(targetSize));
+        Throw( @"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize( targetSize ) );
 
     return newImage;
 }

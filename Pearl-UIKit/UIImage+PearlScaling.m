@@ -101,20 +101,18 @@
 
     CGFloat scaleFactor = MIN( widthFactor, heightFactor );
     CGSize scaledSize = CGSizeMake( self.size.width * scaleFactor, self.size.height * scaleFactor );
-    UIGraphicsBeginImageContextWithOptions( targetSize, NO, self.scale );
+    UIGraphicsBeginImageContextWithOptions( forceSize? targetSize: scaledSize, NO, self.scale );
 
-    CGRect thumbnailRect;
-    thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2,
-        (targetSize.height - scaledSize.height) / 2);
-    thumbnailRect.size = scaledSize;
+    CGRect thumbnailRect = { .origin = CGPointZero, .size = scaledSize };
+    if (forceSize)
+        thumbnailRect.origin = CGPointMake((targetSize.width - scaledSize.width) / 2, (targetSize.height - scaledSize.height) / 2);
 
     [self drawInRect:thumbnailRect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
     if (newImage == nil)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Couldn't scale image"];
+        Throw(@"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize(targetSize));
 
     return newImage;
 }
@@ -148,8 +146,7 @@
     UIGraphicsEndImageContext();
 
     if (newImage == nil)
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"Couldn't scale image"];
+        Throw(@"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize(targetSize));
 
     return newImage;
 }

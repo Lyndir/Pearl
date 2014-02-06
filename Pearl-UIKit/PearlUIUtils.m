@@ -401,6 +401,12 @@ static NSMutableSet *dismissableResponders;
 
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
 
+    [self sizeToFit];
+    if (size.width == CGFLOAT_MIN)
+        size.width = self.bounds.size.width;
+    if (size.height == CGFLOAT_MIN)
+        size.height = self.bounds.size.height;
+
     self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, size, top, right, bottom, left );
 }
 

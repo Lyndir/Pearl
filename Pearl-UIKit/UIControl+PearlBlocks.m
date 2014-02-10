@@ -19,28 +19,30 @@
 
 @interface PearlActionBlock_UIControl : NSObject
 
-- (id)initWithBlock:(void (^)(id sender, UIControlEvents event))block;
+- (id)initWithBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))block weakSelf:(id)weakSelf;
 
 @end
 
 @implementation PearlActionBlock_UIControl {
 
-    void (^block)(id sender, UIControlEvents event);
+    void (^_block)(id sender, UIControlEvents event, id weakSelf);
+    __weak id _weakSelf;
 }
 
-- (id)initWithBlock:(void (^)(id sender, UIControlEvents event))aBlock {
+- (id)initWithBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))aBlock weakSelf:(id)weakSelf {
 
     if (!(self = [super init]))
         return nil;
 
-    block = [aBlock copy];
+    _block = [aBlock copy];
+    _weakSelf = weakSelf;
 
     return self;
 }
 
 - (void)actionFromSender:(id)sender event:(UIControlEvents)event {
 
-    block( sender, event );
+    _block( sender, event, _weakSelf );
 }
 
 @end
@@ -49,13 +51,19 @@
 
 static char actionBlocksKey;
 
-- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event))block forControlEvents:(UIControlEvents)controlEvents {
+- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))block
+      forControlEvents:(UIControlEvents)controlEvents {
+  [self addTargetBlock:block forControlEvents:controlEvents forSelf:nil];
+}
+
+- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))block
+      forControlEvents:(UIControlEvents)controlEvents forSelf:(id)weakSelf {
 
     NSMutableArray *actionBlocks = objc_getAssociatedObject( self, &actionBlocksKey );
     if (!actionBlocks)
         objc_setAssociatedObject( self, &actionBlocksKey, actionBlocks = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
-    PearlActionBlock_UIControl *actionBlock = [[PearlActionBlock_UIControl alloc] initWithBlock:block];
+    PearlActionBlock_UIControl *actionBlock = [[PearlActionBlock_UIControl alloc] initWithBlock:block weakSelf:weakSelf];
     [self addTarget:actionBlock action:@selector(actionFromSender:event:) forControlEvents:controlEvents];
     [actionBlocks addObject:actionBlock];
 }

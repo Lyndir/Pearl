@@ -19,6 +19,9 @@
 
 @interface UIControl(PearlBlocks)
 
-- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event))block forControlEvents:(UIControlEvents)controlEvents;
+- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))block
+      forControlEvents:(UIControlEvents)controlEvents;
+- (void)addTargetBlock:(void (^)(id sender, UIControlEvents event, id weakSelf))block
+      forControlEvents:(UIControlEvents)controlEvents forSelf:(id)weakSelf;
 
 @end

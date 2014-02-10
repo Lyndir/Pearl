@@ -56,7 +56,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
         [[self Pearl_controlsForSuperview] removeObject:[NSValue valueWithNonretainedObject:self]];
 
     if (!objc_getAssociatedObject( self, &selectionInSuperviewCandidateKey ))
-        [self addTargetBlock:^(id sender, UIControlEvents event) {
+        [self addTargetBlock:^(id sender, UIControlEvents event, id weakSelf) {
             UIControl *const senderControl = (UIControl *)sender;
             if (!senderControl.selectionInSuperviewCandidate)
                 return;

@@ -27,7 +27,14 @@ NSString *PearlString(NSString *format, ...) {
     return string;
 }
 
-NSAttributedString *PearlAttributeString(NSString *string, NSRange range, NSDictionary *attributes) {
+NSAttributedString *PearlAttributeString(NSString *string, NSDictionary *attributes) {
+
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    [attributedString setAttributes:attributes range:NSMakeRange(0, [string length])];
+    return (id)attributedString;
+}
+
+NSAttributedString *PearlAttributeStringR(NSString *string, NSRange range, NSDictionary *attributes) {
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     [attributedString setAttributes:attributes range:range];

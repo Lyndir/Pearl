@@ -7,8 +7,7 @@ Defines that can be overridden to alter behavior:
     - kCipherKeySize (Default: kCCKeySizeAES128)
     - kCipherBlockSize (Default: 8)
 
-I depend on the following externals:
-
+The following externals provide source code for my binary dependencies:
     - PEARL_WITH_OPENSSL: iOSPorts/ports/security/openssl/openssl.xcodeproj: crypto
     - PEARL_WITH_SCRYPT : iOSPorts/ports/security/scrypt/scrypt.xcodeproj: scryptenc (includes crypto)
     
@@ -18,9 +17,5 @@ To add these externals, there are two options:
 
 Setup:
 
-    1. Add the external project (eg. openssl.xcodeproj) to your project.
-    2. In your application target, add the following build setting:
-        HEADER_SEARCH_PATHS = [path-to-Pearl]/External/iOSPorts/include/**
-    3a. If you want to build the external from source, add the external's target (eg. crypto) to your application target under "Link Binary With Libraries".
-    3b. If you want to link with the pre-built library, add the library (eg. libcrypto-ios.a) to your application target under "Link Binary With Libraries".
-    4b. Add the external Makefile target (eg. Makefile-openssl) to your application target under "Target Dependencies".
+    a. If you want to build the external from source, add the external's target (eg. crypto) to your application target under "Link Binary With Libraries".
+    b. If you want to link with the pre-built library, add the library (eg. libcrypto-ios.a) to your application target under "Link Binary With Libraries".

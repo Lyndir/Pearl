@@ -10,7 +10,6 @@
 #import "scryptenc.h"
 #import "scryptenc_cpuperf.h"
 #import "sha256.h"
-#import "sysendian.h"
 #import "warn.h"
 #import "PearlCryptUtils.h"
 #import "PearlKeyChain.h"

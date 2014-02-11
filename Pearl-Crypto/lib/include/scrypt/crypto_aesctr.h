@@ -31,7 +31,7 @@
 
 #include <stdint.h>
 
-#include <openssl/aes.h>
+#include "aes.h"
 
 /**
  * crypto_aesctr_init(key, nonce):

@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSError (MPFullDescription)
+@interface NSError (PearlFullDescription)
 
 - (NSString *)fullDescription;
 

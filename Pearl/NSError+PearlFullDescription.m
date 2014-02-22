@@ -4,10 +4,10 @@
 //
 
 
-#import "NSError+MPFullDescription.h"
+#import "NSError+PearlFullDescription.h"
 
 
-@implementation NSError (MPFullDescription)
+@implementation NSError (PearlFullDescription)
 
 - (NSString *)fullDescription {
 

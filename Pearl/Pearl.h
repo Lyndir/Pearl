@@ -7,7 +7,7 @@
 #import "NSBundle+PearlMutableInfo.h"
 #import "NSDateFormatter+RFC3339.h"
 #import "NSDictionary+Indexing.h"
-#import "NSError+MPFullDescription.h"
+#import "NSError+PearlFullDescription.h"
 #import "NSObject+PearlExport.h"
 #import "NSObject+PearlKVO.h"
 #import "NSString+PearlNSArrayFormat.h"

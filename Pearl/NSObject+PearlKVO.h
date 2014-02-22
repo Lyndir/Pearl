@@ -24,7 +24,9 @@
  *
  * @param observerBlock The block that gets invoked whenever a change to the receiver's value at the keyPath is detected.
  *                      The keyPath passed to the block is the keyPath where the change happened, the object is the receiver,
-  *                     change is a dictionary that describes the change and context is the context given to this method.
+ *                      change is a dictionary that describes the change and context is the context given to this method.
+ *
+ * @return The observer that will delegate notifications to the block.  Remove this observer in -dealloc.
 */
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
             forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;

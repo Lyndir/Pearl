@@ -12,31 +12,33 @@
 - (NSString *)fullDescription {
 
     NSMutableString *fullDescription = [NSMutableString new];
-    [fullDescription appendFormat:@"Error: %d (%@): %@\n", self.code, self.domain, self.localizedDescription];
+    [fullDescription appendFormat:@"Error: %lu (%@): %@\n", (long)self.code, self.domain, self.localizedDescription];
     if (self.localizedRecoveryOptions)
-        [fullDescription appendFormat:@"    - RecoveryOptions: %@\n", self.localizedRecoveryOptions];
+        [fullDescription appendFormat:@" - RecoveryOptions: %@\n", self.localizedRecoveryOptions];
     if (self.localizedRecoverySuggestion)
-        [fullDescription appendFormat:@"    - RecoverySuggestion: %@\n", self.localizedRecoverySuggestion];
+        [fullDescription appendFormat:@" - RecoverySuggestion: %@\n", self.localizedRecoverySuggestion];
     if (self.localizedFailureReason)
-        [fullDescription appendFormat:@"    - FailureReason: %@\n", self.localizedFailureReason];
+        [fullDescription appendFormat:@" - FailureReason: %@\n", self.localizedFailureReason];
     if (self.helpAnchor)
-        [fullDescription appendFormat:@"    - HelpAnchor: %@\n", self.helpAnchor];
+        [fullDescription appendFormat:@" - HelpAnchor: %@\n", self.helpAnchor];
     if (self.userInfo) {
         for (id key in self.userInfo) {
             id info = self.userInfo[key];
             NSMutableString *infoString;
             if ([info respondsToSelector:@selector(fullDescription)])
                 infoString = [[info fullDescription] mutableCopy];
+            else if ([info isKindOfClass:[NSException class]])
+                infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [info name], [info reason], [info userInfo]];
             else if ([info respondsToSelector:@selector(debugDescription)])
                 infoString = [[info debugDescription] mutableCopy];
             else
                 infoString = [[info description] mutableCopy];
 
-            NSString *keyString = [NSString stringWithFormat:@"    - Info %@: ", key];
+            NSString *keyString = [NSString stringWithFormat:@" - Info %@: [%@] ", key, [info class]];
             NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length] + 1
                                                             withString:@" " startingAtIndex:0];
             [infoString replaceOccurrencesOfString:@"\n" withString:indentedNewline options:0
-                                             range:NSMakeRange(0, [infoString length])];
+                                             range:NSMakeRange( 0, [infoString length] )];
             [fullDescription appendString:keyString];
             [fullDescription appendString:infoString];
             [fullDescription appendString:@"\n"];

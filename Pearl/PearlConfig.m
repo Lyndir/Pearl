@@ -41,7 +41,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
     unsigned *_gameRandomCounters;
 }
 
-@dynamic build, version, copyright, firstRun, launchCount, askForReviews, reviewAfterLaunches, reviewInApp, reviewedVersion, iTunesID;
+@dynamic build, version, copyright, firstRun, lastRunVersion, launchCount, askForReviews, reviewAfterLaunches, reviewInApp, reviewedVersion, iTunesID;
 @dynamic supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;
@@ -65,6 +65,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
             NSStringFromSelector( @selector(version) )             : @"",
             NSStringFromSelector( @selector(copyright) )           : @"",
             NSStringFromSelector( @selector(firstRun) )            : @YES,
+            NSStringFromSelector( @selector(lastRunVersion) )      : @"",
             NSStringFromSelector( @selector(launchCount) )         : @0,
             NSStringFromSelector( @selector(askForReviews) )       : @NO,
             NSStringFromSelector( @selector(reviewAfterLaunches) ) : @10,
@@ -112,6 +113,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.firstRun = @NO;
+        self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
         [[self class] flush];
     }];
 #if TARGET_OS_IPHONE
@@ -121,6 +123,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
 #endif
     [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.firstRun = @NO;
+        self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
         [[self class] flush];
     }];
 
@@ -203,6 +206,10 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
     }
 }
 
+
+- (BOOL)firstVersionRun {
+    return ![self.lastRunVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion];
+}
 
 #pragma mark Audio
 

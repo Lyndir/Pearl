@@ -57,6 +57,8 @@ extern NSString *const PearlConfigChangedNotification;
 @property(nonatomic, readwrite, retain) NSString *version;
 @property(nonatomic, readwrite, retain) NSString *copyright;
 @property(nonatomic, readwrite, retain) NSNumber *firstRun;
+@property(nonatomic, readonly) BOOL firstVersionRun;
+@property(nonatomic, readwrite, retain) NSString *lastRunVersion;
 @property(nonatomic, readwrite, retain) NSNumber *launchCount;
 @property(nonatomic, readwrite, retain) NSNumber *askForReviews;
 @property(nonatomic, readwrite, retain) NSNumber *reviewAfterLaunches;

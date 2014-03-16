@@ -62,4 +62,14 @@ static char actionBlocksKey;
     return handler;
 }
 
+- (id)observeKeyPath:(NSString *)keyPath withBlock:(void (^)(id from, id to, NSKeyValueChange cause, id _self))block {
+
+    __weak id weakSelf = self;
+    return [self addObserverBlock:^(NSString *aKeyPath, id object, NSDictionary *change, void *context) {
+        __strong id strongWeakSelf = weakSelf;
+        block( change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey], [change[NSKeyValueChangeKindKey] unsignedIntegerValue],
+                strongWeakSelf );
+    } forKeyPath:keyPath options:NSKeyValueObservingOptionInitial context:nil];
+}
+
 @end

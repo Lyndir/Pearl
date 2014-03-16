@@ -17,7 +17,7 @@
 //
 
 
-NSString *PearlString(NSString *format, ...) {
+NSString *strf(NSString *format, ...) {
 
     va_list argList;
     va_start(argList, format);
@@ -27,21 +27,21 @@ NSString *PearlString(NSString *format, ...) {
     return string;
 }
 
-NSAttributedString *PearlAttributeString(NSString *string, NSDictionary *attributes) {
+NSAttributedString *stra(NSString *string, NSDictionary *attributes) {
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     [attributedString setAttributes:attributes range:NSMakeRange(0, [string length])];
-    return (id)attributedString;
+    return attributedString;
 }
 
-NSAttributedString *PearlAttributeStringR(NSString *string, NSRange range, NSDictionary *attributes) {
+NSAttributedString *strra(NSString *string, NSRange range, NSDictionary *attributes) {
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     [attributedString setAttributes:attributes range:range];
-    return (id)attributedString;
+    return attributedString;
 }
 
-NSString *PearlLocalize(NSString *format, ...) {
+NSString *strl(NSString *format, ...) {
 
     va_list argList;
     va_start(argList, format);
@@ -64,7 +64,7 @@ NSString *PearlLocalizeDyn(NSString *format, ...) {
     return msg;
 }
 
-NSString *PearlLocalizeTable(NSString *tableName, NSString *format, ...) {
+NSString *strtl(NSString *tableName, NSString *format, ...) {
 
     va_list argList;
     va_start(argList, format);

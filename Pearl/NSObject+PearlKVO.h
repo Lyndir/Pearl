@@ -31,4 +31,12 @@
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
             forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context;
 
+/**
+ * @param keyPath The keyPath to observe.
+ * @param block The block to invoke whenever keyPath changes with the value it was set to before and after the change.
+ *
+ * @return The observer that will delegate notifications to the block.  Remove this observer in -dealloc.
+*/
+- (id)observeKeyPath:(NSString *)keyPath withBlock:(void (^)(id from, id to, NSKeyValueChange cause, id _self))block;
+
 @end

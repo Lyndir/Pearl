@@ -54,6 +54,8 @@
                     userInfo:__userInfo]
 #define Throw(__reason, ...)                                                                    \
             ThrowInfo(nil, __reason , ##__VA_ARGS__)
+#define Weakify(__target) __weak typeof(__target) _weak_ ## __target = __target
+#define Strongify(__target) __strong typeof(__target) __target = _weak_ ## __target
 
 #define PearlInteger(__number) \
             [NSNumber numberWithInteger:__number]

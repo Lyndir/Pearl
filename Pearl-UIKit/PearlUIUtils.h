@@ -128,6 +128,7 @@ __END_DECLS
 
 @interface UIView(PearlUIUtils)
 
+- (UITapGestureRecognizer *)dismissKeyboardForField:(UIView *)field onTouchForced:(BOOL)forced;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;

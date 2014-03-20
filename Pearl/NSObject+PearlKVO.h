@@ -26,6 +26,8 @@
  *                      The keyPath passed to the block is the keyPath where the change happened, the object is the receiver,
  *                      change is a dictionary that describes the change and context is the context given to this method.
  *
+ * Don't forget to remove the observer before the receiver is deallocated.  A convenient way of doing this is with -removeKeyPathObservers.
+ *
  * @return The observer that will delegate notifications to the block.  Remove this observer in -dealloc.
 */
 - (id)addObserverBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))observerBlock
@@ -35,8 +37,15 @@
  * @param keyPath The keyPath to observe.
  * @param block The block to invoke whenever keyPath changes with the value it was set to before and after the change.
  *
+ * Don't forget to remove the observer before the receiver is deallocated.  A convenient way of doing this is with -removeKeyPathObservers.
+ *
  * @return The observer that will delegate notifications to the block.  Remove this observer in -dealloc.
 */
 - (id)observeKeyPath:(NSString *)keyPath withBlock:(void (^)(id from, id to, NSKeyValueChange cause, id _self))block;
+
+/**
+* A convenience method for removing all observers registered using this category's helper methods.
+*/
+- (void)removeKeyPathObservers;
 
 @end

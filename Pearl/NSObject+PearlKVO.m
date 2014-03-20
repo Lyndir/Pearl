@@ -17,29 +17,28 @@
 
 @interface PearlBlockObserver_NSObject : NSObject
 
-- (id)initWithBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock;
+@property(nonatomic, copy) NSString *keyPath;
+@property(nonatomic, copy) void (^block)(NSString *, id, NSDictionary *, void *);
 
 @end
 
-@implementation PearlBlockObserver_NSObject {
+@implementation PearlBlockObserver_NSObject
 
-    void(^block)(NSString *keyPath, id object, NSDictionary *change, void *context);
-}
-
-- (id)initWithBlock:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))aBlock {
+- (id)initWithKeyPath:(NSString *)keyPath block:(void (^)(NSString *keyPath, id object, NSDictionary *change, void *context))block {
 
     if (!(self = [super init]))
         return nil;
 
-    block = [aBlock copy];
+    self.keyPath = keyPath;
+    self.block = block;
 
     return self;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
-    if (block)
-        block( keyPath, object, change, context );
+    if (self.block && [keyPath isEqualToString:self.keyPath])
+        self.block( keyPath, object, change, context );
 }
 
 @end
@@ -55,7 +54,7 @@ static char actionBlocksKey;
     if (!blockObservers)
         objc_setAssociatedObject( self, &actionBlocksKey, blockObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
-    PearlBlockObserver_NSObject *handler = [[PearlBlockObserver_NSObject alloc] initWithBlock:observerBlock];
+    PearlBlockObserver_NSObject *handler = [[PearlBlockObserver_NSObject alloc] initWithKeyPath:keyPath block:observerBlock];
     [self addObserver:handler forKeyPath:keyPath options:options context:context];
     [blockObservers addObject:handler];
 
@@ -70,6 +69,15 @@ static char actionBlocksKey;
         block( change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey], [change[NSKeyValueChangeKindKey] unsignedIntegerValue],
                 strongWeakSelf );
     } forKeyPath:keyPath options:NSKeyValueObservingOptionInitial context:nil];
+}
+
+- (void)removeKeyPathObservers {
+
+    NSMutableArray *blockObservers = objc_getAssociatedObject( self, &actionBlocksKey );
+    if (blockObservers)
+        for (PearlBlockObserver_NSObject *handler in blockObservers)
+            [self removeObserver:handler forKeyPath:handler.keyPath];
+    objc_setAssociatedObject( self, &actionBlocksKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 }
 
 @end

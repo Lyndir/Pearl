@@ -96,9 +96,9 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         if (profileError)
             profileString = profileError;
         else
-            profileString = PearlString( @"%@ (%@, devices: %d, UUID: %@)", provisioningProfile[@"Name"],
+            profileString = PearlString( @"%@ (%@, devices: %ld, UUID: %@)", provisioningProfile[@"Name"],
                     [provisioningProfile[@"Entitlements"][@"get-task-allow"] boolValue]? @"debug": @"release",
-                    [provisioningProfile[@"ProvisionedDevices"] count], provisioningProfile[@"UUID"] );
+                    (long)[provisioningProfile[@"ProvisionedDevices"] count], provisioningProfile[@"UUID"] );
     }
     inf(@"%@ %@ on platform: %@, profile: %@", name, version, [PearlDeviceUtils platform], profileString);
 

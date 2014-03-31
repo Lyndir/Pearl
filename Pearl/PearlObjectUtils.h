@@ -44,7 +44,9 @@
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 #define IfNotNilElse(__NN,__N)                                                                  \
-            ({ NSNullToNil(__NN)? __NN: __N; })
+            ({ __typeof__(__NN) __nn = __NN; NSNullToNil(__nn)? __nn: __N; })
+#define IfElse(__T, __F)                                                                        \
+            ({ __typeof__(__T) __t = __T; __t? __t: __F; })
 #define PearlNil (id)(__bridge void *)nil
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
@@ -74,14 +76,6 @@
 #define PearlBoolNot(__number) \
             PearlBool(![__number boolValue])
 
-#define PearlMainThread(__mainBlock)                                                            \
-            ({                                                                                  \
-                if ([NSThread isMainThread])                                                    \
-                    __mainBlock();                                                              \
-                else                                                                            \
-                    dispatch_async(dispatch_get_main_queue(), __mainBlock);                     \
-            })
-
 #define PearlMainThreadStart                                                                 \
             ({                                                                                  \
                 dispatch_block_t __pearl_main_thread_block = ^
@@ -103,6 +97,12 @@
             - ( __type ) __getter {                                                             \
                 return objc_getAssociatedObject( self, & __name ## Key );                       \
             }
+
+extern void PearlMainQueue(void (^block)());
+extern void PearlNotMainQueue(void (^block)());
+extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
+extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
+extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
 
 @interface PearlObjectUtils : NSObject
 

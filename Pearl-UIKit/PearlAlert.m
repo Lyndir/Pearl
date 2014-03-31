@@ -210,13 +210,13 @@
 - (PearlAlert *)showAlert {
 
     __weak UIAlertView *alertView = self.alertView;
-    PearlMainThread(^{
+    PearlMainQueue( ^{
         if (!alertView)
             return;
 
         [alertView show];
         [((NSMutableArray *)[PearlAlert activeAlerts]) addObject:self];
-    });
+    } );
 
     return self;
 }
@@ -230,10 +230,10 @@
 
     __weak PearlAlert *wSelf = self;
     __weak UIAlertView *alertView = self.alertView;
-    PearlMainThread(^{
+    PearlMainQueue( ^{
         if (wSelf && !wSelf.handlingClick)
             [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:animated];
-    });
+    } );
 
     return self;
 }

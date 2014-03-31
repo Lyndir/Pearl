@@ -122,7 +122,7 @@
 - (PearlSheet *)showSheet {
 
     __weak UIActionSheet *sheetView = self.sheetView;
-    PearlMainThread(^{
+    PearlMainQueue( ^{
         if (!sheetView)
             return;
 
@@ -134,7 +134,7 @@
             view = window;
         [sheetView showInView:view];
         [((NSMutableArray *)[PearlSheet activeSheets]) addObject:self];
-    });
+    } );
 
     return self;
 }
@@ -148,10 +148,10 @@
 
     __weak PearlSheet *wSelf = self;
     __weak UIActionSheet *sheet = self.sheetView;
-    PearlMainThread(^{
+    PearlMainQueue( ^{
         if (wSelf && !wSelf.handlingClick)
             [sheet dismissWithClickedButtonIndex:[sheet cancelButtonIndex] animated:animated];
-    });
+    } );
 
     return self;
 }

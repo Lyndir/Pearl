@@ -16,9 +16,12 @@
 //  Copyright, lhunath (Maarten Billemont) 2013. All rights reserved.
 //
 
+#import "PearlUIView.h"
+
 @interface PearlOverlay()
 
 @property(nonatomic, strong) NSString *title;
+@property(nonatomic, strong) PearlUIView *backgroundView;
 @property(nonatomic, strong) UIView *overlayView;
 @property(nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) UITextView *titleView;
@@ -27,90 +30,116 @@
 
 @implementation PearlOverlay
 
-static __strong PearlOverlay *activeOverlay = nil;
++ (NSMutableArray *)activeOverlays {
 
-+ (PearlOverlay *)activeOverlay {
+    static NSMutableArray *activeOverlays = nil;
+    if (!activeOverlays)
+        activeOverlays = [[NSMutableArray alloc] initWithCapacity:3];
 
-    return activeOverlay;
+    return activeOverlays;
 }
 
-- (id)initWithTitle:(NSString *)title {
+- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity disableUserInteraction:(BOOL)disableUserInteraction {
 
     if (!(self = [super init]))
         return nil;
 
-    PearlMainThread(^{
+    PearlMainQueue( ^{
         _title = title;
-        _overlayView = [[UIView alloc] initWithFrame:CGRectInCGRectWithSizeAndPadding(
-                UIApp.keyWindow.bounds, CGSizeMake( CGFLOAT_MAX, 120 ), CGFLOAT_MAX, 20, 20, 20 )];
-        _overlayView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.66f];
-        _overlayView.layer.cornerRadius = 10;
+        _backgroundView = [[PearlUIView alloc] initWithFrame:UIApp.keyWindow.bounds];
+        _backgroundView.backgroundColor = disableUserInteraction? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
+        _backgroundView.ignoreTouches = disableUserInteraction? NO: YES;
 
-        _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [_overlayView addSubview:_activityIndicator];
-        [_activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:20 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
-        [_activityIndicator startAnimating];
+        _overlayView = [UIView new];
+        _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6f];
+        _overlayView.layer.cornerRadius = 8;
+        [_backgroundView addSubview:_overlayView];
 
         _titleView = [UITextView new];
-        [_overlayView addSubview:_titleView];
-        CGPoint activityIndicatorBottom = CGPointFromCGRectBottom( _activityIndicator.frame );
-        [_titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MAX )
-                 andParentPaddingTop:activityIndicatorBottom.y + 10 right:20 bottom:20 left:20];
         _titleView.text = title;
         _titleView.textColor = [UIColor whiteColor];
         _titleView.textAlignment = NSTextAlignmentCenter;
         _titleView.font = [UIFont boldSystemFontOfSize:16];
         _titleView.backgroundColor = [UIColor clearColor];
-    });
+        [_overlayView addSubview:_titleView];
+        [_titleView sizeToFit];
+
+        if (activity) {
+            _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            [_activityIndicator startAnimating];
+            [_overlayView addSubview:_activityIndicator];
+            [_activityIndicator sizeToFit];
+        }
+
+        [_overlayView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, 16 + _titleView.frame.size.height + _activityIndicator.frame.size.height )
+                   andParentPaddingTop:CGFLOAT_MAX right:20 bottom:20 left:20];
+        [_titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MIN )
+                 andParentPaddingTop:CGFLOAT_MAX right:20 bottom:8 left:20];
+        [_activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
+    } );
 
     return self;
 }
 
-+ (instancetype)showOverlayWithTitle:(NSString *)title {
++ (instancetype)showProgressOverlayWithTitle:(NSString *)title {
 
-    return [[[self alloc] initWithTitle:title] showOverlay];
+    return [[[self alloc] initWithTitle:title withActivity:YES disableUserInteraction:YES] showOverlay];
+}
+
++ (instancetype)showTemporaryOverlayWithTitle:(NSString *)title dismissAfter:(NSTimeInterval)seconds {
+
+    PearlOverlay *overlay = [[[self alloc] initWithTitle:title withActivity:NO disableUserInteraction:NO] showOverlay];
+    PearlMainQueueAfter( seconds, ^{
+        [overlay cancelOverlayAnimated:YES];
+    } );
+
+    return overlay;
 }
 
 - (PearlOverlay *)showOverlay {
 
-    __weak UIView *overlayView = self.overlayView;
-    PearlMainThread(^{
-        [UIApp.keyWindow addSubview:overlayView];
-        overlayView.superview.userInteractionEnabled = NO;
+    PearlMainQueue( ^{
+        [UIApp.keyWindow addSubview:self.backgroundView];
 
-        overlayView.alpha = 0;
-        CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+        self.backgroundView.alpha = 0;
+        CGRectSetY( self.backgroundView.frame, self.backgroundView.frame.origin.y + 10 );
         [UIView animateWithDuration:0.3f animations:^{
-            overlayView.alpha = 1;
-            CGRectSetY( overlayView.frame, overlayView.frame.origin.y - 10 );
+            self.backgroundView.alpha = 1;
+            CGRectSetY( self.backgroundView.frame, self.backgroundView.frame.origin.y - 10 );
         }];
-    });
+
+        [(NSMutableArray *)[PearlOverlay activeOverlays] addObject:self];
+    } );
 
     return self;
 }
 
 - (BOOL)isVisible {
 
-    return self.overlayView.superview != nil;
+    return self.backgroundView.superview != nil;
 }
 
 - (PearlOverlay *)cancelOverlayAnimated:(BOOL)animated {
 
-    __weak UIView *overlayView = self.overlayView;
-    PearlMainThread(^{
-        overlayView.superview.userInteractionEnabled = YES;
+    Weakify(self);
+    PearlMainQueue( ^{
+        Strongify( self );
 
-        if (!animated)
-            [overlayView removeFromSuperview];
+        if (!animated) {
+            [self.backgroundView removeFromSuperview];
+            [((NSMutableArray *)[PearlOverlay activeOverlays]) removeObject:self];
+        }
+
         else {
             [UIView animateWithDuration:0.3f animations:^{
-                overlayView.alpha = 0;
-                CGRectSetY( overlayView.frame, overlayView.frame.origin.y + 10 );
+                self.backgroundView.alpha = 0;
+                CGRectSetY( self.backgroundView.frame, self.backgroundView.frame.origin.y + 10 );
             }                completion:^(BOOL finished) {
-                [overlayView removeFromSuperview];
+                [self.backgroundView removeFromSuperview];
+                [((NSMutableArray *)[PearlOverlay activeOverlays]) removeObject:self];
             }];
         }
-    });
+    } );
 
     return self;
 }

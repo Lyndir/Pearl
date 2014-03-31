@@ -53,6 +53,12 @@ extern CGPoint CGPointFromCGRectTopRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
+/** Get the UIEdgeInsets to apply to the insetRect in order to subtract the subtractRect from it. */
+extern UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect);
+
+// UIViewAnimationCurve -> UIViewAnimationOptions
+extern UIViewAnimationOptions UIViewAnimationCurveToOptions(UIViewAnimationCurve curve);
+
 // CGPoint <-> CGSize.
 extern CGPoint CGPointFromCGSize(const CGSize size);
 extern CGPoint CGPointFromCGSizeCenter(const CGSize size);
@@ -129,11 +135,14 @@ __END_DECLS
 @interface UIView(PearlUIUtils)
 
 - (UITapGestureRecognizer *)dismissKeyboardForField:(UIView *)field onTouchForced:(BOOL)forced;
++ (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
+                 completion:(void (^)(BOOL finished))completion;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 
+- (id)superviewOrSelfOfKind:(Class)kind;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
 - (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;

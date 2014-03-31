@@ -16,6 +16,38 @@
 //  Copyright 2010 Lyndir. All rights reserved.
 //
 
+
+void PearlMainQueue(void (^block)()) {
+
+    if ([NSThread isMainThread])
+        block();
+    else
+        dispatch_async(dispatch_get_main_queue(), block);
+}
+
+void PearlNotMainQueue(void (^block)()) {
+
+    if (![NSThread isMainThread])
+        block();
+    else
+        dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}
+
+void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)()) {
+
+    PearlQueueAfter( seconds, dispatch_get_main_queue(), block );
+}
+
+void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)()) {
+
+    PearlQueueAfter( seconds, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), block );
+}
+
+void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)()) {
+
+    dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
+}
+
 @implementation PearlObjectUtils
 
 + (id)getNil {

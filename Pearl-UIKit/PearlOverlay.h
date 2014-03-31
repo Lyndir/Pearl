@@ -23,20 +23,20 @@
 /**
  * The currently active overlay.
  */
-+ (PearlOverlay *)activeOverlay;
++ (NSArray *)activeOverlays;
 
 /**
  * Create an overlay view controller that controls an overlay message.
  *
  * @param title             The title of the overlay.
  */
-- (id)initWithTitle:(NSString *)title;
+- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity disableUserInteraction:(BOOL)disableUserInteraction;
 
 /**
  * Initializes and shows an overlay.  See -initWithTitle:
  */
-+ (instancetype)showOverlayWithTitle:(NSString *)title;
-
++ (instancetype)showProgressOverlayWithTitle:(NSString *)title;
++ (instancetype)showTemporaryOverlayWithTitle:(NSString *)title dismissAfter:(NSTimeInterval)seconds;
 
 #pragma mark ###############################
 #pragma mark Behaviors

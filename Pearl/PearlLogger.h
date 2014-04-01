@@ -25,6 +25,8 @@
 #define wrn(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ wrn:(format), ##__VA_ARGS__]
 #define err(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ err:(format), ##__VA_ARGS__]
 #define ftl(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ ftl:(format), ##__VA_ARGS__]
+#define dbg_return(__ret)   dbg_return_tr(__ret, returnArg)
+#define dbg_return_tr(__ret, __to_id)   { typeof(__ret) __R = __ret; dbg(@"%s: %@", sel_getName(_cmd), __to_id(__R)); return __R; }
 
 __BEGIN_DECLS
 /** Levels that determine the importance of logging events. */
@@ -45,6 +47,7 @@ typedef enum {
 
 extern const char *PearlLogLevelStr(PearlLogLevel level);
 extern const NSString *errstr(void);
+extern id returnArg(id arg);
 __END_DECLS
 
 @interface PearlLogMessage : NSObject

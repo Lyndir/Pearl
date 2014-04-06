@@ -36,6 +36,10 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
     Throw(@"Formatting a message with a log level that is not understood.");
 }
 
+id returnArg(id arg) {
+  return arg;
+}
+
 @implementation PearlLogMessage
 
 @synthesize message, occurrence, level;

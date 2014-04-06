@@ -48,6 +48,7 @@
 #define IfElse(__T, __F)                                                                        \
             ({ __typeof__(__T) __t = __T; __t? __t: __F; })
 #define PearlNil (id)(__bridge void *)nil
+#define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \

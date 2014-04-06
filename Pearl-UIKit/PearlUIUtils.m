@@ -478,11 +478,11 @@ static char dismissRecognizerForcedKey;
     self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, size, top, right, bottom, left );
 }
 
-- (id)superviewOrSelfOfKind:(Class)kind {
++ (instancetype)findAsSuperviewOf:(UIView *)view {
 
-    for (UIView *view = self; view; view = [view superview])
-        if ([view isKindOfClass:kind])
-            return view;
+    for (UIView *candidate = view; candidate; candidate = [candidate superview])
+        if ([candidate isKindOfClass:self])
+            return candidate;
 
     return nil;
 }

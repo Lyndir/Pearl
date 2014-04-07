@@ -25,8 +25,17 @@
 #define wrn(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ wrn:(format), ##__VA_ARGS__]
 #define err(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ err:(format), ##__VA_ARGS__]
 #define ftl(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ ftl:(format), ##__VA_ARGS__]
-#define dbg_return(__ret)   dbg_return_tr(__ret, returnArg)
-#define dbg_return_tr(__ret, __to_id)   { typeof(__ret) __R = __ret; dbg(@"%s: %@", sel_getName(_cmd), __to_id(__R)); return __R; }
+#define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
+#define dbg_return_tr(__ret, __to_id, ...) \
+                            do { \
+                                typeof(__ret) __R = __ret; \
+                                NSArray *__args = @[ __VA_ARGS__ ]; \
+                                if ([__args count]) \
+                                    dbg(@"%s %@ => %@", sel_getName(_cmd), __args, __to_id(__R)); \
+                                else \
+                                    dbg(@"%s => %@", sel_getName(_cmd), __to_id(__R)); \
+                                return __R; \
+                            } while(0)
 
 __BEGIN_DECLS
 /** Levels that determine the importance of logging events. */

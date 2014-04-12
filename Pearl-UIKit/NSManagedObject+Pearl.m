@@ -1,0 +1,32 @@
+/**
+ * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+ *
+ * See the enclosed file LICENSE for license information (LGPLv3). If you did
+ * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * @author   Maarten Billemont <lhunath@lyndir.com>
+ * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+ */
+
+//
+//  NSManagedObject(Pearl).h
+//  NSManagedObject(Pearl)
+//
+//  Created by lhunath on 2014-04-12.
+//  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
+//
+
+#import "NSManagedObject+Pearl.h"
+
+@implementation NSManagedObject(Pearl)
+
++ (instancetype)insertNewObjectInContext:(NSManagedObjectContext *)context {
+
+    for (NSEntityDescription *entity in [[context.persistentStoreCoordinator.managedObjectModel entitiesByName] allValues])
+        if ([entity.managedObjectClassName isEqualToString:NSStringFromClass( [self class] )])
+            return [NSEntityDescription insertNewObjectForEntityForName:entity.name inManagedObjectContext:context];
+
+    return nil;
+}
+
+@end

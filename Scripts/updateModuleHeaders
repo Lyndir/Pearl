@@ -35,7 +35,7 @@ for module in "$main"!(*Tests*)/; do
             while read f; do
                 (( headers++ ))
                 printf '#import "%s"\n' "${f##*/}"
-            done < <(find . -name private -prune -o '(' ! -name "$module.h" ! -name "$module-*.h" -name '*.h' -print ')')
+            done < <(find . '(' -name private -o -name lib ')' -prune -o '(' ! -name "$module.h" ! -name "$module-*.h" -name '*.h' -print ')')
         } > "$module.h"
         echo "$headers")"
 done

@@ -37,7 +37,8 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
 }
 
 id returnArg(id arg) {
-  return arg;
+
+    return arg;
 }
 
 @implementation PearlLogMessage
@@ -132,8 +133,8 @@ id returnArg(id arg) {
     NSMutableArray *messages = [self.messages mutableCopy];
     [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
             ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
-        return message.level >= level;
-    }]];
+                return message.level >= level;
+            }]];
 
     return messages;
 }
@@ -173,7 +174,9 @@ id returnArg(id arg) {
     @try {
         @synchronized (self.listeners) {
             threadLocals[@"PearlDisableLog"] = @"";
-            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
+            for (
+                    BOOL (^listener)(PearlLogMessage *)
+                    in self.listeners)
                 if (!listener( message ))
                     return self;
         }
@@ -199,11 +202,18 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
-            message = @"Error formatting message.";
+            message = PearlString(@"Error formatting message: %@, error: %@", format, exception);
+        }
+        @catch (id exception) {
+            @try {
+                message = strf( @"Error formatting message: %@", format );
+            }
+            @catch (id exception) {
+                message = @"Error formatting message";
+            }
         }
     }
     va_end(argList);
@@ -219,10 +229,12 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
             message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
@@ -239,10 +251,12 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
             message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
@@ -259,10 +273,12 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
             message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
@@ -279,10 +295,12 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
             message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
@@ -299,10 +317,12 @@ id returnArg(id arg) {
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
             message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }

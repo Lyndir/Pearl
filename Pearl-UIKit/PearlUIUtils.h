@@ -137,6 +137,12 @@ __END_DECLS
 - (UITapGestureRecognizer *)dismissKeyboardForField:(UIView *)field onTouchForced:(BOOL)forced;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
                  completion:(void (^)(BOOL finished))completion;
+/** Recursively iterate the hierarchy of this view and set UIScrollView contentInsets to dodge translucent bars. */
+- (void)adjustContentInsets;
+- (void)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
+                               metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
+- (void)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
+                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
@@ -145,7 +151,7 @@ __END_DECLS
 /** Return the view or the first parent of it that is of the receiver's type. */
 + (instancetype)findAsSuperviewOf:(UIView *)view;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
-- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
+- (BOOL)enumerateViews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
 

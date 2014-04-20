@@ -100,12 +100,12 @@ UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtrac
     CGPoint topLeftInset = CGPointMinusCGPoint( bottomRightFrom, topLeftBounds );
     CGPoint bottomRightInset = CGPointMinusCGPoint( bottomRightBounds, topLeftFrom );
 
-    return UIEdgeInsetsMake(
-            MAX(0, topLeftInset.y >= insetRect.size.height? 0: topLeftInset.y),
-            MAX(0, topLeftInset.x >= insetRect.size.width? 0: topLeftInset.x),
-            MAX(0, bottomRightInset.y >= insetRect.size.height? 0: bottomRightInset.y),
-            MAX(0, bottomRightInset.x >= insetRect.size.width? 0: bottomRightInset.x)
-                           );
+    CGFloat top = topLeftFrom.y <= 0 && bottomRightFrom.y < insetRect.size.height? MAX(0, topLeftInset.y): 0;
+    CGFloat left = topLeftFrom.x <= 0 && bottomRightFrom.x < insetRect.size.width? MAX(0, topLeftInset.x): 0;
+    CGFloat bottom = bottomRightFrom.y >= insetRect.size.height && topLeftFrom.y > 0? MAX(0, bottomRightInset.y): 0;
+    CGFloat right = bottomRightFrom.x >= insetRect.size.width && topLeftFrom.x > 0? MAX(0, bottomRightInset.x): 0;
+    dbg(@"Inset subtractRect:%@ into insetRect:%@", NSStringFromCGRect( subtractRect ), NSStringFromCGRect( insetRect ));
+    return UIEdgeInsetsMake( top, left, bottom, right );
 }
 
 UIViewAnimationOptions UIViewAnimationCurveToOptions(UIViewAnimationCurve curve) {
@@ -429,6 +429,48 @@ static char dismissRecognizerForcedKey;
     }
 }
 
+- (void)adjustContentInsets {
+
+    NSMutableArray *insetViews = [NSMutableArray array];
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        if ([subview respondsToSelector:@selector(isTranslucent)] && [(id)subview isTranslucent])
+            [insetViews addObject:subview];
+    }            recurse:YES];
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        if ([subview isKindOfClass:[UIScrollView class]]) {
+            UIScrollView *scrollView = (UIScrollView *)subview;
+            UIEdgeInsets contentInset = scrollView.contentInset;
+            scrollView.contentInset = UIEdgeInsetsZero;
+//            CGRect scrollViewBounds = [scrollView convertRect:CGRectIntersection( scrollView.frameInWindow, scrollView.window.bounds )
+//                                                     fromView:scrollView.window];
+            for (UIView *insetView in insetViews) {
+                UIEdgeInsets viewInsets = UIEdgeInsetsForRectSubtractingRect(
+                        scrollView.bounds, [scrollView convertRect:insetView.bounds fromView:insetView] );
+                contentInset = UIEdgeInsetsMake(
+                        MAX(contentInset.top, viewInsets.top),
+                        MAX(contentInset.left, viewInsets.left),
+                        MAX(contentInset.bottom, viewInsets.bottom),
+                        MAX(contentInset.right, viewInsets.right)
+                                               );
+            }
+            scrollView.contentInset = contentInset;
+        }
+    }            recurse:YES];
+}
+
+- (void)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
+                               metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
+
+    [self addConstraintsWithVisualFormats:@[ format ] options:opts metrics:metrics views:views];
+}
+
+- (void)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
+                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
+
+    for (NSString *format in formats)
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:format options:opts metrics:metrics views:views]];
+}
+
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
 
     return [self firstConstraintForAttribute:attribute otherView:nil];
@@ -496,16 +538,19 @@ static char dismissRecognizerForcedKey;
     return NO;
 }
 
-- (void)enumerateSubviews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
+- (BOOL)enumerateViews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
 
-    for (UIView *subview in self.subviews) {
-        BOOL stop = NO, recurse = recurseDefault;
-        block( subview, &stop, &recurse );
-        if (recurse)
-            [subview enumerateSubviews:block recurse:recurseDefault];
-        if (stop)
-            break;
-    }
+    BOOL stop = NO, recurse = recurseDefault;
+    block( self, &stop, &recurse );
+    if (stop)
+        return NO;
+
+    if (recurse)
+        for (UIView *subview in self.subviews)
+            if (![subview enumerateViews:block recurse:recurseDefault])
+                return NO;
+
+    return YES;
 }
 
 - (void)printSuperHierarchy {

@@ -16,14 +16,13 @@
 //  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
 //
 
-#import "UIScrollView+PearlAdjustInsets.h"
-
 @implementation UIScrollView(PearlAdjustInsets)
 
-- (void)automaticallyAdjustInsetsForKeyboard {
+- (id)automaticallyAdjustInsetsForKeyboard {
 
     Weakify(self);
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification object:nil queue:nil usingBlock:
+    UIEdgeInsets originalInsets = self.contentInset;
+    return [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification object:nil queue:nil usingBlock:
             ^(NSNotification *note) {
                 Strongify(self);
 
@@ -31,8 +30,10 @@
                 CGRect frameToScreen = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
                 CGRect frameFrom = [self convertRect:[self.window convertRect:frameFromScreen fromWindow:nil] fromView:self.window];
                 CGRect frameTo = [self convertRect:[self.window convertRect:frameToScreen fromWindow:nil] fromView:self.window];
-                UIEdgeInsets insetsFrom = UIEdgeInsetsForRectSubtractingRect( self.bounds, frameFrom );
-                UIEdgeInsets insetsTo = UIEdgeInsetsForRectSubtractingRect( self.bounds, frameTo );
+                UIEdgeInsets insetsFrom = UIEdgeInsetsUnionEdgeInsets( originalInsets,
+                        UIEdgeInsetsForRectSubtractingRect( self.bounds, frameFrom ) );
+                UIEdgeInsets insetsTo = UIEdgeInsetsUnionEdgeInsets( originalInsets,
+                        UIEdgeInsetsForRectSubtractingRect( self.bounds, frameTo ) );
 
                 self.contentInset = insetsFrom;
                 [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0

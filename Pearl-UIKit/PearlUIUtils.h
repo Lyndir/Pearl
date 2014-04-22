@@ -53,6 +53,9 @@ extern CGPoint CGPointFromCGRectTopRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomRight(CGRect rect);
 extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
 
+/** Get the UIEdgeInsets that insets each edge by the largest edge of either a or b. */
+UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b);
+
 /** Get the UIEdgeInsets to apply to the insetRect in order to subtract the subtractRect from it. */
 extern UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect);
 

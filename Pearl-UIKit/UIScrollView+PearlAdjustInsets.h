@@ -20,6 +20,9 @@
 
 @interface UIScrollView(PearlAdjustInsets)
 
-- (void)automaticallyAdjustInsetsForKeyboard;
+/**
+* @return The NSNotificationCenter observer to make the magic happen.
+*/
+- (id)automaticallyAdjustInsetsForKeyboard;
 
 @end

@@ -91,6 +91,9 @@ CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
     return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height );
 }
 
+UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {
+    return UIEdgeInsetsMake( MAX(a.top, b.top), MAX(a.left, b.left), MAX(a.bottom, b.bottom), MAX(a.right, b.right) );
+}
 UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect) {
 
     CGPoint topLeftBounds = CGPointFromCGRectTopLeft( insetRect );
@@ -443,16 +446,10 @@ static char dismissRecognizerForcedKey;
             scrollView.contentInset = UIEdgeInsetsZero;
 //            CGRect scrollViewBounds = [scrollView convertRect:CGRectIntersection( scrollView.frameInWindow, scrollView.window.bounds )
 //                                                     fromView:scrollView.window];
-            for (UIView *insetView in insetViews) {
-                UIEdgeInsets viewInsets = UIEdgeInsetsForRectSubtractingRect(
-                        scrollView.bounds, [scrollView convertRect:insetView.bounds fromView:insetView] );
-                contentInset = UIEdgeInsetsMake(
-                        MAX(contentInset.top, viewInsets.top),
-                        MAX(contentInset.left, viewInsets.left),
-                        MAX(contentInset.bottom, viewInsets.bottom),
-                        MAX(contentInset.right, viewInsets.right)
-                                               );
-            }
+            for (UIView *insetView in insetViews)
+                contentInset = UIEdgeInsetsUnionEdgeInsets( contentInset,
+                        UIEdgeInsetsForRectSubtractingRect( scrollView.bounds,
+                                [scrollView convertRect:insetView.bounds fromView:insetView] ) );
             scrollView.contentInset = contentInset;
         }
     }            recurse:YES];

@@ -36,9 +36,11 @@
 
 + (BOOL)canSendMail;
 
-+ (void)sendEMailTo:(NSString *)recipient;
-+ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body;
-+ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController;
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController
+            subject:(NSString *)subject body:(NSString *)body;
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController
+            subject:(NSString *)subject body:(NSString *)body
         attachments:(PearlEMailAttachment *)attachment, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (id)initForEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body

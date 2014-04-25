@@ -156,7 +156,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 - (void)showFeedback {
 
 #ifdef PEARL_WITH_MESSAGEUI
-    [PearlEMail sendEMailTo:nil subject:PearlString( @"Feedback for %@", [PearlInfoPlist get].CFBundleName ) body:nil];
+    [PearlEMail sendEMailTo:nil fromVC:nil subject:PearlString( @"Feedback for %@", [PearlInfoPlist get].CFBundleName ) body:nil];
 #endif
 }
 

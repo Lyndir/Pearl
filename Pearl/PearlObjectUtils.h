@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+#import "map-macro.h"
 
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \
@@ -98,6 +99,29 @@
             - ( __type ) __getter {                                                             \
                 return objc_getAssociatedObject( self, & __name ## Key );                       \
             }
+#define PearlStringify(arg) @#arg
+#define PearlStringifyArg(arg) PearlStringify(arg),
+#define PearlEnum(_enumname, _enumvalues...)                        \
+    typedef NS_ENUM(NSUInteger, _enumname) {                        \
+        _enumvalues, _enumname ## Count                             \
+    };                                                              \
+                                                                    \
+    static const NSArray *_enumname ## Names;                       \
+    __attribute__ ((constructor)) static void                       \
+     _init_ ## _enumname () {                                       \
+        _enumname ## Names = @[                                     \
+            MAP(PearlStringifyArg, _enumvalues)                     \
+            PearlStringify(_enumname ## Count)                      \
+        ];                                                          \
+    }                                                               \
+    __attribute__((unused)) static _enumname                        \
+    _enumname ## FromNSString(NSString *name) {                     \
+        return (_enumname)[_enumname ## Names indexOfObject:name];  \
+    }                                                               \
+    __attribute__((unused)) static NSString*                        \
+    NSStringFrom ## _enumname(_enumname value) {                    \
+        return [_enumname ## Names objectAtIndex:value];            \
+    }
 
 extern void PearlMainQueue(void (^block)());
 extern void PearlNotMainQueue(void (^block)());

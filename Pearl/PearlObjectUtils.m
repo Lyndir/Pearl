@@ -48,6 +48,17 @@ void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^bloc
     dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
 }
 
+NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
+
+  va_list objs;
+  va_start(objs, firstHashCode);
+  NSUInteger hashCode = 0;
+  for (NSUInteger nextHashCode = firstHashCode; nextHashCode != -1; nextHashCode = va_arg(objs, int))
+    hashCode = hashCode * 31 + nextHashCode;
+  return hashCode;
+}
+
+
 @implementation PearlObjectUtils
 
 + (id)getNil {

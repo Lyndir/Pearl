@@ -44,6 +44,10 @@
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
+#define NilToNSNulls(...)                                                                        \
+            MAP_LIST(NilToNSNull, __VA_ARGS__)
+#define NSNullToNils(...)                                                                        \
+            MAP_LIST(NSNullToNil, __VA_ARGS__)
 #define IfNotNilElse(__NN,__N)                                                                  \
             ({ __typeof__(__NN) __nn = __NN; NSNullToNil(__nn)? __nn: __N; })
 #define IfElse(__T, __F)                                                                        \
@@ -99,8 +103,14 @@
             - ( __type ) __getter {                                                             \
                 return objc_getAssociatedObject( self, & __name ## Key );                       \
             }
+#define PearlObjCall(arg, call) [arg call]
+/** Simplify PearlHashCode usage with objects.  Eg.
+ *  PearlHashCode( self.age, MAP_LIST( PearlHashCall, self.firstName, self.lastName ), -1 );
+ */
+#define PearlHashCall(arg) [arg hash]
+#define PearlHashFloat(arg) ((NSUInteger)((uint32_t*)&arg)[0])
+#define PearlHashFloats(...) MAP_LIST(PearlHashFloat, __VA_ARGS__)
 #define PearlStringify(arg) @#arg
-#define PearlStringifyArg(arg) PearlStringify(arg),
 #define PearlEnum(_enumname, _enumvalues...)                        \
     typedef NS_ENUM(NSUInteger, _enumname) {                        \
         _enumvalues, _enumname ## Count                             \
@@ -110,7 +120,7 @@
     __attribute__ ((constructor)) static void                       \
      _init_ ## _enumname () {                                       \
         _enumname ## Names = @[                                     \
-            MAP(PearlStringifyArg, _enumvalues)                     \
+            MAP_LIST(PearlStringify, _enumvalues),                       \
             PearlStringify(_enumname ## Count)                      \
         ];                                                          \
     }                                                               \
@@ -128,6 +138,8 @@ extern void PearlNotMainQueue(void (^block)());
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+/** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
+extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 
 @interface PearlObjectUtils : NSObject
 

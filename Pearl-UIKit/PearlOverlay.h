@@ -29,13 +29,18 @@
  * Create an overlay view controller that controls an overlay message.
  *
  * @param title             The title of the overlay.
+ * @param activity          YES if the overlay should have an activity spinner.
+ * @param cancelOnTouch     If nil, the overlay will not inhibit touches.
+ *                          If set, the overlay will darken the rest of the window and a touch will fire the block.
+ *                          If the block returns NO, nothing will happen.  If it returns YES, the overlay will be cancelled.
  */
-- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity disableUserInteraction:(BOOL)disableUserInteraction;
+- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity cancelOnTouch:(BOOL (^)(void))cancelOnTouch;
 
 /**
  * Initializes and shows an overlay.  See -initWithTitle:
  */
 + (instancetype)showProgressOverlayWithTitle:(NSString *)title;
++ (instancetype)showProgressOverlayWithTitle:(NSString *)title cancelOnTouch:(BOOL (^)(void))cancelOnTouch;
 + (instancetype)showTemporaryOverlayWithTitle:(NSString *)title dismissAfter:(NSTimeInterval)seconds;
 
 #pragma mark ###############################

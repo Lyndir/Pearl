@@ -25,27 +25,44 @@
  * promote the sale, use or other dealings in this Software without
  * prior written authorization from the authors.
  */
- 
+
 #ifndef MAP_H_INCLUDED
 #define MAP_H_INCLUDED
- 
+
 #define EVAL0(...) __VA_ARGS__
 #define EVAL1(...) EVAL0 (EVAL0 (EVAL0 (__VA_ARGS__)))
 #define EVAL2(...) EVAL1 (EVAL1 (EVAL1 (__VA_ARGS__)))
 #define EVAL3(...) EVAL2 (EVAL2 (EVAL2 (__VA_ARGS__)))
 #define EVAL4(...) EVAL3 (EVAL3 (EVAL3 (__VA_ARGS__)))
 #define EVAL(...)  EVAL4 (EVAL4 (EVAL4 (__VA_ARGS__)))
- 
+
 #define MAP_END(...)
- 
 #define MAP_OUT
+#define MAP_COMMA ,
+
 #define MAP_GET_END() 0, MAP_END
-#define MAP_NEXT0(item, next, ...) next MAP_OUT
-#define MAP_NEXT1(item, next) MAP_NEXT0 (item, next, 0)
-#define MAP_NEXT(item, next)  MAP_NEXT1 (MAP_GET_END item, next)
- 
+#define MAP_NEXT0(test, next, ...) next MAP_OUT
+#define MAP_NEXT1(test, next) MAP_NEXT0 (test, next, 0)
+#define MAP_NEXT(test, next)  MAP_NEXT1 (MAP_GET_END test, next)
+
 #define MAP0(f, x, peek, ...) f(x) MAP_NEXT (peek, MAP1) (f, peek, __VA_ARGS__)
 #define MAP1(f, x, peek, ...) f(x) MAP_NEXT (peek, MAP0) (f, peek, __VA_ARGS__)
+
+#define MAP_LIST_NEXT1(test, next) MAP_NEXT0 (test, MAP_COMMA next, 0)
+#define MAP_LIST_NEXT(test, next)  MAP_LIST_NEXT1 (MAP_GET_END test, next)
+
+#define MAP_LIST0(f, x, peek, ...) f(x) MAP_LIST_NEXT (peek, MAP_LIST1) (f, peek, __VA_ARGS__)
+#define MAP_LIST1(f, x, peek, ...) f(x) MAP_LIST_NEXT (peek, MAP_LIST0) (f, peek, __VA_ARGS__)
+
+/**
+* Applies the function macro `f` to each of the remaining parameters.
+*/
 #define MAP(f, ...) EVAL (MAP1 (f, __VA_ARGS__, (), 0))
- 
+
+/**
+* Applies the function macro `f` to each of the remaining parameters and
+* inserts commas between the results.
+*/
+#define MAP_LIST(f, ...) EVAL (MAP_LIST1 (f, __VA_ARGS__, (), 0))
+
 #endif

@@ -19,6 +19,7 @@
 
 @interface NSTimer(PearlBlock)
 
-+ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id userInfo))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo;
++ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(NSTimer *))block repeats:(BOOL)yesOrNo;
++ (instancetype)scheduledTimerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(NSTimer *))block repeats:(BOOL)yesOrNo;
 
 @end

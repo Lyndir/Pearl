@@ -28,3 +28,4 @@
 #import "PearlResettable.h"
 #import "PearlStrings.h"
 #import "PearlStringUtils.h"
+#import "PearlTween.h"

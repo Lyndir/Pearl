@@ -68,7 +68,7 @@ static char actionBlocksKey;
         __strong id strongWeakSelf = weakSelf;
         block( change[NSKeyValueChangeOldKey], change[NSKeyValueChangeNewKey], [change[NSKeyValueChangeKindKey] unsignedIntegerValue],
                 strongWeakSelf );
-    } forKeyPath:keyPath options:NSKeyValueObservingOptionInitial context:nil];
+    } forKeyPath:keyPath options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 }
 
 - (void)removeKeyPathObservers {

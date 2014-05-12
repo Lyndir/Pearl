@@ -15,46 +15,25 @@
 //  Copyright 2012 lhunath (Maarten Billemont). All rights reserved.
 //
 
-@interface PearlBlock_NSTimer : NSObject
-
-- (id)initWithBlock:(void (^)(id userInfo))block;
-
-@end
-
-@implementation PearlBlock_NSTimer {
-
-    void (^block)(id userInfo);
-}
-
-- (id)initWithBlock:(void (^)(id userInfo))aBlock {
-
-    if (!(self = [super init]))
-        return nil;
-
-    block = [aBlock copy];
-
-    return self;
-}
-
-- (void)triggerWithUserInfo:(id)userInfo {
-
-    block( userInfo );
-}
-
-@end
-
 @implementation NSTimer(PearlBlock)
 
-static char blockTriggersKey;
++ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(NSTimer *))block repeats:(BOOL)yesOrNo {
 
-+ (instancetype)timerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(id))block userInfo:(id)userInfo repeats:(BOOL)yesOrNo {
+    return [self timerWithTimeInterval:ti target:self selector:@selector( PearlBlock_firedTimer: )
+                              userInfo:@{ @"block" : [block copy] } repeats:yesOrNo];
 
-    PearlBlock_NSTimer *blockTrigger = [[PearlBlock_NSTimer alloc] initWithBlock:block];
-    NSTimer *timer = [self timerWithTimeInterval:ti target:blockTrigger selector:@selector(triggerWithUserInfo:)
-                                        userInfo:userInfo repeats:yesOrNo];
-    objc_setAssociatedObject( timer, &blockTriggersKey, blockTrigger, OBJC_ASSOCIATION_RETAIN );
+}
 
-    return timer;
++ (instancetype)scheduledTimerWithTimeInterval:(NSTimeInterval)ti block:(void (^)(NSTimer *))block repeats:(BOOL)yesOrNo {
+
+    return [self scheduledTimerWithTimeInterval:ti target:self selector:@selector( PearlBlock_firedTimer: )
+                                       userInfo:@{ @"block" : [block copy] } repeats:yesOrNo];
+}
+
++ (void)PearlBlock_firedTimer:(NSTimer *)timer {
+
+    void (^block)(NSTimer *) = timer.userInfo[@"block"];
+    block( timer );
 }
 
 @end

@@ -9,19 +9,17 @@
  */
 
 //
-//  NSManagedObject(Pearl).h
-//  NSManagedObject(Pearl)
+//  UITextView(PearlAttributes).h
+//  UITextView(PearlAttributes)
 //
-//  Created by lhunath on 2014-04-12.
+//  Created by lhunath on 2014-05-09.
 //  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 
-@interface NSManagedObject(Pearl)
+@interface UITextView(PearlAttributes)
 
-+ (instancetype)insertNewObjectInContext:(NSManagedObjectContext *)context;
-+ (instancetype)existingObjectWithID:(NSManagedObjectID *)objectID inContext:(NSManagedObjectContext *)context;
+- (NSDictionary *)textAttributes;
 
 @end

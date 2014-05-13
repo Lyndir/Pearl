@@ -29,4 +29,21 @@
     return nil;
 }
 
++ (instancetype)existingObjectWithID:(NSManagedObjectID *)objectID inContext:(NSManagedObjectContext *)context {
+
+    if (!objectID || !context)
+        return nil;
+
+    NSError *error = nil;
+    NSManagedObject *element = [context existingObjectWithID:objectID error:&error];
+    if (!element)
+        err( @"Failed to load %@: %@", self, error );
+    else if (element.isDeleted) {
+        wrn( @"%@ was deleted: %@, returning nil instead.", self, element );
+        return nil;
+    }
+
+    return element;
+}
+
 @end

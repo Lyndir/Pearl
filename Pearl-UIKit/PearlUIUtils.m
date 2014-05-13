@@ -925,27 +925,10 @@ static char dismissRecognizerForcedKey;
     [dismissableResponders addObjectsFromArray:viewsArray];
 }
 
-+ (UIWindow *)findWindow {
-
-    UIWindow *window = UIApp.keyWindow;
-    if (!window)
-        for (UIWindow *aWindow in UIApp.windows)
-            if ([aWindow findFirstResponderInHierarchy]) {
-                window = aWindow;
-                break;
-            }
-    if (!window)
-        window = (UIApp.windows)[0];
-
-    return window;
-}
-
 + (void)keyboardWillShow:(NSNotification *)n {
 
-    UIView *responder = [[self findWindow] findFirstResponderInHierarchy];
-    if (!responder)
-            // Sometimes we seem to get these notifications even though there's no responder, and no keyboard shows up.
-            // Don't know why but since no keyboard actually appears in this case, ignore them.
+    id responder = [UIResponder findFirstResponder];
+    if (![responder isKindOfClass:[UIView class]])
         return;
 
     // Find the active scrollview in our dictionary
@@ -992,7 +975,7 @@ static char dismissRecognizerForcedKey;
     CGRect keyboardScrollNewFrame = keyboardScrollView_resized.frame;
     keyboardScrollNewFrame.size.height -= hiddenRect.size.height;
 
-    CGRect responderRect = [keyboardScrollView_resized convertRect:responder.bounds fromView:responder];
+    CGRect responderRect = [keyboardScrollView_resized convertRect:[responder bounds] fromView:responder];
 
     if (responderRect.origin.y < keyboardScrollNewOffset.y)
         keyboardScrollNewOffset.y = 0;

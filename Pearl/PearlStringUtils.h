@@ -20,8 +20,8 @@
 
 __BEGIN_DECLS
 extern NSString *strf(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
-extern NSAttributedString *stra(NSString *string, NSDictionary *attributes);
-extern NSAttributedString *strra(NSString *string, NSRange range, NSDictionary *attributes);
+extern NSMutableAttributedString *stra(id string, NSDictionary *attributes);
+extern NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attributes);
 extern NSString *strl(NSString *format, ...) NS_FORMAT_FUNCTION(1, 0);
 extern NSString *strtl(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION(2, 0);
 

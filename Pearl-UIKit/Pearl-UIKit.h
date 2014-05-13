@@ -18,6 +18,7 @@
 #import "PearlOverlay.h"
 #import "PearlRootViewController.h"
 #import "PearlSheet.h"
+#import "PearlSizedTextView.h"
 #import "PearlUICollectionView.h"
 #import "PearlUIDebug.h"
 #import "PearlUINavigationBar.h"
@@ -31,3 +32,4 @@
 #import "UIResponder+PearlFirstResponder.h"
 #import "UIScrollView+PearlAdjustInsets.h"
 #import "UIScrollView+PearlFlashingIndicators.h"
+#import "UITextView+PearlAttributes.h"

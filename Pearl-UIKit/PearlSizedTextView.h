@@ -1,3 +1,4 @@
+
 /**
  * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
  *
@@ -9,19 +10,15 @@
  */
 
 //
-//  NSManagedObject(Pearl).h
-//  NSManagedObject(Pearl)
+//  PearlSizedTextView.h
+//  PearlSizedTextView
 //
-//  Created by lhunath on 2014-04-12.
+//  Created by lhunath on 2014-05-09.
 //  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import <UIKit/UIKit.h>
 
-@interface NSManagedObject(Pearl)
 
-+ (instancetype)insertNewObjectInContext:(NSManagedObjectContext *)context;
-+ (instancetype)existingObjectWithID:(NSManagedObjectID *)objectID inContext:(NSManagedObjectContext *)context;
-
+@interface PearlSizedTextView : UITextView
 @end

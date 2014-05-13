@@ -46,7 +46,7 @@
 
     PearlMainQueue( ^{
         _title = title;
-        _backgroundView = [[PearlUIView alloc] initWithFrame:UIApp.keyWindow.bounds];
+        _backgroundView = [[PearlUIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
         _backgroundView.backgroundColor = disableUserInteraction? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
         _backgroundView.ignoreTouches = disableUserInteraction? NO: YES;
 
@@ -99,7 +99,7 @@
 - (PearlOverlay *)showOverlay {
 
     PearlMainQueue( ^{
-        [UIApp.keyWindow addSubview:self.backgroundView];
+        [UIApp.windows[0] addSubview:self.backgroundView];
 
         self.backgroundView.alpha = 0;
         CGRectSetY( self.backgroundView.frame, self.backgroundView.frame.origin.y + 10 );

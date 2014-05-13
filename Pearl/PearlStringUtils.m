@@ -27,18 +27,30 @@ NSString *strf(NSString *format, ...) {
     return string;
 }
 
-NSAttributedString *stra(NSString *string, NSDictionary *attributes) {
+NSMutableAttributedString *stra(id string, NSDictionary *attributes) {
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-    [attributedString setAttributes:attributes range:NSMakeRange(0, [string length])];
-    return attributedString;
+    if ([string isKindOfClass:[NSMutableAttributedString class]]) {
+        [string addAttributes:attributes range:NSMakeRange( 0, [string length] )];
+        return string;
+    }
+    if ([string isKindOfClass:[NSAttributedString class]])
+        return stra( [string mutableCopy], attributes );
+    if ([string isKindOfClass:[NSString class]])
+        return [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
+    return stra( [string description], attributes );
 }
 
-NSAttributedString *strra(NSString *string, NSRange range, NSDictionary *attributes) {
+NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attributes) {
 
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-    [attributedString setAttributes:attributes range:range];
-    return attributedString;
+    if ([string isKindOfClass:[NSMutableAttributedString class]]) {
+        [string addAttributes:attributes range:range];
+        return string;
+    }
+    if ([string isKindOfClass:[NSAttributedString class]])
+        return strra( [string mutableCopy], range, attributes );
+    if ([string isKindOfClass:[NSString class]])
+        return strra( [[NSMutableAttributedString alloc] initWithString:string], range, attributes);
+    return strra( [string description], range, attributes );
 }
 
 NSString *strl(NSString *format, ...) {

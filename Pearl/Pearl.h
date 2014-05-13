@@ -2,6 +2,7 @@
 #error PEARL used but not enabled.  If you want to use this library, first enable it with #define PEARL in your Pearl prefix file.
 #endif
 
+#import "map-macro.h"
 #import "NSArray+Indexing.h"
 #import "NSArray+Pearl.h"
 #import "NSBundle+PearlMutableInfo.h"
@@ -27,3 +28,4 @@
 #import "PearlResettable.h"
 #import "PearlStrings.h"
 #import "PearlStringUtils.h"
+#import "PearlTween.h"

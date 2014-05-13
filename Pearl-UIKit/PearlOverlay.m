@@ -25,6 +25,7 @@
 @property(nonatomic, strong) UIView *overlayView;
 @property(nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) UITextView *titleView;
+@property(nonatomic, copy) BOOL (^cancelOnTouch)(void);
 
 @end
 
@@ -39,16 +40,20 @@
     return activeOverlays;
 }
 
-- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity disableUserInteraction:(BOOL)disableUserInteraction {
+- (id)initWithTitle:(NSString *)title withActivity:(BOOL)activity cancelOnTouch:(BOOL (^)(void))cancelOnTouch {
 
     if (!(self = [super init]))
         return nil;
 
+    self.cancelOnTouch = cancelOnTouch;
+  
     PearlMainQueue( ^{
         _title = title;
         _backgroundView = [[PearlUIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
-        _backgroundView.backgroundColor = disableUserInteraction? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
-        _backgroundView.ignoreTouches = disableUserInteraction? NO: YES;
+        _backgroundView.backgroundColor = self.cancelOnTouch? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
+        _backgroundView.ignoreTouches = !self.cancelOnTouch;
+        if (self.cancelOnTouch)
+          [_backgroundView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didRecognizeTap:)]];
 
         _overlayView = [UIView new];
         _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6f];
@@ -81,14 +86,25 @@
     return self;
 }
 
+- (void)didRecognizeTap:(UITapGestureRecognizer *)didRecognizeTap {
+  if (didRecognizeTap.state == UIGestureRecognizerStateEnded && self.cancelOnTouch)
+    if (self.cancelOnTouch())
+      [self cancelOverlayAnimated:YES];
+}
+
 + (instancetype)showProgressOverlayWithTitle:(NSString *)title {
 
-    return [[[self alloc] initWithTitle:title withActivity:YES disableUserInteraction:YES] showOverlay];
+    return [self showProgressOverlayWithTitle:title cancelOnTouch:^BOOL{ return NO; }];
+}
+
++ (instancetype)showProgressOverlayWithTitle:(NSString *)title cancelOnTouch:(BOOL (^)(void))cancelOnTouch {
+
+    return [[[self alloc] initWithTitle:title withActivity:YES cancelOnTouch:cancelOnTouch] showOverlay];
 }
 
 + (instancetype)showTemporaryOverlayWithTitle:(NSString *)title dismissAfter:(NSTimeInterval)seconds {
 
-    PearlOverlay *overlay = [[[self alloc] initWithTitle:title withActivity:NO disableUserInteraction:NO] showOverlay];
+    PearlOverlay *overlay = [[[self alloc] initWithTitle:title withActivity:NO cancelOnTouch:nil] showOverlay];
     PearlMainQueueAfter( seconds, ^{
         [overlay cancelOverlayAnimated:YES];
     } );

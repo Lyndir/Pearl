@@ -80,12 +80,12 @@
         va_end(otherTitlesList);
     }
 
-    PearlMainThreadStart {
+    PearlMainQueue( ^{
         if (initBlock)
-            initBlock( _sheetView );
+            initBlock( self.sheetView );
         if (cancelTitle)
-            _sheetView.cancelButtonIndex = [_sheetView addButtonWithTitle:cancelTitle];
-    } PearlMainThreadEnd
+            self.sheetView.cancelButtonIndex = [self.sheetView addButtonWithTitle:cancelTitle];
+    } );
 
     return self;
 }

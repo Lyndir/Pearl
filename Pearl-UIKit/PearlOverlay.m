@@ -48,39 +48,39 @@
     self.cancelOnTouch = cancelOnTouch;
   
     PearlMainQueue( ^{
-        _title = title;
-        _backgroundView = [[PearlUIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
-        _backgroundView.backgroundColor = self.cancelOnTouch? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
-        _backgroundView.ignoreTouches = !self.cancelOnTouch;
+        self.title = title;
+        self.backgroundView = [[PearlUIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
+        self.backgroundView.backgroundColor = self.cancelOnTouch? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
+        self.backgroundView.ignoreTouches = !self.cancelOnTouch;
         if (self.cancelOnTouch)
-          [_backgroundView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didRecognizeTap:)]];
+          [self.backgroundView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didRecognizeTap:)]];
 
-        _overlayView = [UIView new];
-        _overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6f];
-        _overlayView.layer.cornerRadius = 8;
-        [_backgroundView addSubview:_overlayView];
+        self.overlayView = [UIView new];
+        self.overlayView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6f];
+        self.overlayView.layer.cornerRadius = 8;
+        [self.backgroundView addSubview:self.overlayView];
 
-        _titleView = [UITextView new];
-        _titleView.text = title;
-        _titleView.textColor = [UIColor whiteColor];
-        _titleView.textAlignment = NSTextAlignmentCenter;
-        _titleView.font = [UIFont boldSystemFontOfSize:16];
-        _titleView.backgroundColor = [UIColor clearColor];
-        [_overlayView addSubview:_titleView];
-        [_titleView sizeToFit];
+        self.titleView = [UITextView new];
+        self.titleView.text = title;
+        self.titleView.textColor = [UIColor whiteColor];
+        self.titleView.textAlignment = NSTextAlignmentCenter;
+        self.titleView.font = [UIFont boldSystemFontOfSize:16];
+        self.titleView.backgroundColor = [UIColor clearColor];
+        [self.overlayView addSubview:self.titleView];
+        [self.titleView sizeToFit];
 
         if (activity) {
-            _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-            [_activityIndicator startAnimating];
-            [_overlayView addSubview:_activityIndicator];
-            [_activityIndicator sizeToFit];
+            self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+            [self.activityIndicator startAnimating];
+            [self.overlayView addSubview:self.activityIndicator];
+            [self.activityIndicator sizeToFit];
         }
 
-        [_overlayView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, 16 + _titleView.frame.size.height + _activityIndicator.frame.size.height )
+        [self.overlayView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, 16 + self.titleView.frame.size.height + self.activityIndicator.frame.size.height )
                    andParentPaddingTop:CGFLOAT_MAX right:20 bottom:20 left:20];
-        [_titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MIN )
+        [self.titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MIN )
                  andParentPaddingTop:CGFLOAT_MAX right:20 bottom:8 left:20];
-        [_activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
+        [self.activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
     } );
 
     return self;

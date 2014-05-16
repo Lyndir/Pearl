@@ -72,12 +72,12 @@
         va_end(otherTitlesList);
     }
 
-    PearlMainThreadStart{
+    PearlMainQueue( ^{
         if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
             // iOS 5+
-            _alertView.alertViewStyle = viewStyle;
+            self.alertView.alertViewStyle = viewStyle;
             if (viewStyle != UIAlertViewStyleDefault)
-                _alertField = [self.alertView textFieldAtIndex:0];
+                self.alertField = [self.alertView textFieldAtIndex:0];
         }
         else if (viewStyle != UIAlertViewStyleDefault) {
             // iOS <5
@@ -89,23 +89,23 @@
             alertLabel.shadowOffset = CGSizeMake( 0, -1 );
             alertLabel.textAlignment = NSTextAlignmentCenter;
             alertLabel.text = message;
-            _alertView.message = @"\n\n\n";
+            self.alertView.message = @"\n\n\n";
 
-            _alertField = [[UITextField alloc] initWithFrame:CGRectMake( 16, 83, 252, 25 )];
-            _alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
-            _alertField.borderStyle = UITextBorderStyleRoundedRect;
+            self.alertField = [[UITextField alloc] initWithFrame:CGRectMake( 16, 83, 252, 25 )];
+            self.alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+            self.alertField.borderStyle = UITextBorderStyleRoundedRect;
             if (viewStyle == UIAlertViewStyleSecureTextInput)
-                _alertField.secureTextEntry = YES;
+                self.alertField.secureTextEntry = YES;
 
-            [_alertView addSubview:alertLabel];
-            [_alertView addSubview:self.alertField];
+            [self.alertView addSubview:alertLabel];
+            [self.alertView addSubview:self.alertField];
         }
 
         if (initBlock)
-            initBlock( _alertView, _alertField );
+            initBlock( self.alertView, self.alertField );
 
-        [_alertField becomeFirstResponder];
-    } PearlMainThreadEnd
+        [self.alertField becomeFirstResponder];
+    } );
 
     return self;
 }

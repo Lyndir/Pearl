@@ -78,6 +78,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
         // Already at target.
         if (reuseTween)
             _tweens[tw].active = NO;
+        free( keyPathString );
         return;
     }
     if (reuseTween)

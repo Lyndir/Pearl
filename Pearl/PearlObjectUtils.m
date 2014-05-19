@@ -53,7 +53,7 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
   va_list objs;
   va_start(objs, firstHashCode);
   NSUInteger hashCode = 0;
-  for (NSUInteger nextHashCode = firstHashCode; nextHashCode != -1; nextHashCode = va_arg(objs, int))
+  for (NSUInteger nextHashCode = firstHashCode; nextHashCode != (NSUInteger)-1; nextHashCode = va_arg(objs, NSUInteger))
     hashCode = hashCode * 31 + nextHashCode;
   return hashCode;
 }

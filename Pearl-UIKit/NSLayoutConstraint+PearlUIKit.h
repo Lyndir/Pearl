@@ -8,8 +8,23 @@
 @interface NSLayoutConstraint (PearlUIKit)
 
 /**
- * Apply any changes these constraints have on the layout that have not yet been applied.
+ * Apply any layout changes incurred by this constraint's items.
  */
-- (void)apply;
+- (void)layout;
+
+/**
+ * Apply the given constant and the layout changes this incurs on the constraint's items.
+ */
+- (void)layoutWithConstant:(CGFloat)constant;
+
+/**
+ * Apply the given priority and the layout changes this incurs on the constraint's items.
+ */
+- (void)layoutWithPriority:(UILayoutPriority)priority;
+
+/**
+ * Apply the given constant and priority and the layout changes this incurs on the constraint's items.
+ */
+- (void)layoutWithConstant:(CGFloat)constant priority:(UILayoutPriority)priority;
 
 @end

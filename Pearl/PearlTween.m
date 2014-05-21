@@ -78,6 +78,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
         // Already at target.
         if (reuseTween)
             _tweens[tw].active = NO;
+        free( keyPathString );
         return;
     }
     if (reuseTween)
@@ -217,6 +218,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
         [oldValue getValue:buf];
         memcpy( buf + valueOffset, &value, sizeof( float ) );
         newValue = [NSValue valueWithBytes:buf objCType:[oldValue objCType]];
+        // FIXME: Leaks buf.
     }
     else
         err( @"Don't know how to handle: %@, type: %@", oldValue, [oldValue class] );

@@ -31,12 +31,12 @@ typedef struct {
     size_t valueSize;
     NSUInteger valueOffset;
     __unsafe_unretained id target;
-} PropertyTween;
+} PearlTween;
 
 @implementation NSObject(PearlTween)
 
 static const char PearlTween_timer;
-static PropertyTween *_tweens = NULL;
+static PearlTween *_tweens = NULL;
 static NSUInteger _tweenCount = 0;
 static CFAbsoluteTime _lastFiredTime = 0;
 
@@ -56,11 +56,11 @@ static CFAbsoluteTime _lastFiredTime = 0;
     // Get the current value at the keyPath.
     float from = [self valueForKeyPath:keyPath valueSize:valueSize valueOffset:valueOffset];
 
-    // Find a PropertyTween to use.
+    // Find a PearlTween to use.
     NSUInteger tw = 0;
     BOOL reuseTween = NO, resetTween = YES;
     for (; tw < _tweenCount; ++tw) {
-        PropertyTween tween = _tweens[tw];
+        PearlTween tween = _tweens[tw];
 
         if (!tween.active) {
             // Inactive tween, reactivate it.
@@ -87,11 +87,11 @@ static CFAbsoluteTime _lastFiredTime = 0;
     else {
         // Make a new tween.
         tw = _tweenCount;
-        _tweens = realloc( _tweens, sizeof( PropertyTween ) * (++_tweenCount) );
+        _tweens = realloc( _tweens, sizeof( PearlTween ) * (++_tweenCount) );
     }
 
     // Set up our tween.
-    PropertyTween tween = _tweens[tw];
+    PearlTween tween = _tweens[tw];
     float t = (float)duration;
     float vi = resetTween? 0: tween.v;
     //ai = Sign(to - from) * 2000;
@@ -106,7 +106,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
         a = tween.a + Sign(a - tween.a) * 2000;*/
 
 //    dbg(@"%f -> %f, v: %f, ai: %f, a: %f", to, from, vi, ai, a);
-    _tweens[tw] = (PropertyTween){
+    _tweens[tw] = (PearlTween){
         YES,                            // BOOL active
         keyPathString,                  // char *keyPath
         0,                              // NSTimeInterval elapsed
@@ -142,7 +142,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
 
     BOOL deactivate = YES;
     for (NSUInteger tw = 0; tw < _tweenCount; ++tw) {
-        PropertyTween tween = _tweens[tw];
+        PearlTween tween = _tweens[tw];
 
         // Skip inactive tweens.
         if (!tween.active)

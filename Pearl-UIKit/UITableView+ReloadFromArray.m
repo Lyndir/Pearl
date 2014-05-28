@@ -21,7 +21,7 @@
   [self beginUpdates];
 
   // First remove deleted rows.
-  for (NSInteger index = [workArray count] - 1; index >= 0; --index) {
+  for (NSInteger index = (NSInteger)[workArray count] - 1; index >= 0; --index) {
     id row = workArray[(NSUInteger)index];
     if (![toArray containsObject:row]) {
       [self deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
@@ -34,7 +34,7 @@
   for (NSUInteger index = 0; index < [toArray count]; ++index) {
     id row = toArray[index];
     if (![workArray containsObject:row]) {
-      [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
+      [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:(NSInteger)index inSection:section] ]
                   withRowAnimation:animation];
       [workArray insertObject:row atIndex:MIN( [workArray count], index )];
     }
@@ -45,8 +45,8 @@
     id row = workArray[index];
     NSUInteger toIndex = [toArray indexOfObject:row];
     if (toIndex != index)
-      [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:[fromArray indexOfObject:row] inSection:section]
-                   toIndexPath:[NSIndexPath indexPathForRow:toIndex inSection:section]];
+      [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[fromArray indexOfObject:row] inSection:section]
+                   toIndexPath:[NSIndexPath indexPathForRow:(NSInteger)toIndex inSection:section]];
   }
 
   [self endUpdates];

@@ -28,7 +28,7 @@
             if ([info respondsToSelector:@selector(fullDescription)])
                 infoString = [[info fullDescription] mutableCopy];
             else if ([info isKindOfClass:[NSException class]])
-                infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [info name], [info reason], [info userInfo]];
+                infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [(NSException *)info name], [(NSException *)info reason], [(NSException *)info userInfo]];
             else if ([info respondsToSelector:@selector(debugDescription)])
                 infoString = [[info debugDescription] mutableCopy];
             else

@@ -38,7 +38,9 @@
 #define WEAK_OR_UNRETAINED          unsafe_unretained
 #endif
 
+__BEGIN_DECLS
 extern NSString *const PearlConfigChangedNotification;
+__END_DECLS
 
 @protocol PearlConfigDelegate<NSObject>
 

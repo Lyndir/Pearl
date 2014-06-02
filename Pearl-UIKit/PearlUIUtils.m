@@ -107,6 +107,7 @@ UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtrac
     CGFloat left = topLeftFrom.x <= 0 && bottomRightFrom.x < insetRect.size.width? MAX(0, topLeftInset.x): 0;
     CGFloat bottom = bottomRightFrom.y >= insetRect.size.height && topLeftFrom.y > 0? MAX(0, bottomRightInset.y): 0;
     CGFloat right = bottomRightFrom.x >= insetRect.size.width && topLeftFrom.x > 0? MAX(0, bottomRightInset.x): 0;
+
     return UIEdgeInsetsMake( top, left, bottom, right );
 }
 

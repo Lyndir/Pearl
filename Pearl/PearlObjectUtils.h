@@ -112,16 +112,17 @@
 #define PearlStringify(arg) @#arg
 #define PearlEnum(_enumname, _enumvalues...)                        \
     typedef NS_ENUM(NSUInteger, _enumname) {                        \
-        _enumvalues, _enumname ## Count                             \
+        _enumvalues                                                 \
     };                                                              \
                                                                     \
     static const NSArray *_enumname ## Names;                       \
+    static NSUInteger _enumname ## Count;                           \
     __attribute__ ((constructor)) static void                       \
      _init_ ## _enumname () {                                       \
         _enumname ## Names = @[                                     \
-            MAP_LIST(PearlStringify, _enumvalues),                       \
-            PearlStringify(_enumname ## Count)                      \
+            MAP_LIST(PearlStringify, _enumvalues)                   \
         ];                                                          \
+        _enumname ## Count = [_enumname ## Names count];            \
     }                                                               \
     __attribute__((unused)) static _enumname                        \
     _enumname ## FromNSString(NSString *name) {                     \
@@ -129,9 +130,12 @@
     }                                                               \
     __attribute__((unused)) static NSString*                        \
     NSStringFrom ## _enumname(_enumname value) {                    \
-        return [_enumname ## Names objectAtIndex:value];            \
+        return [_enumname ## Names objectAtIndex:value]?:           \
+                   strf(@"[Unknown %@: %ld]",                       \
+                       PearlStringify(_enumname), (long)value);     \
     }
 
+__BEGIN_DECLS
 extern void PearlMainQueue(void (^block)());
 extern void PearlNotMainQueue(void (^block)());
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
@@ -139,6 +143,7 @@ extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
+__END_DECLS
 
 @interface PearlObjectUtils : NSObject
 

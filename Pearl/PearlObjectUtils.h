@@ -47,10 +47,6 @@
             MAP_LIST(NilToNSNull, __VA_ARGS__)
 #define NSNullToNils(...)                                                                        \
             MAP_LIST(NSNullToNil, __VA_ARGS__)
-#define IfNotNilElse(__NN,__N)                                                                  \
-            ({ __typeof__(__NN) __nn = __NN; NSNullToNil(__nn)? __nn: __N; })
-#define IfElse(__T, __F)                                                                        \
-            ({ __typeof__(__T) __t = __T; __t? __t: __F; })
 #define PearlNil (id)(__bridge void *)nil
 #define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 

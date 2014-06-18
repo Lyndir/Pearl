@@ -387,15 +387,10 @@ static NSMutableSet *dismissableResponders;
 
 @implementation UIView(PearlUIUtils)
 
-static char dismissRecognizerFieldKey;
-static char dismissRecognizerForcedKey;
+- (UILongPressGestureRecognizer *)dismissKeyboardOnTouch {
 
-- (UITapGestureRecognizer *)dismissKeyboardForField:(UIView *)field onTouchForced:(BOOL)forced {
-
-    UITapGestureRecognizer *dismissRecognizer = [[UITapGestureRecognizer alloc]
+    UILongPressGestureRecognizer *dismissRecognizer = [[UILongPressGestureRecognizer alloc]
             initWithTarget:self action:@selector(didRecognizeDismissKeyboard:)];
-    objc_setAssociatedObject( dismissRecognizer, &dismissRecognizerFieldKey, field, OBJC_ASSOCIATION_RETAIN );
-    objc_setAssociatedObject( dismissRecognizer, &dismissRecognizerForcedKey, @(forced), OBJC_ASSOCIATION_RETAIN );
     [self addGestureRecognizer:dismissRecognizer];
 
     return dismissRecognizer;
@@ -403,14 +398,13 @@ static char dismissRecognizerForcedKey;
 
 - (void)didRecognizeDismissKeyboard:(UITapGestureRecognizer *)dismissRecognizer {
 
-    UIView *field = objc_getAssociatedObject( dismissRecognizer, &dismissRecognizerFieldKey );
-    BOOL forced = [objc_getAssociatedObject( dismissRecognizer, &dismissRecognizerForcedKey ) boolValue];
-
-    if (CGRectContainsPoint( field.bounds, [dismissRecognizer locationInView:field] ))
-            // Touched field.
+    UIResponder *responder = [UIResponder findFirstResponder];
+    if ([responder isKindOfClass:[UIView class]] &&
+        CGRectContainsPoint( ((UIView *)responder).bounds, [dismissRecognizer locationInView:(UIView *)responder] ))
+        // Touched field.
         return;
 
-    [self endEditing:forced];
+    [responder resignFirstResponder];
 }
 
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations

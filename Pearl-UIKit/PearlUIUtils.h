@@ -137,7 +137,7 @@ __END_DECLS
 
 @interface UIView(PearlUIUtils)
 
-- (UITapGestureRecognizer *)dismissKeyboardForField:(UIView *)field onTouchForced:(BOOL)forced;
+- (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
                  completion:(void (^)(BOOL finished))completion;
 /** Recursively iterate the hierarchy of this view and set UIScrollView contentInsets to dodge translucent bars. */

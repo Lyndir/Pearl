@@ -8,12 +8,12 @@
 
 @implementation UITableView(ReloadFromArray)
 
-- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSMutableArray *)toArray inSection:(NSInteger)section {
+- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section {
 
   [self reloadRowsFromArray:fromArray toArray:toArray inSection:section withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSMutableArray *)toArray inSection:(NSInteger)section
+- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section
            withRowAnimation:(UITableViewRowAnimation)animation {
 
   NSMutableArray *workArray = [fromArray mutableCopy];

@@ -9,15 +9,19 @@
  */
 
 //
-//  NSArray(Pearl)
+//  UITableView(PearlReloadFromArray)
 //
-//  Created by Maarten Billemont on 1/23/2014.
+//  Created by Maarten Billemont on 2014-05-21.
 //  Copyright 2014 lhunath (Maarten Billemont). All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface NSArray (Pearl)
-- (id)firstObjectWhere:(BOOL (^)(id obj))predicate;
-- (id)onlyObjectWhere:(BOOL (^)(id obj))predicate;
+
+@interface UITableView(PearlReloadFromArray)
+
+- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section;
+- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section
+           withRowAnimation:(UITableViewRowAnimation)animation;
+
 @end

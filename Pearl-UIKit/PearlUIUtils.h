@@ -43,15 +43,15 @@ extern CGRect CGRectWithOrigin(CGRect rect, CGPoint origin);
 extern CGRect CGRectWithSize(CGRect rect, CGSize size);
 
 // Calculate the point of a certain part of a CGRect.
-extern CGPoint CGPointFromCGRectCenter(CGRect rect);
-extern CGPoint CGPointFromCGRectTop(CGRect rect);
-extern CGPoint CGPointFromCGRectRight(CGRect rect);
-extern CGPoint CGPointFromCGRectBottom(CGRect rect);
-extern CGPoint CGPointFromCGRectLeft(CGRect rect);
-extern CGPoint CGPointFromCGRectTopLeft(CGRect rect);
-extern CGPoint CGPointFromCGRectTopRight(CGRect rect);
-extern CGPoint CGPointFromCGRectBottomRight(CGRect rect);
-extern CGPoint CGPointFromCGRectBottomLeft(CGRect rect);
+extern CGPoint CGRectGetCenter(CGRect rect);
+extern CGPoint CGRectGetTop(CGRect rect);
+extern CGPoint CGRectGetRight(CGRect rect);
+extern CGPoint CGRectGetBottom(CGRect rect);
+extern CGPoint CGRectGetLeft(CGRect rect);
+extern CGPoint CGRectGetTopLeft(CGRect rect);
+extern CGPoint CGRectGetTopRight(CGRect rect);
+extern CGPoint CGRectGetBottomRight(CGRect rect);
+extern CGPoint CGRectGetBottomLeft(CGRect rect);
 
 /** Get the UIEdgeInsets that insets each edge by the largest edge of either a or b. */
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b);

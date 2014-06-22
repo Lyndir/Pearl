@@ -46,60 +46,62 @@ CGRect CGRectWithSize(CGRect rect, CGSize size) {
     return (CGRect){ rect.origin, size };
 }
 
-CGPoint CGPointFromCGRectCenter(CGRect rect) {
+CGPoint CGRectGetCenter(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height / 2 );
 }
 
-CGPoint CGPointFromCGRectTop(CGRect rect) {
+CGPoint CGRectGetTop(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y );
 }
 
-CGPoint CGPointFromCGRectRight(CGRect rect) {
+CGPoint CGRectGetRight(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2 );
 }
 
-CGPoint CGPointFromCGRectBottom(CGRect rect) {
+CGPoint CGRectGetBottom(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height );
 }
 
-CGPoint CGPointFromCGRectLeft(CGRect rect) {
+CGPoint CGRectGetLeft(CGRect rect) {
 
     return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height / 2 );
 }
 
-CGPoint CGPointFromCGRectTopLeft(CGRect rect) {
+CGPoint CGRectGetTopLeft(CGRect rect) {
 
     return CGPointMake( rect.origin.x, rect.origin.y );
 }
 
-CGPoint CGPointFromCGRectTopRight(CGRect rect) {
+CGPoint CGRectGetTopRight(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y );
 }
 
-CGPoint CGPointFromCGRectBottomRight(CGRect rect) {
+CGPoint CGRectGetBottomRight(CGRect rect) {
 
     return CGPointMake( rect.origin.x + rect.size.width, rect.origin.y + rect.size.height );
 }
 
-CGPoint CGPointFromCGRectBottomLeft(CGRect rect) {
+CGPoint CGRectGetBottomLeft(CGRect rect) {
 
     return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height );
 }
 
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {
+
     return UIEdgeInsetsMake( MAX(a.top, b.top), MAX(a.left, b.left), MAX(a.bottom, b.bottom), MAX(a.right, b.right) );
 }
+
 UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect) {
 
-    CGPoint topLeftBounds = CGPointFromCGRectTopLeft( insetRect );
-    CGPoint bottomRightBounds = CGPointFromCGRectBottomRight( insetRect );
-    CGPoint topLeftFrom = CGPointFromCGRectTopLeft( subtractRect );
-    CGPoint bottomRightFrom = CGPointFromCGRectBottomRight( subtractRect );
+    CGPoint topLeftBounds = CGRectGetTopLeft( insetRect );
+    CGPoint bottomRightBounds = CGRectGetBottomRight( insetRect );
+    CGPoint topLeftFrom = CGRectGetTopLeft( subtractRect );
+    CGPoint bottomRightFrom = CGRectGetBottomRight( subtractRect );
     CGPoint topLeftInset = CGPointMinusCGPoint( bottomRightFrom, topLeftBounds );
     CGPoint bottomRightInset = CGPointMinusCGPoint( bottomRightBounds, topLeftFrom );
 

@@ -25,12 +25,50 @@ void PearlMainQueue(void (^block)()) {
         dispatch_async(dispatch_get_main_queue(), block);
 }
 
+void PearlMainQueueWait(void (^block)()) {
+
+    if ([NSThread isMainThread])
+        block();
+    else {
+        dispatch_group_t waitGroup = dispatch_group_create();
+        dispatch_group_enter( waitGroup );
+        dispatch_async( dispatch_get_main_queue(), ^{
+            @try {
+                block();
+            }
+            @finally {
+                dispatch_group_leave( waitGroup );
+            }
+        } );
+        dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+    }
+}
+
 void PearlNotMainQueue(void (^block)()) {
 
     if (![NSThread isMainThread])
         block();
     else
         dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+}
+
+void PearlNotMainQueueWait(void (^block)()) {
+
+    if (![NSThread isMainThread])
+        block();
+    else {
+        dispatch_group_t waitGroup = dispatch_group_create();
+        dispatch_group_enter( waitGroup );
+        dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
+            @try {
+                block();
+            }
+            @finally {
+                dispatch_group_leave( waitGroup );
+            }
+        } );
+        dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+    }
 }
 
 void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)()) {

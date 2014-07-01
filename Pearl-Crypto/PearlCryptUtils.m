@@ -90,7 +90,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
                                               (long)status];
         default:
             wrn(@"Security Error status code not known: %ld", (long)status);
-            return PearlString( @"Unknown status (%ld).", (long)status );
+            return strf( @"Unknown status (%ld).", (long)status );
     }
 }
 
@@ -191,7 +191,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
     free( hmac );
 
     // Extract otpLength digits out of the OTP data.
-    return PearlString( PearlString( @"%%0%lud", (long)otpLength ), otp % (int)powf( 10, otpLength ) );
+    return strf( strf( @"%%0%lud", (long)otpLength ), otp % (int)powf( 10, otpLength ) );
 }
 
 // Credits to Berin Lautenbach's "Importing an iPhone RSA public key into a Java app" -- http://blog.wingsofhermes.org/?p=42

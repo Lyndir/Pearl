@@ -78,7 +78,7 @@
     while (constraintHolder && ![constraintHolder.constraints containsObject:self])
       constraintHolder = [constraintHolder superview];
   }
-  return constraintHolder;
+  return constraintHolder?: self.firstItem;
 }
 
 + (UIView *)constraintHolderForConstraints:(NSArray *)layoutConstraints {

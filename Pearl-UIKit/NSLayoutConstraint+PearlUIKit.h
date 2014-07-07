@@ -20,27 +20,31 @@
 @interface NSLayoutConstraint (PearlUIKit)
 
 /**
- * Apply the given constant and the layout changes this incurs on the constraint's items if in an animation block.
+ * Update this constraint's constant with the given value, rebuilding it if necessary.
+ * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
 - (NSLayoutConstraint *)updateConstant:(CGFloat)constant;
 
 /**
- * Apply the given multiplier and the layout changes this incurs on the constraint's items if in an animation block.
+* Update this constraint's multiplier with the given value, rebuilding it if necessary.
+* NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
 - (NSLayoutConstraint *)updateMultiplier:(CGFloat)constant;
 
 /**
- * Apply the given priority and the layout changes this incurs on the constraint's items if in an animation block.
+* Update this constraint's priority with the given value, rebuilding it if necessary.
+* NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
 - (NSLayoutConstraint *)updatePriority:(UILayoutPriority)priority;
 
 /**
- * Apply the given constant and priority and the layout changes this incurs on the constraint's items if in an animation block.
+* Update this constraint's constant, multiplier and priority with the given values, rebuilding it if necessary.
+* NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
 - (NSLayoutConstraint *)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority;
 
 /**
-* Apply any layout changes incurred by this constraint's items if in an animation block.
+* Apply any layout changes incurred by this constraint's items.
 */
 - (void)layout;
 
@@ -51,6 +55,7 @@
 
 /**
  * Find the view that holds all the given constraints (the highest level superview that contains all the given constraint's items).
+ * NOTE: Use this to update layout changes of a batch of constraints at once by calling layoutIfNeeded on the returned view.
  */
 + (UIView *)constraintHolderForConstraints:(NSArray *)layoutConstraints;
 

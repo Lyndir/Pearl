@@ -20,23 +20,38 @@
 @interface NSLayoutConstraint (PearlUIKit)
 
 /**
- * Apply any layout changes incurred by this constraint's items.
+ * Apply the given constant and the layout changes this incurs on the constraint's items if in an animation block.
  */
+- (NSLayoutConstraint *)updateConstant:(CGFloat)constant;
+
+/**
+ * Apply the given multiplier and the layout changes this incurs on the constraint's items if in an animation block.
+ */
+- (NSLayoutConstraint *)updateMultiplier:(CGFloat)constant;
+
+/**
+ * Apply the given priority and the layout changes this incurs on the constraint's items if in an animation block.
+ */
+- (NSLayoutConstraint *)updatePriority:(UILayoutPriority)priority;
+
+/**
+ * Apply the given constant and priority and the layout changes this incurs on the constraint's items if in an animation block.
+ */
+- (NSLayoutConstraint *)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority;
+
+/**
+* Apply any layout changes incurred by this constraint's items if in an animation block.
+*/
 - (void)layout;
 
 /**
- * Apply the given constant and the layout changes this incurs on the constraint's items.
- */
-- (void)layoutWithConstant:(CGFloat)constant;
+* Find the view that holds this constraint.
+*/
+- (UIView *)constraintHolder;
 
 /**
- * Apply the given priority and the layout changes this incurs on the constraint's items.
+ * Find the view that holds all the given constraints (the highest level superview that contains all the given constraint's items).
  */
-- (void)layoutWithPriority:(UILayoutPriority)priority;
-
-/**
- * Apply the given constant and priority and the layout changes this incurs on the constraint's items.
- */
-- (void)layoutWithConstant:(CGFloat)constant priority:(UILayoutPriority)priority;
++ (UIView *)constraintHolderForConstraints:(NSArray *)layoutConstraints;
 
 @end

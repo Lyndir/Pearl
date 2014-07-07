@@ -15,6 +15,8 @@
 //  Copyright 2014 lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import "NSLayoutConstraint+PearlUIKit.h"
 
 
@@ -22,39 +24,73 @@
 
 - (void)layout {
 
-  UIView *view;
-  if ([self.firstItem isKindOfClass:[UIView class]]) {
-    view = self.firstItem;
-    [view setNeedsLayout];
-    [view layoutIfNeeded];
-    [view.superview layoutIfNeeded];
+  [[self constraintHolder] layoutIfNeeded];
+}
+
+- (NSLayoutConstraint *)updateConstant:(CGFloat)constant {
+
+  return [self updateConstant:constant mulitplier:self.multiplier priority:self.priority];
+}
+
+- (NSLayoutConstraint *)updateMultiplier:(CGFloat)multiplier {
+
+  return [self updateConstant:self.constant mulitplier:multiplier priority:self.priority];
+}
+
+- (NSLayoutConstraint *)updatePriority:(UILayoutPriority)priority {
+
+  return [self updateConstant:self.constant mulitplier:self.multiplier priority:priority];
+}
+
+- (NSLayoutConstraint *)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority {
+
+  if ((self.priority != priority && (self.priority == UILayoutPriorityRequired || priority == UILayoutPriorityRequired)) ||
+      self.multiplier != multiplier) {
+    NSLayoutConstraint *rebuiltConstraint =
+      [NSLayoutConstraint constraintWithItem:self.firstItem attribute:self.firstAttribute relatedBy:self.relation
+                                      toItem:self.secondItem attribute:self.secondAttribute
+                                  multiplier:multiplier constant:constant];
+    rebuiltConstraint.priority = priority;
+
+    // Find the view that holds the constraint and replace it with the new one.
+    UIView *constraintHolder = [self constraintHolder];
+    [constraintHolder removeConstraint:self];
+    [constraintHolder addConstraint:rebuiltConstraint];
+
+    return rebuiltConstraint;
   }
 
-  if ([self.secondItem isKindOfClass:[UIView class]]) {
-    view = self.secondItem;
-    [view setNeedsLayout];
-    [view layoutIfNeeded];
-    [view.superview layoutIfNeeded];
+  if (self.constant != constant)
+    self.constant = constant;
+  if (self.priority != priority)
+    self.priority = priority;
+
+  return self;
+}
+
+- (UIView *)constraintHolder {
+
+  UIView *constraintHolder = self.firstItem;
+  while (constraintHolder && ![constraintHolder.constraints containsObject:self])
+    constraintHolder = [constraintHolder superview];
+  if (!constraintHolder) {
+    constraintHolder = self.secondItem;
+    while (constraintHolder && ![constraintHolder.constraints containsObject:self])
+      constraintHolder = [constraintHolder superview];
   }
+  return constraintHolder;
 }
 
-- (void)layoutWithConstant:(CGFloat)constant {
++ (UIView *)constraintHolderForConstraints:(NSArray *)layoutConstraints {
 
-  self.constant = constant;
-  [self layout];
-}
+  UIView *constraintHolder = nil;
+  for (NSLayoutConstraint *constraint in layoutConstraints)
+    if (!constraintHolder ||
+        ![constraint.firstItem isDescendantOfView:constraintHolder] ||
+        ![constraint.secondItem isDescendantOfView:constraintHolder])
+      constraintHolder = [constraint constraintHolder];
 
-- (void)layoutWithPriority:(UILayoutPriority)priority {
-
-  self.priority = priority;
-  [self layout];
-}
-
-- (void)layoutWithConstant:(CGFloat)constant priority:(UILayoutPriority)priority {
-
-  self.constant = constant;
-  self.priority = priority;
-  [self layout];
+  return constraintHolder;
 }
 
 @end

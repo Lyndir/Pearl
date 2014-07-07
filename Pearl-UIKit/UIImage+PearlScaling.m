@@ -77,7 +77,7 @@
 
     NSString *imageSourceKey = [[(__bridge_transfer NSData *)CGDataProviderCopyData( CGImageGetDataProvider( self.CGImage ) )
             hashWith:PearlHashMD4] encodeBase64];
-    NSString *imageKey = PearlString( @"%@_%@_%@", imageSourceKey, NSStringFromCGSize( scaleSize ), NSStringFromCGSize( cropSize ) );
+    NSString *imageKey = strf( @"%@_%@_%@", imageSourceKey, NSStringFromCGSize( scaleSize ), NSStringFromCGSize( cropSize ) );
     UIImage *image = [imageCache objectForKey:imageKey];
     if (!image)
         [imageCache setObject:image = [[self imageByScalingAndFittingInSize:scaleSize] imageByScalingAndCroppingToSize:cropSize]

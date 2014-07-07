@@ -134,6 +134,10 @@
 __BEGIN_DECLS
 extern void PearlMainQueue(void (^block)());
 extern void PearlNotMainQueue(void (^block)());
+
+extern void PearlMainQueueWait(void (^block)());
+extern void PearlNotMainQueueWait(void (^block)());
+
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));

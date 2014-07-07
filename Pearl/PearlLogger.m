@@ -203,7 +203,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@, error: %@", format, exception);
+            message = strf(@"Error formatting message: %@, error: %@", format, exception);
         }
         @catch (id exception) {
             @try {
@@ -230,7 +230,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
+            message = strf(@"Error formatting message: %@", exception);
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -252,7 +252,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
+            message = strf(@"Error formatting message: %@", exception);
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -274,7 +274,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
+            message = strf(@"Error formatting message: %@", exception);
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -296,7 +296,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
+            message = strf(@"Error formatting message: %@", exception);
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -318,7 +318,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
+            message = strf(@"Error formatting message: %@", exception);
         }
         @catch (id exception) {
             message = @"Error formatting message.";

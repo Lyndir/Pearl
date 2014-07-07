@@ -96,7 +96,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         if (profileError)
             profileString = profileError;
         else
-            profileString = PearlString( @"%@ (%@, devices: %ld, UUID: %@)", provisioningProfile[@"Name"],
+            profileString = strf( @"%@ (%@, devices: %ld, UUID: %@)", provisioningProfile[@"Name"],
                     [provisioningProfile[@"Entitlements"][@"get-task-allow"] boolValue]? @"debug": @"release",
                     (long)[provisioningProfile[@"ProvisionedDevices"] count], provisioningProfile[@"UUID"] );
     }
@@ -156,7 +156,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 - (void)showFeedback {
 
 #ifdef PEARL_WITH_MESSAGEUI
-    [PearlEMail sendEMailTo:nil fromVC:nil subject:PearlString( @"Feedback for %@", [PearlInfoPlist get].CFBundleName ) body:nil];
+    [PearlEMail sendEMailTo:nil fromVC:nil subject:strf( @"Feedback for %@", [PearlInfoPlist get].CFBundleName ) body:nil];
 #endif
 }
 
@@ -211,7 +211,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
     if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
     if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
         [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
-                               message:PearlString( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
+                               message:strf( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
                              viewStyle:UIAlertViewStyleDefault
                              initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
             if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {

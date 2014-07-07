@@ -156,12 +156,12 @@
     switch (random() % 2) {
         case 0: {
             solution = a + b;
-            operator = PearlString(@"What's the sum of %d and %d?", a, b );
+            operator = strf(@"What's the sum of %d and %d?", a, b );
             break;
         }
         case 1: {
             solution = a * b;
-            operator = PearlString(@"What's the product of %d and %d?", a, b);
+            operator = strf(@"What's the product of %d and %d?", a, b);
             break;
         }
         default:

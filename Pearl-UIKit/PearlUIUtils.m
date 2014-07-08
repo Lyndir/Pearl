@@ -428,29 +428,6 @@ static NSMutableSet *dismissableResponders;
     }
 }
 
-- (void)adjustContentInsets {
-
-    NSMutableArray *insetViews = [NSMutableArray array];
-    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview respondsToSelector:@selector(isTranslucent)] && [(id)subview isTranslucent])
-            [insetViews addObject:subview];
-    }            recurse:YES];
-    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview isKindOfClass:[UIScrollView class]]) {
-            UIScrollView *scrollView = (UIScrollView *)subview;
-            UIEdgeInsets contentInset = scrollView.contentInset;
-            scrollView.contentInset = UIEdgeInsetsZero;
-//            CGRect scrollViewBounds = [scrollView convertRect:CGRectIntersection( scrollView.frameInWindow, scrollView.window.bounds )
-//                                                     fromView:scrollView.window];
-            for (UIView *insetView in insetViews)
-                contentInset = UIEdgeInsetsUnionEdgeInsets( contentInset,
-                        UIEdgeInsetsForRectSubtractingRect( scrollView.bounds,
-                                [scrollView convertRect:insetView.bounds fromView:insetView] ) );
-            scrollView.contentInset = contentInset;
-        }
-    }            recurse:YES];
-}
-
 - (void)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
 

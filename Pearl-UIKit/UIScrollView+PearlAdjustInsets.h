@@ -25,4 +25,6 @@
 */
 - (id)automaticallyAdjustInsetsForKeyboard;
 
+- (void)insetContentOcclusion;
+
 @end

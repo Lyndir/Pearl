@@ -9,8 +9,8 @@
  */
 
 //
-//  PearlUIView.h
-//  PearlUIView
+//  UIView+Touches.h
+//  UIView+Touches
 //
 //  Created by lhunath on 2014-03-17.
 //  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PearlUIView : UIView
+@interface UIView (Touches)
 
 @property(assign, nonatomic) BOOL ignoreTouches;
 

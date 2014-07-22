@@ -46,7 +46,7 @@
 /**
 * Apply any layout changes incurred by this constraint's items.
 */
-- (void)layout;
+- (void)layoutIfNeeded;
 
 /**
 * Find the view that holds this constraint.

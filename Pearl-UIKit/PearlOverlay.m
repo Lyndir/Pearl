@@ -16,12 +16,12 @@
 //  Copyright, lhunath (Maarten Billemont) 2013. All rights reserved.
 //
 
-#import "PearlUIView.h"
+#import "UIView+Touches.h"
 
 @interface PearlOverlay()
 
 @property(nonatomic, strong) NSString *title;
-@property(nonatomic, strong) PearlUIView *backgroundView;
+@property(nonatomic, strong) UIView *backgroundView;
 @property(nonatomic, strong) UIView *overlayView;
 @property(nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, strong) UITextView *titleView;
@@ -49,7 +49,7 @@
   
     PearlMainQueue( ^{
         self.title = title;
-        self.backgroundView = [[PearlUIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
+        self.backgroundView = [[UIView alloc] initWithFrame:[UIApp.windows[0] bounds]];
         self.backgroundView.backgroundColor = self.cancelOnTouch? [UIColor colorWithWhite:0 alpha:0.3f]: [UIColor clearColor];
         self.backgroundView.ignoreTouches = !self.cancelOnTouch;
         if (self.cancelOnTouch)

@@ -22,7 +22,7 @@
 
 @implementation NSLayoutConstraint (PearlUIKit)
 
-- (void)layout {
+- (void)layoutIfNeeded {
 
   [[self constraintHolder] layoutIfNeeded];
 }

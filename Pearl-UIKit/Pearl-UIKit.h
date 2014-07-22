@@ -23,7 +23,7 @@
 #import "PearlUIDebug.h"
 #import "PearlUINavigationBar.h"
 #import "PearlUIUtils.h"
-#import "PearlUIView.h"
+#import "UIView+Touches.h"
 #import "PearlValidatingTextField.h"
 #import "PearlWebViewController.h"
 #import "UICollectionReusableView+PearlDequeue.h"

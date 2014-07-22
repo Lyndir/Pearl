@@ -25,6 +25,14 @@
 */
 - (id)automaticallyAdjustInsetsForKeyboard;
 
-- (void)insetContentOcclusion;
+/**
+* @return UIEdgeInsets needed to dodge any views that occlude this scroll view's content.
+*/
+- (UIEdgeInsets)occludedInsets;
+
+/**
+* Apply the occludedInsets to the current content insets.
+*/
+- (void)insetOcclusion;
 
 @end

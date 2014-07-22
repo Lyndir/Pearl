@@ -39,6 +39,10 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
             return @"UIInterfaceOrientationLandscapeLeft";
         case UIInterfaceOrientationLandscapeRight:
             return @"UIInterfaceOrientationLandscapeRight";
+#ifdef __IPHONE_8_0
+        case UIInterfaceOrientationUnknown:
+            return @"UIInterfaceOrientationUnknown";
+#endif
     }
 
     err(@"Unsupported interface orientation: %ld", (long)orientation);

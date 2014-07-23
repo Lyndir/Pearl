@@ -24,7 +24,17 @@
 
 - (void)layoutIfNeeded {
 
-  [[self constraintHolder] layoutIfNeeded];
+  // Lay out the constraint holder, and while its frame changes, also lay out the superview to allow dependant views to lay out correctly.
+  UIView *layoutContainer = [self constraintHolder];
+  CGRect oldFrame;
+  while (layoutContainer) {
+    oldFrame = layoutContainer.frame;
+    [layoutContainer layoutIfNeeded];
+
+    if (CGRectEqualToRect( oldFrame, layoutContainer.frame ))
+      break;
+    layoutContainer = [layoutContainer superview];
+  };
 }
 
 - (NSLayoutConstraint *)updateConstant:(CGFloat)constant {

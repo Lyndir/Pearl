@@ -100,7 +100,7 @@ static CFAbsoluteTime _lastFiredTime = 0;
 
     // The animation gets choppy at excessive acceleration.  Cap the acceleration: this causes the tween to exceed the given duration.
     if (fabsf( ai ) > 4000)
-        ai = Sign( ai ) * 4000;
+        ai = Normal( ai ) * 4000;
     //float a = ai;
     /*if (!resetTween && fabsf(a - tween.a) > 2000)
         a = tween.a + Sign(a - tween.a) * 2000;*/

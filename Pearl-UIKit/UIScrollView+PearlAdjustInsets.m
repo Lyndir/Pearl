@@ -37,8 +37,6 @@
         UIEdgeInsets insetsTo = UIEdgeInsetsUnionEdgeInsets( originalInsets,
                 UIEdgeInsetsForRectSubtractingRect( self.bounds, frameTo ) );
 
-
-
         self.contentInset = insetsFrom;
         [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0
                             options:UIViewAnimationCurveToOptions( [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue] )
@@ -60,9 +58,21 @@
             if (occludingView.hidden || !occludingView.alpha)
                 continue;
 
+            CGRect contentRect = [self convertRect:self.frame fromView:self.superview];
             CGRect occludingRect = [self convertRect:occludingView.frame fromView:superview];
-            UIEdgeInsets occludingInsets = UIEdgeInsetsForRectSubtractingRect( self.bounds, occludingRect );
-            insets = UIEdgeInsetsUnionEdgeInsets( insets, occludingInsets );
+            CGRect insetContentRect = UIEdgeInsetsInsetRect( contentRect, insets );
+
+            UIEdgeInsets verticalOccludingInsets = UIEdgeInsetsForRectSubtractingRect( insetContentRect, occludingRect );
+            verticalOccludingInsets.left = verticalOccludingInsets.right = 0;
+            insetContentRect = UIEdgeInsetsInsetRect( insetContentRect, verticalOccludingInsets );
+
+            UIEdgeInsets horizontalOccludingInsets = UIEdgeInsetsForRectSubtractingRect( insetContentRect, occludingRect );
+            insetContentRect = UIEdgeInsetsInsetRect( insetContentRect, horizontalOccludingInsets );
+
+            insets = UIEdgeInsetsMake( insetContentRect.origin.y - contentRect.origin.y,
+            insetContentRect.origin.x - contentRect.origin.x,
+            contentRect.origin.y + contentRect.size.height - insetContentRect.origin.y - insetContentRect.size.height,
+            contentRect.origin.x + contentRect.size.width - insetContentRect.origin.x - insetContentRect.size.width );
         }
 
     return insets;

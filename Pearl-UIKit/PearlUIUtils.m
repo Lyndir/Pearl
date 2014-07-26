@@ -98,6 +98,9 @@ UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {
 
 UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect) {
 
+    if (!CGRectIntersectsRect( insetRect, subtractRect ))
+        return UIEdgeInsetsZero;
+
     CGPoint topLeftBounds = CGRectGetTopLeft( insetRect );
     CGPoint bottomRightBounds = CGRectGetBottomRight( insetRect );
     CGPoint topLeftFrom = CGRectGetTopLeft( subtractRect );
@@ -441,6 +444,17 @@ static NSMutableSet *dismissableResponders;
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:format options:opts metrics:metrics views:views]];
 }
 
+- (NSArray *)applicableConstraints {
+
+  NSMutableArray *applicableConstraints = [NSMutableArray new];
+  for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview])
+    for (NSLayoutConstraint *constraint in constraintHolder.constraints)
+      if (constraint.firstItem == self || constraint.secondItem == self)
+        [applicableConstraints addObject:constraint];
+
+  return applicableConstraints;
+}
+
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
 
     return [self firstConstraintForAttribute:attribute otherView:nil];
@@ -448,27 +462,11 @@ static NSMutableSet *dismissableResponders;
 
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
 
-    NSLayoutConstraint *constraint = [self.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
-        if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
-            return obj.firstAttribute == attribute;
-        if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))
-            return obj.secondAttribute == attribute;
-
-        return NO;
-    }];
-    if (constraint)
-        return constraint;
-
-    for (UIView *superview = self.superview; superview != nil; superview = superview.superview)
-        if ((constraint = (NSLayoutConstraint *)[superview.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
-            if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
-                return obj.firstAttribute == attribute;
-            if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))
-                return obj.secondAttribute == attribute;
-
-            return NO;
-        }]))
-            return constraint;
+  for (NSLayoutConstraint *constraint in self.applicableConstraints)
+    if (((constraint.firstItem == self && constraint.firstAttribute == attribute) ||
+         (constraint.secondItem == self && constraint.secondAttribute == attribute)) &&
+        (!otherView || constraint.firstItem == otherView || constraint.secondItem == otherView))
+      return constraint;
 
     return nil;
 }

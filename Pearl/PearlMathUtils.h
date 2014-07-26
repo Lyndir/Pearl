@@ -18,4 +18,4 @@
 
 #import <Foundation/Foundation.h>
 
-#define Sign(number) (number < 0? -1: 1)
+#define Normal(number) ({ __typeof__(number) __number = (number); __number < 0? -1: __number > 0? 1: 0; })

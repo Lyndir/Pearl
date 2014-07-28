@@ -25,6 +25,26 @@
 
 @end
 
+@implementation UITableView(FontScale)
+
+- (BOOL)_scaleMyFonts:(float)scale {
+  // Don't font-scale dynamic views.  Instead, reload them so they can be font-scaled cell-by-cell.
+  [self reloadData];
+  return NO;
+}
+
+@end
+
+@implementation UICollectionView(FontScale)
+
+- (BOOL)_scaleMyFonts:(float)scale {
+  // Don't font-scale dynamic views.  Instead, reload them so they can be font-scaled cell-by-cell.
+  [self reloadData];
+  return NO;
+}
+
+@end
+
 @implementation UILabel(FontScale)
 
 - (BOOL)_scaleMyFonts:(float)scale {

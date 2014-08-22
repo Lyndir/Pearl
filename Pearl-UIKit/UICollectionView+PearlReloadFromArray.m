@@ -29,7 +29,6 @@
         for (NSInteger index = (NSInteger)[workArray count] - 1; index >= 0; --index) {
             id row = workArray[(NSUInteger)index];
             if (![toArray containsObject:row]) {
-                dbg( @"deleting: %@", row );
                 [self deleteItemsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]];
                 [workArray removeObjectAtIndex:(NSUInteger)index];
             }
@@ -39,7 +38,6 @@
         for (NSUInteger index = 0; index < [toArray count]; ++index) {
             id row = toArray[index];
             if (![workArray containsObject:row]) {
-                dbg( @"inserting: %@", row );
                 [self insertItemsAtIndexPaths:@[ [NSIndexPath indexPathForRow:(NSInteger)index inSection:section] ]];
                 [workArray insertObject:row atIndex:MIN( [workArray count], index )];
             }
@@ -49,11 +47,9 @@
         for (NSUInteger index = 0; index < [workArray count]; ++index) {
             id row = workArray[index];
             NSUInteger toIndex = [toArray indexOfObject:row];
-            if (toIndex != index) {
-                dbg( @"moving: %@ (%d -> %d)", row, [fromArray indexOfObject:row], toIndex);
+            if (toIndex != index)
                 [self moveItemAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[fromArray indexOfObject:row] inSection:section]
                               toIndexPath:[NSIndexPath indexPathForRow:(NSInteger)toIndex inSection:section]];
-            }
         }
     }              completion:nil];
 }

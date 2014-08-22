@@ -141,9 +141,9 @@ __END_DECLS
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
                  completion:(void (^)(BOOL finished))completion;
 /** Recursively iterate the hierarchy of this view and set UIScrollView contentInsets to dodge translucent bars. */
-- (void)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
+- (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
-- (void)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
+- (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
                                 metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 /** @return All constraints in the view hierarchy that apply to this view. */
 - (NSArray *)applicableConstraints;

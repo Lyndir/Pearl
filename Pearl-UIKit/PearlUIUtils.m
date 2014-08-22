@@ -431,17 +431,21 @@ static NSMutableSet *dismissableResponders;
     }
 }
 
-- (void)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
+- (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
 
-    [self addConstraintsWithVisualFormats:@[ format ] options:opts metrics:metrics views:views];
+    return [self addConstraintsWithVisualFormats:@[ format ] options:opts metrics:metrics views:views];
 }
 
-- (void)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
+- (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
                                 metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
 
+    NSMutableArray *constraints =  [NSMutableArray new];
     for (NSString *format in formats)
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:format options:opts metrics:metrics views:views]];
+        [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:format options:opts metrics:metrics views:views]];
+    [self addConstraints:constraints];
+
+    return constraints;
 }
 
 - (NSArray *)applicableConstraints {

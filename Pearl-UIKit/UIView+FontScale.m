@@ -4,7 +4,6 @@
 //
 
 #import "UIView+FontScale.h"
-#import "CMHRStore.h"
 
 
 @implementation UIView(FontScale)

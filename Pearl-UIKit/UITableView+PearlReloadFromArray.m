@@ -33,12 +33,12 @@
   [self beginUpdates];
 
   // First remove deleted rows.
-  for (NSInteger index = (NSInteger)[workArray count] - 1; index >= 0; --index) {
-    id row = workArray[(NSUInteger)index];
+  for (NSUInteger index = [workArray count] - 1; index < [workArray count]; --index) {
+    id row = workArray[index];
     if (![toArray containsObject:row]) {
       [self deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
                   withRowAnimation:animation];
-      [workArray removeObjectAtIndex:(NSUInteger)index];
+      [workArray removeObjectAtIndex:index];
     }
   }
 

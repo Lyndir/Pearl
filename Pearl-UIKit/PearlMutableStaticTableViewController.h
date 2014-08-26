@@ -10,6 +10,10 @@
 
 @property(nonatomic, readonly) NSArray *allCells;
 
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animated:(BOOL)animated;
+- (void)reloadCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells;
+- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells
+                animation:(UITableViewRowAnimation)animation;
+- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells
+                animation:(UITableViewRowAnimation)animation reloadData:(BOOL)reloadData;
 
 @end

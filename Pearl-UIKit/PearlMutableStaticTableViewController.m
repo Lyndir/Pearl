@@ -4,6 +4,7 @@
 //
 
 #import "PearlMutableStaticTableViewController.h"
+#import "PearlProfiler.h"
 
 
 @implementation PearlMutableStaticTableViewController {
@@ -87,7 +88,18 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Behavior
 
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animated:(BOOL)animated {
+- (void)reloadCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells {
+
+  [self updateCellsHiding:hideCells showing:showCells animation:UITableViewRowAnimationNone reloadData:YES];
+}
+
+- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animation:(UITableViewRowAnimation)animation {
+
+  [self updateCellsHiding:hideCells showing:showCells animation:animation reloadData:NO];
+}
+
+- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animation:(UITableViewRowAnimation)animation
+               reloadData:(BOOL)reloadData {
 
   for (NSUInteger section = 0; section < [_activeCells count]; ++section) {
     NSMutableArray *activeSectionCells = _activeCells[section];
@@ -118,9 +130,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
       [activeSectionCells insertObject:cell atIndex:cellInsertionRow];
     }
 
-    [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:0
-                       withRowAnimation:animated? UITableViewRowAnimationAutomatic: UITableViewRowAnimationNone];
+    if (!reloadData)
+      [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:0 withRowAnimation:animation];
   }
+
+  if (reloadData)
+    [self.tableView reloadData];
 }
 
 #pragma mark - Private

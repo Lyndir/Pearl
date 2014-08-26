@@ -28,6 +28,9 @@
 - (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section
            withRowAnimation:(UITableViewRowAnimation)animation {
 
+  if ([fromArray isEqualToArray:toArray])
+    return;
+
   NSMutableArray *workArray = [fromArray mutableCopy];
 
   [self beginUpdates];

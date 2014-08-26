@@ -131,7 +131,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 
     if (!reloadData)
-      [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:0 withRowAnimation:animation];
+      [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:section withRowAnimation:animation];
   }
 
   if (reloadData)

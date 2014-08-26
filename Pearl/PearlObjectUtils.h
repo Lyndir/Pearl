@@ -141,6 +141,16 @@ extern void PearlNotMainQueueWait(void (^block)());
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+/**
+* Recursion detection.  Usage:
+* static BOOL recursing = NO;
+* if (PearlIsRecursing(&recursing))
+*     return;
+* [stuff];
+* recursing = NO;
+* return;
+*/
+extern BOOL PearlIsRecursing(BOOL *recursing);
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 __END_DECLS

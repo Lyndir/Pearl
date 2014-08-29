@@ -28,6 +28,7 @@ static NSUInteger profilerJobs = 0;
 
 @implementation PearlProfiler {
   CFTimeInterval _startTime;
+  CFTimeInterval _totalTime;
 }
 
 + (void)setDefaultThreshold:(CFTimeInterval)threshold {
@@ -60,7 +61,7 @@ static NSUInteger profilerJobs = 0;
         [spaces appendString:@"  "];
 
     if (!_startTime)
-        [[PearlLogger get] inFile:fileName atLine:lineNumber dbg:@"[       >] %@[%@] begin", spaces, self.taskName];
+        [[PearlLogger get] inFile:fileName atLine:lineNumber dbg:@"[         ]  %@> [%@] begin", spaces, self.taskName];
 
     _startTime = CACurrentMediaTime();
     ++profilerJobs;
@@ -77,6 +78,8 @@ static NSUInteger profilerJobs = 0;
     --profilerJobs;
 
     CFTimeInterval jobTime = endTime - _startTime;
+    _totalTime += jobTime;
+
     if (jobTime >= self.threshold) {
         NSString *job = [[NSString alloc] initWithFormat:format arguments:args];
 
@@ -84,7 +87,18 @@ static NSUInteger profilerJobs = 0;
         for (NSUInteger j = 0; j < profilerJobs; ++j)
             [spaces appendString:@"  "];
 
-        [[PearlLogger get] inFile:fileName atLine:lineNumber dbg:@"[+%0.6f] %@[%@] %@", jobTime, spaces, self.taskName, job];
+        [[PearlLogger get] inFile:fileName atLine:lineNumber dbg:@"[+%0.6f]  %@- [%@] %@", jobTime, spaces, self.taskName, job];
+    }
+}
+
+- (void)logTotalInFile:(char *)fileName atLine:(NSInteger)lineNumber {
+
+    if (_totalTime >= self.threshold) {
+        NSMutableString *spaces = [NSMutableString stringWithCapacity:profilerJobs * 2];
+        for (NSUInteger j = 0; j < profilerJobs; ++j)
+            [spaces appendString:@"  "];
+
+        [[PearlLogger get] inFile:fileName atLine:lineNumber dbg:@"[+%0.6f]  %@< [%@] total", _totalTime, spaces, self.taskName];
     }
 }
 
@@ -106,21 +120,24 @@ static NSUInteger profilerJobs = 0;
     va_end( args );
 
     _startTime = 0;
+    [self logTotalInFile:fileName atLine:lineNumber];
 }
 
-- (void)finish {
+- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber {
 
     if (_startTime) {
         _startTime = 0;
         --profilerJobs;
     }
+
+    [self logTotalInFile:fileName atLine:lineNumber];
 }
 
 - (void)dealloc {
 
     if (_startTime) {
         wrn( @"Unfinished profiler: %@", self.taskName );
-      [self finish];
+        [self finishInFile:basename( (char *)__FILE__ ) atLine:__LINE__];
     }
 }
 

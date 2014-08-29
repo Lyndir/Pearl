@@ -52,6 +52,6 @@
 /**
  * Stop the profiler's job.
  */
-- (void)finish;
+- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber;
 
 @end

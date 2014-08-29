@@ -86,12 +86,13 @@ void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^bloc
     dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
 }
 
-BOOL PearlIsRecursing(BOOL *recursing) {
+void PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)()) {
   if (*recursing)
-    return YES;
+    return;
 
   *recursing = YES;
-  return NO;
+  notRecursingBlock();
+  *recursing = NO;
 }
 
 NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {

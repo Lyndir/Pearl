@@ -89,7 +89,7 @@ id returnArg(id arg) {
 
 - (NSString *)messageDescription {
 
-    return [NSString stringWithFormat:@"%25s:%-3ld | %-7s : %@", //
+    return [NSString stringWithFormat:@"%30s:%-3ld | %-7s : %@", //
                                       self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr( self.level ), self.message];
 }
 

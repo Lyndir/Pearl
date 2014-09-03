@@ -54,6 +54,13 @@
 - (UIView *)constraintHolder;
 
 /**
+* Remove this constraint from its constraint holder.
+*
+* @return nil if the constraint wasn't currently held by a view, otherwise returns the view that held the constraint.
+*/
+- (UIView *)removeFromHolder;
+
+/**
  * Find the view that holds all the given constraints (the highest level superview that contains all the given constraint's items).
  * NOTE: Use this to update layout changes of a batch of constraints at once by calling layoutIfNeeded on the returned view.
  */

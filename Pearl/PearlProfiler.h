@@ -18,6 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#define prof_new(format, ...)     PearlProfiler *__profiler = [PearlProfiler profilerInFile:basename((char *)__FILE__) \
+                                                                                     atLine:__LINE__ forTask:(format), ##__VA_ARGS__]
+#define prof_rewind(format, ...)  [__profiler rewindInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
+#define prof_finish(format, ...)  [__profiler finishInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
+
 @interface PearlProfiler : NSObject
 
 @property(nonatomic, copy, readonly) NSString *taskName;
@@ -25,16 +30,28 @@
 /**
  * Create a profiler for a certain task.  The task name will be included in every job completion message logged.  Implicitly start a job.
  */
-+ (instancetype)profilerForTask:(NSString *)taskName;
++ (instancetype)profilerInFile:(char *)fileName atLine:(NSInteger)lineNumber forTask:(NSString *)taskName, ... NS_FORMAT_FUNCTION( 3, 4 );
+
+@property(nonatomic) CFTimeInterval threshold;
 
 /**
  * Start the timer for a job.
  */
-- (void)startJob;
+- (void)startJobInFile:(char *)fileName atLine:(NSInteger)lineNumber;
 
 /**
- * Stop the timer for a job, logging a debug message which includes the job's elapsed time and the message.
+ * Restart the timer, logging a debug message which includes the completed job's elapsed time and the message.
  */
-- (void)finishJob:(NSString *)format, ... NS_FORMAT_FUNCTION( 1, 2 );
+- (void)rewindInFile:(char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
+
+/**
+ * Stop the timer, logging a debug message which includes the completed job's elapsed time and the message.
+ */
+- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
+
+/**
+ * Stop the profiler's job.
+ */
+- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber;
 
 @end

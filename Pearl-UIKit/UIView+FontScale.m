@@ -10,11 +10,9 @@
 
 - (void)scaleFonts:(float)fontScale {
   // Scale fonts in this view.
-  if (![self _scaleMyFonts:fontScale])
-    return;
-
-  for (UIView *view in self.subviews)
-    [view scaleFonts:fontScale];
+  if ([self _scaleMyFonts:fontScale])
+    for (UIView *view in self.subviews)
+      [view scaleFonts:fontScale];
 }
 
 /** Override me on custom controls that need to scale their text, return NO if subviews shouldn't be scaled. */

@@ -80,15 +80,21 @@
 
 - (UIView *)constraintHolder {
 
-  UIView *constraintHolder = self.firstItem;
+  UIView *constraintHolder = self.firstItem?: self.secondItem;
   while (constraintHolder && ![constraintHolder.constraints containsObject:self])
     constraintHolder = [constraintHolder superview];
-  if (!constraintHolder) {
-    constraintHolder = self.secondItem;
-    while (constraintHolder && ![constraintHolder.constraints containsObject:self])
-      constraintHolder = [constraintHolder superview];
-  }
-  return constraintHolder?: self.firstItem;
+
+  return constraintHolder;
+}
+
+- (UIView *)removeFromHolder {
+
+  UIView *constraintHolder = [self constraintHolder];
+  if (![constraintHolder.constraints containsObject:self])
+    return nil;
+
+  [constraintHolder removeConstraint:self];
+  return constraintHolder;
 }
 
 + (UIView *)constraintHolderForConstraints:(NSArray *)layoutConstraints {

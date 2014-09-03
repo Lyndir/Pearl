@@ -93,7 +93,7 @@
         supportedInterfaceOrientations)
         return preferredInterfaceOrientationForPresentation;
 
-    Throw( @"No preferred orientation supports the supported orientations: %d", supportedInterfaceOrientations );
+    Throw( @"No preferred orientation supports the supported orientations: %lu", (long)supportedInterfaceOrientations );
 }
 
 - (void)setPreferredInterfaceOrientationForPresentation:(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {

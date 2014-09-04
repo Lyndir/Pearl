@@ -542,8 +542,24 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg( strf( @"%%%lds - t:%%d, a:%%0.1f, h:%%@, %%@", (long)indent ),
-    "", self.tag, self.alpha, @(self.hidden), [self debugDescription]);
+    // Get background color
+    CGFloat red, green, blue, alpha;
+    [self.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+    NSString *backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
+        (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
+
+    // Get view controller
+    UIResponder *nextResponder = [self nextResponder];
+    while ([nextResponder isKindOfClass:[UIView class]])
+      nextResponder = [nextResponder nextResponder];
+    UIViewController *viewController = nil;
+    if ([nextResponder isKindOfClass:[UIViewController class]])
+        if ((viewController = (UIViewController *)nextResponder).view != self)
+          viewController = nil;
+
+    dbg( strf( @"%%%lds %@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", (long)indent, viewController? @"+ %@(%@)": @"- %@%@" ),
+        "", NSStringFromClass([viewController class])?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
+        NSStringFromCGRect( self.frame ), [self debugDescription]);
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];

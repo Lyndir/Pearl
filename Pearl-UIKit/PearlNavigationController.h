@@ -36,7 +36,7 @@
 /**
  * -[UIViewController (NSUInteger)supportedInterfaceOrientations]
  */
-@property(nonatomic, assign) NSUInteger supportedInterfaceOrientations;
+@property(nonatomic, assign) UIInterfaceOrientationMask supportedInterfaceOrientations;
 
 /**
  * -[UIViewController (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation]

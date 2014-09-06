@@ -5,66 +5,96 @@
 
 #import "UIView+FontScale.h"
 
+@interface NSObject(JRSwizzle)
+
++ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
+
+@end
 
 @implementation UIView(FontScale)
 
-- (void)scaleFonts:(float)fontScale {
-  // Scale fonts in this view.
-  if ([self _scaleMyFonts:fontScale])
-    for (UIView *view in self.subviews)
-      [view scaleFonts:fontScale];
+static char InstalledKey;
+static char FontScaleKey;
+static char AppliedFontScaleKey;
+
++ (void)initialize {
+
+    if (// JRSwizzle must be present
+            ![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )] ||
+            // Class must be a UIView
+            ![self isSubclassOfClass:[UIView class]] ||
+            // Class must declare (not inherit) setFont:
+            !class_respondsToSelector( self, @selector( setFont: ) ) ||
+            class_respondsToSelector( class_getSuperclass( self ), @selector( setFont: ) ) ||
+            // Swizzle must not have been installed already.
+            objc_getAssociatedObject( self, &InstalledKey ))
+        return;
+
+    NSError *error = nil;
+    if ([self jr_swizzleMethod:@selector( layoutSubviews ) withMethod:@selector( fontScale_layoutSubviews ) error:&error] &&
+        [self jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
+        objc_setAssociatedObject( self, &InstalledKey, @(1), OBJC_ASSOCIATION_RETAIN );
+    if (error)
+        err( @"While installing UIView(FontScale): %@", [error fullDescription] );
 }
 
-/** Override me on custom controls that need to scale their text, return NO if subviews shouldn't be scaled. */
-- (BOOL)_scaleMyFonts:(float)scale {
-  return YES;
+- (void)setFontScale:(CGFloat)fontScale {
+
+    objc_setAssociatedObject( self, &FontScaleKey, @(fontScale), OBJC_ASSOCIATION_RETAIN );
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        if ([subview respondsToSelector:@selector(fontScale_layoutSubviews)])
+            [subview setNeedsLayout];
+    } recurse:YES];
 }
 
-@end
+- (CGFloat)fontScale {
 
-@implementation UITableView(FontScale)
-
-- (BOOL)_scaleMyFonts:(float)scale {
-  // Don't font-scale dynamic views.  Instead, reload them so they can be font-scaled cell-by-cell.
-  [self reloadData];
-  return NO;
+    return [objc_getAssociatedObject( self, &FontScaleKey ) floatValue]?: 1;
 }
 
-@end
+/**
+* @return The font scale that should affect this view.  It is this view's scale modified by the scale of any of its superviews.
+*/
+- (CGFloat)effectiveFontScale {
 
-@implementation UICollectionView(FontScale)
-
-- (BOOL)_scaleMyFonts:(float)scale {
-  // Don't font-scale dynamic views.  Instead, reload them so they can be font-scaled cell-by-cell.
-  [self reloadData];
-  return NO;
+    return self.fontScale * (self.superview.effectiveFontScale?: 1);
 }
 
-@end
+- (void)setAppliedFontScale:(CGFloat)appliedFontScale {
 
-@implementation UILabel(FontScale)
-
-- (BOOL)_scaleMyFonts:(float)scale {
-  self.font = [self.font fontWithSize:self.font.pointSize * scale];
-  return [super _scaleMyFonts:scale];
+    objc_setAssociatedObject( self, &AppliedFontScaleKey, @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 }
 
-@end
+/**
+* @return The font scale that is currently applied to the view's font.
+*/
+- (CGFloat)appliedFontScale {
 
-@implementation UITextField(FontScale)
-
-- (BOOL)_scaleMyFonts:(float)scale {
-  self.font = [self.font fontWithSize:self.font.pointSize * scale];
-  return [super _scaleMyFonts:scale];
+    return [objc_getAssociatedObject( self, &AppliedFontScaleKey ) floatValue]?: 1;
 }
 
-@end
+- (void)fontScale_layoutSubviews {
 
-@implementation UITextView(FontScale)
+    if ([self isKindOfClass:[UILabel class]] || [self isKindOfClass:[UITextField class]] || [self isKindOfClass:[UITextView class]]) {
+        CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
+        if (effectiveFontScale != appliedFontScale) {
+            UIFont *originalFont = [(UILabel *)self font];
+            UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
+            [(UILabel *)self fontScale_setFont:scaledFont];
+            self.appliedFontScale = self.effectiveFontScale;
+        }
+    }
 
-- (BOOL)_scaleMyFonts:(float)scale {
-  self.font = [self.font fontWithSize:self.font.pointSize * scale];
-  return [super _scaleMyFonts:scale];
+    [self fontScale_layoutSubviews];
+}
+
+- (void)fontScale_setFont:(UIFont *)originalFont {
+
+    CGFloat effectiveFontScale = self.effectiveFontScale;
+    if (effectiveFontScale != 1) {
+        [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
+        self.appliedFontScale = effectiveFontScale;
+    }
 }
 
 @end

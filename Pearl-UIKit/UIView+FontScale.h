@@ -8,6 +8,9 @@
 
 @interface UIView(FontScale)
 
-- (void)scaleFonts:(float)fontScale;
+/**
+ * The scale by which this view should scale its (and its subviews') fonts.
+ */
+@property(nonatomic) CGFloat fontScale;
 
 @end

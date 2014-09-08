@@ -87,7 +87,7 @@ static char GoneAlpha;
 
     if (gone && !wasGone) {
         NSArray *constraints = [self applicableConstraints];
-        [self.window layoutIfNeeded];
+        [self.window?: self.superview?: self layoutIfNeeded];
 
         // Save and remove our constraints.
         objc_setAssociatedObject( self, &GoneConstraints, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC );

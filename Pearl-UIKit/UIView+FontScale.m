@@ -11,6 +11,9 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "InfiniteRecursion"
+
 @implementation UIView(FontScale)
 
 static char InstalledKey;
@@ -57,7 +60,21 @@ static char AppliedFontScaleKey;
 */
 - (CGFloat)effectiveFontScale {
 
-    return self.fontScale * (self.superview.effectiveFontScale?: 1);
+    CGFloat inheritedFontScale = 1;
+    if (self.superview)
+        inheritedFontScale = self.superview.exportedFontScale;
+    else if (![self isKindOfClass:[UIWindow class]])
+        inheritedFontScale = [UIApp keyWindow].exportedFontScale;
+
+    return self.fontScale * inheritedFontScale;
+}
+
+/**
+* @return The font scale that should affect our subviews.
+*/
+- (CGFloat)exportedFontScale {
+
+    return self.effectiveFontScale;
 }
 
 - (void)setAppliedFontScale:(CGFloat)appliedFontScale {
@@ -82,6 +99,8 @@ static char AppliedFontScaleKey;
             UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
             [(UILabel *)self fontScale_setFont:scaledFont];
             self.appliedFontScale = self.effectiveFontScale;
+            [self invalidateIntrinsicContentSize];
+            [self setNeedsUpdateConstraints];
         }
     }
 
@@ -91,10 +110,14 @@ static char AppliedFontScaleKey;
 - (void)fontScale_setFont:(UIFont *)originalFont {
 
     CGFloat effectiveFontScale = self.effectiveFontScale;
-    if (effectiveFontScale != 1) {
+    if (effectiveFontScale == 1)
+        [self fontScale_setFont:originalFont];
+    else
         [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
-        self.appliedFontScale = effectiveFontScale;
-    }
+
+    self.appliedFontScale = effectiveFontScale;
 }
 
 @end
+
+#pragma clang diagnostic pop

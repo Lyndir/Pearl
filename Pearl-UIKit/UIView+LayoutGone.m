@@ -105,17 +105,14 @@ static char GoneAlpha;
         [UIView animateWithDuration:0 animations:^{
             self.alpha = 0;
         } completion:^(BOOL finished) {
-            objc_setAssociatedObject( self, &GoneSuperview, self.superview, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-            [self removeFromSuperview];
+            if (finished && self.gone) {
+                objc_setAssociatedObject( self, &GoneSuperview, self.superview, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                [self removeFromSuperview];
+            }
         }];
     }
 
     if (!gone && wasGone) {
-        // Add ourselves back to the hierarchy and remove any temporary constraints.
-        [objc_getAssociatedObject( self, &GoneSuperview ) addSubview:self];
-        objc_setAssociatedObject( self, &GoneSuperview, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        [[self applicableConstraints] makeObjectsPerformSelector:@selector( removeFromHolder )];
-
         // Restore our saved constraints and fade back in.
         NSArray *goneConstraints = objc_getAssociatedObject( self, &GoneConstraints );
         for (NSLayoutConstraint *constraint in goneConstraints) {

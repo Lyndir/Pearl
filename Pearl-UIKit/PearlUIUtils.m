@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  PearlUIUtils.m
@@ -93,7 +93,7 @@ CGPoint CGRectGetBottomLeft(CGRect rect) {
 
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {
 
-    return UIEdgeInsetsMake( MAX(a.top, b.top), MAX(a.left, b.left), MAX(a.bottom, b.bottom), MAX(a.right, b.right) );
+    return UIEdgeInsetsMake( MAX( a.top, b.top ), MAX( a.left, b.left ), MAX( a.bottom, b.bottom ), MAX( a.right, b.right ) );
 }
 
 UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtractRect) {
@@ -108,17 +108,17 @@ UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtrac
     CGPoint topLeftInset = CGPointMinusCGPoint( bottomRightFrom, topLeftBounds );
     CGPoint bottomRightInset = CGPointMinusCGPoint( bottomRightBounds, topLeftFrom );
 
-    CGFloat top = topLeftFrom.y <= 0 && bottomRightFrom.y < insetRect.size.height? MAX(0, topLeftInset.y): 0;
-    CGFloat left = topLeftFrom.x <= 0 && bottomRightFrom.x < insetRect.size.width? MAX(0, topLeftInset.x): 0;
-    CGFloat bottom = bottomRightFrom.y >= insetRect.size.height && topLeftFrom.y > 0? MAX(0, bottomRightInset.y): 0;
-    CGFloat right = bottomRightFrom.x >= insetRect.size.width && topLeftFrom.x > 0? MAX(0, bottomRightInset.x): 0;
+    CGFloat top = topLeftFrom.y <= 0 && bottomRightFrom.y < insetRect.size.height? MAX( 0, topLeftInset.y ): 0;
+    CGFloat left = topLeftFrom.x <= 0 && bottomRightFrom.x < insetRect.size.width? MAX( 0, topLeftInset.x ): 0;
+    CGFloat bottom = bottomRightFrom.y >= insetRect.size.height && topLeftFrom.y > 0? MAX( 0, bottomRightInset.y ): 0;
+    CGFloat right = bottomRightFrom.x >= insetRect.size.width && topLeftFrom.x > 0? MAX( 0, bottomRightInset.x ): 0;
 
     return UIEdgeInsetsMake( top, left, bottom, right );
 }
 
 UIViewAnimationOptions UIViewAnimationCurveToOptions(UIViewAnimationCurve curve) {
 
-    NSCAssert(UIViewAnimationCurveLinear << 16 == UIViewAnimationOptionCurveLinear, @"Unexpected implementation of UIViewAnimationCurve");
+    NSCAssert( UIViewAnimationCurveLinear << 16 == UIViewAnimationOptionCurveLinear, @"Unexpected implementation of UIViewAnimationCurve" );
     return (UIViewAnimationOptions)(curve << 16);;
 }
 
@@ -317,7 +317,7 @@ static NSMutableSet *dismissableResponders;
                      ignoreSubviews:(UIView *)ignoredSubviews, ... {
 
     [self autoSizeContentIgnoreHidden:ignoreHidden ignoreInvisible:ignoreInvisible limitPadding:limitPadding
-                  ignoreSubviewsArray:va_array(ignoredSubviews)];
+                  ignoreSubviewsArray:va_array( ignoredSubviews )];
 }
 
 - (void)autoSizeContentIgnoreHidden:(BOOL)ignoreHidden
@@ -345,15 +345,15 @@ static NSMutableSet *dismissableResponders;
             contentRect = CGRectUnion( contentRect, subviewContent );
     }
     if (CGRectEqualToRect( contentRect, CGRectNull ))
-            // No subviews inside the scroll area.
+        // No subviews inside the scroll area.
         contentRect = CGRectZero;
 
     // Add right/bottom padding by adding left/top offset to the size (but no more than 20pt if limitPadding).
-    CGSize originPadding = CGSizeMake( MAX(0, contentRect.origin.x), MAX(0, contentRect.origin.y) );
+    CGSize originPadding = CGSizeMake( MAX( 0, contentRect.origin.x ), MAX( 0, contentRect.origin.y ) );
     CGRect paddedRect = (CGRect){
             CGPointZero,
-            CGSizeMake( contentRect.size.width + originPadding.width + (limitPadding? MIN(20, originPadding.width): originPadding.width),
-                    contentRect.size.height + originPadding.height + (limitPadding? MIN(20, originPadding.height): originPadding.height) )
+            CGSizeMake( contentRect.size.width + originPadding.width + (limitPadding? MIN( 20, originPadding.width ): originPadding.width),
+                    contentRect.size.height + originPadding.height + (limitPadding? MIN( 20, originPadding.height ): originPadding.height) )
     };
 
     // Apply rect to scrollView's content definition.
@@ -362,11 +362,11 @@ static NSMutableSet *dismissableResponders;
 
     // === Step 2: Manage the scroll view on keyboard notifications.
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                                             selector:@selector(keyboardWillShow:)
+                                             selector:@selector( keyboardWillShow: )
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:[PearlUIUtils class]
-                                             selector:@selector(keyboardWillHide:)
+                                             selector:@selector( keyboardWillHide: )
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
 
@@ -395,7 +395,7 @@ static NSMutableSet *dismissableResponders;
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch {
 
     UILongPressGestureRecognizer *dismissRecognizer = [[UILongPressGestureRecognizer alloc]
-            initWithTarget:self action:@selector(didRecognizeDismissKeyboard:)];
+            initWithTarget:self action:@selector( didRecognizeDismissKeyboard: )];
     [self addGestureRecognizer:dismissRecognizer];
 
     return dismissRecognizer;
@@ -412,8 +412,8 @@ static NSMutableSet *dismissableResponders;
     [responder resignFirstResponder];
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
-                 completion:(void (^)(BOOL finished))completion {
++ (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void ( ^ )(void))uiAnimations caAnimations:(void ( ^ )(void))caAnimations
+                 completion:(void ( ^ )(BOOL finished))completion {
 
     if (uiAnimations)
         [UIView animateWithDuration:duration animations:uiAnimations completion:completion];
@@ -432,15 +432,15 @@ static NSMutableSet *dismissableResponders;
 }
 
 - (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
-                               metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
+                                    metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
 
     return [self addConstraintsWithVisualFormats:@[ format ] options:opts metrics:metrics views:views];
 }
 
 - (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
-                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
+                                     metrics:(NSDictionary *)metrics views:(NSDictionary *)views {
 
-    NSMutableArray *constraints =  [NSMutableArray new];
+    NSMutableArray *constraints = [NSMutableArray new];
     for (NSString *format in formats)
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:format options:opts metrics:metrics views:views]];
     [self addConstraints:constraints];
@@ -450,13 +450,16 @@ static NSMutableSet *dismissableResponders;
 
 - (NSArray *)applicableConstraints {
 
-  NSMutableArray *applicableConstraints = [NSMutableArray new];
-  for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview])
-    for (NSLayoutConstraint *constraint in constraintHolder.constraints)
-      if (constraint.firstItem == self || constraint.secondItem == self)
-        [applicableConstraints addObject:constraint];
+    NSMutableArray *applicableConstraints = [NSMutableArray new];
+    for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview]) {
+        [constraintHolder updateConstraintsIfNeeded];
 
-  return applicableConstraints;
+        for (NSLayoutConstraint *constraint in constraintHolder.constraints)
+            if (constraint.firstItem == self || constraint.secondItem == self)
+                [applicableConstraints addObject:constraint];
+    }
+
+    return applicableConstraints;
 }
 
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
@@ -466,11 +469,11 @@ static NSMutableSet *dismissableResponders;
 
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
 
-  for (NSLayoutConstraint *constraint in self.applicableConstraints)
-    if (((constraint.firstItem == self && constraint.firstAttribute == attribute) ||
-         (constraint.secondItem == self && constraint.secondAttribute == attribute)) &&
-        (!otherView || constraint.firstItem == otherView || constraint.secondItem == otherView))
-      return constraint;
+    for (NSLayoutConstraint *constraint in self.applicableConstraints)
+        if (((constraint.firstItem == self && constraint.firstAttribute == attribute) ||
+             (constraint.secondItem == self && constraint.secondAttribute == attribute)) &&
+            (!otherView || constraint.firstItem == otherView || constraint.secondItem == otherView))
+            return constraint;
 
     return nil;
 }
@@ -482,7 +485,7 @@ static NSMutableSet *dismissableResponders;
 
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
 
-    CGRectSetSize(self.frame, CGSizeZero);
+    CGRectSetSize( self.frame, CGSizeZero );
     [self sizeToFit];
     if (size.width == CGFLOAT_MIN)
         size.width = self.frame.size.width;
@@ -510,7 +513,7 @@ static NSMutableSet *dismissableResponders;
     return NO;
 }
 
-- (BOOL)enumerateViews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
+- (BOOL)enumerateViews:(void ( ^ )(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault {
 
     BOOL stop = NO, recurse = recurseDefault;
     block( self, &stop, &recurse );
@@ -530,7 +533,7 @@ static NSMutableSet *dismissableResponders;
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
         dbg( strf( @"%%%lds - t:%%d, a:%%0.1f, h:%%@, %%@", (long)indent ),
-        "", view.tag, view.alpha, @(view.hidden), [view debugDescription]);
+                "", view.tag, view.alpha, @(view.hidden), [view debugDescription] );
         indent += 4;
     }
 }
@@ -546,20 +549,19 @@ static NSMutableSet *dismissableResponders;
     CGFloat red, green, blue, alpha;
     [self.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
     NSString *backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
-        (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
+            (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
 
     // Get view controller
     UIResponder *nextResponder = [self nextResponder];
     while ([nextResponder isKindOfClass:[UIView class]])
-      nextResponder = [nextResponder nextResponder];
+        nextResponder = [nextResponder nextResponder];
     UIViewController *viewController = nil;
-    if ([nextResponder isKindOfClass:[UIViewController class]])
-        if ((viewController = (UIViewController *)nextResponder).view != self)
-          viewController = nil;
+    if ([nextResponder isKindOfClass:[UIViewController class]]) if ((viewController = (UIViewController *)nextResponder).view != self)
+        viewController = nil;
 
     dbg( strf( @"%%%lds %@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", (long)indent, viewController? @"+ %@(%@)": @"- %@%@" ),
-        "", NSStringFromClass([viewController class])?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
-        NSStringFromCGRect( self.frame ), [self debugDescription]);
+            "", NSStringFromClass( [viewController class] )?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
+            NSStringFromCGRect( self.frame ), [self debugDescription] );
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];
@@ -572,7 +574,7 @@ static NSMutableSet *dismissableResponders;
 
 - (CGRect)contentBoundsIgnoringSubviews:(UIView *)ignoredSubviews, ... {
 
-    return [self contentBoundsIgnoringSubviewsArray:va_array(ignoredSubviews)];
+    return [self contentBoundsIgnoringSubviewsArray:va_array( ignoredSubviews )];
 }
 
 - (CGRect)contentBoundsIgnoringSubviewsArray:(NSArray *)ignoredSubviewsArray {
@@ -583,7 +585,7 @@ static NSMutableSet *dismissableResponders;
             if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
                 contentRect = CGRectUnion( contentRect,
                         [self convertRect:
-                                [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
+                                        [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
                                  fromView:subview] );
 
     return contentRect;
@@ -596,7 +598,7 @@ static NSMutableSet *dismissableResponders;
 
 - (void)showBoundingBoxOfColor:(UIColor *)color {
 
-    dbg(@"Showing bounding box for view: %@", self);
+    dbg( @"Showing bounding box for view: %@", self );
     PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){ CGPointZero, self.bounds.size } color:color];
     [self addSubview:box];
     [self addObserver:box forKeyPath:@"bounds" options:0 context:nil];
@@ -872,7 +874,7 @@ static NSMutableSet *dismissableResponders;
 
 + (UIView *)viewClosestTo:(CGPoint)point of:(UIView *)views, ... {
 
-    return [self viewClosestTo:point ofArray:va_array(views)];
+    return [self viewClosestTo:point ofArray:va_array( views )];
 }
 
 + (UIView *)viewClosestTo:(CGPoint)point ofArray:(NSArray *)views {
@@ -905,7 +907,7 @@ static NSMutableSet *dismissableResponders;
 
 + (void)makeDismissable:(UIView *)views, ... {
 
-    [self makeDismissableArray:va_array(views)];
+    [self makeDismissableArray:va_array( views )];
 }
 
 + (void)makeDismissableArray:(NSArray *)viewsArray {
@@ -942,10 +944,10 @@ static NSMutableSet *dismissableResponders;
 
     // Make sure no old view is still resized and a current view is set.
     if (keyboardScrollView_resized && keyboardScrollView_resized != activePearlKBSV.keyboardScrollView) {
-        err(@"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!");
+        err( @"Keyboard shown for a scroll view while another scroll view is still resized.  We missed a keyboardWillHide: for keyboardScrollView_resized!" );
         return;
     }
-    assert(activePearlKBSV);
+    assert( activePearlKBSV );
 //    assert(!keyboardScrollView_resized);
 
     // Activate scrollview so we know which one to restore when the keyboard is hidden.
@@ -985,16 +987,16 @@ static NSMutableSet *dismissableResponders;
                          animations:^{
                              animatingScrollView.contentOffset = keyboardScrollNewOffset;
                          } completion:^(BOOL finished) {
-            if (!CGRectIsNull( keyboardScrollNewFrame ))
-                animatingScrollView.frame = keyboardScrollNewFrame;
-        }];
+                    if (!CGRectIsNull( keyboardScrollNewFrame ))
+                        animatingScrollView.frame = keyboardScrollNewFrame;
+                }];
     }
 }
 
 + (void)keyboardWillHide:(NSNotification *)n {
 
     if (!keyboardScrollView_resized)
-            // Don't do any scrollview animation when no scrollview is active.
+        // Don't do any scrollview animation when no scrollview is active.
         return;
 
     UIScrollView *animatingScrollView = keyboardScrollView_resized;
@@ -1005,7 +1007,7 @@ static NSMutableSet *dismissableResponders;
         }
     }
     if (nil == currentPearlKBSV) {
-        err(@"No PearlKBSV found in dictionary yet got keyboardWillHide notification...");
+        err( @"No PearlKBSV found in dictionary yet got keyboardWillHide notification..." );
         return;
     }
 
@@ -1029,7 +1031,7 @@ static NSMutableSet *dismissableResponders;
                          animations:^{
                              animatingScrollView.contentOffset = animatingScrollView_originalOffset;
                          } completion:^(BOOL finished) {
-        }];
+                }];
 
         keyboardScrollView_resized = nil;
     } );
@@ -1063,7 +1065,8 @@ static NSMutableSet *dismissableResponders;
                                                                  defaultValue = [localizableValue substringWithRange:defaultValueRange];
 
                                                              localizedValue
-                                                                     = NSLocalizedStringWithDefaultValue(localizationKey, nil, [NSBundle mainBundle], defaultValue, nil);
+                                                                     = NSLocalizedStringWithDefaultValue( localizationKey, nil,
+                                                                     [NSBundle mainBundle], defaultValue, nil );
                                                          }
                                                      }];
 

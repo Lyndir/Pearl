@@ -66,6 +66,10 @@
             [self.webView stringByEvaluatingJavaScriptFromString:
                     @"window.__defineGetter__('orientation',function(){return 180;});window.onorientationchange();"];
             break;
+#ifdef __IPHONE_8_0
+        case UIInterfaceOrientationUnknown:
+            break;
+#endif
     }
 }
 

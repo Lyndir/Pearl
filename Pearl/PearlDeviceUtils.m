@@ -88,6 +88,9 @@
         case UIUserInterfaceIdiomPad:
             return 1024.0f / 480.0f;
         case UIUserInterfaceIdiomPhone:
+#ifdef __IPHONE_8_0
+        case UIUserInterfaceIdiomUnspecified:
+#endif
             break;
     }
 #endif

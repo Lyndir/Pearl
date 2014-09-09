@@ -18,6 +18,7 @@
 
 static char InstalledKey;
 static char FontScaleKey;
+static char IgnoreFontScaleKey;
 static char AppliedFontScaleKey;
 
 + (void)initialize {
@@ -55,10 +56,27 @@ static char AppliedFontScaleKey;
     return [objc_getAssociatedObject( self, &FontScaleKey ) floatValue]?: 1;
 }
 
+- (void)setIgnoreFontScale:(BOOL)ignoreFontScale {
+
+    objc_setAssociatedObject( self, &IgnoreFontScaleKey, @(ignoreFontScale), OBJC_ASSOCIATION_RETAIN );
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        if ([subview respondsToSelector:@selector( fontScale_layoutSubviews )])
+            [subview setNeedsLayout];
+    } recurse:YES];
+}
+
+- (BOOL)ignoreFontScale {
+
+    return [objc_getAssociatedObject( self, &IgnoreFontScaleKey ) boolValue];
+}
+
 /**
 * @return The font scale that should affect this view.  It is this view's scale modified by the scale of any of its superviews.
 */
 - (CGFloat)effectiveFontScale {
+
+    if (self.ignoreFontScale)
+      return 1;
 
     CGFloat inheritedFontScale = 1;
     if (self.superview)

@@ -84,7 +84,7 @@
     BOOL valid = YES;
 
     if (self.validationDelegate)
-        valid &= [self.validationDelegate isValid:self];
+        valid &= [self.validationDelegate checkValid:self];
     if (_isValid)
         valid &= _isValid();
 

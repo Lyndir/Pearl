@@ -78,13 +78,13 @@ static char AppliedFontScaleKey;
     if (self.ignoreFontScale)
       return 1;
 
-    CGFloat inheritedFontScale = 1;
+    CGFloat inheritedFontScale = 0;
     if (self.superview)
         inheritedFontScale = self.superview.exportedFontScale;
     else if (![self isKindOfClass:[UIWindow class]])
         inheritedFontScale = [UIApp keyWindow].exportedFontScale;
 
-    return self.fontScale * inheritedFontScale;
+    return self.fontScale * inheritedFontScale?: 1;
 }
 
 /**
@@ -115,7 +115,7 @@ static char AppliedFontScaleKey;
         if (effectiveFontScale != appliedFontScale) {
             UIFont *originalFont = [(UILabel *)self font];
             UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-            [(UILabel *)self fontScale_setFont:scaledFont];
+            [self fontScale_setFont:scaledFont];
             self.appliedFontScale = self.effectiveFontScale;
             [self invalidateIntrinsicContentSize];
             [self setNeedsUpdateConstraints];

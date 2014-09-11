@@ -12,7 +12,8 @@ static char GoneChildrenKey;
 static char GoneKey;
 static char GoneConstraints;
 static char GoneSuperview;
-static char GoneAlpha;
+//static char GoneAlpha;
+//static char GoneTemporaryConstraints;
 
 - (NSArray *)goneParents {
 
@@ -87,34 +88,37 @@ static char GoneAlpha;
 
     if (gone && !wasGone) {
         NSArray *constraints = [self applicableConstraints];
-        [self.window layoutIfNeeded];
+//        [self.window?: self.superview?: self layoutIfNeeded];
 
         // Save and remove our constraints.
         objc_setAssociatedObject( self, &GoneConstraints, constraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        [constraints makeObjectsPerformSelector:@selector( removeFromHolder )];
+//        [constraints makeObjectsPerformSelector:@selector( removeFromHolder )];
 
         // Lock our position with temporary constraints and fade out.
-        objc_setAssociatedObject( self, &GoneAlpha, @(self.alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        [self.superview addConstraintsWithVisualFormats:@[ @"H:|-(x)-[view(w)]", @"V:|-(y)-[view(h)]" ] options:0
-                                                metrics:@{
-                                                        @"x" : @(self.frame.origin.x), @"y" : @(self.frame.origin.y),
-                                                        @"w" : @(self.frame.size.width), @"h" : @(self.frame.size.height)
-                                                } views:@{ @"view" : self }];
+//        objc_setAssociatedObject( self, &GoneAlpha, @(self.alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        NSArray *temporaryConstraints = [self.superview addConstraintsWithVisualFormats:@[ @"H:|-(x)-[view(w)]", @"V:|-(y)-[view(h)]" ]
+//                                                                                options:0 metrics:@{
+//                @"x" : @(self.frame.origin.x), @"y" : @(self.frame.origin.y),
+//                @"w" : @(self.frame.size.width), @"h" : @(self.frame.size.height)
+//            }                                                                     views:@{ @"view" : self }];
+//        objc_setAssociatedObject( self, &GoneTemporaryConstraints, temporaryConstraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
         // Inherit any existing animation, fade out in it and only after its completion remove ourselves from the hierarchy.
-        [UIView animateWithDuration:0 animations:^{
-            self.alpha = 0;
-        } completion:^(BOOL finished) {
-            objc_setAssociatedObject( self, &GoneSuperview, self.superview, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-            [self removeFromSuperview];
-        }];
+//        [UIView animateWithDuration:0 animations:^{
+//            self.alpha = 0;
+//        } completion:^(BOOL finished) {
+//            if (finished && self.gone) {
+                objc_setAssociatedObject( self, &GoneSuperview, self.superview, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                [self removeFromSuperview];
+//            }
+//        }];
     }
 
     if (!gone && wasGone) {
-        // Add ourselves back to the hierarchy and remove any temporary constraints.
-        [objc_getAssociatedObject( self, &GoneSuperview ) addSubview:self];
-        objc_setAssociatedObject( self, &GoneSuperview, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        [[self applicableConstraints] makeObjectsPerformSelector:@selector( removeFromHolder )];
+        // Remove our temporary constraints.
+//        NSArray *temporaryConstraints = objc_getAssociatedObject( self, &GoneTemporaryConstraints );
+//        [temporaryConstraints makeObjectsPerformSelector:@selector( removeFromHolder )];
+//        objc_setAssociatedObject( self, &GoneTemporaryConstraints, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
         // Restore our saved constraints and fade back in.
         NSArray *goneConstraints = objc_getAssociatedObject( self, &GoneConstraints );
@@ -127,8 +131,8 @@ static char GoneAlpha;
                 }
         }
         objc_setAssociatedObject( self, &GoneConstraints, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        self.alpha = [objc_getAssociatedObject( self, &GoneAlpha ) floatValue];
-        objc_setAssociatedObject( self, &GoneAlpha, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        self.alpha = [objc_getAssociatedObject( self, &GoneAlpha ) floatValue];
+//        objc_setAssociatedObject( self, &GoneAlpha, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
     }
 
     // Update the children who depend on us.

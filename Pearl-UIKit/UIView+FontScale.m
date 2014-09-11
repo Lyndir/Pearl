@@ -11,10 +11,14 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "InfiniteRecursion"
+
 @implementation UIView(FontScale)
 
 static char InstalledKey;
 static char FontScaleKey;
+static char IgnoreFontScaleKey;
 static char AppliedFontScaleKey;
 
 + (void)initialize {
@@ -52,12 +56,43 @@ static char AppliedFontScaleKey;
     return [objc_getAssociatedObject( self, &FontScaleKey ) floatValue]?: 1;
 }
 
+- (void)setIgnoreFontScale:(BOOL)ignoreFontScale {
+
+    objc_setAssociatedObject( self, &IgnoreFontScaleKey, @(ignoreFontScale), OBJC_ASSOCIATION_RETAIN );
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        if ([subview respondsToSelector:@selector( fontScale_layoutSubviews )])
+            [subview setNeedsLayout];
+    } recurse:YES];
+}
+
+- (BOOL)ignoreFontScale {
+
+    return [objc_getAssociatedObject( self, &IgnoreFontScaleKey ) boolValue];
+}
+
 /**
 * @return The font scale that should affect this view.  It is this view's scale modified by the scale of any of its superviews.
 */
 - (CGFloat)effectiveFontScale {
 
-    return self.fontScale * (self.superview.effectiveFontScale?: 1);
+    if (self.ignoreFontScale)
+      return 1;
+
+    CGFloat inheritedFontScale = 1;
+    if (self.superview)
+        inheritedFontScale = self.superview.exportedFontScale;
+    else if (![self isKindOfClass:[UIWindow class]])
+        inheritedFontScale = [UIApp keyWindow].exportedFontScale;
+
+    return self.fontScale * inheritedFontScale;
+}
+
+/**
+* @return The font scale that should affect our subviews.
+*/
+- (CGFloat)exportedFontScale {
+
+    return self.effectiveFontScale;
 }
 
 - (void)setAppliedFontScale:(CGFloat)appliedFontScale {
@@ -82,6 +117,8 @@ static char AppliedFontScaleKey;
             UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
             [(UILabel *)self fontScale_setFont:scaledFont];
             self.appliedFontScale = self.effectiveFontScale;
+            [self invalidateIntrinsicContentSize];
+            [self setNeedsUpdateConstraints];
         }
     }
 
@@ -91,10 +128,14 @@ static char AppliedFontScaleKey;
 - (void)fontScale_setFont:(UIFont *)originalFont {
 
     CGFloat effectiveFontScale = self.effectiveFontScale;
-    if (effectiveFontScale != 1) {
+    if (effectiveFontScale == 1)
+        [self fontScale_setFont:originalFont];
+    else
         [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
-        self.appliedFontScale = effectiveFontScale;
-    }
+
+    self.appliedFontScale = effectiveFontScale;
 }
 
 @end
+
+#pragma clang diagnostic pop

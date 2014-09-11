@@ -13,4 +13,9 @@
  */
 @property(nonatomic) CGFloat fontScale;
 
+/**
+ * If YES, this view and its subviews ignore its and any inherited font scale.
+ */
+@property(nonatomic) BOOL ignoreFontScale;
+
 @end

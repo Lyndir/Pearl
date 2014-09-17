@@ -7,8 +7,8 @@
 #import "PearlProfiler.h"
 
 @implementation PearlMutableStaticTableViewController {
-  NSMutableArray *_allCells;
-  NSMutableArray *_activeCells;
+  NSMutableArray *_allCellsBySection;
+  NSMutableArray *_activeCellsBySection;
 }
 
 #pragma mark - Life
@@ -18,14 +18,14 @@
   [super viewDidLoad];
 
   NSUInteger sections = (NSUInteger)[super numberOfSectionsInTableView:self.tableView];
-  _allCells = [NSMutableArray arrayWithCapacity:sections];
-  _activeCells = [NSMutableArray arrayWithCapacity:sections];
+  _allCellsBySection = [NSMutableArray arrayWithCapacity:sections];
+  _activeCellsBySection = [NSMutableArray arrayWithCapacity:sections];
   for (NSUInteger section = 0; section < sections; ++section) {
     NSUInteger rows = (NSUInteger)[super tableView:self.tableView numberOfRowsInSection:section];
     NSMutableArray *allSectionCells = [NSMutableArray arrayWithCapacity:rows];
     NSMutableArray *activeSectionCells = [NSMutableArray arrayWithCapacity:rows];
-    [_allCells addObject:allSectionCells];
-    [_activeCells addObject:activeSectionCells];
+    [_allCellsBySection addObject:allSectionCells];
+    [_activeCellsBySection addObject:activeSectionCells];
 
     for (NSUInteger row = 0; row < rows; ++row) {
       UITableViewCell *cell = [super tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
@@ -39,17 +39,17 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-  return [_activeCells[(NSUInteger)section] count];
+  return [_activeCellsBySection[(NSUInteger)section] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-  return _activeCells[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
+  return _activeCellsBySection[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 
-  return [_activeCells count];
+  return [_activeCellsBySection count];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
@@ -59,7 +59,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     case UITableViewCellEditingStyleNone:
       break;
     case UITableViewCellEditingStyleDelete:
-      [_activeCells[(NSUInteger)indexPath.section] removeObjectAtIndex:(NSUInteger)indexPath.row];
+      [_activeCellsBySection[(NSUInteger)indexPath.section] removeObjectAtIndex:(NSUInteger)indexPath.row];
       [self.tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationAutomatic];
       break;
     case UITableViewCellEditingStyleInsert:
@@ -72,17 +72,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath
       toIndexPath:(NSIndexPath *)destinationIndexPath {
 
-  UITableViewCell *cell = _activeCells[(NSUInteger)sourceIndexPath.section][(NSUInteger)sourceIndexPath.row];
-  [_activeCells[(NSUInteger)sourceIndexPath.section] removeObjectAtIndex:(NSUInteger)sourceIndexPath.row];
-  [_activeCells[(NSUInteger)destinationIndexPath.section] insertObject:cell atIndex:(NSUInteger)sourceIndexPath.row];
+  UITableViewCell *cell = _activeCellsBySection[(NSUInteger)sourceIndexPath.section][(NSUInteger)sourceIndexPath.row];
+  [_activeCellsBySection[(NSUInteger)sourceIndexPath.section] removeObjectAtIndex:(NSUInteger)sourceIndexPath.row];
+  [_activeCellsBySection[(NSUInteger)destinationIndexPath.section] insertObject:cell atIndex:(NSUInteger)sourceIndexPath.row];
   [self.tableView moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 #pragma mark - State
 
-- (NSArray *)allCells {
+- (NSArray *)allCellsBySection {
 
-  return _allCells;
+  return _allCellsBySection;
 }
 
 #pragma mark - Behavior
@@ -100,8 +100,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animation:(UITableViewRowAnimation)animation
                reloadData:(BOOL)reloadData {
 
-  for (NSUInteger section = 0; section < [_activeCells count]; ++section) {
-    NSMutableArray *activeSectionCells = _activeCells[section];
+  for (NSUInteger section = 0; section < [_activeCellsBySection count]; ++section) {
+    NSMutableArray *activeSectionCells = _activeCellsBySection[section];
     NSArray *oldSectionCells = [activeSectionCells copy];
 
     // Remove all the features in _activeSectionCells that need to be hidden.
@@ -109,7 +109,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     // Figure out where in the _activeSectionCells to insert the feature based on the original order of cells in _allSectionCells.
     for (UITableViewCell *cell in showCells) {
-      NSUInteger allFeaturesRow = [_allCells[section] indexOfObject:cell];
+      NSUInteger allFeaturesRow = [_allCellsBySection[section] indexOfObject:cell];
       if (allFeaturesRow == NSNotFound)
         continue;
       if ([activeSectionCells containsObject:cell])
@@ -118,7 +118,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
       NSUInteger cellInsertionRow = 0;
       NSUInteger previousAllCellRow = MAX( 0, allFeaturesRow - 1 );
       while (previousAllCellRow > 0) {
-        NSUInteger previousActiveCellRow = [activeSectionCells indexOfObject:_allCells[section][previousAllCellRow]];
+        NSUInteger previousActiveCellRow = [activeSectionCells indexOfObject:_allCellsBySection[section][previousAllCellRow]];
         if (previousActiveCellRow == NSNotFound)
           --previousAllCellRow;
         else {
@@ -141,10 +141,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (NSIndexPath *)originalIndexPathForIndexPath:(NSIndexPath *)indexPath {
 
-  UITableViewCell *cell = _activeCells[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
-  for (NSUInteger section = 0; section < [_allCells count]; ++section)
-    for (NSUInteger row = 0; row < [_allCells[section] count]; ++row)
-      if (_allCells[section][row] == cell)
+  UITableViewCell *cell = _activeCellsBySection[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
+  for (NSUInteger section = 0; section < [_allCellsBySection count]; ++section)
+    for (NSUInteger row = 0; row < [_allCellsBySection[section] count]; ++row)
+      if (_allCellsBySection[section][row] == cell)
         return [NSIndexPath indexPathForRow:row inSection:section];
 
   return nil;

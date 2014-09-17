@@ -5,7 +5,7 @@
 
 #import "UIView+FontScale.h"
 
-@interface NSObject(JRSwizzle)
+@interface NSObject(FontScale_JRSwizzle)
 
 + (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
 

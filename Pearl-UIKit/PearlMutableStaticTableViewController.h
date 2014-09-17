@@ -8,7 +8,7 @@
 
 @interface PearlMutableStaticTableViewController : UITableViewController
 
-@property(nonatomic, readonly) NSArray *allCells;
+@property(nonatomic, readonly) NSArray *allCellsBySection;
 
 - (void)reloadCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells;
 - (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells

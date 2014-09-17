@@ -19,6 +19,15 @@
 #import "UIView+Touches.h"
 #import "JRSwizzle.h"
 
+@interface NSObject(Touches_JRSwizzle)
+
++ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
+
+@end
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "InfiniteRecursion"
+
 @implementation UIView(Touches)
 
 static char *PearlIgnoreTouches;
@@ -50,3 +59,5 @@ static char *PearlIgnoreTouches;
 }
 
 @end
+
+#pragma clang diagnostic pop

@@ -109,15 +109,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [activeSectionCells removeObjectsInArray:hideCells];
 
     // Figure out where in the _activeSectionCells to insert the feature based on the original order of cells in _allSectionCells.
-    for (UITableViewCell *cell in showCells) {
-      NSUInteger allFeaturesRow = [_allCellsBySection[section] indexOfObject:cell];
-      if (allFeaturesRow == NSNotFound)
-        continue;
-      if ([activeSectionCells containsObject:cell])
-        continue;
+    for (UITableViewCell *showCell in showCells) {
+      NSUInteger allCellsRow = [_allCellsBySection[section] indexOfObject:showCell];
+        if (allCellsRow == NSNotFound)
+            continue;
+      if ([activeSectionCells containsObject:showCell])
+          continue;
 
-      NSUInteger cellInsertionRow = 0;
-      NSUInteger previousAllCellRow = MAX( 0, allFeaturesRow - 1 );
+        NSUInteger cellInsertionRow = 0;
+      NSUInteger previousAllCellRow = MAX( 1, allCellsRow) - 1;
       while (previousAllCellRow > 0) {
         NSUInteger previousActiveCellRow = [activeSectionCells indexOfObject:_allCellsBySection[section][previousAllCellRow]];
         if (previousActiveCellRow == NSNotFound)
@@ -127,11 +127,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
           break;
         }
       }
-      [activeSectionCells insertObject:cell atIndex:cellInsertionRow];
+      [activeSectionCells insertObject:showCell atIndex:cellInsertionRow];
     }
 
-    if (!reloadData)
-      [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:section withRowAnimation:animation];
+      if (!reloadData)
+          [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:section withRowAnimation:animation];
   }
 
   if (reloadData)

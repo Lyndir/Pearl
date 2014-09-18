@@ -26,12 +26,19 @@
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 // Modify the variable (of type CGRect) such that it contains a new CGRect derived from the original.
-#define CGRectSetX(_rect, _v)                       _rect = CGRectWithX(_rect, _v)
-#define CGRectSetY(_rect, _v)                       _rect = CGRectWithY(_rect, _v)
-#define CGRectSetWidth(_rect, _v)                   _rect = CGRectWithWidth(_rect, _v)
-#define CGRectSetHeight(_rect, _v)                  _rect = CGRectWithHeight(_rect, _v)
-#define CGRectSetOrigin(_rect, _v)                  _rect = CGRectWithOrigin(_rect, _v)
-#define CGRectSetSize(_rect, _v)                    _rect = CGRectWithSize(_rect, _v)
+#define CGRectSetX(rect, value)                     rect = CGRectWithX(rect, value)
+#define CGRectSetY(rect, value)                     rect = CGRectWithY(rect, value)
+#define CGRectSetWidth(rect, value)                 rect = CGRectWithWidth(rect, value)
+#define CGRectSetHeight(rect, value)                rect = CGRectWithHeight(rect, value)
+#define CGRectSetOrigin(rect, value)                rect = CGRectWithOrigin(rect, value)
+#define CGRectSetSize(rect, value)                  rect = CGRectWithSize(rect, value)
+
+#define CGRectSetXDidChange(rect, value)            ({ CGRect __old = rect; CGRectSetX(rect, value); !CGRectEqualToRect(__old, rect); })
+#define CGRectSetYDidChange(rect, value)            ({ CGRect __old = rect; CGRectSetY(rect, value); !CGRectEqualToRect(__old, rect); })
+#define CGRectSetWidthDidChange(rect, value)        ({ CGRect __old = rect; CGRectSetWidth(rect, value); !CGRectEqualToRect(__old, rect); })
+#define CGRectSetHeightDidChange(rect, value)       ({ CGRect __old = rect; CGRectSetHeight(rect, value); !CGRectEqualToRect(__old, rect); })
+#define CGRectSetOriginDidChange(rect, value)       ({ CGRect __old = rect; CGRectSetOrigin(rect, value); !CGRectEqualToRect(__old, rect); })
+#define CGRectSetSizeDidChange(rect, value)         ({ CGRect __old = rect; CGRectSetSize(rect, value); !CGRectEqualToRect(__old, rect); })
 
 __BEGIN_DECLS
 // Create a new CGRect derived from the original.

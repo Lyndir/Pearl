@@ -111,16 +111,16 @@ __END_DECLS
 /** Log a new event on a specified level. */
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level text:(NSString *)text;
 /** Log a new TRACE-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 /** Log a new DEBUG-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 /** Log a new INFO-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 /** Log a new WARNING-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 /** Log a new ERROR-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 /** Log a new FATAL-level event. */
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 
 @end

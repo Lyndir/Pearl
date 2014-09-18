@@ -193,7 +193,7 @@ id returnArg(id arg) {
     return self;
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
@@ -220,7 +220,7 @@ id returnArg(id arg) {
               withLevel:PearlLogLevelTrace text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
@@ -242,7 +242,7 @@ id returnArg(id arg) {
               withLevel:PearlLogLevelDebug text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
@@ -264,7 +264,7 @@ id returnArg(id arg) {
               withLevel:PearlLogLevelInfo text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
@@ -286,7 +286,7 @@ id returnArg(id arg) {
               withLevel:PearlLogLevelWarn text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
@@ -308,7 +308,7 @@ id returnArg(id arg) {
               withLevel:PearlLogLevelError text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );

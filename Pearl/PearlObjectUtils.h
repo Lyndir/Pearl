@@ -153,6 +153,12 @@ extern void PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 __END_DECLS
 
+@interface NSObject (PearlObjectUtils)
+
+- (NSString *)propertyWithValue:(id)value;
+
+@end
+
 @interface PearlObjectUtils : NSObject
 
 + (id)getNil;

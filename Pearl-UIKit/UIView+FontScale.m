@@ -44,6 +44,9 @@ static char AppliedFontScaleKey;
 
 - (void)setFontScale:(CGFloat)fontScale {
 
+    if (fontScale == self.fontScale)
+        return;
+
     objc_setAssociatedObject( self, &FontScaleKey, @(fontScale), OBJC_ASSOCIATION_RETAIN );
     [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
         if ([subview respondsToSelector:@selector(fontScale_layoutSubviews)])

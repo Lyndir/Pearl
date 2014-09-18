@@ -6,7 +6,6 @@
 #import "PearlMutableStaticTableViewController.h"
 #import "PearlProfiler.h"
 
-
 @implementation PearlMutableStaticTableViewController {
   NSMutableArray *_allCellsBySection;
   NSMutableArray *_activeCellsBySection;

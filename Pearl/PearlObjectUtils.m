@@ -87,24 +87,44 @@ void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^bloc
 }
 
 void PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)()) {
-  if (*recursing)
-    return;
+    if (*recursing)
+        return;
 
-  *recursing = YES;
-  notRecursingBlock();
-  *recursing = NO;
+    *recursing = YES;
+    notRecursingBlock();
+    *recursing = NO;
 }
 
 NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
 
-  va_list objs;
-  va_start(objs, firstHashCode);
-  NSUInteger hashCode = 0;
-  for (NSUInteger nextHashCode = firstHashCode; nextHashCode != (NSUInteger)-1; nextHashCode = va_arg(objs, NSUInteger))
-    hashCode = hashCode * 31 + nextHashCode;
-  return hashCode;
+    va_list objs;
+    va_start(objs, firstHashCode);
+    NSUInteger hashCode = 0;
+    for (NSUInteger nextHashCode = firstHashCode; nextHashCode != (NSUInteger)-1; nextHashCode = va_arg(objs, NSUInteger))
+        hashCode = hashCode * 31 + nextHashCode;
+    return hashCode;
 }
 
+@implementation NSObject(PearlObjectUtils)
+
+- (NSString *)propertyWithValue:(id)value {
+
+    NSString *propertyName = nil;
+    unsigned int count = 0;
+    objc_property_t *properties = class_copyPropertyList( [self class], &count );
+    for (unsigned int p = 0; p < count; ++p) {
+        NSString *currentPropertyName = strf(@"%s", property_getName( properties[p] ));
+        if ([self valueForKey:currentPropertyName] == value) {
+            propertyName = currentPropertyName;
+            break;
+        }
+    }
+    free( properties );
+
+    return propertyName;
+}
+
+@end
 
 @implementation PearlObjectUtils
 

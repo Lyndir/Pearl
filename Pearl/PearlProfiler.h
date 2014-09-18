@@ -18,8 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-#define prof_new(format, ...)     PearlProfiler *__profiler = [PearlProfiler profilerInFile:basename((char *)__FILE__) \
-                                                                                     atLine:__LINE__ forTask:(format), ##__VA_ARGS__]
+#define prof_new(format, ...)     PearlProfiler * prof_new_var((format), ##__VA_ARGS__)
+#define prof_new_var(format, ...) __profiler = [PearlProfiler profilerInFile:basename((char *)__FILE__) atLine:__LINE__ \
+                                                                     forTask:(format), ##__VA_ARGS__]
 #define prof_rewind(format, ...)  [__profiler rewindInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
 #define prof_finish(format, ...)  [__profiler finishInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
 
@@ -30,28 +31,29 @@
 /**
  * Create a profiler for a certain task.  The task name will be included in every job completion message logged.  Implicitly start a job.
  */
-+ (instancetype)profilerInFile:(char *)fileName atLine:(NSInteger)lineNumber forTask:(NSString *)taskName, ... NS_FORMAT_FUNCTION( 3, 4 );
++ (instancetype)profilerInFile:(const char *)fileName atLine:(NSInteger)lineNumber forTask:(NSString *)taskName, ... NS_FORMAT_FUNCTION( 3, 4 );
 
 @property(nonatomic) CFTimeInterval threshold;
-
+@property(nonatomic, copy) NSString *fileName;
+@property(nonatomic) NSInteger lineNumber;
 /**
  * Start the timer for a job.
  */
-- (void)startJobInFile:(char *)fileName atLine:(NSInteger)lineNumber;
+- (void)startJobInFile:(const char *)fileName atLine:(NSInteger)lineNumber;
 
 /**
  * Restart the timer, logging a debug message which includes the completed job's elapsed time and the message.
  */
-- (void)rewindInFile:(char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
+- (void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
 
 /**
  * Stop the timer, logging a debug message which includes the completed job's elapsed time and the message.
  */
-- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
+- (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... NS_FORMAT_FUNCTION( 3, 4 );
 
 /**
  * Stop the profiler's job.
  */
-- (void)finishInFile:(char *)fileName atLine:(NSInteger)lineNumber;
+- (void)finish;
 
 @end

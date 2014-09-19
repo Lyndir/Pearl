@@ -25,8 +25,8 @@ static char AppliedFontScaleKey;
 
     if (// JRSwizzle must be present
             ![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )] ||
-            // Class must be a UIView
-            ![self isSubclassOfClass:[UIView class]] ||
+            // Class must be a UILabel, UITextField or UITextView
+            !(self == [UILabel class] || self == [UITextField class] || self == [UITextView class]) ||
             // Class must declare (not inherit) setFont:
             !class_respondsToSelector( self, @selector( setFont: ) ) ||
             class_respondsToSelector( class_getSuperclass( self ), @selector( setFont: ) ) ||
@@ -81,7 +81,7 @@ static char AppliedFontScaleKey;
     if (self.ignoreFontScale)
       return 1;
 
-    CGFloat inheritedFontScale = 0;
+    CGFloat inheritedFontScale = 1;
     if (self.superview)
         inheritedFontScale = self.superview.exportedFontScale;
     else if (![self isKindOfClass:[UIWindow class]])
@@ -113,16 +113,14 @@ static char AppliedFontScaleKey;
 
 - (void)fontScale_layoutSubviews {
 
-    if ([self isKindOfClass:[UILabel class]] || [self isKindOfClass:[UITextField class]] || [self isKindOfClass:[UITextView class]]) {
-        CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
-        if (effectiveFontScale != appliedFontScale) {
-            UIFont *originalFont = [(UILabel *)self font];
-            UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-            [self fontScale_setFont:scaledFont];
-            self.appliedFontScale = self.effectiveFontScale;
-            [self invalidateIntrinsicContentSize];
-            [self setNeedsUpdateConstraints];
-        }
+    CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
+    if (effectiveFontScale != appliedFontScale) {
+        UIFont *originalFont = [(UILabel *)self font];
+        UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
+        [self fontScale_setFont:scaledFont];
+        self.appliedFontScale = self.effectiveFontScale;
+        [self invalidateIntrinsicContentSize];
+        [self setNeedsUpdateConstraints];
     }
 
     [self fontScale_layoutSubviews];

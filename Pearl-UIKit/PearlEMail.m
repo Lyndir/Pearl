@@ -130,7 +130,7 @@
           didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
 
     if (error)
-    err(@"Error composing mail message: %@", error);
+        err(@"Error composing mail message: %@", [error fullDescription]);
 
     switch (result) {
         case MFMailComposeResultSaved:

@@ -10,6 +10,7 @@
 #import "PearlArrayTVC.h"
 #import "PearlBoxView.h"
 #import "PearlEMail.h"
+#import "PearlFixedTableView.h"
 #import "PearlGradientView.h"
 #import "PearlLayout.h"
 #import "PearlLayoutView.h"

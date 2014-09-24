@@ -16,7 +16,6 @@
 
 @implementation UIView(FontScale)
 
-static char InstalledKey;
 static char FontScaleKey;
 static char IgnoreFontScaleKey;
 static char AppliedFontScaleKey;
@@ -25,7 +24,7 @@ static char AppliedFontScaleKey;
 
     // JRSwizzle must be present
     if (![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )]) {
-        wrn( @"Missing JRSwizzle, caanot load UIView(FontScale)" );
+        wrn( @"Missing JRSwizzle, cannot load UIView(FontScale)" );
         return;
     }
 
@@ -33,7 +32,6 @@ static char AppliedFontScaleKey;
     for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
         if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontScale_updateConstraints ) error:&error] &&
             [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
-            objc_setAssociatedObject( type, &InstalledKey, @(1), OBJC_ASSOCIATION_RETAIN );
         if (error)
             err( @"While installing UIView(FontScale): %@", [error fullDescription] );
     }

@@ -117,6 +117,11 @@ static char AppliedFontScaleKey;
 
     self.appliedFontScale = self.effectiveFontScale;
     [self invalidateIntrinsicContentSize];
+    [self setNeedsUpdateConstraints];
+    if ([self.superview isKindOfClass:[UIControl class]]) {
+      [self.superview invalidateIntrinsicContentSize];
+      [self.superview setNeedsUpdateConstraints];
+    }
 }
 
 - (void)fontScale_updateConstraints {

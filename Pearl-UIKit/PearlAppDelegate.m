@@ -187,7 +187,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
                 SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].iTunesID
         }                              completionBlock:^(BOOL result, NSError *error) {
             if (!result) {
-                err(@"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, error);
+                err(@"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [error fullDescription]);
                 [self showReview:NO];
                 return;
             }

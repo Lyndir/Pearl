@@ -157,7 +157,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", pattern, error);
+        err(@"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription]);
         return nil;
     }
 
@@ -175,7 +175,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", pattern, error);
+        err(@"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription]);
         return nil;
     }
 

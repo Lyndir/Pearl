@@ -40,7 +40,7 @@ static char *PearlIgnoreTouches;
     dispatch_once( &once, ^{
         NSError *error;
         if (![UIView jr_swizzleMethod:@selector( hitTest:withEvent: ) withMethod:@selector( pearl_hitTest:withEvent: ) error:&error])
-            err( @"Failed to swizzle hitTest:withEvent:.  ignoreTouches will have no effect.  Cause: %@", error );
+            err( @"Failed to swizzle hitTest:withEvent:.  ignoreTouches will have no effect.  Cause: %@", [error fullDescription] );
     } );
 }
 

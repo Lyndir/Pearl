@@ -88,15 +88,15 @@
                     dispatch_async(dispatch_get_main_queue(), __pearl_main_thread_block);       \
             });
 
-#define PearlAssociatedObjectProperty(__type, __name, __getter)                                 \
-            PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, OBJC_ASSOCIATION_RETAIN)
-#define PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, __association)       \
-            static char __name ## Key;                                                          \
-            - (void)set ## __name :( __type ) __name {                                          \
-                objc_setAssociatedObject( self, & __name ## Key, __name, __association );       \
+#define PearlAssociatedObjectProperty(__type, __uppercased, __lowercased)                                 \
+            PearlAssociatedObjectPropertyAssociation(__type, __uppercased, __lowercased, OBJC_ASSOCIATION_RETAIN)
+#define PearlAssociatedObjectPropertyAssociation(__type, __uppercased, __lowercased, __association)       \
+            static char __uppercased ## Key;                                                          \
+            - (void)set ## __uppercased :( __type ) __lowercased {                                          \
+                objc_setAssociatedObject( self, & __uppercased ## Key, __lowercased, __association );       \
             }                                                                                   \
-            - ( __type ) __getter {                                                             \
-                return objc_getAssociatedObject( self, & __name ## Key );                       \
+            - ( __type ) __lowercased {                                                             \
+                return objc_getAssociatedObject( self, & __uppercased ## Key );                       \
             }
 #define PearlObjCall(arg, call) [arg call]
 /** Simplify PearlHashCode usage with objects.  Eg.

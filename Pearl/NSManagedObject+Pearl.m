@@ -37,7 +37,7 @@
     NSError *error = nil;
     NSManagedObject *element = [context existingObjectWithID:objectID error:&error];
     if (!element)
-        err( @"Failed to load %@: %@", self, error );
+        err( @"Failed to load %@: %@", self, [error fullDescription] );
     else if (element.isDeleted) {
         wrn( @"%@ was deleted: %@, returning nil instead.", self, element );
         return nil;

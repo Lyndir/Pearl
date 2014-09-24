@@ -5,7 +5,9 @@
 
 #import <Foundation/Foundation.h>
 
-
+/**
+* A category which allows you to scale the font point sizes of this view and all its subviews with a single assignment.
+*/
 @interface UIView(FontScale)
 
 /**

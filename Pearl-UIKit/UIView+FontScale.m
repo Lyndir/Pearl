@@ -21,25 +21,22 @@ static char FontScaleKey;
 static char IgnoreFontScaleKey;
 static char AppliedFontScaleKey;
 
-+ (void)initialize {
++ (void)load {
 
-    if (// JRSwizzle must be present
-            ![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )] ||
-            // Class must be a UILabel, UITextField or UITextView
-            !(self == [UILabel class] || self == [UITextField class] || self == [UITextView class]) ||
-            // Class must declare (not inherit) setFont:
-            !class_respondsToSelector( self, @selector( setFont: ) ) ||
-            class_respondsToSelector( class_getSuperclass( self ), @selector( setFont: ) ) ||
-            // Swizzle must not have been installed already.
-            objc_getAssociatedObject( self, &InstalledKey ))
+    // JRSwizzle must be present
+    if (![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )]) {
+        wrn( @"Missing JRSwizzle, caanot load UIView(FontScale)" );
         return;
+    }
 
     NSError *error = nil;
-    if ([self jr_swizzleMethod:@selector( layoutSubviews ) withMethod:@selector( fontScale_layoutSubviews ) error:&error] &&
-        [self jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
-        objc_setAssociatedObject( self, &InstalledKey, @(1), OBJC_ASSOCIATION_RETAIN );
-    if (error)
-        err( @"While installing UIView(FontScale): %@", [error fullDescription] );
+    for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
+        if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontScale_updateConstraints ) error:&error] &&
+            [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
+            objc_setAssociatedObject( type, &InstalledKey, @(1), OBJC_ASSOCIATION_RETAIN );
+        if (error)
+            err( @"While installing UIView(FontScale): %@", [error fullDescription] );
+    }
 }
 
 - (void)setFontScale:(CGFloat)fontScale {
@@ -49,8 +46,8 @@ static char AppliedFontScaleKey;
 
     objc_setAssociatedObject( self, &FontScaleKey, @(fontScale), OBJC_ASSOCIATION_RETAIN );
     [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview respondsToSelector:@selector(fontScale_layoutSubviews)])
-            [subview setNeedsLayout];
+        if ([subview respondsToSelector:@selector( setFont: )])
+            [subview setNeedsUpdateConstraints];
     } recurse:YES];
 }
 
@@ -63,8 +60,8 @@ static char AppliedFontScaleKey;
 
     objc_setAssociatedObject( self, &IgnoreFontScaleKey, @(ignoreFontScale), OBJC_ASSOCIATION_RETAIN );
     [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview respondsToSelector:@selector( fontScale_layoutSubviews )])
-            [subview setNeedsLayout];
+        if ([subview respondsToSelector:@selector( setFont: )])
+            [subview setNeedsUpdateConstraints];
     } recurse:YES];
 }
 
@@ -111,19 +108,23 @@ static char AppliedFontScaleKey;
     return [objc_getAssociatedObject( self, &AppliedFontScaleKey ) floatValue]?: 1;
 }
 
-- (void)fontScale_layoutSubviews {
+- (void)updateFontScale {
 
     CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
-    if (effectiveFontScale != appliedFontScale) {
-        UIFont *originalFont = [(UILabel *)self font];
-        UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-        [self fontScale_setFont:scaledFont];
-        self.appliedFontScale = self.effectiveFontScale;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsUpdateConstraints];
-    }
+    if (effectiveFontScale == appliedFontScale)
+        return;
 
-    [self fontScale_layoutSubviews];
+    UIFont *originalFont = [(UILabel *)self font];
+    [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale]];
+
+    self.appliedFontScale = self.effectiveFontScale;
+    [self invalidateIntrinsicContentSize];
+}
+
+- (void)fontScale_updateConstraints {
+
+    [self updateFontScale];
+    [self fontScale_updateConstraints];
 }
 
 - (void)fontScale_setFont:(UIFont *)originalFont {
@@ -135,6 +136,7 @@ static char AppliedFontScaleKey;
         [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
 
     self.appliedFontScale = effectiveFontScale;
+    [self invalidateIntrinsicContentSize];
 }
 
 @end

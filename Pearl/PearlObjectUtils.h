@@ -132,15 +132,41 @@
     }
 
 __BEGIN_DECLS
+/* Run a block on the main queue.  If already on the main queue, run it synchronously. */
 extern void PearlMainQueue(void (^block)());
+/* Run a block on a background queue.  If already on a background queue, run it synchronously. */
 extern void PearlNotMainQueue(void (^block)());
 
+/* Schedule a block to run on the main queue. */
+extern NSBlockOperation *PearlMainQueueOperation(void (^block)());
+/* Schedule a block to run on a background queue.  Use the current queue if currently on one, otherwise schedule it on a new queue. */
+extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)());
+
+/* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously. */
 extern void PearlMainQueueWait(void (^block)());
+/* Run a block on a background queue and block until the operation has finished.  If already on a background queue, run it synchronously. */
 extern void PearlNotMainQueueWait(void (^block)());
 
+/* Schedule a block to run on the main queue after x seconds from now. */
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
+/* Schedule a block to run on the global queue after x seconds from now. */
 extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
+/* Schedule a block to run on the given queue after x seconds from now. */
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+
+/* Schedule a block to run on the main queue.  If this block was previously scheduled but not yet completed, cancel it first. */
+#define PearlMainQueueSingularOperation(block) ({ \
+        static __weak NSOperation *operation = nil; \
+        [operation cancel]; \
+        operation = PearlMainQueueOperation(block); \
+    })
+/* Schedule a block to run on a background queue.  If this block was previously scheduled but not yet completed, cancel it first. */
+#define PearlNotMainQueueSingularOperation(block) ({ \
+        static __weak NSOperation *operation = nil; \
+        [operation cancel]; \
+        operation = PearlNotMainQueueOperation(block); \
+    })
+
 /**
 * Recursion detection.  Usage:
 * static BOOL recursing = NO;

@@ -44,6 +44,23 @@ void PearlMainQueueWait(void (^block)()) {
     }
 }
 
+NSBlockOperation *PearlMainQueueOperation(void (^block)()) {
+
+  NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
+  [[NSOperationQueue mainQueue] addOperation:blockOperation];
+  return blockOperation;
+}
+
+NSBlockOperation *PearlNotMainQueueOperation(void (^block)()) {
+
+  NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
+  NSOperationQueue *queue = [NSOperationQueue currentQueue];
+  if (!queue || queue == [NSOperationQueue mainQueue])
+    queue = [NSOperationQueue new];
+  [queue addOperation:blockOperation];
+  return blockOperation;
+}
+
 void PearlNotMainQueue(void (^block)()) {
 
     if (![NSThread isMainThread])

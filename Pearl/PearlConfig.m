@@ -111,21 +111,21 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
 #else
     notification = NSApplicationWillTerminateNotification;
 #endif
-    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
+    PearlAddNotificationObserver( notification, nil, nil, ^(PearlConfig *self, NSNotification *note) {
         self.firstRun = @NO;
         self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
         [[self class] flush];
-    }];
+    } );
 #if TARGET_OS_IPHONE
     notification = UIApplicationDidEnterBackgroundNotification;
 #else
     notification = NSApplicationDidHideNotification;
 #endif
-    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
+    PearlAddNotificationObserver( notification, nil, nil, ^(PearlConfig *self, NSNotification *note) {
         self.firstRun = @NO;
         self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
         [[self class] flush];
-    }];
+    } );
 
     return self;
 }

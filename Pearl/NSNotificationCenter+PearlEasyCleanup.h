@@ -30,7 +30,7 @@ static char NotificationObserversKey;
                     notificationObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN ); \
         [notificationObservers addObject:[[NSNotificationCenter defaultCenter] \
                 addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
-            __noteblock(note, wSelf); \
+            __noteblock(wSelf, note); \
         }] ]; \
     } )
 

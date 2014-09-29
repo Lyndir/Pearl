@@ -10,6 +10,7 @@
 #import "NSDictionary+Indexing.h"
 #import "NSError+PearlFullDescription.h"
 #import "NSManagedObject+Pearl.h"
+#import "NSNotificationCenter+PearlEasyCleanup.h"
 #import "NSObject+PearlExport.h"
 #import "NSObject+PearlKVO.h"
 #import "NSString+PearlNSArrayFormat.h"

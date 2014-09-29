@@ -16,12 +16,15 @@
 //  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface UIScrollView(PearlAdjustInsets)
 
 /**
+* Installs a keyboard appearance observer which adjusts the content insets of this scrollView to prevent occlusion.
+*
 * @return The NSNotificationCenter observer to make the magic happen.
+* You can also remove this observer with PearlRemoveNotificationObserversFrom( [scrollView] )
 */
 - (id)automaticallyAdjustInsetsForKeyboard;
 

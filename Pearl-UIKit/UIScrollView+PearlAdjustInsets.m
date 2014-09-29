@@ -22,12 +22,8 @@
 
 - (id)automaticallyAdjustInsetsForKeyboard {
 
-    Weakify( self );
     UIEdgeInsets originalInsets = self.contentInset;
-    return [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification object:nil queue:nil usingBlock:
-            ^(NSNotification *note) {
-        Strongify( self );
-
+    return PearlAddNotificationObserver( UIKeyboardWillChangeFrameNotification, nil, nil, ^(UIScrollView *self, NSNotification *note) {
         CGRect frameFromScreen = [note.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
         CGRect frameToScreen = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGRect frameFrom = [self convertRect:[self.window convertRect:frameFromScreen fromWindow:nil] fromView:self.window];
@@ -41,7 +37,7 @@
         [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0
                             options:UIViewAnimationCurveToOptions( [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue] )
                          animations:^{ self.contentInset = insetsTo; } completion:nil];
-    }];
+    });
 }
 
 - (void)insetOcclusion {

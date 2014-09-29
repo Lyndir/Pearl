@@ -71,6 +71,8 @@
  * If the user fails to pass the gate (either due to cancelling or failing the test), the block is fired with continuing set to NO.
  */
 + (instancetype)showParentalGate:(void (^)(BOOL continuing))completion;
++ (instancetype)showParentalGateWithTitle:(NSString *)title message:(NSString *)message
+                               completion:(void ( ^ )(BOOL continuing))completion;
 
 /**
  * Initializes and shows an alert.  See -initWithTitle:message:viewStyle:tappedButtonBlock:cancelTitle:otherTitles:

@@ -28,16 +28,19 @@ static char NotificationObserversKey;
         if (!notificationObservers) \
             objc_setAssociatedObject( self, &NotificationObserversKey, \
                     notificationObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN ); \
-        [notificationObservers addObject:[[NSNotificationCenter defaultCenter] \
+        id observer = [[NSNotificationCenter defaultCenter] \
                 addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
-            __noteblock(wSelf, note); \
-        }] ]; \
+                    __noteblock(wSelf, note); \
+                }]; \
+        [notificationObservers addObject:observer]; \
+        observer; \
     } )
 
-#define PearlRemoveNotificationObservers() \
+#define PearlRemoveNotificationObservers() PearlRemoveNotificationObserversFrom( self );
+#define PearlRemoveNotificationObserversFrom(_host) \
     ( { \
-        NSMutableArray *notificationObservers = objc_getAssociatedObject( self, &NotificationObserversKey ); \
+        NSMutableArray *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
         for (id notificationObserver in notificationObservers) \
             [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver]; \
-        objc_setAssociatedObject( self, &NotificationObserversKey, nil, OBJC_ASSOCIATION_RETAIN ); \
+        objc_setAssociatedObject( _host, &NotificationObserversKey, nil, OBJC_ASSOCIATION_RETAIN ); \
     } )

@@ -150,6 +150,14 @@
 
 + (instancetype)showParentalGate:(void (^)(BOOL continuing))completion {
 
+    return [self showParentalGateWithTitle:@"Parents Only"
+                                   message:@"To proceed, first get the help of your parents."
+                                completion:completion];
+}
+
++ (instancetype)showParentalGateWithTitle:(NSString *)title message:(NSString *)message
+                completion:(void (^)(BOOL continuing))completion {
+
     int a = random() % 6, b = random() % 6;
     int solution;
     NSString *operator;
@@ -168,8 +176,7 @@
             @throw [[NSException alloc] initWithName:NSInternalInconsistencyException reason:@"Unsupported operator." userInfo:nil];
     }
 
-    return [self showAlertWithTitle:@"Parents Only"
-                            message:@"To proceed, first get the help of your parents."
+    return [self showAlertWithTitle:title message:message
                           viewStyle:UIAlertViewStylePlainTextInput
                           initAlert:^(UIAlertView *alert, UITextField *firstField) { firstField.placeholder = operator; }
                   tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {

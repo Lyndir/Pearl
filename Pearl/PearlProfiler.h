@@ -18,11 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
+#if DEBUG
 #define prof_new(format, ...)     PearlProfiler * prof_new_var((format), ##__VA_ARGS__)
 #define prof_new_var(format, ...) __profiler = [PearlProfiler profilerInFile:basename((char *)__FILE__) atLine:__LINE__ \
                                                                      forTask:(format), ##__VA_ARGS__]
 #define prof_rewind(format, ...)  [__profiler rewindInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
 #define prof_finish(format, ...)  [__profiler finishInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
+#else
+#define prof_new(format, ...)     while (0) {}
+#define prof_new_var(format, ...) while (0) {}
+#define prof_rewind(format, ...)  while (0) {}
+#define prof_finish(format, ...)  while (0) {}
+#endif
 
 @interface PearlProfiler : NSObject
 

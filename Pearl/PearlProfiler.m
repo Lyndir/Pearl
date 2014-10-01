@@ -29,6 +29,7 @@ static NSUInteger profilerJobs = 0;
 @implementation PearlProfiler {
   CFTimeInterval _startTime;
   CFTimeInterval _totalTime;
+  BOOL _cancelled;
 }
 
 + (void)setDefaultThreshold:(CFTimeInterval)threshold {
@@ -58,6 +59,9 @@ static NSUInteger profilerJobs = 0;
 
 - (void)startJobInFile:(const char *)fileName atLine:(NSInteger)lineNumber {
 
+    if (_cancelled)
+        return;
+
     NSMutableString *spaces = [NSMutableString stringWithCapacity:profilerJobs * 2];
     for (NSUInteger j = 0; j < profilerJobs; ++j)
         [spaces appendString:@"  "];
@@ -71,6 +75,9 @@ static NSUInteger profilerJobs = 0;
 }
 
 - (void)logJob:(NSString *)format args:(va_list)args inFile:(const char *)fileName atLine:(NSInteger)lineNumber {
+
+    if (_cancelled)
+        return;
 
     CFTimeInterval endTime = CACurrentMediaTime();
     if (!_startTime) {
@@ -98,6 +105,9 @@ static NSUInteger profilerJobs = 0;
 
 - (void)logTotal {
 
+    if (_cancelled)
+        return;
+
     if (_totalTime >= self.threshold) {
         NSMutableString *spaces = [NSMutableString stringWithCapacity:profilerJobs * 2];
         for (NSUInteger j = 0; j < profilerJobs; ++j)
@@ -110,6 +120,9 @@ static NSUInteger profilerJobs = 0;
 
 -(void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... {
 
+    if (_cancelled)
+        return;
+
     va_list args;
     va_start( args, format );
     [self logJob:format args:args inFile:fileName atLine:lineNumber];
@@ -119,6 +132,9 @@ static NSUInteger profilerJobs = 0;
 }
 
 - (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... {
+
+    if (_cancelled)
+        return;
 
     va_list args;
     va_start( args, format );
@@ -137,6 +153,16 @@ static NSUInteger profilerJobs = 0;
     }
 
     [self logTotal];
+}
+
+- (void)cancel {
+
+    if (_startTime) {
+        _startTime = 0;
+        --profilerJobs;
+    }
+
+  _cancelled = YES;
 }
 
 - (void)dealloc {

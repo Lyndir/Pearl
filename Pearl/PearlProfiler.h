@@ -23,6 +23,7 @@
                                                                      forTask:(format), ##__VA_ARGS__]
 #define prof_rewind(format, ...)  [__profiler rewindInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
 #define prof_finish(format, ...)  [__profiler finishInFile:basename((char *)__FILE__) atLine:__LINE__ job:(format), ##__VA_ARGS__]
+#define prof_disable_if(condition)if (condition) { [__profiler cancel]; }
 
 @interface PearlProfiler : NSObject
 
@@ -55,5 +56,10 @@
  * Stop the profiler's job.
  */
 - (void)finish;
+
+/**
+ * Cancel the profiler, making it ignore any other operations.
+ */
+- (void)cancel;
 
 @end

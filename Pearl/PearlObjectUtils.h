@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  ObjectUtils.h
@@ -100,8 +100,8 @@
             }
 #define PearlObjCall(arg, call) [arg call]
 /** Simplify PearlHashCode usage with objects.  Eg.
- *  PearlHashCode( self.age, MAP_LIST( PearlHashCall, self.firstName, self.lastName ), -1 );
- */
+*  PearlHashCode( self.age, MAP_LIST( PearlHashCall, self.firstName, self.lastName ), -1 );
+*/
 #define PearlHashCall(arg) [arg hash]
 #define PearlHashFloat(arg) ((NSUInteger)((uint32_t*)&arg)[0])
 #define PearlHashFloats(...) MAP_LIST(PearlHashFloat, __VA_ARGS__)
@@ -132,20 +132,24 @@
     }
 
 __BEGIN_DECLS
-/* Run a block on the main queue.  If already on the main queue, run it synchronously. */
-extern void PearlMainQueue(void (^block)());
-/* Run a block on a background queue.  If already on a background queue, run it synchronously. */
-extern void PearlNotMainQueue(void (^block)());
+/* Run a block on the main queue.  If already on the main queue, run it synchronously.
+ * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled on the main queue. */
+extern BOOL PearlMainQueue(void (^block)());
+/* Run a block on a background queue.  If already on a background queue, run it synchronously.
+ * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled on a background queue. */
+extern BOOL PearlNotMainQueue(void (^block)());
 
 /* Schedule a block to run on the main queue. */
 extern NSBlockOperation *PearlMainQueueOperation(void (^block)());
 /* Schedule a block to run on a background queue.  Use the current queue if currently on one, otherwise schedule it on a new queue. */
 extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)());
 
-/* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously. */
-extern void PearlMainQueueWait(void (^block)());
-/* Run a block on a background queue and block until the operation has finished.  If already on a background queue, run it synchronously. */
-extern void PearlNotMainQueueWait(void (^block)());
+/* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously.
+ * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on the main queue. */
+extern BOOL PearlMainQueueWait(void (^block)());
+/* Run a block on a background queue and block until the operation has finished.  If already on a background queue, run it synchronously.
+ * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on a background queue. */
+extern BOOL PearlNotMainQueueWait(void (^block)());
 
 /* Schedule a block to run on the main queue after x seconds from now. */
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
@@ -173,13 +177,15 @@ extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void
 * PearlIfNotRecursing(&recursing, ^{
 *     [stuff]; // Only executed first time, skipped if stuff causes recursion.
 * });
+*
+* @return YES if not recursing and the block was executed.
 */
-extern void PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
+extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 __END_DECLS
 
-@interface NSObject (PearlObjectUtils)
+@interface NSObject(PearlObjectUtils)
 
 - (NSString *)propertyWithValue:(id)value;
 
@@ -193,11 +199,11 @@ __END_DECLS
 
 @interface PearlBlockObject : NSObject
 
-+ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
-+ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
-+ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
++ (id)facadeFor:(id)facadedObject usingBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+- (id)initWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
        facadeObject:(id)facade superClass:(Class)superClass;
 
 @end

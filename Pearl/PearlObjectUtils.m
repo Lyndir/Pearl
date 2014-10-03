@@ -17,31 +17,36 @@
 //
 
 
-void PearlMainQueue(void (^block)()) {
+BOOL PearlMainQueue(void (^block)()) {
 
-    if ([NSThread isMainThread])
+    if ([NSThread isMainThread]) {
         block();
-    else
-        dispatch_async(dispatch_get_main_queue(), block);
+        return YES;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), block);
+    return NO;
 }
 
-void PearlMainQueueWait(void (^block)()) {
+BOOL PearlMainQueueWait(void (^block)()) {
 
-    if ([NSThread isMainThread])
+    if ([NSThread isMainThread]) {
         block();
-    else {
-        dispatch_group_t waitGroup = dispatch_group_create();
-        dispatch_group_enter( waitGroup );
-        dispatch_async( dispatch_get_main_queue(), ^{
-            @try {
-                block();
-            }
-            @finally {
-                dispatch_group_leave( waitGroup );
-            }
-        } );
-        dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+        return YES;
     }
+
+    dispatch_group_t waitGroup = dispatch_group_create();
+    dispatch_group_enter( waitGroup );
+    dispatch_async( dispatch_get_main_queue(), ^{
+        @try {
+            block();
+        }
+        @finally {
+            dispatch_group_leave( waitGroup );
+        }
+    } );
+    dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+    return NO;
 }
 
 NSBlockOperation *PearlMainQueueOperation(void (^block)()) {
@@ -61,36 +66,41 @@ NSBlockOperation *PearlNotMainQueueOperation(void (^block)()) {
   return blockOperation;
 }
 
-void PearlNotMainQueue(void (^block)()) {
+BOOL PearlNotMainQueue(void (^block)()) {
 
-    if (![NSThread isMainThread])
+    if (![NSThread isMainThread]) {
         block();
-    else
-        dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+        return YES;
+    }
+
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+    return NO;
 }
 
-void PearlNotMainQueueWait(void (^block)()) {
+BOOL PearlNotMainQueueWait(void (^block)()) {
 
-    if (![NSThread isMainThread])
+    if (![NSThread isMainThread]) {
         block();
-    else {
-        dispatch_group_t waitGroup = dispatch_group_create();
-        dispatch_group_enter( waitGroup );
-        dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
-            @try {
-                block();
-            }
-            @finally {
-                dispatch_group_leave( waitGroup );
-            }
-        } );
-        dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+        return YES;
     }
+
+    dispatch_group_t waitGroup = dispatch_group_create();
+    dispatch_group_enter( waitGroup );
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ^{
+        @try {
+            block();
+        }
+        @finally {
+            dispatch_group_leave( waitGroup );
+        }
+    } );
+    dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+    return NO;
 }
 
 void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)()) {
 
-    PearlQueueAfter( seconds, dispatch_get_main_queue(), block );
+    return PearlQueueAfter( seconds, dispatch_get_main_queue(), block );
 }
 
 void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)()) {
@@ -103,13 +113,14 @@ void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^bloc
     dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
 }
 
-void PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)()) {
+BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)()) {
     if (*recursing)
-        return;
+        return NO;
 
     *recursing = YES;
     notRecursingBlock();
     *recursing = NO;
+    return YES;
 }
 
 NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {

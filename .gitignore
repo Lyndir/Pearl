@@ -1,6 +1,8 @@
 # OS-Specific junk.
 .DS_Store
 
+# "Implicit" submodules
+
 # IntelliJ
 /.idea/*
 !/.idea/encodings.xml

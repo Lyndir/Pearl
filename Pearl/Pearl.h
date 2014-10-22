@@ -13,6 +13,7 @@
 #import "NSNotificationCenter+PearlEasyCleanup.h"
 #import "NSObject+PearlExport.h"
 #import "NSObject+PearlKVO.h"
+#import "NSPersistentStore+PearlMigration.h"
 #import "NSString+PearlNSArrayFormat.h"
 #import "NSString+PearlSEL.h"
 #import "NSTimer+PearlBlock.h"

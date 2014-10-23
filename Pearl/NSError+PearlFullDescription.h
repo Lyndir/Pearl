@@ -11,3 +11,9 @@
 - (NSString *)fullDescription;
 
 @end
+
+@interface NSException (PearlFullDescription)
+
+- (NSString *)fullDescription;
+
+@end

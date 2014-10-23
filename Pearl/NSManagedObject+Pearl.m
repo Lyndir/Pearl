@@ -47,7 +47,7 @@
         return element;
     }
     @catch (NSException *exception) {
-        err( @"Exception while loading %@: %@", self, exception );
+        err( @"Exception while loading %@: %@", self, [exception fullDescription] );
         return nil;
     }
 }

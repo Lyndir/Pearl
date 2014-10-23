@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  PearlAbstractAppDelegate.m
@@ -100,7 +100,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
                     [provisioningProfile[@"Entitlements"][@"get-task-allow"] boolValue]? @"debug": @"release",
                     (long)[provisioningProfile[@"ProvisionedDevices"] count], provisioningProfile[@"UUID"] );
     }
-    inf(@"%@ %@ on platform: %@, profile: %@", name, version, [PearlDeviceUtils platform], profileString);
+    inf( @"%@ %@ on platform: %@, profile: %@", name, version, [PearlDeviceUtils platform], profileString );
 
 #ifdef PEARL_WITH_APNS
     if ([[PearlConfig get].supportedNotifications unsignedIntegerValue])
@@ -168,26 +168,26 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 - (void)showReview:(BOOL)allowInApp {
 
     if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" )) {
-        if (NSNullToNil([PearlConfig get].iTunesID)) {
-            inf(@"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID);
-            [UIApp openURL:ITMS_REVIEW_URL([PearlConfig get].iTunesID)];
+        if (NSNullToNil( [PearlConfig get].iTunesID )) {
+            inf( @"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID );
+            [UIApp openURL:ITMS_REVIEW_URL( [PearlConfig get].iTunesID )];
         }
         else {
-            inf(@"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID);
-            [UIApp openURL:ITMS_APP_URL([PearlInfoPlist get].CFBundleName)];
+            inf( @"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID );
+            [UIApp openURL:ITMS_APP_URL( [PearlInfoPlist get].CFBundleName )];
         }
         return;
     }
 
     @try {
-        inf(@"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID);
+        inf( @"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID );
         SKStoreProductViewController *storeViewController = [SKStoreProductViewController new];
         storeViewController.delegate = self;
         [storeViewController loadProductWithParameters:@{
                 SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].iTunesID
         }                              completionBlock:^(BOOL result, NSError *error) {
             if (!result) {
-                err(@"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [error fullDescription]);
+                err( @"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [error fullDescription] );
                 [self showReview:NO];
                 return;
             }
@@ -195,7 +195,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
     }
     @catch (NSException *exception) {
-        err(@"Exception while loading in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, exception);
+        err( @"Exception while loading in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [exception fullDescription] );
         [self showReview:NO];
     }
 }
@@ -214,22 +214,22 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
                                message:strf( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
                              viewStyle:UIAlertViewStyleDefault
                              initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
-            if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
-                // Comment
-                [self showFeedback];
-                return;
-            }
+                    if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
+                        // Comment
+                        [self showFeedback];
+                        return;
+                    }
 
-            [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
-            if (buttonIndex_ == [alert_ cancelButtonIndex])
-                    // No
-                return;
+                    [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
+                    if (buttonIndex_ == [alert_ cancelButtonIndex])
+                        // No
+                        return;
 
-            if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
-                // Yes
-                [self showReview];
-            }
-        }                  cancelTitle:[PearlStrings get].reviewNo
+                    if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
+                        // Yes
+                        [self showReview];
+                    }
+                }          cancelTitle:[PearlStrings get].reviewNo
                            otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewIssue, nil];
 #endif
 }
@@ -303,10 +303,10 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
+- (void)applicationDidEnterBackground:(UIApplication *)application __OSX_AVAILABLE_STARTING( __MAC_NA, __IPHONE_4_0 ) {
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING(__MAC_NA, __IPHONE_4_0) {
+- (void)applicationWillEnterForeground:(UIApplication *)application __OSX_AVAILABLE_STARTING( __MAC_NA, __IPHONE_4_0 ) {
 }
 
 - (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication *)application {
@@ -328,7 +328,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
 
-    dbg(@"Done with in-app product view.");
+    dbg( @"Done with in-app product view." );
     [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 

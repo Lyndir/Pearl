@@ -27,19 +27,17 @@
             @try {
                 if ([info respondsToSelector:@selector( fullDescription )])
                     infoString = [[info fullDescription] mutableCopy];
-                else if ([info isKindOfClass:[NSException class]])
-                    infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [(NSException *)info name], [(NSException *)info reason],
-                                                                   [(NSException *)info userInfo]];
                 else if ([info respondsToSelector:@selector( debugDescription )])
                     infoString = [[info debugDescription] mutableCopy];
                 else
                     infoString = [[info description] mutableCopy];
             }
             @catch (NSException *exception) {
-                infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@", NSStringFromClass( [info class] ), exception];
+                infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@",
+                                                               NSStringFromClass( [info class] ), [exception fullDescription]];
             }
 
-            NSString *keyString = [NSString stringWithFormat:@" - Info %@: [%@] ", key, [info class]];
+            NSString *keyString = strf(@" - Info %@: [%@] ", key, [info class]);
             NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length] + 1
                                                             withString:@" " startingAtIndex:0];
             [infoString replaceOccurrencesOfString:@"\n" withString:indentedNewline options:0
@@ -54,3 +52,46 @@
 }
 
 @end
+
+@implementation NSException(PearlFullDescription)
+
+- (NSString *)fullDescription {
+
+    NSMutableString *fullDescription = [NSMutableString new];
+    [fullDescription appendFormat:@"Exception: %@: %@\n", self.name, self.reason];
+    [fullDescription appendFormat:@" - Call Stack:\n"];
+    for (NSUInteger s = 0; s < [self.callStackSymbols count]; ++s)
+        [fullDescription appendFormat:@"     %u. %@\n", s, self.callStackSymbols[s]];
+    if (self.userInfo) {
+        for (id key in self.userInfo) {
+            id info = self.userInfo[key];
+            NSMutableString *infoString;
+            @try {
+                if ([info respondsToSelector:@selector( fullDescription )])
+                    infoString = [[info fullDescription] mutableCopy];
+                else if ([info respondsToSelector:@selector( debugDescription )])
+                    infoString = [[info debugDescription] mutableCopy];
+                else
+                    infoString = [[info description] mutableCopy];
+            }
+            @catch (NSException *exception) {
+                infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@",
+                                                               NSStringFromClass( [info class] ), [exception fullDescription]];
+            }
+
+            NSString *keyString = strf(@" - Info %@: [%@] ", key, [info class]);
+            NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length] + 1
+                                                            withString:@" " startingAtIndex:0];
+            [infoString replaceOccurrencesOfString:@"\n" withString:indentedNewline options:0
+                                             range:NSMakeRange( 0, [infoString length] )];
+            [fullDescription appendString:keyString];
+            [fullDescription appendString:infoString];
+            [fullDescription appendString:@"\n"];
+        }
+    }
+
+    return fullDescription;
+}
+
+@end
+

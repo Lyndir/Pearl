@@ -6,8 +6,7 @@
 
 #import "NSError+PearlFullDescription.h"
 
-
-@implementation NSError (PearlFullDescription)
+@implementation NSError(PearlFullDescription)
 
 - (NSString *)fullDescription {
 
@@ -25,14 +24,20 @@
         for (id key in self.userInfo) {
             id info = self.userInfo[key];
             NSMutableString *infoString;
-            if ([info respondsToSelector:@selector(fullDescription)])
-                infoString = [[info fullDescription] mutableCopy];
-            else if ([info isKindOfClass:[NSException class]])
-                infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [(NSException *)info name], [(NSException *)info reason], [(NSException *)info userInfo]];
-            else if ([info respondsToSelector:@selector(debugDescription)])
-                infoString = [[info debugDescription] mutableCopy];
-            else
-                infoString = [[info description] mutableCopy];
+            @try {
+                if ([info respondsToSelector:@selector( fullDescription )])
+                    infoString = [[info fullDescription] mutableCopy];
+                else if ([info isKindOfClass:[NSException class]])
+                    infoString = [NSMutableString stringWithFormat:@"%@: %@ %@", [(NSException *)info name], [(NSException *)info reason],
+                                                                   [(NSException *)info userInfo]];
+                else if ([info respondsToSelector:@selector( debugDescription )])
+                    infoString = [[info debugDescription] mutableCopy];
+                else
+                    infoString = [[info description] mutableCopy];
+            }
+            @catch (NSException *exception) {
+                infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@", NSStringFromClass( [info class] ), exception];
+            }
 
             NSString *keyString = [NSString stringWithFormat:@" - Info %@: [%@] ", key, [info class]];
             NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length] + 1

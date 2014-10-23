@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  NSManagedObject(Pearl).h
@@ -34,16 +34,22 @@
     if (!objectID || !context)
         return nil;
 
-    NSError *error = nil;
-    NSManagedObject *element = [context existingObjectWithID:objectID error:&error];
-    if (!element)
-        err( @"Failed to load %@: %@", self, [error fullDescription] );
-    else if (element.isDeleted) {
-        wrn( @"%@ was deleted: %@, returning nil instead.", self, element );
+    @try {
+        NSError *error = nil;
+        NSManagedObject *element = [context existingObjectWithID:objectID error:&error];
+        if (!element)
+            err( @"Failed to load %@: %@", self, [error fullDescription] );
+        else if (element.isDeleted) {
+            wrn( @"%@ was deleted: %@, returning nil instead.", self, element );
+            return nil;
+        }
+
+        return element;
+    }
+    @catch (NSException *exception) {
+        err( @"Exception while loading %@: %@", self, exception );
         return nil;
     }
-
-    return element;
 }
 
 @end

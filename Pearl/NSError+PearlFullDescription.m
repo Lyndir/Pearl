@@ -61,7 +61,7 @@
     [fullDescription appendFormat:@"Exception: %@: %@\n", self.name, self.reason];
     [fullDescription appendFormat:@" - Call Stack:\n"];
     for (NSUInteger s = 0; s < [self.callStackSymbols count]; ++s)
-        [fullDescription appendFormat:@"     %u. %@\n", s, self.callStackSymbols[s]];
+        [fullDescription appendFormat:@"     %lu. %@\n", (long)s, self.callStackSymbols[s]];
     if (self.userInfo) {
         for (id key in self.userInfo) {
             id info = self.userInfo[key];

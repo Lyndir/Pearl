@@ -17,6 +17,7 @@
 //
 
 #import "PearlProfiler.h"
+#import <QuartzCore/QuartzCore.h>
 
 static CFTimeInterval profilerThreshold = 1.0 / 60;
 static NSUInteger profilerJobs = 0;

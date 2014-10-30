@@ -21,16 +21,18 @@
 static char NotificationObserversKey;
 
 #define PearlAddNotificationObserver(_name, _object, _queue, _block) \
+    PearlAddNotificationObserverTo( self, _name, _object, _queue, _block )
+#define PearlAddNotificationObserverTo(_host, _name, _object, _queue, _block) \
     ( { \
-        __weak typeof(self) wSelf = self; \
-        void (^__noteblock)(id self, NSNotification *note) = _block; \
-        NSMutableArray *notificationObservers = objc_getAssociatedObject( self, &NotificationObserversKey ); \
+        __weak typeof(_host) wHost = _host; \
+        void (^__noteblock)(id _self, NSNotification *note) = _block; \
+        NSMutableArray *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
         if (!notificationObservers) \
-            objc_setAssociatedObject( self, &NotificationObserversKey, \
+            objc_setAssociatedObject( _host, &NotificationObserversKey, \
                     notificationObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN ); \
         id observer = [[NSNotificationCenter defaultCenter] \
                 addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
-                    __noteblock(wSelf, note); \
+                    __noteblock(wHost, note); \
                 }]; \
         [notificationObservers addObject:observer]; \
         observer; \

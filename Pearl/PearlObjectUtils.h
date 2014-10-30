@@ -89,14 +89,16 @@
             });
 
 #define PearlAssociatedObjectProperty(__type, __uppercased, __lowercased)                                 \
-            PearlAssociatedObjectPropertyAssociation(__type, __uppercased, __lowercased, OBJC_ASSOCIATION_RETAIN)
-#define PearlAssociatedObjectPropertyAssociation(__type, __uppercased, __lowercased, __association)       \
+            PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, , self)
+#define PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, __tr_to, __tr_from)                                 \
+            PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, OBJC_ASSOCIATION_RETAIN, __tr_to, __tr_from)
+#define PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, __association, __tr_to, __tr_from)       \
             static char __uppercased ## Key;                                                          \
             - (void)set ## __uppercased :( __type ) __lowercased {                                          \
-                objc_setAssociatedObject( self, & __uppercased ## Key, __lowercased, __association );       \
+                objc_setAssociatedObject( self, & __uppercased ## Key, __tr_to(__lowercased), __association );       \
             }                                                                                   \
             - ( __type ) __lowercased {                                                             \
-                return objc_getAssociatedObject( self, & __uppercased ## Key );                       \
+                return [objc_getAssociatedObject( self, & __uppercased ## Key ) __tr_from];                       \
             }
 #define PearlObjCall(arg, call) [arg call]
 /** Simplify PearlHashCode usage with objects.  Eg.

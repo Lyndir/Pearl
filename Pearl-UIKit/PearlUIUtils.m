@@ -532,8 +532,7 @@ static NSMutableSet *dismissableResponders;
 
     NSUInteger indent = 0;
     for (UIView *view = self; view; view = view.superview) {
-        dbg( strf( @"%%%lds - t:%%d, a:%%0.1f, h:%%@, %%@", (long)indent ),
-                "", view.tag, view.alpha, @(view.hidden), [view debugDescription] );
+        dbg( strf( @"%%%lds %%@", (long)indent ), "", [view infoDescription] );
         indent += 4;
     }
 }
@@ -545,13 +544,21 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
+    dbg( strf(@"%%%lds %%@", (long)indent), "", [self infoDescription] );
+
+    for (UIView *child in self.subviews)
+        [child printChildHierarchyWithIndent:indent + 4];
+}
+
+- (NSString *)infoDescription {
+
     // Get background color
     CGFloat red, green, blue, alpha;
     [self.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
     NSString *backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
             (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
 
-    // Get view controller
+    // Find the view controller
     UIResponder *nextResponder = [self nextResponder];
     while ([nextResponder isKindOfClass:[UIView class]])
         nextResponder = [nextResponder nextResponder];
@@ -559,12 +566,9 @@ static NSMutableSet *dismissableResponders;
     if ([nextResponder isKindOfClass:[UIViewController class]]) if ((viewController = (UIViewController *)nextResponder).view != self)
         viewController = nil;
 
-    dbg( strf( @"%%%lds %@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", (long)indent, viewController? @"+ %@(%@)": @"- %@%@" ),
-            "", NSStringFromClass( [viewController class] )?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
+    return strf( strf( @"%@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", viewController? @"+ %@(%@)": @"- %@%@" ),
+            NSStringFromClass( [viewController class] )?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
             NSStringFromCGRect( self.frame ), [self debugDescription] );
-
-    for (UIView *child in self.subviews)
-        [child printChildHierarchyWithIndent:indent + 4];
 }
 
 - (UIView *)subviewClosestTo:(CGPoint)point {

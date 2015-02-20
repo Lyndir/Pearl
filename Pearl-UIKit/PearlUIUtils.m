@@ -571,6 +571,21 @@ static NSMutableSet *dismissableResponders;
             NSStringFromCGRect( self.frame ), [self debugDescription] );
 }
 
+- (NSString *)layoutDescription {
+
+  NSMutableString *layout = [NSMutableString new], *ancestry = [NSMutableString new];
+  [layout appendFormat:@"Constraints affecting: %@", [self infoDescription]];
+  for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview], [ancestry appendString:@":"])
+    for (NSLayoutConstraint *constraint in constraintHolder.constraints) {
+      if (constraint.firstItem != self && constraint.secondItem != self)
+        continue;
+
+      [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder class], [constraint debugDescription]];
+    }
+
+  return layout;
+}
+
 - (UIView *)subviewClosestTo:(CGPoint)point {
 
     return [PearlUIUtils viewClosestTo:point ofArray:self.subviews];

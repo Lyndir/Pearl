@@ -167,6 +167,10 @@ __END_DECLS
 - (BOOL)enumerateViews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
+/** Return a string that briefly describes this view. */
+- (NSString *)infoDescription;
+/** Return a string that briefly describes this view's layout. */
+- (NSString *)layoutDescription;
 
 /**
  * Calculate which of this view's subviews have their center closest to the given point.

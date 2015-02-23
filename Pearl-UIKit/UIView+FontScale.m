@@ -101,9 +101,12 @@
 
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 
+    [self setNeedsUpdateConstraints];
     [self invalidateIntrinsicContentSize];
-    if ([self.superview isKindOfClass:[UIControl class]])
+    if ([self.superview isKindOfClass:[UIControl class]]) {
+        [self.superview setNeedsUpdateConstraints];
         [self.superview invalidateIntrinsicContentSize];
+    }
 }
 
 /**

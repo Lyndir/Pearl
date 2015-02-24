@@ -462,6 +462,25 @@ static NSMutableSet *dismissableResponders;
     return applicableConstraints;
 }
 
+- (NSDictionary *)applicableConstraintsByHolder {
+
+    NSMutableDictionary *constraintsByHolder = [NSMutableDictionary new];
+    for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview]) {
+      NSValue *holderKey = [NSValue valueWithPointer:(__bridge void *)constraintHolder];
+      [constraintHolder updateConstraintsIfNeeded];
+
+      NSMutableArray *holderConstraints = constraintsByHolder[holderKey];
+      if (!holderConstraints)
+        constraintsByHolder[holderKey] = holderConstraints = [NSMutableArray new];
+      for (NSLayoutConstraint *constraint in constraintHolder.constraints)
+            if (constraint.firstItem == self || constraint.secondItem == self) {
+              [holderConstraints addObject:constraint];
+            }
+    }
+
+    return constraintsByHolder;
+}
+
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
 
     return [self firstConstraintForAttribute:attribute otherView:nil];

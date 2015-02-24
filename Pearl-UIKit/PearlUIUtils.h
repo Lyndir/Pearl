@@ -154,6 +154,7 @@ __END_DECLS
                                 metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 /** @return All constraints in the view hierarchy that apply to this view. */
 - (NSArray *)applicableConstraints;
+- (NSDictionary *)applicableConstraintsByHolder;
 /** @return The first constraint that applies to this view's given attribute. */
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 /** @return The first constraint that applies to this view's given attribute and relates to the given other view. */

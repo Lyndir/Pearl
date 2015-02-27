@@ -130,13 +130,15 @@ id returnArg(id arg) {
 
 - (NSArray *)messagesWithLevel:(PearlLogLevel)level {
 
-    NSMutableArray *messages = [self.messages mutableCopy];
-    [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
-            ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
-                return message.level >= level;
-            }]];
+    @synchronized (self.messages) {
+        NSMutableArray *messages = [self.messages mutableCopy];
+        [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
+                ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
+                    return message.level >= level;
+                }]];
 
-    return messages;
+        return messages;
+    };
 }
 
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
@@ -152,9 +154,11 @@ id returnArg(id arg) {
 
 - (void)printAllWithLevel:(PearlLogLevel)level {
 
-    for (PearlLogMessage *message in self.messages)
-        if (message.level >= level)
-            fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
+    @synchronized (self.messages) {
+        for (PearlLogMessage *message in self.messages)
+            if (message.level >= level)
+                fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
+    }
 }
 
 - (void)registerListener:(BOOL ( ^ )(PearlLogMessage *message))listener {
@@ -174,7 +178,9 @@ id returnArg(id arg) {
     @synchronized (self.listeners) {
         @try {
             threadLocals[@"PearlDisableLog"] = @YES;
-            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
+            for (
+                    BOOL (^listener)(PearlLogMessage *)
+                    in self.listeners)
                 if (!listener( message ))
                     return self;
         }
@@ -188,7 +194,9 @@ id returnArg(id arg) {
             fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
         }
     if (message.level >= self.historyLevel)
-        [self.messages addObject:message];
+        @synchronized (self.messages) {
+            [self.messages addObject:message];
+        }
 
     return self;
 }
@@ -203,7 +211,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@, error: %@", format, exception);
+            message = strf( @"Error formatting message: %@, error: %@", format, exception );
         }
         @catch (id exception) {
             @try {
@@ -230,7 +238,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@", exception);
+            message = strf( @"Error formatting message: %@", exception );
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -252,7 +260,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@", exception);
+            message = strf( @"Error formatting message: %@", exception );
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -274,7 +282,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@", exception);
+            message = strf( @"Error formatting message: %@", exception );
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -296,7 +304,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@", exception);
+            message = strf( @"Error formatting message: %@", exception );
         }
         @catch (id exception) {
             message = @"Error formatting message.";
@@ -318,7 +326,7 @@ id returnArg(id arg) {
     }
     @catch (id exception) {
         @try {
-            message = strf(@"Error formatting message: %@", exception);
+            message = strf( @"Error formatting message: %@", exception );
         }
         @catch (id exception) {
             message = @"Error formatting message.";

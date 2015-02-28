@@ -4,8 +4,6 @@
 //
 
 #import "UIView+FontScale.h"
-#import "CMHRSectionsViewController.h"
-#import "CMHRRightImageButton.h"
 
 @interface NSObject(FontScale_JRSwizzle)
 

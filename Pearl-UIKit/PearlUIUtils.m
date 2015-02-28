@@ -462,6 +462,25 @@ static NSMutableSet *dismissableResponders;
     return applicableConstraints;
 }
 
+- (NSDictionary *)applicableConstraintsByHolder {
+
+    NSMutableDictionary *constraintsByHolder = [NSMutableDictionary new];
+    for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview]) {
+      NSValue *holderKey = [NSValue valueWithPointer:(__bridge void *)constraintHolder];
+      [constraintHolder updateConstraintsIfNeeded];
+
+      NSMutableArray *holderConstraints = constraintsByHolder[holderKey];
+      if (!holderConstraints)
+        constraintsByHolder[holderKey] = holderConstraints = [NSMutableArray new];
+      for (NSLayoutConstraint *constraint in constraintHolder.constraints)
+            if (constraint.firstItem == self || constraint.secondItem == self) {
+              [holderConstraints addObject:constraint];
+            }
+    }
+
+    return constraintsByHolder;
+}
+
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
 
     return [self firstConstraintForAttribute:attribute otherView:nil];
@@ -569,6 +588,21 @@ static NSMutableSet *dismissableResponders;
     return strf( strf( @"%@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", viewController? @"+ %@(%@)": @"- %@%@" ),
             NSStringFromClass( [viewController class] )?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
             NSStringFromCGRect( self.frame ), [self debugDescription] );
+}
+
+- (NSString *)layoutDescription {
+
+  NSMutableString *layout = [NSMutableString new], *ancestry = [NSMutableString new];
+  [layout appendFormat:@"Constraints affecting: %@", [self infoDescription]];
+  for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview], [ancestry appendString:@":"])
+    for (NSLayoutConstraint *constraint in constraintHolder.constraints) {
+      if (constraint.firstItem != self && constraint.secondItem != self)
+        continue;
+
+      [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder class], [constraint debugDescription]];
+    }
+
+  return layout;
 }
 
 - (UIView *)subviewClosestTo:(CGPoint)point {

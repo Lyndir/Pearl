@@ -132,6 +132,13 @@
                    strf(@"[Unknown %@: %ld]",                       \
                        PearlStringify(_enumname), (long)value);     \
     }
+#define PearlPrefix(_v) PearlToken _v
+#define PearlSuffix(_v) _v PearlToken
+#define PearlInit(_variable, ...) ({ \
+    typeof(_variable) PearlToken = _variable; \
+    MAP_LIST( PearlPrefix, __VA_ARGS__ ); \
+    PearlToken; \
+})
 
 __BEGIN_DECLS
 /* Run a block on the main queue.  If already on the main queue, run it synchronously.

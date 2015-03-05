@@ -60,6 +60,17 @@ extern CGPoint CGRectGetTopRight(CGRect rect);
 extern CGPoint CGRectGetBottomRight(CGRect rect);
 extern CGPoint CGRectGetBottomLeft(CGRect rect);
 
+// Create a new CGRect from the original anchored at a new position.
+extern CGRect CGRectWithCenter(CGRect rect, CGPoint newCenter);
+extern CGRect CGRectWithTop(CGRect rect, CGPoint newTop);
+extern CGRect CGRectWithRight(CGRect rect, CGPoint newRight);
+extern CGRect CGRectWithBottom(CGRect rect, CGPoint newBottom);
+extern CGRect CGRectWithLeft(CGRect rect, CGPoint newLeft);
+extern CGRect CGRectWithTopLeft(CGRect rect, CGPoint newTopLeft);
+extern CGRect CGRectWithTopRight(CGRect rect, CGPoint newTopRight);
+extern CGRect CGRectWithBottomRight(CGRect rect, CGPoint newBottomRight);
+extern CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft);
+
 /** Get the UIEdgeInsets that insets each edge by the largest edge of either a or b. */
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b);
 

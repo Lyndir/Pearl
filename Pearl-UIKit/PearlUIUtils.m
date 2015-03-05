@@ -16,6 +16,8 @@
 //  Copyright 2010, lhunath (Maarten Billemont). All rights reserved.
 //
 
+#import <CoreGraphics/CoreGraphics.h>
+
 CGRect CGRectWithX(CGRect rect, CGFloat x) {
 
     return (CGRect){ { x, rect.origin.y }, { rect.size.width, rect.size.height } };
@@ -89,6 +91,51 @@ CGPoint CGRectGetBottomRight(CGRect rect) {
 CGPoint CGRectGetBottomLeft(CGRect rect) {
 
     return CGPointMake( rect.origin.x, rect.origin.y + rect.size.height );
+}
+
+CGRect CGRectWithCenter(CGRect rect, CGPoint newCenter) {
+
+  return CGRectFromCenterWithSize( newCenter, rect.size );
+}
+
+CGRect CGRectWithTop(CGRect rect, CGPoint newTop) {
+
+  return CGRectFromCenterWithSize( CGPointMake( newTop.x, newTop.y + rect.size.height / 2 ), rect.size );
+}
+
+CGRect CGRectWithRight(CGRect rect, CGPoint newRight) {
+
+  return CGRectFromCenterWithSize( CGPointMake( newRight.x - rect.size.width / 2, newRight.y ), rect.size );
+}
+
+CGRect CGRectWithBottom(CGRect rect, CGPoint newBottom) {
+
+  return CGRectFromCenterWithSize( CGPointMake( newBottom.x, newBottom.y - rect.size.height / 2 ), rect.size );
+}
+
+CGRect CGRectWithLeft(CGRect rect, CGPoint newLeft) {
+
+  return CGRectFromCenterWithSize( CGPointMake( newLeft.x + rect.size.width / 2, newLeft.y ), rect.size );
+}
+
+CGRect CGRectWithTopLeft(CGRect rect, CGPoint newTopLeft) {
+
+  return CGRectFromOriginWithSize( newTopLeft, rect.size );
+}
+
+CGRect CGRectWithTopRight(CGRect rect, CGPoint newTopRight) {
+
+  return CGRectFromOriginWithSize( CGPointMake( newTopRight.x - rect.size.width, newTopRight.y ), rect.size );
+}
+
+CGRect CGRectWithBottomRight(CGRect rect, CGPoint newBottomRight) {
+
+  return CGRectFromOriginWithSize( CGPointMake( newBottomRight.x - rect.size.width, newBottomRight.y - rect.size.height ), rect.size );
+}
+
+CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft) {
+
+  return CGRectFromOriginWithSize( CGPointMake( newBottomLeft.x, newBottomLeft.y - rect.size.height ), rect.size );
 }
 
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {

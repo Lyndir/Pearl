@@ -36,7 +36,7 @@ static char NotificationObserversKey;
             if (!notificationObservers) \
                 objc_setAssociatedObject( _host, &NotificationObserversKey, \
                         notificationObservers = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN ); \
-            id observer = [[NSNotificationCenter defaultCenter] \
+            observer = [[NSNotificationCenter defaultCenter] \
                     addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
                         __noteblock(wHost, note); \
                     }]; \

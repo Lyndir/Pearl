@@ -99,12 +99,9 @@
 
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 
-    //[self setNeedsUpdateConstraints]; // Needed sometimes but can cause weird layout hang-ups...
-    [self invalidateIntrinsicContentSize];
-    if ([self.superview isKindOfClass:[UIControl class]]) {
-        [self.superview setNeedsUpdateConstraints];
-        [self.superview invalidateIntrinsicContentSize];
-    }
+  [self invalidateIntrinsicContentSize];
+  for (UIView *view = self; view; view = [view superview])
+    [view setNeedsLayout];
 }
 
 /**

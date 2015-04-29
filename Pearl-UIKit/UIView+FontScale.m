@@ -99,9 +99,11 @@
 
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 
-  [self invalidateIntrinsicContentSize];
-  for (UIView *view = self; view; view = [view superview])
-    [view setNeedsLayout];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self invalidateIntrinsicContentSize];
+        for (UIView *view = self; view; view = [view superview])
+            [view setNeedsLayout];
+    }];
 }
 
 /**

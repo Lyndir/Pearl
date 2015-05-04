@@ -8,7 +8,7 @@
 @interface UIView(LayoutGone_Private)
 
 @property(nonatomic) NSArray /* <UIView> */ *goneParents;
-@property(nonatomic, readonly) NSMutableSet /* <PearlWeakReference<UIView>> */ *goneChildren;
+@property(nonatomic, readonly) NSMutableSet /* <UIView> */ *goneChildren;
 @property(nonatomic) BOOL gone;
 @property(nonatomic) NSArray /* <NSLayoutConstraint> */ *goneConstraints;
 @property(nonatomic) UIView *goneSuperview;
@@ -47,7 +47,7 @@
     // Add ourselves as children to new parents.
     NSMutableArray *newGoneParentRefs = [NSMutableArray arrayWithCapacity:newGoneParents.count];
     for (UIView *newGoneParent in newGoneParents) {
-        [newGoneParent.goneChildren addObject:[PearlWeakReference referenceWithObject:self]];
+        [newGoneParent.goneChildren addObject:self];
         [newGoneParentRefs addObject:[PearlWeakReference referenceWithObject:newGoneParent]];
     }
 
@@ -164,11 +164,12 @@
         for (NSLayoutConstraint *constraint in self.goneConstraints) {
             BOOL restored = NO;
             // Find constraint holder for constraint: first common container for both items.
-            for (UIView *constraintHolder = constraint.firstItem; constraintHolder; constraintHolder = [constraintHolder superview])
-                if (!constraint.secondItem || [constraint.secondItem isDescendantOfView:constraintHolder]) {
+            for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview])
+                if ([constraint.firstItem isDescendantOfView:constraintHolder] &&
+                    [constraint.secondItem isDescendantOfView:constraintHolder]) {
                     [constraintHolder addConstraint:constraint];
-                  restored = YES;
-                  break;
+                    restored = YES;
+                    break;
                 }
 
             if (!restored)
@@ -182,8 +183,8 @@
     }
 
     // Update the children who depend on us.
-    for (PearlWeakReference *goneChildRef in self.goneChildren)
-        [((UIView *)goneChildRef.object) updateGone];
+    for (UIView *goneChild in self.goneChildren)
+        [goneChild updateGone];
 }
 
 - (void)restoreGoneSuperview {
@@ -194,9 +195,9 @@
     }
 
     // Update the children who depend on us.
-    for (PearlWeakReference *goneChildRef in self.goneChildren)
-        if (!((UIView *)goneChildRef.object).effectiveGone)
-            [((UIView *)goneChildRef.object) restoreGoneSuperview];
+    for (UIView *goneChild in self.goneChildren)
+        if (!goneChild.effectiveGone)
+            [goneChild restoreGoneSuperview];
 }
 
 @end

@@ -17,6 +17,8 @@
 //
 
 
+#import <AVFoundation/AVFoundation.h>
+
 BOOL PearlMainQueue(void (^block)()) {
 
     if ([NSThread isMainThread]) {
@@ -133,6 +135,27 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     return hashCode;
 }
 
+@implementation PearlWeakReference
+
++ (instancetype)referenceWithObject:(id)object {
+
+    PearlWeakReference *holder = [self new];
+    holder.object = object;
+    return holder;
+}
+
+- (BOOL)isEqual:(id)other {
+
+  return [self.object isEqual:other];
+}
+
+- (NSUInteger)hash {
+
+  return [self.object hash];
+}
+
+@end
+
 @implementation NSObject(PearlObjectUtils)
 
 - (NSString *)propertyWithValue:(id)value {
@@ -150,6 +173,22 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     free( properties );
 
     return propertyName;
+}
+
+- (void)setStrongAssociatedObject:(id)object forSelector:(SEL)sel {
+
+    objc_setAssociatedObject( self, sel, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+}
+
+- (void)setWeakAssociatedObject:(id)object forSelector:(SEL)sel {
+
+    [self setStrongAssociatedObject:[PearlWeakReference referenceWithObject:object] forSelector:sel];
+}
+
+- (id)getAssociatedObjectForSelector:(SEL)sel {
+
+  id object = objc_getAssociatedObject( self, sel );
+  return [object isKindOfClass:[PearlWeakReference class]]? ((PearlWeakReference *)object).object: object;
 }
 
 @end

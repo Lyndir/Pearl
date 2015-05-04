@@ -194,9 +194,20 @@ extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 __END_DECLS
 
+@interface PearlWeakReference : NSObject
+
+@property(nonatomic, weak) id object;
+
++ (instancetype)referenceWithObject:(id)object;
+
+@end
+
 @interface NSObject(PearlObjectUtils)
 
 - (NSString *)propertyWithValue:(id)value;
+- (void)setStrongAssociatedObject:(id)object forSelector:(SEL)sel;
+- (void)setWeakAssociatedObject:(id)object forSelector:(SEL)sel;
+- (id)getAssociatedObjectForSelector:(SEL)sel;
 
 @end
 

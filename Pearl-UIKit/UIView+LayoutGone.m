@@ -7,10 +7,10 @@
 
 @interface UIView(LayoutGone_Private)
 
-@property(nonatomic) NSArray *goneParents;
-@property(nonatomic, readonly) NSMutableSet *goneChildren;
+@property(nonatomic) NSArray /* <UIView> */ *goneParents;
+@property(nonatomic, readonly) NSMutableSet /* <PearlWeakReference<UIView>> */ *goneChildren;
 @property(nonatomic) BOOL gone;
-@property(nonatomic) NSArray *goneConstraints;
+@property(nonatomic) NSArray /* <NSLayoutConstraint> */ *goneConstraints;
 @property(nonatomic) UIView *goneSuperview;
 //@property(nonatomic) CGFloat *goneAlpha;
 //@property(nonatomic) NSArray *goneTemporaryConstraints;
@@ -21,36 +21,52 @@
 
 - (NSArray *)goneParents {
 
-    return objc_getAssociatedObject( self, @selector( goneParents ) );
+    NSArray *goneParentRefs = [self getAssociatedObjectForSelector:@selector( goneParents ) ];
+    NSMutableArray *goneParents = [NSMutableArray arrayWithCapacity:goneParentRefs.count];
+    for (PearlWeakReference *goneParentRef in goneParentRefs) {
+        NSLayoutConstraint *goneConstraint = goneParentRef.object;
+        if (goneConstraint)
+            [goneParents addObject:goneConstraint];
+
+        else
+            err( @"A gone parent was lost for view: %@\n"
+                @"Make sure they remain strongly referenced while gone.", self );
+    }
+
+    return goneParents;
 }
 
-- (void)setGoneParents:(NSArray *)goneParents {
+- (void)setGoneParents:(NSArray *)newGoneParents {
 
     // Remove ourselves as children from former parents.
-    for (UIView *goneParent in self.goneParents)
-        if (![goneParents containsObject:goneParent])
-            [goneParent.goneChildren removeObject:self];
+    NSArray *oldGoneParentRefs = [self getAssociatedObjectForSelector:@selector( goneParents )];
+    for (PearlWeakReference *oldGoneParentRef in oldGoneParentRefs)
+        if (![newGoneParents containsObject:oldGoneParentRef.object])
+            [((UIView *)oldGoneParentRef.object).goneChildren removeObject:self];
 
     // Add ourselves as children to new parents.
-    for (UIView *goneParent in goneParents)
-        [goneParent.goneChildren addObject:self];
+    NSMutableArray *newGoneParentRefs = [NSMutableArray arrayWithCapacity:newGoneParents.count];
+    for (UIView *newGoneParent in newGoneParents) {
+        [newGoneParent.goneChildren addObject:[PearlWeakReference referenceWithObject:self]];
+        [newGoneParentRefs addObject:[PearlWeakReference referenceWithObject:newGoneParent]];
+    }
 
-    objc_setAssociatedObject( self, @selector( goneParents ), goneParents, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    [self setStrongAssociatedObject:newGoneParentRefs forSelector:@selector( goneParents )];
 }
 
 - (NSMutableSet *)goneChildren {
 
     // Get our children or make a new set if we don't have any yet.
-    NSMutableSet *children = objc_getAssociatedObject( self, @selector( goneChildren ) );
+    NSMutableSet *children = [self getAssociatedObjectForSelector:@selector( goneChildren ) ];
     if (!children)
-        objc_setAssociatedObject( self, @selector( goneChildren ), children = [NSMutableSet set], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+        [self setStrongAssociatedObject:children = [NSMutableSet set] forSelector:@selector( goneChildren )];
 
     return children;
 }
 
 - (BOOL)gone {
 
-    return [objc_getAssociatedObject( self, @selector( gone ) ) boolValue];
+    return [[self getAssociatedObjectForSelector:@selector( gone ) ] boolValue];
 }
 
 - (void)setGone:(BOOL)gone {
@@ -58,29 +74,29 @@
     if (gone == self.gone)
         return;
 
-    objc_setAssociatedObject( self, @selector( gone ), @(gone), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    [self setStrongAssociatedObject:@(gone) forSelector:@selector( gone )];
 
     [self updateGone];
 }
 
 - (NSArray *)goneConstraints {
 
-    return objc_getAssociatedObject( self, @selector( goneConstraints ) );
+    return [self getAssociatedObjectForSelector:@selector( goneConstraints )];
 }
 
 - (void)setGoneConstraints:(NSArray *)goneConstraints {
 
-    objc_setAssociatedObject( self, @selector( goneConstraints ), goneConstraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    [self setStrongAssociatedObject:goneConstraints forSelector:@selector( goneConstraints )];
 }
 
 - (UIView *)goneSuperview {
 
-    return objc_getAssociatedObject( self, @selector( goneSuperview ) );
+    return [self getAssociatedObjectForSelector:@selector( goneSuperview ) ];
 }
 
 - (void)setGoneSuperview:(UIView *)goneSuperview {
 
-    objc_setAssociatedObject( self, @selector( goneSuperview ), goneSuperview, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    [self setWeakAssociatedObject:goneSuperview forSelector:@selector( goneSuperview )];
 }
 
 - (BOOL)effectiveGone {
@@ -89,16 +105,18 @@
     if (self.gone)
         return YES;
 
-    if ([self.goneParents count]) {
-        for (UIView *goneParent in self.goneParents)
-            if (!goneParent.effectiveGone)
-                return NO;
+    NSArray *goneParents = self.goneParents;
+    if (![goneParents count])
+        // We have no gone parents.
+        return NO;
 
-        // All our parents are gone.
-        return YES;
-    }
+    for (UIView *goneParent in goneParents)
+        if (!goneParent.effectiveGone)
+            // One of our parents is visible.
+            return NO;
 
-    return NO;
+    // All our parents are gone.
+    return YES;
 }
 
 - (void)updateGone {
@@ -117,13 +135,13 @@
 //        [constraints makeObjectsPerformSelector:@selector( removeFromHolder )];
 
         // Lock our position with temporary constraints and fade out.
-//        objc_setAssociatedObject( self, &GoneAlpha, @(self.alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        [self setStrongAssociatedObject:@(self.alpha) forSelector:&GoneAlpha];
 //        NSArray *temporaryConstraints = [self.superview addConstraintsWithVisualFormats:@[ @"H:|-(x)-[view(w)]", @"V:|-(y)-[view(h)]" ]
 //                                                                                options:0 metrics:@{
 //                @"x" : @(self.frame.origin.x), @"y" : @(self.frame.origin.y),
 //                @"w" : @(self.frame.size.width), @"h" : @(self.frame.size.height)
 //            }                                                                     views:@{ @"view" : self }];
-//        objc_setAssociatedObject( self, &GoneTemporaryConstraints, temporaryConstraints, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        [self setStrongAssociatedObject:temporaryConstraints forSelector:&GoneTemporaryConstraints];
 
         // Inherit any existing animation, fade out in it and only after its completion remove ourselves from the hierarchy.
 //        [UIView animateWithDuration:0 animations:^{
@@ -138,9 +156,9 @@
 
     if (!makeGone && wasGone) {
         // Remove our temporary constraints.
-//        NSArray *temporaryConstraints = objc_getAssociatedObject( self, &GoneTemporaryConstraints );
+//        NSArray *temporaryConstraints = [self getAssociatedObjectForSelector:&GoneTemporaryConstraints];
 //        [temporaryConstraints makeObjectsPerformSelector:@selector( removeFromHolder )];
-//        objc_setAssociatedObject( self, &GoneTemporaryConstraints, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        [self setStrongAssociatedObject:nil forSelector:&GoneTemporaryConstraints];
 
         // Restore our saved constraints and fade back in.
         for (NSLayoutConstraint *constraint in self.goneConstraints) {
@@ -149,22 +167,23 @@
             for (UIView *constraintHolder = constraint.firstItem; constraintHolder; constraintHolder = [constraintHolder superview])
                 if (!constraint.secondItem || [constraint.secondItem isDescendantOfView:constraintHolder]) {
                     [constraintHolder addConstraint:constraint];
-                    restored = YES;
-                    break;
+                  restored = YES;
+                  break;
                 }
+
             if (!restored)
-                err( @"Constraint was lost since its items aren't yet in the hierarchy: %@\n"
-                    @"Make sure you aren't explicitly making multiple dependent views gone.", constraint );
+                err( @"Unable to restore constraint: %@\n"
+                    @"Its item(s) are not yet in the hierarchy.  Make sure you don't have a gone dependency cycle.", constraint );
         }
-//        self.alpha = [objc_getAssociatedObject( self, &GoneAlpha ) floatValue];
-//        objc_setAssociatedObject( self, &GoneAlpha, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+//        self.alpha = [[self getAssociatedObjectForSelector:&GoneAlpha] floatValue];
+//        [self setStrongAssociatedObject:nil forSelector:&GoneAlpha];
         self.goneConstraints = nil;
         self.goneSuperview = nil;
     }
 
     // Update the children who depend on us.
-    for (UIView *goneChild in self.goneChildren)
-        [goneChild updateGone];
+    for (PearlWeakReference *goneChildRef in self.goneChildren)
+        [((UIView *)goneChildRef.object) updateGone];
 }
 
 - (void)restoreGoneSuperview {
@@ -175,9 +194,9 @@
     }
 
     // Update the children who depend on us.
-    for (UIView *goneChild in self.goneChildren)
-        if (!goneChild.effectiveGone)
-            [goneChild restoreGoneSuperview];
+    for (PearlWeakReference *goneChildRef in self.goneChildren)
+        if (!((UIView *)goneChildRef.object).effectiveGone)
+            [((UIView *)goneChildRef.object) restoreGoneSuperview];
 }
 
 @end

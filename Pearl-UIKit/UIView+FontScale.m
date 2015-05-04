@@ -99,7 +99,9 @@
 
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 
+    Weakify( self );
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        Strongify( self );
         [self invalidateIntrinsicContentSize];
         for (UIView *view = self; view; view = [view superview])
             [view setNeedsLayout];

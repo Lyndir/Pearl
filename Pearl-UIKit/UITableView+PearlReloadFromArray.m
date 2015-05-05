@@ -31,40 +31,50 @@
   if ([fromArray isEqualToArray:toArray])
     return;
 
-  NSMutableArray *workArray = [fromArray mutableCopy];
+  @try {
+    NSMutableArray *workArray = [fromArray mutableCopy];
+    [self beginUpdates];
 
-  [self beginUpdates];
+    // First remove deleted rows.
+    for (NSUInteger index = [workArray count] - 1; index < [workArray count]; --index) {
+      id row = workArray[index];
+      if (![toArray containsObject:row]) {
+        [self deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
+            withRowAnimation:animation];
+        [workArray removeObjectAtIndex:index];
+      }
+    }
 
-  // First remove deleted rows.
-  for (NSUInteger index = [workArray count] - 1; index < [workArray count]; --index) {
-    id row = workArray[index];
-    if (![toArray containsObject:row]) {
-      [self deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
-                  withRowAnimation:animation];
-      [workArray removeObjectAtIndex:index];
+    // Then add inserted rows.
+    for (NSUInteger index = 0; index < [toArray count]; ++index) {
+      id row = toArray[index];
+      if (![workArray containsObject:row]) {
+        [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:(NSInteger)index inSection:section] ]
+            withRowAnimation:animation];
+        [workArray insertObject:row atIndex:MIN( [workArray count], index )];
+      }
+    }
+
+    // Then shuffle around moved rows.
+    for (NSUInteger index = 0; index < [workArray count]; ++index) {
+      id row = workArray[index];
+      NSUInteger toIndex = [toArray indexOfObject:row];
+      if (toIndex != index)
+        [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[fromArray indexOfObject:row] inSection:section]
+            toIndexPath:[NSIndexPath indexPathForRow:(NSInteger)toIndex inSection:section]];
+    }
+
+    [self endUpdates];
+  }
+  @catch(NSException *e) {
+    wrn( @"Exception while reloading rows for table.  Falling back to a full reload.\n%@", [e fullDescription] );
+    @try {
+      [self reloadData];
+    }
+    @catch (NSException *e) {
+      err( @"Exception during fallback reload.\n%@", [e fullDescription] );
     }
   }
-
-  // Then add inserted rows.
-  for (NSUInteger index = 0; index < [toArray count]; ++index) {
-    id row = toArray[index];
-    if (![workArray containsObject:row]) {
-      [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:(NSInteger)index inSection:section] ]
-                  withRowAnimation:animation];
-      [workArray insertObject:row atIndex:MIN( [workArray count], index )];
-    }
-  }
-
-  // Then shuffle around moved rows.
-  for (NSUInteger index = 0; index < [workArray count]; ++index) {
-    id row = workArray[index];
-    NSUInteger toIndex = [toArray indexOfObject:row];
-    if (toIndex != index)
-      [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[fromArray indexOfObject:row] inSection:section]
-                   toIndexPath:[NSIndexPath indexPathForRow:(NSInteger)toIndex inSection:section]];
-  }
-
-  [self endUpdates];
 }
 
 @end

@@ -22,13 +22,17 @@
 + (instancetype)templateCellFromTableView:(UITableView *)tableView;
 
 + (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView;
 
-+ (void)registerCellWithTableView:(UITableView *)tableView;
 + (void)registerNibCellWithTableView:(UITableView *)tableView;
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView;
-
++ (void)registerCellWithTableView:(UITableView *)tableView;
 + (void)registerCellWithTableView:(UITableView *)tableView usingNib:(UINib *)nib;
+
+@end
+
+@interface UITableViewHeaderFooterView(PearlDeque)
+
++ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView;
++ (void)registerHeaderFooterWithTableView:(UITableView *)tableView;
 + (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib;
 
 @end

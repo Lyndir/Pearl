@@ -25,6 +25,26 @@
 
 @end
 
+@implementation UITableViewHeaderFooterView(PearlDeque)
+
++ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView {
+    
+    return [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass( self )];
+}
+
+
++ (void)registerHeaderFooterWithTableView:(UITableView *)tableView {
+    
+    [tableView registerClass:self forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
+}
+
++ (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib {
+    
+    [tableView registerNib:nib forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
+}
+
+@end
+
 @implementation UITableViewCell(PearlDeque)
 
 + (instancetype)templateCellFromTableView:(UITableView *)tableView {
@@ -47,11 +67,6 @@
     return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
 }
 
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView {
-
-    return [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass( self )];
-}
-
 + (void)registerCellWithTableView:(UITableView *)tableView {
 
     [tableView registerClass:self forCellReuseIdentifier:NSStringFromClass( self )];
@@ -62,19 +77,9 @@
     [self registerCellWithTableView:tableView usingNib:[UINib nibWithNibName:NSStringFromClass( self ) bundle:[NSBundle mainBundle]]];
 }
 
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView {
-
-    [tableView registerClass:self forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
-}
-
 + (void)registerCellWithTableView:(UITableView *)tableView usingNib:(UINib *)nib {
 
     [tableView registerNib:nib forCellReuseIdentifier:NSStringFromClass( self )];
-}
-
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib {
-
-    [tableView registerNib:nib forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
 }
 
 @end

@@ -67,7 +67,7 @@ static NSUInteger profilerJobs = 0;
     for (NSUInteger j = 0; j < profilerJobs; ++j)
         [spaces appendString:@"  "];
 
-    if (!_startTime)
+    if (_startTime == 0)
         [[PearlLogger get] inFile:fileName atLine:lineNumber
                               dbg:@"[         ]  %@> [%@] begin", spaces, self.taskName];
 
@@ -81,7 +81,7 @@ static NSUInteger profilerJobs = 0;
         return;
 
     CFTimeInterval endTime = CACurrentMediaTime();
-    if (!_startTime) {
+    if (_startTime == 0) {
         [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber
                               wrn:@"Profiler not started: %@, when finished job: %@", self.taskName, format];
         [self startJobInFile:fileName atLine:lineNumber];
@@ -148,7 +148,7 @@ static NSUInteger profilerJobs = 0;
 
 - (void)finish {
 
-    if (_startTime) {
+    if (_startTime != 0) {
         _startTime = 0;
         --profilerJobs;
     }
@@ -158,7 +158,7 @@ static NSUInteger profilerJobs = 0;
 
 - (void)cancel {
 
-    if (_startTime) {
+    if (_startTime != 0) {
         _startTime = 0;
         --profilerJobs;
     }
@@ -168,7 +168,7 @@ static NSUInteger profilerJobs = 0;
 
 - (void)dealloc {
 
-    if (_startTime) {
+    if (_startTime != 0) {
         [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber
                               wrn:@"Unfinished profiler: %@", self.taskName];
         [self finish];

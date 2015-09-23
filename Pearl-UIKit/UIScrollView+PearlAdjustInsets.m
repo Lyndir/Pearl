@@ -51,7 +51,7 @@
     for (UIView *view = self, *superview = [view superview]; superview; view = superview, superview = [view superview])
         for (NSUInteger c = [[superview subviews] indexOfObject:view] + 1; c < [[superview subviews] count]; ++c) {
             UIView *occludingView = [superview subviews][c];
-            if (occludingView.hidden || !occludingView.alpha)
+            if (occludingView.hidden || occludingView.alpha < DBL_EPSILON)
                 continue;
 
             CGRect contentRect = [self convertRect:self.frame fromView:self.superview];

@@ -378,7 +378,7 @@ static NSMutableSet *dismissableResponders;
     for (UIView *subview in self.subviews) {
         if (ignoreHidden && subview.hidden)
             continue;
-        if (ignoreInvisible && !subview.alpha)
+        if (ignoreInvisible && subview.alpha < DBL_EPSILON)
             continue;
         if ([ignoredSubviewsArray containsObject:subview])
             continue;
@@ -667,7 +667,7 @@ static NSMutableSet *dismissableResponders;
     CGRect contentRect = self.bounds;
     if (!self.clipsToBounds)
         for (UIView *subview in self.subviews)
-            if (!subview.hidden && subview.alpha && ![ignoredSubviewsArray containsObject:subview])
+            if (!subview.hidden && subview.alpha > DBL_EPSILON && ![ignoredSubviewsArray containsObject:subview])
                 contentRect = CGRectUnion( contentRect,
                         [self convertRect:
                                         [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
@@ -967,11 +967,11 @@ static NSMutableSet *dismissableResponders;
     UIView *closestView = nil;
     CGFloat closestDistance = 0;
     for (UIView *view in views) {
-        if (view.hidden || !view.alpha)
+        if (view.hidden || view.alpha < DBL_EPSILON)
             continue;
 
         CGFloat distance = DistanceBetweenCGPointsSq( view.center, point );
-        if (!closestDistance || distance < closestDistance) {
+        if (closestDistance < DBL_EPSILON || distance < closestDistance) {
             closestDistance = distance;
             closestView = view;
         }

@@ -166,9 +166,9 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
         }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 
-    NSUInteger supportedInterfaceOrientations = 0;
+    UIInterfaceOrientationMask supportedInterfaceOrientations = 0;
     for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
         supportedInterfaceOrientations |= [supportedInterfaceOrientation unsignedIntegerValue];
 

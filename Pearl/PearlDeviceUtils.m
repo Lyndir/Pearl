@@ -86,7 +86,7 @@
 #if TARGET_OS_IPHONE
     switch ([UIDevice currentDevice].userInterfaceIdiom) {
         case UIUserInterfaceIdiomPad:
-#ifndef SDK_HIDE_TIDE
+#if defined(__IPHONE_9_0) && ! defined(SDK_HIDE_TIDE)
         case UIUserInterfaceIdiomTV:
 #endif
             return 1024.0f / 480.0f;

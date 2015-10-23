@@ -180,11 +180,14 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     return (UIInterfaceOrientation)[(self.mySupportedIterfaceOrientations)[0] unsignedIntegerValue];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
     dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation( fromInterfaceOrientation ), NSStringFromUIInterfaceOrientation(
             UIApp.statusBarOrientation ));
     [[PearlAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
+#pragma clang diagnostic pop
 
 @end

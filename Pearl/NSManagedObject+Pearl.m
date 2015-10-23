@@ -24,7 +24,7 @@
 
     for (NSEntityDescription *entity in [[context.persistentStoreCoordinator.managedObjectModel entitiesByName] allValues])
         if ([entity.managedObjectClassName isEqualToString:NSStringFromClass( [self class] )])
-            return [NSEntityDescription insertNewObjectForEntityForName:entity.name inManagedObjectContext:context];
+            return [NSEntityDescription insertNewObjectForEntityForName:PearlNotNull(entity.name) inManagedObjectContext:context];
 
     return nil;
 }

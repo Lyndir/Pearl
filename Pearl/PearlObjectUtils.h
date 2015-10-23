@@ -43,10 +43,14 @@
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
-#define NilToNSNulls(...)                                                                        \
+#define NilToNSNulls(...)                                                                       \
             MAP_LIST(NilToNSNull, __VA_ARGS__)
-#define NSNullToNils(...)                                                                        \
+#define NSNullToNils(...)                                                                       \
             MAP_LIST(NSNullToNil, __VA_ARGS__)
+#define PearlNotNull(__N)                                                                       \
+            ({ __typeof__(__N) __n = __N; assert(__n); (id __nonnull) (__n); })
+#define PearlNotNullOr(__N, __NN)                                                               \
+            ({ __typeof__(__N) __n = __N; (id __nonnull) (NSNullToNil(__n)? __n: __NN); })
 #define PearlNil (id)(__bridge void *)nil
 #define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 

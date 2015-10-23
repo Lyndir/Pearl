@@ -287,7 +287,7 @@ static char facadeBlockKey, facadedObjectKey;
 
 - (id)valueForKey:(NSString *)key {
 
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:PearlNotNull([NSMethodSignature signatureWithObjCTypes:"@@:@"])];
     [invocation setSelector:_cmd];
     [invocation setArgument:&key atIndex:2];
 
@@ -300,7 +300,7 @@ static char facadeBlockKey, facadedObjectKey;
 
 - (id)valueForKeyPath:(NSString *)key {
 
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:PearlNotNull([NSMethodSignature signatureWithObjCTypes:"@@:@"])];
     [invocation setSelector:_cmd];
     [invocation setArgument:&key atIndex:2];
 

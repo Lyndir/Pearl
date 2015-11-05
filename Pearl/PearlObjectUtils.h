@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+/** @return an NSMutableArray with all vararg arguments remaining in __list */
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -28,6 +29,7 @@
                 __array;                                                                        \
             })
 
+/** @return an NSMutableArray with all vararg arguments beginning at __firstParameter */
 #define va_array(__firstParameter)                                                              \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -39,25 +41,37 @@
                 __array;                                                                        \
             })
 
+/** @return __O or NSNull if it is nil */
 #define NilToNSNull(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
+/** @return __O or nil if it is NSNull */
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
+/** @return an inline list of arguments where each nil argument is replaced with NSNull */
 #define NilToNSNulls(...)                                                                        \
             MAP_LIST(NilToNSNull, __VA_ARGS__)
+/** @return an inline list of arguments where each NSNull argument is replaced with nil */
 #define NSNullToNils(...)                                                                        \
             MAP_LIST(NSNullToNil, __VA_ARGS__)
+/** @return a nil object */
 #define PearlNil (id)(__bridge void *)nil
+/** @return the set resulting from setByAddingObjectsFromSet of both arguments, in a nil-safe manner */
 #define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 
+/** Throw an NSInternalInconsistencyException with given __userInfo and __reason format and arguments */
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
                     exceptionWithName:NSInternalInconsistencyException                          \
                     reason:PearlString(__reason , ##__VA_ARGS__)                                \
                     userInfo:__userInfo]
+/** Throw an NSInternalInconsistencyException with given __reason format and arguments */
 #define Throw(__reason, ...)                                                                    \
             ThrowInfo(nil, __reason , ##__VA_ARGS__)
+
+/** Internally, declare a weak version of __target for later use by Strongify. */
 #define Weakify(__target) __weak typeof(__target) _weak_ ## __target = __target
+/** Re-declare __target as strong from an earlier declared weak version of it.
+ * Eg. Weakify(self); block = ^{ Strongify(self); [self doSomething]; } */
 #define Strongify(__target) __strong typeof(__target) __target = _weak_ ## __target
 
 #define PearlInteger(__number) \
@@ -77,9 +91,11 @@
 #define PearlBoolNot(__number) \
             PearlBool(![__number boolValue])
 
+/** Start a block of code that can run synchronously if we are currently on the main thread, otherwise will be asynchonously scheduled on the main thread */
 #define PearlMainThreadStart                                                                 \
             ({                                                                                  \
                 dispatch_block_t __pearl_main_thread_block = ^
+/** End a block of code started by PearlMainThreadStart */
 #define PearlMainThreadEnd                                                                   \
                 ;                                                                              \
                 if ([NSThread isMainThread])                                                    \
@@ -88,10 +104,15 @@
                     dispatch_async(dispatch_get_main_queue(), __pearl_main_thread_block);       \
             });
 
+/** Declare methods that behave like a property for use in a class extension.
+ * Eg. PearlAssociatedObjectProperty(NSString*, Name, name) */
 #define PearlAssociatedObjectProperty(__type, __uppercased, __lowercased)                                 \
             PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, , self)
+/** Like PearlAssociatedObjectProperty but specify a method used to convert the type to an object and a method used to convert the object to the type.
+ * Eg. PearlAssociatedObjectPropertyTR(BOOL, Alive, alive, @, boolValue) */
 #define PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, __tr_to, __tr_from)                                 \
             PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, OBJC_ASSOCIATION_RETAIN, __tr_to, __tr_from)
+/** Like PearlAssociatedObjectPropertyTR but specify an object storage association that's not OBJC_ASSOCIATION_RETAIN. */
 #define PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, __association, __tr_to, __tr_from)       \
             static char __uppercased ## Key;                                                          \
             - (void)set ## __uppercased :( __type ) __lowercased {                                          \

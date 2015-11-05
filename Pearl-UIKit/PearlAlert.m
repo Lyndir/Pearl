@@ -245,6 +245,8 @@
     return self;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock) {
@@ -258,5 +260,6 @@
 
     [((NSMutableArray *)[PearlAlert activeAlerts]) removeObject:self];
 }
+#pragma clang diagnostic pop
 
 @end

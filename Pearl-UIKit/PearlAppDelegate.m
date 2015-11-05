@@ -78,14 +78,14 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
     NSString *profileString;
     NSData *provisioningProfileData = [NSData dataWithContentsOfFile:
-            [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"]];
+            PearlNotNull([[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"])];
     if (!provisioningProfileData)
         profileString = @"No profile.";
     else {
-        NSRange startRange = [provisioningProfileData rangeOfData:[@"<?xml" dataUsingEncoding:NSASCIIStringEncoding] options:0
-                                                            range:NSMakeRange( 0, [provisioningProfileData length] )];
-        NSRange endRange = [provisioningProfileData rangeOfData:[@"</plist>" dataUsingEncoding:NSASCIIStringEncoding] options:0
-                                                          range:NSMakeRange( 0, [provisioningProfileData length] )];
+        NSRange startRange = [provisioningProfileData rangeOfData:PearlNotNull([@"<?xml" dataUsingEncoding:NSASCIIStringEncoding])
+                                                          options:0 range:NSMakeRange( 0, [provisioningProfileData length] )];
+        NSRange endRange = [provisioningProfileData rangeOfData:PearlNotNull([@"</plist>" dataUsingEncoding:NSASCIIStringEncoding])
+                                                        options:0 range:NSMakeRange( 0, [provisioningProfileData length] )];
         provisioningProfileData = [provisioningProfileData subdataWithRange:
                 NSMakeRange( startRange.location, endRange.location + endRange.length - startRange.location )];
 
@@ -170,11 +170,11 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
     if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" )) {
         if (NSNullToNil( [PearlConfig get].iTunesID )) {
             inf( @"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID );
-            [UIApp openURL:ITMS_REVIEW_URL( [PearlConfig get].iTunesID )];
+            [UIApp openURL:PearlNotNull(ITMS_REVIEW_URL( [PearlConfig get].iTunesID ))];
         }
         else {
             inf( @"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID );
-            [UIApp openURL:ITMS_APP_URL( [PearlInfoPlist get].CFBundleName )];
+            [UIApp openURL:PearlNotNull(ITMS_APP_URL( [PearlInfoPlist get].CFBundleName ))];
         }
         return;
     }
@@ -237,6 +237,8 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 - (void)applicationWillResignActive:(UIApplication *)application {
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -249,6 +251,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
     return NO;
 }
+#pragma clang diagnostic pop
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 

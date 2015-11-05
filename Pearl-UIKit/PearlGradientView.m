@@ -52,7 +52,7 @@
     CGGradientRef newGradient = CGGradientCreateWithColorComponents( newColorSpace, components, NULL, 2 );
     CGColorSpaceRelease( newColorSpace );
 
-    CGContextDrawLinearGradient( UIGraphicsGetCurrentContext(), newGradient, CGPointZero, CGPointMake( 0, rect.size.height ), 0 );
+    CGContextDrawLinearGradient( UIGraphicsGetCurrentContext(), newGradient, CGPointZero, CGPointMake( 0, rect.size.height ), (CGGradientDrawingOptions)0 );
     CGGradientRelease( newGradient );
 }
 

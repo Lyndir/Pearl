@@ -48,11 +48,17 @@
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
 /** @return an inline list of arguments where each nil argument is replaced with NSNull */
-#define NilToNSNulls(...)                                                                        \
+#define NilToNSNulls(...)                                                                       \
             MAP_LIST(NilToNSNull, __VA_ARGS__)
 /** @return an inline list of arguments where each NSNull argument is replaced with nil */
-#define NSNullToNils(...)                                                                        \
+#define NSNullToNils(...)                                                                       \
             MAP_LIST(NSNullToNil, __VA_ARGS__)
+/** @return __N asserted and typed as __nonnull. */
+#define PearlNotNull(__N)                                                                       \
+            ({ __typeof__(__N) __n = __N; assert(__n); (id __nonnull) (__n); })
+/** @return __N or __NN if _N is nil, typed as __nonnull. */
+#define PearlNotNullOr(__N, __NN)                                                               \
+            ({ __typeof__(__N) __n = __N; (id __nonnull) (NSNullToNil(__n)? __n: __NN); })
 /** @return a nil object */
 #define PearlNil (id)(__bridge void *)nil
 /** @return the set resulting from setByAddingObjectsFromSet of both arguments, in a nil-safe manner */

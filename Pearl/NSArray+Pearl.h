@@ -8,4 +8,5 @@
 @interface NSArray (Pearl)
 - (id)firstObjectWhere:(BOOL (^)(id obj))predicate;
 - (id)onlyObjectWhere:(BOOL (^)(id obj))predicate;
+- (id)onlyObjectWhere:(BOOL (^)(id obj))predicate firstIfReleaseBuild:(BOOL)firstIfReleaseBuild;
 @end

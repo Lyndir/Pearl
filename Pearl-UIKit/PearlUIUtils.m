@@ -429,14 +429,18 @@ static char dismissRecognizerForcedKey;
     }
 }
 
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute {
 
-    return [self firstConstraintForAttribute:attribute otherView:nil];
+    return [self constraintForAttribute:attribute otherView:nil];
 }
 
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
 
     NSLayoutConstraint *constraint = [self.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
+        if (![NSStringFromClass([obj class]) isEqualToString:@"NSLayoutConstraint"])
+            // Skip custom layout constraints such as internal system constraints (eg. NSContentSizeLayoutConstraint).
+            return NO;
+
         if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
             return obj.firstAttribute == attribute;
         if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))
@@ -449,6 +453,10 @@ static char dismissRecognizerForcedKey;
 
     for (UIView *superview = self.superview; superview != nil; superview = superview.superview)
         if ((constraint = (NSLayoutConstraint *)[superview.constraints firstObjectWhere:^BOOL(NSLayoutConstraint *obj) {
+            if (![NSStringFromClass([obj class]) isEqualToString:@"NSLayoutConstraint"])
+                // Skip custom layout constraints such as internal system constraints (eg. NSContentSizeLayoutConstraint).
+                return NO;
+
             if (obj.firstItem == self && (!otherView || obj.secondItem == otherView))
                 return obj.firstAttribute == attribute;
             if (obj.secondItem == self && (!otherView || obj.firstItem == otherView))

@@ -34,4 +34,15 @@
   return object;
 }
 
+- (id)onlyObjectWhere:(BOOL (^)(id obj))predicate firstIfReleaseBuild:(BOOL)firstIfReleaseBuild {
+  if (!firstIfReleaseBuild)
+    return [self onlyObjectWhere:predicate];
+
+#ifdef DEBUG
+  return [self onlyObjectWhere:predicate];
+#else
+  return [self firstObjectWhere:predicate];
+#endif
+}
+
 @end

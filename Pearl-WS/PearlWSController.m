@@ -189,7 +189,7 @@
         }
 
         if (request.error)
-        err(@"Failed from: %@, error: %@", request.url, request.error);
+        err(@"Failed from: %@, error: %@", request.url, [request.error fullDescription]);
         else
          trc(@"In from: %@, data:\n%@", request.url, [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
 

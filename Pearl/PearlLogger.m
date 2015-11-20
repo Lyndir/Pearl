@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  PearlLogger.m
@@ -33,11 +33,12 @@ const char *PearlLogLevelStr(PearlLogLevel level) {
             return "FATAL";
     }
 
-    Throw(@"Formatting a message with a log level that is not understood.");
+    Throw( @"Formatting a message with a log level that is not understood." );
 }
 
 id returnArg(id arg) {
-  return arg;
+
+    return arg;
 }
 
 @implementation PearlLogMessage
@@ -88,7 +89,7 @@ id returnArg(id arg) {
 
 - (NSString *)messageDescription {
 
-    return [NSString stringWithFormat:@"%25s:%-3ld | %-7s : %@", //
+    return [NSString stringWithFormat:@"%30s:%-3ld | %-7s : %@", //
                                       self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr( self.level ), self.message];
 }
 
@@ -129,13 +130,15 @@ id returnArg(id arg) {
 
 - (NSArray *)messagesWithLevel:(PearlLogLevel)level {
 
-    NSMutableArray *messages = [self.messages mutableCopy];
-    [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
-            ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
-        return message.level >= level;
-    }]];
+    @synchronized (self.messages) {
+        NSMutableArray *messages = [self.messages mutableCopy];
+        [messages filterUsingPredicate:[NSPredicate predicateWithBlock:
+                ^BOOL(PearlLogMessage *message, NSDictionary *bindings) {
+                    return message.level >= level;
+                }]];
 
-    return messages;
+        return messages;
+    };
 }
 
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level {
@@ -151,12 +154,14 @@ id returnArg(id arg) {
 
 - (void)printAllWithLevel:(PearlLogLevel)level {
 
-    for (PearlLogMessage *message in self.messages)
-        if (message.level >= level)
-            fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
+    @synchronized (self.messages) {
+        for (PearlLogMessage *message in self.messages)
+            if (message.level >= level)
+                fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
+    }
 }
 
-- (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener {
+- (void)registerListener:(BOOL ( ^ )(PearlLogMessage *message))listener {
 
     @synchronized (self.listeners) {
         [self.listeners addObject:listener];
@@ -166,20 +171,22 @@ id returnArg(id arg) {
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level text:(NSString *)text {
 
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
-    if ([[threadLocals allKeys] containsObject:@"PearlDisableLog"])
+    if (!threadLocals || [[threadLocals allKeys] containsObject:@"PearlDisableLog"])
         return self;
 
     PearlLogMessage *message = [PearlLogMessage messageInFile:fileName atLine:lineNumber withLevel:level text:text];
-    @try {
-        @synchronized (self.listeners) {
-            threadLocals[@"PearlDisableLog"] = @"";
-            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
+    @synchronized (self.listeners) {
+        @try {
+            threadLocals[@"PearlDisableLog"] = @YES;
+            for (
+                    BOOL (^listener)(PearlLogMessage *)
+                    in self.listeners)
                 if (!listener( message ))
                     return self;
         }
-    }
-    @finally {
-        [threadLocals removeObjectForKey:@"PearlDisableLog"];
+        @finally {
+            [threadLocals removeObjectForKey:@"PearlDisableLog"];
+        }
     }
 
     if (level >= self.printLevel)
@@ -187,126 +194,145 @@ id returnArg(id arg) {
             fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
         }
     if (message.level >= self.historyLevel)
-        [self.messages addObject:message];
+        @synchronized (self.messages) {
+            [self.messages addObject:message];
+        }
 
     return self;
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
-            message = @"Error formatting message.";
+            message = strf( @"Error formatting message: %@, error: %@", format, exception );
+        }
+        @catch (id exception) {
+            @try {
+                message = strf( @"Error formatting message: %@", format );
+            }
+            @catch (id exception) {
+                message = @"Error formatting message";
+            }
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelTrace text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+            message = strf( @"Error formatting message: %@", exception );
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelDebug text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+            message = strf( @"Error formatting message: %@", exception );
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelInfo text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+            message = strf( @"Error formatting message: %@", exception );
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelWarn text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+            message = strf( @"Error formatting message: %@", exception );
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelError text:message];
 }
 
-- (PearlLogger *)inFile:(char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
-    } @catch (id exception) {
+    }
+    @catch (id exception) {
         @try {
-            message = PearlString(@"Error formatting message: %@", exception);
-        } @catch (id exception) {
+            message = strf( @"Error formatting message: %@", exception );
+        }
+        @catch (id exception) {
             message = @"Error formatting message.";
         }
     }
-    va_end(argList);
+    va_end( argList );
 
     return [self inFile:@(fileName) atLine:lineNumber
               withLevel:PearlLogLevelFatal text:message];

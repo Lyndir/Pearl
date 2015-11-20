@@ -80,12 +80,12 @@
         va_end(otherTitlesList);
     }
 
-    PearlMainThreadStart {
+    PearlMainQueue( ^{
         if (initBlock)
-            initBlock( _sheetView );
+            initBlock( self.sheetView );
         if (cancelTitle)
-            _sheetView.cancelButtonIndex = [_sheetView addButtonWithTitle:cancelTitle];
-    } PearlMainThreadEnd
+            self.sheetView.cancelButtonIndex = [self.sheetView addButtonWithTitle:cancelTitle];
+    } );
 
     return self;
 }
@@ -126,9 +126,7 @@
         if (!sheetView)
             return;
 
-        UIWindow *window = UIApp.keyWindow;
-        if (!window)
-            window = [UIApp.windows objectAtIndex:0];
+        UIWindow *window = UIApp.windows[0];
         UIView *view = window.rootViewController.view;
         if (!view)
             view = window;
@@ -156,6 +154,8 @@
     return self;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock) {
@@ -169,5 +169,6 @@
 
     [((NSMutableArray *)[PearlSheet activeSheets]) removeObject:self];
 }
+#pragma clang diagnostic pop
 
 @end

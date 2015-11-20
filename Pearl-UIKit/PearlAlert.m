@@ -72,12 +72,12 @@
         va_end(otherTitlesList);
     }
 
-    PearlMainThreadStart{
+    PearlMainQueue( ^{
         if ([self.alertView respondsToSelector:@selector(setAlertViewStyle:)]) {
             // iOS 5+
-            _alertView.alertViewStyle = viewStyle;
+            self.alertView.alertViewStyle = viewStyle;
             if (viewStyle != UIAlertViewStyleDefault)
-                _alertField = [self.alertView textFieldAtIndex:0];
+                self.alertField = [self.alertView textFieldAtIndex:0];
         }
         else if (viewStyle != UIAlertViewStyleDefault) {
             // iOS <5
@@ -89,23 +89,23 @@
             alertLabel.shadowOffset = CGSizeMake( 0, -1 );
             alertLabel.textAlignment = NSTextAlignmentCenter;
             alertLabel.text = message;
-            _alertView.message = @"\n\n\n";
+            self.alertView.message = @"\n\n\n";
 
-            _alertField = [[UITextField alloc] initWithFrame:CGRectMake( 16, 83, 252, 25 )];
-            _alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
-            _alertField.borderStyle = UITextBorderStyleRoundedRect;
+            self.alertField = [[UITextField alloc] initWithFrame:CGRectMake( 16, 83, 252, 25 )];
+            self.alertField.keyboardAppearance = UIKeyboardAppearanceAlert;
+            self.alertField.borderStyle = UITextBorderStyleRoundedRect;
             if (viewStyle == UIAlertViewStyleSecureTextInput)
-                _alertField.secureTextEntry = YES;
+                self.alertField.secureTextEntry = YES;
 
-            [_alertView addSubview:alertLabel];
-            [_alertView addSubview:self.alertField];
+            [self.alertView addSubview:alertLabel];
+            [self.alertView addSubview:self.alertField];
         }
 
         if (initBlock)
-            initBlock( _alertView, _alertField );
+            initBlock( self.alertView, self.alertField );
 
-        [_alertField becomeFirstResponder];
-    } PearlMainThreadEnd
+        [self.alertField becomeFirstResponder];
+    } );
 
     return self;
 }
@@ -150,26 +150,33 @@
 
 + (instancetype)showParentalGate:(void (^)(BOOL continuing))completion {
 
+    return [self showParentalGateWithTitle:@"Parents Only"
+                                   message:@"To proceed, first get the help of your parents."
+                                completion:completion];
+}
+
++ (instancetype)showParentalGateWithTitle:(NSString *)title message:(NSString *)message
+                completion:(void (^)(BOOL continuing))completion {
+
     int a = random() % 6, b = random() % 6;
     int solution;
     NSString *operator;
     switch (random() % 2) {
         case 0: {
             solution = a + b;
-            operator = PearlString(@"What's the sum of %d and %d?", a, b );
+            operator = strf(@"The sum of %d and %d?", a, b );
             break;
         }
         case 1: {
             solution = a * b;
-            operator = PearlString(@"What's the product of %d and %d?", a, b);
+            operator = strf(@"The product of %d and %d?", a, b);
             break;
         }
         default:
             @throw [[NSException alloc] initWithName:NSInternalInconsistencyException reason:@"Unsupported operator." userInfo:nil];
     }
 
-    return [self showAlertWithTitle:@"Parents Only"
-                            message:@"To proceed, first get the help of your parents."
+    return [self showAlertWithTitle:title message:message
                           viewStyle:UIAlertViewStylePlainTextInput
                           initAlert:^(UIAlertView *alert, UITextField *firstField) { firstField.placeholder = operator; }
                   tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
@@ -238,6 +245,8 @@
     return self;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock) {
@@ -251,5 +260,6 @@
 
     [((NSMutableArray *)[PearlAlert activeAlerts]) removeObject:self];
 }
+#pragma clang diagnostic pop
 
 @end

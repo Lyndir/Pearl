@@ -39,6 +39,10 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
             return @"UIInterfaceOrientationLandscapeLeft";
         case UIInterfaceOrientationLandscapeRight:
             return @"UIInterfaceOrientationLandscapeRight";
+#ifdef __IPHONE_8_0
+        case UIInterfaceOrientationUnknown:
+            return @"UIInterfaceOrientationUnknown";
+#endif
     }
 
     err(@"Unsupported interface orientation: %ld", (long)orientation);
@@ -162,9 +166,9 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
         }
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 
-    NSUInteger supportedInterfaceOrientations = 0;
+    UIInterfaceOrientationMask supportedInterfaceOrientations = 0;
     for (NSNumber *supportedInterfaceOrientation in self.mySupportedIterfaceOrientations)
         supportedInterfaceOrientations |= [supportedInterfaceOrientation unsignedIntegerValue];
 
@@ -176,11 +180,14 @@ static NSString *NSStringFromUIInterfaceOrientation(UIInterfaceOrientation orien
     return (UIInterfaceOrientation)[(self.mySupportedIterfaceOrientations)[0] unsignedIntegerValue];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
     dbg(@"didRotateFrom: %@, to: %@", NSStringFromUIInterfaceOrientation( fromInterfaceOrientation ), NSStringFromUIInterfaceOrientation(
             UIApp.statusBarOrientation ));
     [[PearlAppDelegate get] didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
+#pragma clang diagnostic pop
 
 @end

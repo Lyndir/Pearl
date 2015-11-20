@@ -29,15 +29,4 @@
     return hitView;
 }
 
-- (void)setInvisible:(BOOL)invisible {
-
-    _invisible = invisible;
-
-    if (invisible) {
-        self.translucent = YES;
-        self.shadowImage = [UIImage new];
-        [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    }
-}
-
 @end

@@ -34,10 +34,13 @@
     [self updateWebOrientation];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
     [self updateWebOrientation];
 }
+#pragma clang diagnostic pop
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 
@@ -66,6 +69,10 @@
             [self.webView stringByEvaluatingJavaScriptFromString:
                     @"window.__defineGetter__('orientation',function(){return 180;});window.onorientationchange();"];
             break;
+#ifdef __IPHONE_8_0
+        case UIInterfaceOrientationUnknown:
+            break;
+#endif
     }
 }
 

@@ -32,7 +32,7 @@
     char *machine = malloc( size );
     sysctlbyname( "hw.machine", machine, &size, NULL, 0 );
 
-    NSString *platform = @(machine);
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
     free( machine );
 
     return platform;
@@ -86,8 +86,14 @@
 #if TARGET_OS_IPHONE
     switch ([UIDevice currentDevice].userInterfaceIdiom) {
         case UIUserInterfaceIdiomPad:
+#if defined(__TVOS_9_0) && ! defined(SDK_HIDE_TIDE)
+        case UIUserInterfaceIdiomTV:
+#endif
             return 1024.0f / 480.0f;
         case UIUserInterfaceIdiomPhone:
+#ifdef __IPHONE_8_0
+        case UIUserInterfaceIdiomUnspecified:
+#endif
             break;
     }
 #endif

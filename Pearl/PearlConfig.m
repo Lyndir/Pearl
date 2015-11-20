@@ -105,27 +105,15 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
     self.version = info[@"CFBundleShortVersionString"];
     self.copyright = info[@"NSHumanReadableCopyright"];
 
-    NSString *notification;
 #if TARGET_OS_IPHONE
-    notification = UIApplicationWillTerminateNotification;
+    PearlAddNotificationObserver( UIApplicationWillResignActiveNotification, nil, nil, ^(PearlConfig *self, NSNotification *note) {
 #else
-    notification = NSApplicationWillTerminateNotification;
+    PearlAddNotificationObserver( NSApplicationWillResignActiveNotification, nil, nil, ^(PearlConfig *self, NSNotification *note) {
 #endif
-    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
         self.firstRun = @NO;
         self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
         [[self class] flush];
-    }];
-#if TARGET_OS_IPHONE
-    notification = UIApplicationDidEnterBackgroundNotification;
-#else
-    notification = NSApplicationDidHideNotification;
-#endif
-    [[NSNotificationCenter defaultCenter] addObserverForName:notification object:nil queue:nil usingBlock:^(NSNotification *note) {
-        self.firstRun = @NO;
-        self.lastRunVersion = [PearlInfoPlist get].CFBundleVersion;
-        [[self class] flush];
-    }];
+    } );
 
     return self;
 }
@@ -146,7 +134,8 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
 
 + (void)flush {
 
-    [[[self get] defaults] synchronize];
+    if (![[[self get] defaults] synchronize])
+        wrn( @"Couldn't synchronize: %@", self );
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {

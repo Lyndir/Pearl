@@ -22,7 +22,7 @@
 
 @protocol PearlValidatingTextFieldDelegate
 
-- (BOOL)isValid:(PearlValidatingTextField *)textField;
+- (BOOL)checkValid:(PearlValidatingTextField *)textField;
 
 @end
 

@@ -10,8 +10,8 @@
 
 #ifdef PEARL_WITH_SCRYPT
 
-#import "crypto_scrypt.h"
-#import "scryptenc.h"
+#include <scrypt/crypto_scrypt.h>
+#include <scrypt/scryptenc.h>
 
 @interface PearlSCrypt()
 

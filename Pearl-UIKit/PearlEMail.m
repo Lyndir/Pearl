@@ -39,20 +39,22 @@
     return activeComposers;
 }
 
-+ (void)sendEMailTo:(NSString *)recipient {
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController {
 
-    [self sendEMailTo:recipient subject:nil body:nil];
+    [self sendEMailTo:recipient fromVC:viewController subject:nil body:nil];
 }
 
-+ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body {
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController
+            subject:(NSString *)subject body:(NSString *)body {
 
-    [self sendEMailTo:recipient subject:subject body:body attachments:nil];
+    [self sendEMailTo:recipient fromVC:viewController subject:subject body:body attachments:nil];
 }
 
-+ (void)sendEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body
-        attachments:(PearlEMailAttachment *)attachment, ... {
++ (void)sendEMailTo:(NSString *)recipient fromVC:(UIViewController *)viewController
+            subject:(NSString *)subject body:(NSString *)body attachments:(PearlEMailAttachment *)attachment, ... {
 
-    [[[self alloc] initForEMailTo:recipient subject:subject body:body attachmentsArray:va_array(attachment)] showComposer];
+    [[[self alloc] initForEMailTo:recipient subject:subject body:body attachmentsArray:va_array(attachment)]
+            showComposerForVC:viewController];
 }
 
 - (id)initForEMailTo:(NSString *)recipient subject:(NSString *)subject body:(NSString *)body
@@ -96,9 +98,7 @@
 - (void)showComposerForVC:(UIViewController *)vc {
 
     if (!vc) {
-        UIWindow *window = UIApp.keyWindow;
-        if (!window || !window.rootViewController)
-            window = (UIApp.windows)[0];
+        UIWindow *window = UIApp.windows[0];
         vc = window.rootViewController;
         while ([vc presentedViewController])
             vc = [vc presentedViewController];
@@ -130,7 +130,7 @@
           didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
 
     if (error)
-    err(@"Error composing mail message: %@", error);
+        err(@"Error composing mail message: %@", [error fullDescription]);
 
     switch (result) {
         case MFMailComposeResultSaved:
@@ -146,7 +146,7 @@
 
                     [controller dismissViewControllerAnimated:YES completion:nil];
                     [[PearlEMail activeComposers] removeObject:self];
-                }     otherTitles:@"Retry", nil];
+                } otherTitles:@"Retry", nil];
             return;
         }
     }

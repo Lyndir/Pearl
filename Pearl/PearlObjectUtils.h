@@ -1,12 +1,12 @@
 /**
- * Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
- *
- * See the enclosed file LICENSE for license information (LGPLv3). If you did
- * not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * @author   Maarten Billemont <lhunath@lyndir.com>
- * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
- */
+* Copyright Maarten Billemont (http://www.lhunath.com, lhunath@lyndir.com)
+*
+* See the enclosed file LICENSE for license information (LGPLv3). If you did
+* not receive this file, see http://www.gnu.org/licenses/lgpl-3.0.txt
+*
+* @author   Maarten Billemont <lhunath@lyndir.com>
+* @license  http://www.gnu.org/licenses/lgpl-3.0.txt
+*/
 
 //
 //  ObjectUtils.h
@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+/** @return an NSMutableArray with all vararg arguments remaining in __list */
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -28,6 +29,7 @@
                 __array;                                                                        \
             })
 
+/** @return an NSMutableArray with all vararg arguments beginning at __firstParameter */
 #define va_array(__firstParameter)                                                              \
             ({                                                                                  \
                 NSMutableArray *__array = [NSMutableArray array];                               \
@@ -39,24 +41,43 @@
                 __array;                                                                        \
             })
 
+/** @return __O or NSNull if it is nil */
 #define NilToNSNull(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == nil? (id)[NSNull null]: __o; })
+/** @return __O or nil if it is NSNull */
 #define NSNullToNil(__O)                                                                        \
             ({ __typeof__(__O) __o = __O; __o == (id)[NSNull null]? nil: __o; })
-#define IfNotNilElse(__NN,__N)                                                                  \
-            ({ __typeof__(__NN) __nn = __NN; NSNullToNil(__nn)? __nn: __N; })
-#define IfElse(__T, __F)                                                                        \
-            ({ __typeof__(__T) __t = __T; __t? __t: __F; })
+/** @return an inline list of arguments where each nil argument is replaced with NSNull */
+#define NilToNSNulls(...)                                                                       \
+            MAP_LIST(NilToNSNull, __VA_ARGS__)
+/** @return an inline list of arguments where each NSNull argument is replaced with nil */
+#define NSNullToNils(...)                                                                       \
+            MAP_LIST(NSNullToNil, __VA_ARGS__)
+/** @return __N asserted and typed as __nonnull. */
+#define PearlNotNull(__N)                                                                       \
+            ({ __typeof__(__N) __n = __N; assert(__n); (id __nonnull) (__n); })
+/** @return __N or __NN if _N is nil, typed as __nonnull. */
+#define PearlNotNullOr(__N, __NN)                                                               \
+            ({ __typeof__(__N) __n = __N; (id __nonnull) (NSNullToNil(__n)? __n: __NN); })
+/** @return a nil object */
 #define PearlNil (id)(__bridge void *)nil
+/** @return the set resulting from setByAddingObjectsFromSet of both arguments, in a nil-safe manner */
+#define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 
+/** Throw an NSInternalInconsistencyException with given __userInfo and __reason format and arguments */
 #define ThrowInfo(__userInfo, __reason, ...)                                                    \
             @throw [NSException                                                                 \
                     exceptionWithName:NSInternalInconsistencyException                          \
                     reason:PearlString(__reason , ##__VA_ARGS__)                                \
                     userInfo:__userInfo]
+/** Throw an NSInternalInconsistencyException with given __reason format and arguments */
 #define Throw(__reason, ...)                                                                    \
             ThrowInfo(nil, __reason , ##__VA_ARGS__)
+
+/** Internally, declare a weak version of __target for later use by Strongify. */
 #define Weakify(__target) __weak typeof(__target) _weak_ ## __target = __target
+/** Re-declare __target as strong from an earlier declared weak version of it.
+ * Eg. Weakify(self); block = ^{ Strongify(self); [self doSomething]; } */
 #define Strongify(__target) __strong typeof(__target) __target = _weak_ ## __target
 
 #define PearlInteger(__number) \
@@ -76,9 +97,11 @@
 #define PearlBoolNot(__number) \
             PearlBool(![__number boolValue])
 
+/** Start a block of code that can run synchronously if we are currently on the main thread, otherwise will be asynchonously scheduled on the main thread */
 #define PearlMainThreadStart                                                                 \
             ({                                                                                  \
                 dispatch_block_t __pearl_main_thread_block = ^
+/** End a block of code started by PearlMainThreadStart */
 #define PearlMainThreadEnd                                                                   \
                 ;                                                                              \
                 if ([NSThread isMainThread])                                                    \
@@ -87,22 +110,133 @@
                     dispatch_async(dispatch_get_main_queue(), __pearl_main_thread_block);       \
             });
 
-#define PearlAssociatedObjectProperty(__type, __name, __getter)                                 \
-            PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, OBJC_ASSOCIATION_RETAIN)
-#define PearlAssociatedObjectPropertyAssociation(__type, __name, __getter, __association)       \
-            static char __name ## Key;                                                          \
-            - (void)set ## __name :( __type ) __name {                                          \
-                objc_setAssociatedObject( self, & __name ## Key, __name, __association );       \
+/** Declare methods that behave like a property for use in a class extension.
+ * Eg. PearlAssociatedObjectProperty(NSString*, Name, name) */
+#define PearlAssociatedObjectProperty(__type, __uppercased, __lowercased)                                 \
+            PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, , self)
+/** Like PearlAssociatedObjectProperty but specify a method used to convert the type to an object and a method used to convert the object to the type.
+ * Eg. PearlAssociatedObjectPropertyTR(BOOL, Alive, alive, @, boolValue) */
+#define PearlAssociatedObjectPropertyTR(__type, __uppercased, __lowercased, __tr_to, __tr_from)                                 \
+            PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, OBJC_ASSOCIATION_RETAIN, __tr_to, __tr_from)
+/** Like PearlAssociatedObjectPropertyTR but specify an object storage association that's not OBJC_ASSOCIATION_RETAIN. */
+#define PearlAssociatedObjectPropertyAssociationTR(__type, __uppercased, __lowercased, __association, __tr_to, __tr_from)       \
+            static char __uppercased ## Key;                                                          \
+            - (void)set ## __uppercased :( __type ) __lowercased {                                          \
+                objc_setAssociatedObject( self, & __uppercased ## Key, __tr_to(__lowercased), __association );       \
             }                                                                                   \
-            - ( __type ) __getter {                                                             \
-                return objc_getAssociatedObject( self, & __name ## Key );                       \
+            - ( __type ) __lowercased {                                                             \
+                return [objc_getAssociatedObject( self, & __uppercased ## Key ) __tr_from];                       \
             }
+#define PearlObjCall(arg, call) [arg call]
+/** Simplify PearlHashCode usage with objects.  Eg.
+*  PearlHashCode( self.age, MAP_LIST( PearlHashCall, self.firstName, self.lastName ), -1 );
+*/
+#define PearlHashCall(arg) [arg hash]
+#define PearlHashFloat(arg) ((NSUInteger)((uint32_t*)&arg)[0])
+#define PearlHashFloats(...) MAP_LIST(PearlHashFloat, __VA_ARGS__)
+#define PearlStringify(arg) @#arg
+#define PearlEnum(_enumname, _enumvalues...)                        \
+    typedef NS_ENUM(NSUInteger, _enumname) {                        \
+        _enumvalues                                                 \
+    };                                                              \
+                                                                    \
+    static const NSArray *_enumname ## Names;                       \
+    static NSUInteger _enumname ## Count;                           \
+    __attribute__ ((constructor)) static void                       \
+     _init_ ## _enumname () {                                       \
+        _enumname ## Names = @[                                     \
+            MAP_LIST(PearlStringify, _enumvalues)                   \
+        ];                                                          \
+        _enumname ## Count = [_enumname ## Names count];            \
+    }                                                               \
+    __attribute__((unused)) static _enumname                        \
+    _enumname ## FromNSString(NSString *name) {                     \
+        return (_enumname)[_enumname ## Names indexOfObject:name];  \
+    }                                                               \
+    __attribute__((unused)) static NSString*                        \
+    NSStringFrom ## _enumname(_enumname value) {                    \
+        return [_enumname ## Names objectAtIndex:value]?:           \
+                   strf(@"[Unknown %@: %ld]",                       \
+                       PearlStringify(_enumname), (long)value);     \
+    }
+#define PearlPrefix(_v) PearlToken _v
+#define PearlSuffix(_v) _v PearlToken
+#define PearlInit(_variable, ...) ({ \
+    typeof(_variable) PearlToken = _variable; \
+    MAP_LIST( PearlPrefix, __VA_ARGS__ ); \
+    PearlToken; \
+})
 
-extern void PearlMainQueue(void (^block)());
-extern void PearlNotMainQueue(void (^block)());
+__BEGIN_DECLS
+/* Run a block on the main queue.  If already on the main queue, run it synchronously.
+ * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled on the main queue. */
+extern BOOL PearlMainQueue(void (^block)());
+/* Run a block on a background queue.  If already on a background queue, run it synchronously.
+ * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled on a background queue. */
+extern BOOL PearlNotMainQueue(void (^block)());
+
+/* Schedule a block to run on the main queue. */
+extern NSBlockOperation *PearlMainQueueOperation(void (^block)());
+/* Schedule a block to run on a background queue.  Use the current queue if currently on one, otherwise schedule it on a new queue. */
+extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)());
+
+/* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously.
+ * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on the main queue. */
+extern BOOL PearlMainQueueWait(void (^block)());
+/* Run a block on a background queue and block until the operation has finished.  If already on a background queue, run it synchronously.
+ * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on a background queue. */
+extern BOOL PearlNotMainQueueWait(void (^block)());
+
+/* Schedule a block to run on the main queue after x seconds from now. */
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
+/* Schedule a block to run on the global queue after x seconds from now. */
 extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
+/* Schedule a block to run on the given queue after x seconds from now. */
 extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+
+/* Schedule a block to run on the main queue.  If this block was previously scheduled but not yet completed, cancel it first. */
+#define PearlMainQueueSingularOperation(block) ({ \
+        static __weak NSOperation *operation = nil; \
+        [operation cancel]; \
+        operation = PearlMainQueueOperation(block); \
+    })
+/* Schedule a block to run on a background queue.  If this block was previously scheduled but not yet completed, cancel it first. */
+#define PearlNotMainQueueSingularOperation(block) ({ \
+        static __weak NSOperation *operation = nil; \
+        [operation cancel]; \
+        operation = PearlNotMainQueueOperation(block); \
+    })
+
+/**
+* Recursion detection.  Usage:
+* static BOOL recursing = NO;
+* PearlIfNotRecursing(&recursing, ^{
+*     [stuff]; // Only executed first time, skipped if stuff causes recursion.
+* });
+*
+* @return YES if not recursing and the block was executed.
+*/
+extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
+/** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
+extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
+__END_DECLS
+
+@interface PearlWeakReference : NSObject
+
+@property(nonatomic, weak) id object;
+
++ (instancetype)referenceWithObject:(id)object;
+
+@end
+
+@interface NSObject(PearlObjectUtils)
+
+- (NSString *)propertyWithValue:(id)value;
+- (void)setStrongAssociatedObject:(id)object forSelector:(SEL)sel;
+- (void)setWeakAssociatedObject:(id)object forSelector:(SEL)sel;
+- (id)getAssociatedObjectForSelector:(SEL)sel;
+
+@end
 
 @interface PearlObjectUtils : NSObject
 
@@ -112,11 +246,11 @@ extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void
 
 @interface PearlBlockObject : NSObject
 
-+ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
-+ (id)objectWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
-+ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
++ (id)objectWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock superClass:(Class)superClass;
++ (id)facadeFor:(id)facadedObject usingBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))aBlock;
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+- (id)initWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
        facadeObject:(id)facade superClass:(Class)superClass;
 
 @end

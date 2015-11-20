@@ -16,7 +16,7 @@
 //  Copyright 2011 Lyndir. All rights reserved.
 //
 
-@interface NSObject(JRSwizzle)
+@interface NSObject(PearlMutableInfo_JRSwizzle)
 
 + (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError**)error_;
 

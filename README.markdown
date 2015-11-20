@@ -8,6 +8,8 @@ Pearl is a modularized iOS library that provides convenience utilities for a wid
 
 You can use only the modules that you require.  Some modules do depend on others, and some have external dependencies.  You'll need to add these dependant modules and externals to your project as well.
 
+Any external dependencies can be checked out from the URL in the External/[project]/.source file.
+
 
 Integration
 -----------
@@ -63,25 +65,3 @@ If you're writing an open source library that uses Pearl, it's best for your lib
     #endif
 
 In this example, the library requires the `Pearl` and `Pearl-Crypto` modules.  If your library's prefix declares this, it forces the host application to have a `Pearl-Prefix.pch` that correctly defines and imports these modules.  If you don't do this and the host application's `Pearl-Prefix.pch` omits certain Pearl modules that you need, linkage errors or runtime errors may follow as Pearl won't be compiled with the correct modules.
-
-
-External Dependencies
----------------------
-
-Some modules require additional external dependencies: they can be found in the `External` directory.  They are included in the repository as submodules and need to be separately and explicitly checked out.  That way, you don't have to check out those dependencies that you don't care about.  If you do need an external dependency, you check it out the first time by issuing a command such as:
-
-    git submodule update --init --recursive External/[dependency]
-
-Once checked out, when you update Pearl to a later version, you may need to update some of your external dependencies too.  In essence, you need to run `git submodule update`, but Pearl provides a script to make the process a little more regulated.  It's best to just run the script:
-
-    ./Scripts/updateDependencies
-
-This script can also be useful to copy to your own repository.  Using this script, it becomes much easier for anyone that checks out your code to automatically fetch and update those submodules required to build your code.  If you want to use it for your own project, modify the header of your copy of the script to configure all the submodules that your own application uses, including `Pearl` and those dependencies which your needed Pearl modules require.
-
-For instance, if your application uses Pearl and the UIKit module, you may want to copy this script file into your own repository and change its `dependencies` array to say this:
-
-    dependencies=( External/Pearl External/Pearl:External/{jrswizzle,uicolor-utilities} )
-
-As a result, anyone checkout out your application's repository need only run your `updateDependencies` copy, and it will automatically check out the `Pearl` git submodule, the `jrswizzle` git submodule and the `uicolor-utilities` git submodule.  Additionally, when you update your application's code, bumping the `Pearl` version, others can run your script to quickly update all submodules to their required versions.
-
-Don't forget to also add the external library's sources to your project.  You probably want to put each under a separate static library target.  Some libraries have a bit of a different directory layout, make sure to only add the library's sources that you need, and not, for instance, its unit tests or example code.

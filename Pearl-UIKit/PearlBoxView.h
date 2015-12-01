@@ -21,6 +21,7 @@
 /**
  * A box view is a plain view that renders a bounding box.
  */
+IB_DESIGNABLE
 @interface PearlBoxView : UIView {
 
     UIColor *_color;
@@ -28,9 +29,9 @@
     BOOL _filled;
 }
 
-@property(nonatomic, retain) UIColor *color;
-@property(nonatomic, assign) CGFloat width;
-@property(nonatomic, assign) BOOL filled;
+@property(nonatomic, retain) IBInspectable UIColor *color;
+@property(nonatomic, assign) IBInspectable CGFloat width;
+@property(nonatomic, assign) IBInspectable BOOL filled;
 
 + (id)boxed:(id)view;
 + (instancetype)boxWithFrame:(CGRect)aFrame color:(UIColor *)aColor;

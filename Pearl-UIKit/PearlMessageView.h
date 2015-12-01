@@ -29,8 +29,8 @@
     CGSize _radii;
 }
 
-@property(nonatomic, assign) UIRectCorner corners;
-@property(nonatomic, retain) UIColor *fill;
-@property(nonatomic, assign) CGSize radii;
+@property(nonatomic, assign) IBInspectable UIRectCorner corners;
+@property(nonatomic, retain) IBInspectable UIColor *fill;
+@property(nonatomic, assign) IBInspectable CGSize radii;
 
 @end

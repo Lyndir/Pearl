@@ -20,6 +20,6 @@
 
 @interface PearlUINavigationBar : UINavigationBar
 
-@property (assign, nonatomic) BOOL ignoreTouches;
+@property (assign, nonatomic) IBInspectable BOOL ignoreTouches;
 
 @end

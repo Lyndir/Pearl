@@ -26,7 +26,7 @@
 /**
  * If set to YES, -shouldAutorotate and -supportedInterfaceOrientations will be forwarded to the top view controller.
  */
-@property(nonatomic, assign) BOOL forwardInterfaceRotation;
+@property(nonatomic, assign) IBInspectable BOOL forwardInterfaceRotation;
 
 /**
  * -[UIViewController (BOOL)shouldAutorotate]

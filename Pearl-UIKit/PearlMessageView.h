@@ -21,7 +21,7 @@
 /**
  * A message view is a plain view that renders a backdrop suitable for displaying a message in.
  */
-@interface PearlMessageView : UIView {
+IB_DESIGNABLE @interface PearlMessageView : UIView {
 
     BOOL _initialized;
     UIRectCorner _corners;

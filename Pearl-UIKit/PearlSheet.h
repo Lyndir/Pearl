@@ -18,6 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 /**
  * The sheet view controller manages a view that displays a short message and choices to the user.
  *
@@ -84,3 +87,5 @@
 - (PearlSheet *)cancelSheetAnimated:(BOOL)animated;
 
 @end
+
+#pragma clang diagnostic pop

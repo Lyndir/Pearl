@@ -17,7 +17,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PearlAlert.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 /**
  * The alert view controller manages a view that displays an alert to the user.
@@ -104,3 +106,5 @@
 - (PearlAlert *)cancelAlertAnimated:(BOOL)animated;
 
 @end
+
+#pragma clang diagnostic pop

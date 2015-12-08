@@ -221,11 +221,11 @@ extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 __END_DECLS
 
-@interface PearlWeakReference : NSObject
+@interface PearlWeakReference<ObjectType> : NSObject
 
-@property(nonatomic, weak) id object;
+@property(nonatomic, weak) ObjectType object;
 
-+ (instancetype)referenceWithObject:(id)object;
++ (instancetype)referenceWithObject:(ObjectType)object;
 
 @end
 

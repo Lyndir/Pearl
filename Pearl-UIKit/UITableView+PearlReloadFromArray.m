@@ -99,7 +99,6 @@
                 id fromItem = fromRows[row];
                 [fromItems addObject:fromItem];
                 NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
-                NSLog(@"fromItem: %@, indexPathForItem: %@ (from: %@)", fromItem, [self indexPathForItem:fromItem inSectionsArray:fromArray], fromIndexPath);
                 NSIndexPath *toIndexPath = [self indexPathForItem:fromItem inSectionsArray:toArray];
 
                 if (!toIndexPath)
@@ -117,13 +116,9 @@
         for (NSUInteger section = 0; section < toArray.count; ++section) {
             NSArray *toRows = toArray[section];
             for (NSUInteger row = 0; row < toRows.count; ++row) {
-                if (![fromItems checkRemoveObject:toRows[row]]) {
-                    NSLog(@"could not remove: %@", toRows[row]);
+                if (![fromItems checkRemoveObject:toRows[row]])
                     [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:section] ]
                                 withRowAnimation:animation];
-                } else {
-                    NSLog(@"removed: %@", toRows[row]);
-                }
             }
         }
 

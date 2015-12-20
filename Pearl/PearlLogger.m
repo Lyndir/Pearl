@@ -201,10 +201,8 @@ id returnArg(id arg) {
     return self;
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList {
 
-    va_list argList;
-    va_start( argList, format );
     NSString *message;
     @try {
         message = [[NSString alloc] initWithFormat:format arguments:argList];
@@ -222,120 +220,92 @@ id returnArg(id arg) {
             }
         }
     }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelTrace text:message];
+    return [self inFile:fileName atLine:lineNumber withLevel:level text:message];
+}
+
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber trc:(NSString *)format, ... {
+
+    va_list argList;
+    va_start( argList, format );
+
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelTrace format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 - (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber dbg:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
-    NSString *message;
-    @try {
-        message = [[NSString alloc] initWithFormat:format arguments:argList];
-    }
-    @catch (id exception) {
-        @try {
-            message = strf( @"Error formatting message: %@", exception );
-        }
-        @catch (id exception) {
-            message = @"Error formatting message.";
-        }
-    }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelDebug text:message];
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelDebug format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 - (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber inf:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
-    NSString *message;
-    @try {
-        message = [[NSString alloc] initWithFormat:format arguments:argList];
-    }
-    @catch (id exception) {
-        @try {
-            message = strf( @"Error formatting message: %@", exception );
-        }
-        @catch (id exception) {
-            message = @"Error formatting message.";
-        }
-    }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelInfo text:message];
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelInfo format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 - (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber wrn:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
-    NSString *message;
-    @try {
-        message = [[NSString alloc] initWithFormat:format arguments:argList];
-    }
-    @catch (id exception) {
-        @try {
-            message = strf( @"Error formatting message: %@", exception );
-        }
-        @catch (id exception) {
-            message = @"Error formatting message.";
-        }
-    }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelWarn text:message];
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelWarn format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 - (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber err:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
-    NSString *message;
-    @try {
-        message = [[NSString alloc] initWithFormat:format arguments:argList];
-    }
-    @catch (id exception) {
-        @try {
-            message = strf( @"Error formatting message: %@", exception );
-        }
-        @catch (id exception) {
-            message = @"Error formatting message.";
-        }
-    }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelError text:message];
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelError format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 - (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber ftl:(NSString *)format, ... {
 
     va_list argList;
     va_start( argList, format );
-    NSString *message;
-    @try {
-        message = [[NSString alloc] initWithFormat:format arguments:argList];
-    }
-    @catch (id exception) {
-        @try {
-            message = strf( @"Error formatting message: %@", exception );
-        }
-        @catch (id exception) {
-            message = @"Error formatting message.";
-        }
-    }
-    va_end( argList );
 
-    return [self inFile:@(fileName) atLine:lineNumber
-              withLevel:PearlLogLevelFatal text:message];
+    @try {
+        return [self inFile:@(fileName) atLine:lineNumber
+                  withLevel:PearlLogLevelFatal format:format args:argList];
+    }
+    @finally {
+        va_end( argList );
+    }
 }
 
 @end

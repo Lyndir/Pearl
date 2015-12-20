@@ -27,6 +27,28 @@ NSString *strf(NSString *format, ...) {
     return string;
 }
 
+NSString *strl(NSString *format, ...) {
+
+    va_list argList;
+    va_start( argList, format );
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
+                                           arguments:argList];
+    va_end( argList );
+
+    return msg;
+}
+
+NSString *strtl(NSString *tableName, NSString *format, ...) {
+    
+    va_list argList;
+    va_start( argList, format );
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
+                                           arguments:argList];
+    va_end( argList );
+    
+    return msg;
+}
+
 NSMutableAttributedString *stra(id string, NSDictionary *attributes) {
 
     if ([string isKindOfClass:[NSMutableAttributedString class]]) {
@@ -51,17 +73,6 @@ NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attribu
     if ([string isKindOfClass:[NSString class]])
         return strra( [[NSMutableAttributedString alloc] initWithString:string], range, attributes );
     return strra( [string description], range, attributes );
-}
-
-NSString *strl(NSString *format, ...) {
-
-    va_list argList;
-    va_start( argList, format );
-    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
-                                           arguments:argList];
-    va_end( argList );
-
-    return msg;
 }
 
 NSMutableAttributedString *straf(id format, ...) {
@@ -103,17 +114,6 @@ NSString *PearlLocalizeDyn(NSString *format, ...) {
     va_list argList;
     va_start( argList, format );
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
-                                           arguments:argList];
-    va_end( argList );
-
-    return msg;
-}
-
-NSString *strtl(NSString *tableName, NSString *format, ...) {
-
-    va_list argList;
-    va_start( argList, format );
-    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
                                            arguments:argList];
     va_end( argList );
 

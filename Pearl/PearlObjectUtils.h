@@ -19,6 +19,12 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+/** Macro Helpers */
+#define PearlCStringify(arg) #arg
+#define PearlStringify(arg) @PearlCStringify(arg)
+#define PearlPrefix(_v) PearlToken _v
+#define PearlSuffix(_v) _v PearlToken
+
 /** @return an NSMutableArray with all vararg arguments remaining in __list */
 #define va_list_array(__list)                                                                   \
             ({                                                                                  \
@@ -55,7 +61,9 @@
             MAP_LIST(NSNullToNil, __VA_ARGS__)
 /** @return __N asserted and typed as __nonnull. */
 #define PearlNotNull(__N)                                                                       \
-            ({ __typeof__(__N) __n = __N; assert(__n); (id __nonnull) (__n); })
+            ({ __typeof__(__N) __n = __N; NSAssert(__n, @"expected non-null: " PearlStringify(__N)); (id __nonnull) (__n); })
+#define PearlCNotNull(__N)                                                                       \
+            ({ __typeof__(__N) __n = __N; NSCAssert(__n, @"expected non-null: " PearlStringify(__N)); (id __nonnull) (__n); })
 /** @return __N or __NN if _N is nil, typed as __nonnull. */
 #define PearlNotNullOr(__N, __NN)                                                               \
             ({ __typeof__(__N) __n = __N; (id __nonnull) (NSNullToNil(__n)? __n: __NN); })
@@ -134,7 +142,6 @@
 #define PearlHashCall(arg) [arg hash]
 #define PearlHashFloat(arg) ((NSUInteger)((uint32_t*)&arg)[0])
 #define PearlHashFloats(...) MAP_LIST(PearlHashFloat, __VA_ARGS__)
-#define PearlStringify(arg) @#arg
 #define PearlEnum(_enumname, _enumvalues...)                        \
     typedef NS_ENUM(NSUInteger, _enumname) {                        \
         _enumvalues                                                 \
@@ -159,8 +166,6 @@
                    strf(@"[Unknown %@: %ld]",                       \
                        PearlStringify(_enumname), (long)value);     \
     }
-#define PearlPrefix(_v) PearlToken _v
-#define PearlSuffix(_v) _v PearlToken
 #define PearlInit(_variable, ...) ({ \
     typeof(_variable) PearlToken = _variable; \
     MAP_LIST( PearlPrefix, __VA_ARGS__ ); \

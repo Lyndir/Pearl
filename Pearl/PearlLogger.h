@@ -19,12 +19,18 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define trc(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ trc:(format), ##__VA_ARGS__]
-#define dbg(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ dbg:(format), ##__VA_ARGS__]
-#define inf(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ inf:(format), ##__VA_ARGS__]
-#define wrn(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ wrn:(format), ##__VA_ARGS__]
-#define err(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ err:(format), ##__VA_ARGS__]
-#define ftl(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ ftl:(format), ##__VA_ARGS__]
+#define trc(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  trc:(format), ##__VA_ARGS__]
+#define dbg(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  dbg:(format), ##__VA_ARGS__]
+#define inf(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  inf:(format), ##__VA_ARGS__]
+#define wrn(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  wrn:(format), ##__VA_ARGS__]
+#define err(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  err:(format), ##__VA_ARGS__]
+#define ftl(format, ...)    [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                  ftl:(format), ##__VA_ARGS__]
 #define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
 #define dbg_return_tr(__ret, __to_id, ...) \
                             do { \
@@ -63,15 +69,16 @@ __END_DECLS
 
 @property(nonatomic, readwrite, strong) NSString *fileName;
 @property(nonatomic, readwrite) NSInteger lineNumber;
+@property(nonatomic, readwrite, strong) NSString *function;
 @property(nonatomic, readwrite, copy) NSString *message;
 @property(nonatomic, readwrite, strong) NSDate *occurrence;
 @property(nonatomic, readwrite) PearlLogLevel level;
 
-+ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
-                         text:(NSString *)aMessage;
++ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+                    withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage;
 
-- (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)aLevel
-            text:(NSString *)aMessage;
+- (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+       withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage;
 
 - (NSString *)occurrenceDescription;
 - (NSString *)messageDescription;
@@ -109,28 +116,28 @@ __END_DECLS
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener;
 
 /** Log a new event on a specified level. */
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level
-                   text:(NSString *)text;
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber withLevel:(PearlLogLevel)level
-                 format:(NSString *)format args:(va_list)argList;
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+              withLevel:(PearlLogLevel)level text:(NSString *)text;
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+              withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList;
 
 /** Log a new TRACE-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    trc:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    trc:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new DEBUG-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new INFO-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    inf:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    inf:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new WARNING-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new ERROR-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    err:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    err:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new FATAL-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber
-                    ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
+- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+                    ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 
 @end

@@ -167,7 +167,6 @@ __END_DECLS
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
                  completion:(void (^)(BOOL finished))completion;
-/** Recursively iterate the hierarchy of this view and set UIScrollView contentInsets to dodge translucent bars. */
 - (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 - (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts

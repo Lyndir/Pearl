@@ -30,7 +30,7 @@
 + (BOOL)migrateStore:(NSURL *)migratingStoreURL withOptions:(NSDictionary *)migratingStoreOptions toStore:(NSURL *)targetStoreURL
          withOptions:(NSDictionary *)targetStoreOptions model:(NSManagedObjectModel *)model error:(__autoreleasing NSError **)error {
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:targetStoreURL.path])
+    if ([[NSFileManager defaultManager] fileExistsAtPath:PearlNotNull(targetStoreURL.path)])
         return [self copyMigrateStore:migratingStoreURL withOptions:migratingStoreOptions
                               toStore:targetStoreURL withOptions:targetStoreOptions
                                 model:model error:error];
@@ -56,7 +56,7 @@
         return NO;
     }
 
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:[targetStoreURL URLByDeletingLastPathComponent]
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull([targetStoreURL URLByDeletingLastPathComponent])
                                   withIntermediateDirectories:YES attributes:nil error:error]) {
         wrn( @"Migration failed, couldn't create location for target store: %@\n%@",
                 [targetStoreURL URLByDeletingLastPathComponent], [*error fullDescription] );
@@ -94,7 +94,7 @@
     }
 
     // Open target store.
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:[targetStoreURL URLByDeletingLastPathComponent]
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull([targetStoreURL URLByDeletingLastPathComponent])
                                   withIntermediateDirectories:YES attributes:nil error:error]) {
         wrn( @"Migration failed, couldn't create location for target store: %@\n%@",
                 [targetStoreURL URLByDeletingLastPathComponent], [*error fullDescription] );
@@ -168,7 +168,7 @@
     @autoreleasepool {
         // Create migrated object.
         NSEntityDescription *entity = self.entity;
-        NSManagedObject *destinationObject = [NSEntityDescription insertNewObjectForEntityForName:entity.name
+        NSManagedObject *destinationObject = [NSEntityDescription insertNewObjectForEntityForName:PearlNotNull(entity.name)
                                                                            inManagedObjectContext:destinationContext];
         migratedIDsBySourceID[self.objectID] = destinationObject.objectID;
 

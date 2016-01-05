@@ -34,10 +34,13 @@
     [self updateWebOrientation];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 
     [self updateWebOrientation];
 }
+#pragma clang diagnostic pop
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 

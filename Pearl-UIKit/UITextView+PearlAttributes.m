@@ -19,6 +19,36 @@
 #import "UITextView+PearlAttributes.h"
 
 
+@implementation UITextField(PearlAttributes)
+
+- (NSDictionary *)textAttributes {
+
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    style.alignment = self.textAlignment;
+    return @{
+            NSFontAttributeName            : self.font,
+            NSForegroundColorAttributeName : self.textColor,
+            NSParagraphStyleAttributeName  : style,
+    };
+}
+
+@end
+
+@implementation UILabel(PearlAttributes)
+
+- (NSDictionary *)textAttributes {
+
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    style.alignment = self.textAlignment;
+    return @{
+            NSFontAttributeName            : self.font,
+            NSForegroundColorAttributeName : self.textColor,
+            NSParagraphStyleAttributeName  : style,
+    };
+}
+
+@end
+
 @implementation UITextView(PearlAttributes)
 
 - (NSDictionary *)textAttributes {

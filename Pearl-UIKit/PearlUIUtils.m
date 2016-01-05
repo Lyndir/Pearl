@@ -528,18 +528,23 @@ static NSMutableSet *dismissableResponders;
     return constraintsByHolder;
 }
 
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute {
 
-    return [self firstConstraintForAttribute:attribute otherView:nil];
+    return [self constraintForAttribute:attribute otherView:nil];
 }
 
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
 
-    for (NSLayoutConstraint *constraint in self.applicableConstraints)
+    for (NSLayoutConstraint *constraint in self.applicableConstraints) {
+        if ([constraint class] != [NSLayoutConstraint class])
+            // Skip custom layout constraints such as internal system constraints (eg. NSContentSizeLayoutConstraint).
+            continue;
+
         if (((constraint.firstItem == self && constraint.firstAttribute == attribute) ||
              (constraint.secondItem == self && constraint.secondAttribute == attribute)) &&
             (!otherView || constraint.firstItem == otherView || constraint.secondItem == otherView))
             return constraint;
+    }
 
     return nil;
 }

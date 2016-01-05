@@ -17,11 +17,25 @@
 
 #import <Foundation/Foundation.h>
 
-
+/**
+ * Automatically calculate the necessary row animations to transition from an old to a new set of items.
+ *
+ * NOTE: This code relies on the row items being unique in terms of -hash and -isEqual.
+ */
 @interface UITableView(PearlReloadFromArray)
 
+/**
+ * fromArray and toArray should be arrays of row items in the given section.
+ */
 - (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section;
 - (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section
            withRowAnimation:(UITableViewRowAnimation)animation;
+
+/**
+ * fromArray and toArray should be arrays of sections, where a section is an array of row items.
+ */
+- (void)reloadSectionsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray;
+- (void)reloadSectionsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray
+               withRowAnimation:(UITableViewRowAnimation)animation;
 
 @end

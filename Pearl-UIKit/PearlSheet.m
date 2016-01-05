@@ -154,6 +154,8 @@
     return self;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock) {
@@ -167,5 +169,6 @@
 
     [((NSMutableArray *)[PearlSheet activeSheets]) removeObject:self];
 }
+#pragma clang diagnostic pop
 
 @end

@@ -11,15 +11,15 @@
 - (NSString *)fullDescription {
 
     NSMutableString *fullDescription = [NSMutableString new];
-    [fullDescription appendFormat:@"Error: %lu (%@): %@\n", (long)self.code, self.domain, self.localizedDescription];
+    [fullDescription appendFormat:@"Error: %lu (%@): %@", (long)self.code, self.domain, self.localizedDescription];
     if (self.localizedRecoveryOptions)
-        [fullDescription appendFormat:@" - RecoveryOptions: %@\n", self.localizedRecoveryOptions];
+        [fullDescription appendFormat:@"\n - RecoveryOptions: %@", self.localizedRecoveryOptions];
     if (self.localizedRecoverySuggestion)
-        [fullDescription appendFormat:@" - RecoverySuggestion: %@\n", self.localizedRecoverySuggestion];
+        [fullDescription appendFormat:@"\n - RecoverySuggestion: %@", self.localizedRecoverySuggestion];
     if (self.localizedFailureReason)
-        [fullDescription appendFormat:@" - FailureReason: %@\n", self.localizedFailureReason];
+        [fullDescription appendFormat:@"\n - FailureReason: %@", self.localizedFailureReason];
     if (self.helpAnchor)
-        [fullDescription appendFormat:@" - HelpAnchor: %@\n", self.helpAnchor];
+        [fullDescription appendFormat:@"\n - HelpAnchor: %@", self.helpAnchor];
     if (self.userInfo) {
         for (id key in self.userInfo) {
             id info = self.userInfo[key];
@@ -37,14 +37,13 @@
                                                                NSStringFromClass( [info class] ), [exception fullDescription]];
             }
 
-            NSString *keyString = strf(@" - Info %@: [%@] ", key, [info class]);
-            NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length] + 1
+            NSString *keyString = strf(@"\n - Info %@: [%@] ", key, [info class]);
+            NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length]
                                                             withString:@" " startingAtIndex:0];
             [infoString replaceOccurrencesOfString:@"\n" withString:indentedNewline options:0
                                              range:NSMakeRange( 0, [infoString length] )];
             [fullDescription appendString:keyString];
             [fullDescription appendString:infoString];
-            [fullDescription appendString:@"\n"];
         }
     }
 

@@ -167,7 +167,6 @@ __END_DECLS
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
                  completion:(void (^)(BOOL finished))completion;
-/** Recursively iterate the hierarchy of this view and set UIScrollView contentInsets to dodge translucent bars. */
 - (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 - (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
@@ -175,10 +174,10 @@ __END_DECLS
 /** @return All constraints in the view hierarchy that apply to this view. */
 - (NSArray *)applicableConstraints;
 - (NSDictionary *)applicableConstraintsByHolder;
-/** @return The first constraint that applies to this view's given attribute. */
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
-/** @return The first constraint that applies to this view's given attribute and relates to the given other view. */
-- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
+/** @return The only constraint that applies to this view's given attribute. Aborts DEBUG builds if multiple matching contraints exist. */
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute;
+/** @return The only constraint that applies to this view's given attribute and relates to the given other view. Aborts DEBUG builds if multiple matching contraints exist. */
+- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 

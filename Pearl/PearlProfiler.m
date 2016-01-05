@@ -38,7 +38,7 @@ static NSUInteger profilerJobs = 0;
   profilerThreshold = threshold;
 }
 
-+ (instancetype)profilerInFile:(const char *)fileName atLine:(NSInteger)lineNumber forTask:(NSString *)taskName, ... {
++ (instancetype)profilerInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function forTask:(NSString *)taskName, ... {
 
     if (MIN([PearlLogger get].printLevel, [PearlLogger get].historyLevel) > PearlLogLevelDebug)
         return nil;
@@ -47,18 +47,19 @@ static NSUInteger profilerJobs = 0;
     profiler.threshold = profilerThreshold;
     profiler.fileName = [NSString stringWithUTF8String:fileName];
     profiler.lineNumber = lineNumber;
+    profiler.function = [NSString stringWithUTF8String:function];
 
     va_list args;
     va_start( args, taskName );
     profiler.taskName = [[NSString alloc] initWithFormat:taskName arguments:args];
     va_end( args );
 
-    [profiler startJobInFile:fileName atLine:lineNumber];
+    [profiler startJobInFile:fileName atLine:lineNumber fromFunction:function];
 
     return profiler;
 }
 
-- (void)startJobInFile:(const char *)fileName atLine:(NSInteger)lineNumber {
+- (void)startJobInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function {
 
     if (_cancelled)
         return;
@@ -68,23 +69,23 @@ static NSUInteger profilerJobs = 0;
         [spaces appendString:@"  "];
 
     if (_startTime == 0)
-        [[PearlLogger get] inFile:fileName atLine:lineNumber
+        [[PearlLogger get] inFile:fileName atLine:lineNumber fromFunction:function
                               dbg:@"[         ]  %@> [%@] begin", spaces, self.taskName];
 
     _startTime = CACurrentMediaTime();
     ++profilerJobs;
 }
 
-- (void)logJob:(NSString *)format args:(va_list)args inFile:(const char *)fileName atLine:(NSInteger)lineNumber {
+- (void)logJob:(NSString *)format args:(va_list)args inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function {
 
     if (_cancelled)
         return;
 
     CFTimeInterval endTime = CACurrentMediaTime();
     if (_startTime == 0) {
-        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber
+        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber fromFunction:[self.function UTF8String]
                               wrn:@"Profiler not started: %@, when finished job: %@", self.taskName, format];
-        [self startJobInFile:fileName atLine:lineNumber];
+        [self startJobInFile:fileName atLine:lineNumber fromFunction:function];
         return;
     }
     --profilerJobs;
@@ -99,7 +100,7 @@ static NSUInteger profilerJobs = 0;
         for (NSUInteger j = 0; j < profilerJobs; ++j)
             [spaces appendString:@"  "];
 
-        [[PearlLogger get] inFile:fileName atLine:lineNumber
+        [[PearlLogger get] inFile:fileName atLine:lineNumber fromFunction:function
                               dbg:@"[+%0.6f]  %@- [%@] %@", jobTime, spaces, self.taskName, job];
     }
 }
@@ -114,32 +115,32 @@ static NSUInteger profilerJobs = 0;
         for (NSUInteger j = 0; j < profilerJobs; ++j)
             [spaces appendString:@"  "];
 
-        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber
+        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber fromFunction:[self.function UTF8String]
                               dbg:@"[+%0.6f]  %@< [%@] total", _totalTime, spaces, self.taskName];
     }
 }
 
--(void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... {
+-(void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... {
 
     if (_cancelled)
         return;
 
     va_list args;
     va_start( args, format );
-    [self logJob:format args:args inFile:fileName atLine:lineNumber];
+    [self logJob:format args:args inFile:fileName atLine:lineNumber fromFunction:function];
     va_end( args );
 
-    [self startJobInFile:fileName atLine:lineNumber];
+    [self startJobInFile:fileName atLine:lineNumber fromFunction:function];
 }
 
-- (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber job:(NSString *)format, ... {
+- (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... {
 
     if (_cancelled)
         return;
 
     va_list args;
     va_start( args, format );
-    [self logJob:format args:args inFile:fileName atLine:lineNumber];
+    [self logJob:format args:args inFile:fileName atLine:lineNumber fromFunction:function];
     va_end( args );
 
     _startTime = 0;
@@ -169,7 +170,7 @@ static NSUInteger profilerJobs = 0;
 - (void)dealloc {
 
     if (_startTime != 0) {
-        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber
+        [[PearlLogger get] inFile:[self.fileName UTF8String] atLine:self.lineNumber fromFunction:[self.function UTF8String]
                               wrn:@"Unfinished profiler: %@", self.taskName];
         [self finish];
     }

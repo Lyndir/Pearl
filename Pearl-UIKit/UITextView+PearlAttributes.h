@@ -18,6 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
+@interface UITextField(PearlAttributes)
+
+- (NSDictionary *)textAttributes;
+
+@end
+
+@interface UILabel(PearlAttributes)
+
+- (NSDictionary *)textAttributes;
+
+@end
+
 @interface UITextView(PearlAttributes)
 
 - (NSDictionary *)textAttributes;

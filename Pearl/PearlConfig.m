@@ -41,7 +41,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
     unsigned *_gameRandomCounters;
 }
 
-@dynamic build, version, copyright, firstRun, lastRunVersion, launchCount, askForReviews, reviewAfterLaunches, reviewInApp, reviewedVersion, iTunesID;
+@dynamic build, version, copyright, firstRun, lastRunVersion, launchCount, askForReviews, reviewAfterLaunches, reviewInApp, reviewedVersion, appleID;
 @dynamic supportedNotifications, deviceToken;
 @dynamic fontSize, largeFontSize, smallFontSize, fontName, fixedFontName, symbolicFontName;
 @dynamic shadeColor, transitionDuration;

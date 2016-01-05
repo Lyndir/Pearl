@@ -18,6 +18,15 @@
 
 #import <UIKit/UIKit.h>
 
+@interface UIView(PearlAdjustInsets)
+
+/**
+* @return UIEdgeInsets needed to dodge any views that occlude this scroll view's content.
+*/
+- (UIEdgeInsets)occludedInsets;
+
+@end
+
 @interface UIScrollView(PearlAdjustInsets)
 
 /**
@@ -27,11 +36,6 @@
 * You can also remove this observer with PearlRemoveNotificationObserversFrom( [scrollView] )
 */
 - (id)automaticallyAdjustInsetsForKeyboard;
-
-/**
-* @return UIEdgeInsets needed to dodge any views that occlude this scroll view's content.
-*/
-- (UIEdgeInsets)occludedInsets;
 
 /**
 * Apply the occludedInsets to the current content insets.

@@ -18,10 +18,12 @@
 // Prefix header for all source files of the 'Pearl' target in the 'Pearl' project
 //
 
+#import <Availability.h>
+
 #ifdef __OBJC__
+#import <Foundation/Foundation.h>
 
 // Pearl Configuration
-#import "Pearl-Prefix.pch"
 #ifdef PEARL
 #import "Pearl.h"
 #endif
@@ -38,6 +40,7 @@
 #endif
 #if TARGET_OS_IPHONE
 #ifdef PEARL_UIKIT
+#import <UIKit/UIKit.h>
 #import "Pearl-UIKit.h"
 #endif
 #endif

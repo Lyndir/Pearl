@@ -20,11 +20,33 @@
 NSString *strf(NSString *format, ...) {
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *string = [[NSString alloc] initWithFormat:format arguments:argList];
-    va_end(argList);
+    va_end( argList );
 
     return string;
+}
+
+NSString *strl(NSString *format, ...) {
+
+    va_list argList;
+    va_start( argList, format );
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
+                                           arguments:argList];
+    va_end( argList );
+
+    return msg;
+}
+
+NSString *strtl(NSString *tableName, NSString *format, ...) {
+    
+    va_list argList;
+    va_start( argList, format );
+    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
+                                           arguments:argList];
+    va_end( argList );
+    
+    return msg;
 }
 
 NSMutableAttributedString *stra(id string, NSDictionary *attributes) {
@@ -49,40 +71,51 @@ NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attribu
     if ([string isKindOfClass:[NSAttributedString class]])
         return strra( [string mutableCopy], range, attributes );
     if ([string isKindOfClass:[NSString class]])
-        return strra( [[NSMutableAttributedString alloc] initWithString:string], range, attributes);
+        return strra( [[NSMutableAttributedString alloc] initWithString:string], range, attributes );
     return strra( [string description], range, attributes );
 }
 
-NSString *strl(NSString *format, ...) {
+NSMutableAttributedString *straf(id format, ...) {
 
-    va_list argList;
-    va_start(argList, format);
-    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
-                                           arguments:argList];
-    va_end(argList);
+    NSMutableAttributedString *attributedString = [format isKindOfClass:[NSMutableAttributedString class]]? format:
+                                                  [format isKindOfClass:[NSAttributedString class]]?
+                                                  [[NSMutableAttributedString alloc] initWithAttributedString:format]:
+                                                  [[NSMutableAttributedString alloc] initWithString:[format description]];
 
-    return msg;
+    va_list __list;
+    va_start( __list, format );
+    NSRange searchRange = NSMakeRange( 0, [attributedString length] );
+    for (id __object; (__object = va_arg( __list, id ));) {
+        NSRange injectionRange = [[attributedString string] rangeOfString:@"%@" options:0 range:searchRange];
+        if (injectionRange.location == NSNotFound)
+            break;
+
+        if ([__object isKindOfClass:[NSAttributedString class]]) {
+            NSAttributedString *injectionString = __object;
+            [attributedString replaceCharactersInRange:injectionRange withAttributedString:injectionString];
+            searchRange.location = injectionRange.location + [injectionString length];
+        }
+        else {
+            NSString *injectionString = [__object isKindOfClass:[NSString class]]? __object: [__object description];
+            [attributedString replaceCharactersInRange:injectionRange withString:injectionString];
+            searchRange.location = injectionRange.location + [injectionString length];
+        }
+
+        searchRange.length = [attributedString length] - searchRange.location;
+    }
+    va_end( __list );
+
+    return attributedString;
 }
 
 NSString *PearlLocalizeDyn(NSString *format, ...) {
     // Identical but for dynamic format strings, no NS_FORMAT_FUNCTION to avoid compiler warning.
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:nil]
                                            arguments:argList];
-    va_end(argList);
-
-    return msg;
-}
-
-NSString *strtl(NSString *tableName, NSString *format, ...) {
-
-    va_list argList;
-    va_start(argList, format);
-    NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
-                                           arguments:argList];
-    va_end(argList);
+    va_end( argList );
 
     return msg;
 }
@@ -91,20 +124,22 @@ NSString *PearlLocalizeTableDyn(NSString *tableName, NSString *format, ...) {
     // Identical but for dynamic format strings, no NS_FORMAT_FUNCTION to avoid compiler warning.
 
     va_list argList;
-    va_start(argList, format);
+    va_start( argList, format );
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
                                            arguments:argList];
-    va_end(argList);
+    va_end( argList );
 
     return msg;
 }
 
 NSString *PearlStringB(BOOL value) {
+
     return value? @"YES": @"NO";
 }
 
 NSString *PearlStringNSB(NSNumber *value) {
-    return PearlStringB([value boolValue]);
+
+    return PearlStringB( [value boolValue] );
 }
 
 NSString *RPad(const NSString *string, const NSUInteger l) {
@@ -144,7 +179,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     formatter.numberStyle = style;
     NSMutableArray *numbers = [NSMutableArray arrayWithCapacity:(NSUInteger)((max - min) / step)];
     for (double n = min; n <= max; n += step)
-        [numbers addObject:[formatter stringFromNumber:@(n)]];
+        [numbers addObject:PearlCNotNull([formatter stringFromNumber:@(n)])];
 
     return numbers;
 }
@@ -157,7 +192,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription]);
+        err( @"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription] );
         return nil;
     }
 
@@ -175,7 +210,7 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:pattern
                                                                                 options:0 error:&error];
     if (error) {
-        err(@"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription]);
+        err( @"Couldn't compile pattern: %@, reason: %@", pattern, [error fullDescription] );
         return nil;
     }
 

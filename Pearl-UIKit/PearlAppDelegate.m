@@ -16,28 +16,22 @@
 //  Copyright, lhunath (Maarten Billemont) 2008. All rights reserved.
 //
 
-#import "PearlAppDelegate.h"
-#import "PearlLogger.h"
-
-#ifdef PEARL_MEDIA
-#import "PearlAudioController.h"
-#endif
-#ifdef PEARL_UIKIT
 #import <StoreKit/StoreKit.h>
-#import "PearlUIUtils.h"
-#ifndef ITMS_REVIEW_URL
-#define ITMS_REVIEW_URL(__id) [NSURL URLWithString:[NSString stringWithFormat: \
-SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
-? @"itms-apps://itunes.apple.com/app/id%@" \
-: @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software&id=%@", __id]]
-#endif
-#ifndef ITMS_APP_URL
-#define ITMS_APP_URL(__app) [NSURL URLWithString:[NSString stringWithFormat:\
-@"itms://itunes.com/apps/%@", __app]]
-#endif
-#endif
-#ifdef PEARL_WITH_MESSAGEUI
-#endif
+
+static NSURL *iTunesReviewURL(NSString *__id) {
+
+    return [NSURL URLWithString:
+            [NSString stringWithFormat:
+                    SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO( @"7.0" )
+                    ? @"itms-apps://itunes.apple.com/app/id%@"
+                    : @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?"
+                            @"onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software&id=%@", __id]];
+}
+
+static NSURL *iTunesAppURL(NSString *__app) {
+
+    return [NSURL URLWithString:[NSString stringWithFormat:@"itms://itunes.com/apps/%@", __app]];
+}
 
 @interface PearlAppDelegate()<SKStoreProductViewControllerDelegate>
 @end
@@ -77,15 +71,15 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         version = [NSString stringWithFormat:@"%@ (GIT: %@)", version, description];
 
     NSString *profileString;
-    NSData *provisioningProfileData = [NSData dataWithContentsOfFile:
-            [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"]];
+    NSString *provisioningProfilePath = [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"];
+    NSData *provisioningProfileData = provisioningProfilePath? [NSData dataWithContentsOfFile:provisioningProfilePath]: nil;
     if (!provisioningProfileData)
         profileString = @"No profile.";
     else {
-        NSRange startRange = [provisioningProfileData rangeOfData:[@"<?xml" dataUsingEncoding:NSASCIIStringEncoding] options:0
-                                                            range:NSMakeRange( 0, [provisioningProfileData length] )];
-        NSRange endRange = [provisioningProfileData rangeOfData:[@"</plist>" dataUsingEncoding:NSASCIIStringEncoding] options:0
-                                                          range:NSMakeRange( 0, [provisioningProfileData length] )];
+        NSRange startRange = [provisioningProfileData rangeOfData:PearlNotNull( [@"<?xml" dataUsingEncoding:NSASCIIStringEncoding] )
+                                                          options:0 range:NSMakeRange( 0, [provisioningProfileData length] )];
+        NSRange endRange = [provisioningProfileData rangeOfData:PearlNotNull( [@"</plist>" dataUsingEncoding:NSASCIIStringEncoding] )
+                                                        options:0 range:NSMakeRange( 0, [provisioningProfileData length] )];
         provisioningProfileData = [provisioningProfileData subdataWithRange:
                 NSMakeRange( startRange.location, endRange.location + endRange.length - startRange.location )];
 
@@ -127,9 +121,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
     if (!self.window) {
         self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-#ifdef PEARL_UIKIT
         //self.window.rootViewController = [PearlRootViewController new];
-#endif
         [self.window makeKeyAndVisible];
     }
     if (!self.navigationController && [self.window.rootViewController isKindOfClass:[UINavigationController class]])
@@ -146,11 +138,9 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
-#ifdef PEARL_UIKIT
     [[PearlAlert activeAlerts] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj cancelAlertAnimated:YES];
     }];
-#endif
 }
 
 - (void)showFeedback {
@@ -167,27 +157,27 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 - (void)showReview:(BOOL)allowInApp {
 
-    if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" )) {
-        if (NSNullToNil( [PearlConfig get].iTunesID )) {
-            inf( @"Opening App Store for review of iTunesID: %@", [PearlConfig get].iTunesID );
-            [UIApp openURL:ITMS_REVIEW_URL( [PearlConfig get].iTunesID )];
+    if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" ) || !NSNullToNil( [PearlConfig get].appleID )) {
+        if (NSNullToNil( [PearlConfig get].appleID )) {
+            inf( @"Opening App Store for review of Apple ID: %@", [PearlConfig get].appleID );
+            [UIApp openURL:PearlNotNull( iTunesReviewURL( [PearlConfig get].appleID ) )];
         }
         else {
-            inf( @"Opening App Store for app with iTunesID: %@", [PearlConfig get].iTunesID );
-            [UIApp openURL:ITMS_APP_URL( [PearlInfoPlist get].CFBundleName )];
+            inf( @"Opening App Store for app with name: %@", [PearlInfoPlist get].CFBundleName );
+            [UIApp openURL:PearlNotNull( iTunesAppURL( [PearlInfoPlist get].CFBundleName ) )];
         }
         return;
     }
 
     @try {
-        inf( @"Opening in-app store page for app with iTunesID: %@", [PearlConfig get].iTunesID );
+        inf( @"Opening in-app store page for app with Apple ID: %@", [PearlConfig get].appleID );
         SKStoreProductViewController *storeViewController = [SKStoreProductViewController new];
         storeViewController.delegate = self;
         [storeViewController loadProductWithParameters:@{
-                SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].iTunesID
+                SKStoreProductParameterITunesItemIdentifier : [PearlConfig get].appleID
         }                              completionBlock:^(BOOL result, NSError *error) {
             if (!result) {
-                err( @"Failed to load in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [error fullDescription] );
+                err( @"Failed to load in-app details for Apple ID: %@, %@", [PearlConfig get].appleID, [error fullDescription] );
                 [self showReview:NO];
                 return;
             }
@@ -195,7 +185,7 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
         [self.window.rootViewController presentViewController:storeViewController animated:YES completion:nil];
     }
     @catch (NSException *exception) {
-        err( @"Exception while loading in-app details for iTunesID: %@, %@", [PearlConfig get].iTunesID, [exception fullDescription] );
+        err( @"Exception while loading in-app details for Apple ID: %@, %@", [PearlConfig get].appleID, [exception fullDescription] );
         [self showReview:NO];
     }
 }
@@ -205,9 +195,8 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 
-#ifdef PEARL_UIKIT
     [PearlConfig get].launchCount = @([[PearlConfig get].launchCount intValue] + 1);
-    if ([[PearlConfig get].askForReviews boolValue] && [PearlConfig get].iTunesID) // Review asking enabled?
+    if ([[PearlConfig get].askForReviews boolValue] && [PearlConfig get].appleID) // Review asking enabled?
     if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
     if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
         [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
@@ -231,11 +220,13 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
                     }
                 }          cancelTitle:[PearlStrings get].reviewNo
                            otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewIssue, nil];
-#endif
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 
@@ -249,6 +240,8 @@ SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") \
 
     return NO;
 }
+
+#pragma clang diagnostic pop
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 

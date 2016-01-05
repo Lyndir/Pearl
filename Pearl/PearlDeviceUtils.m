@@ -94,9 +94,6 @@
 #ifdef __IPHONE_8_0
         case UIUserInterfaceIdiomUnspecified:
 #endif
-#ifdef __IPHONE_9_2
-        case UIUserInterfaceIdiomTV:
-#endif
             break;
     }
 #endif

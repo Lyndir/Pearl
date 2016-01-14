@@ -60,7 +60,7 @@ NSString *NSStringFromErrSec(OSStatus status) {
             return [NSString stringWithFormat:@"file already open with with write permission (errSecOpWr: %ld).", (long)status];
 #endif
         case errSecParam:
-            return [NSString stringWithFormat:@"One or more parameters passed to a function where not valid (errSecParam: %ld).",
+            return [NSString stringWithFormat:@"One or more parameters passed to the function were not valid (errSecParam: %ld).",
                                               (long)status];
         case errSecAllocate:
             return [NSString stringWithFormat:@"Failed to allocate memory (errSecAllocate: %ld).", (long)status];

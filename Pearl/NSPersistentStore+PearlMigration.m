@@ -110,8 +110,8 @@
     }
 
     // Set up contexts for them.
-    NSManagedObjectContext *migratingContext = [NSManagedObjectContext new];
-    NSManagedObjectContext *targetContext = [NSManagedObjectContext new];
+    NSManagedObjectContext *migratingContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    NSManagedObjectContext *targetContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     migratingContext.persistentStoreCoordinator = migratingCoordinator;
     targetContext.persistentStoreCoordinator = targetCoordinator;
 

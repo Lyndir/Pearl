@@ -155,9 +155,8 @@ uint64_t PearlSecureRandom() {
 
 - (NSString *)encodeURL {
 
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes( kCFAllocatorDefault, (__bridge CFStringRef)self, NULL,
-            CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
-            kCFStringEncodingUTF8 );
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:
+            [NSCharacterSet characterSetWithCharactersInString:@":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"]];
 }
 
 - (NSString *)inject:(NSString *)injection interval:(NSUInteger)interval {

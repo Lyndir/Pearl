@@ -5652,7 +5652,7 @@
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 			};
 			name = "Debug-OSX";
@@ -5786,7 +5786,7 @@
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 			};
 			name = "Release-OSX";
@@ -5838,8 +5838,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5857,8 +5856,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5876,8 +5874,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5895,8 +5892,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = iphoneos;
 			};
@@ -5982,8 +5978,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = macosx;
 			};
@@ -6001,8 +5996,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = macosx;
 			};
@@ -6020,8 +6014,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = macosx;
 			};
@@ -6039,8 +6032,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Pearl-Crypto\\\"",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 				SDKROOT = macosx;
 			};
@@ -6289,7 +6281,7 @@
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 			};
 			name = "Debug-iOS";
@@ -6302,7 +6294,7 @@
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/lhunath/Documents/workspace/lyndir/Pearl/Pearl-Crypto/lib",
+					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
 			};
 			name = "Release-iOS";

@@ -94,6 +94,9 @@
 #ifdef __IPHONE_8_0
         case UIUserInterfaceIdiomUnspecified:
 #endif
+#ifdef __IPHONE_9_0
+        case UIUserInterfaceIdiomCarPlay:
+#endif
             break;
     }
 #endif

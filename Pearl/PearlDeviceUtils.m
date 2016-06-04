@@ -40,21 +40,21 @@
 
 + (BOOL)isAppEncrypted {
 
-    const uint8_t *command = (const uint8_t *) (&_mh_execute_header + 1);
+    const uint8_t *command = (const uint8_t *)(&_mh_execute_header + 1);
     for (uint32_t idx = 0; idx < _mh_execute_header.ncmds; ++idx)
-        if (((const struct load_command *) command)->cmd == LC_ENCRYPTION_INFO) {
-            struct encryption_info_command *crypt_cmd = (struct encryption_info_command *) command;
+        if (((const struct load_command *)command)->cmd == LC_ENCRYPTION_INFO) {
+            struct encryption_info_command *crypt_cmd = (struct encryption_info_command *)command;
             return crypt_cmd->cryptid != 0;
         }
         else
-            command += ((const struct load_command *) command)->cmdsize;
+            command += ((const struct load_command *)command)->cmdsize;
 
     return NO;
 }
 
 + (BOOL)isJailbroken {
 
-    return system("") == 0;
+    return system( "" ) == 0;
 }
 
 + (BOOL)isIPod {
@@ -84,21 +84,8 @@
 + (float)uiScale {
 
 #if TARGET_OS_IPHONE
-    switch ([UIDevice currentDevice].userInterfaceIdiom) {
-        case UIUserInterfaceIdiomPad:
-#if defined(__TVOS_9_0) && ! defined(SDK_HIDE_TIDE)
-        case UIUserInterfaceIdiomTV:
-#endif
-            return 1024.0f / 480.0f;
-        case UIUserInterfaceIdiomPhone:
-#ifdef __IPHONE_8_0
-        case UIUserInterfaceIdiomUnspecified:
-#endif
-#ifdef __IPHONE_9_0
-        case UIUserInterfaceIdiomCarPlay:
-#endif
-            break;
-    }
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+        return 1024.0f / 480.0f;
 #endif
 
     return 1;

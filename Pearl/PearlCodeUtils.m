@@ -50,16 +50,19 @@ uint64_t PearlSecureRandom() {
 
     uint64_t random = 0;
 #if TARGET_OS_IPHONE
-    SecRandomCopyBytes( kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random );
+    if (!SecRandomCopyBytes( kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random )) {
+        wrn(@"Couldn't produce random bytes: %@", errstr());
+        random = (((uint64_t)arc4random()) << 32) | (uint64_t)arc4random();
+    }
 #else
     FILE *fp = fopen("/dev/random", "r");
-    if (!fp) {
-        err(@"Couldn't open /dev/random.");
-        return YES;
+    if (fp) {
+        for (size_t i=0; i < sizeof(random); ++i)
+            random |= ((uint64_t)fgetc(fp) << (8 * i));
+    } else {
+        wrn(@"Couldn't open /dev/random: %@", errstr());
+        random = (((uint64_t)arc4random()) << 32) | (uint64_t)arc4random();
     }
-    
-    for (size_t i=0; i < sizeof(random); ++i)
-        random |= ((uint64_t)fgetc(fp) << (8 * i));
 #endif
 
     return random;
@@ -149,7 +152,8 @@ uint64_t PearlSecureRandom() {
             bytes[length++] = (char)(buffer[2] << 6) | buffer[3];
     }
 
-    realloc( bytes, length );
+
+    bytes = realloc( bytes, length );
     return [NSData dataWithBytesNoCopy:bytes length:length];
 }
 

@@ -152,12 +152,14 @@ static NSURL *iTunesAppURL(NSString *__app) {
 
 - (void)showReview {
 
+#ifdef PEARL_WITH_STOREKIT
     [self showReview:[[PearlConfig get].reviewInApp boolValue]];
 }
 
 - (void)showReview:(BOOL)allowInApp {
 
     if (!allowInApp || !NSClassFromString( @"SKStoreProductViewController" ) || !NSNullToNil( [PearlConfig get].appleID )) {
+#endif
         if (NSNullToNil( [PearlConfig get].appleID )) {
             inf( @"Opening App Store for review of Apple ID: %@", [PearlConfig get].appleID );
             [UIApp openURL:PearlNotNull( iTunesReviewURL( [PearlConfig get].appleID ) )];
@@ -167,6 +169,7 @@ static NSURL *iTunesAppURL(NSString *__app) {
             [UIApp openURL:PearlNotNull( iTunesAppURL( [PearlInfoPlist get].CFBundleName ) )];
         }
         return;
+#ifdef PEARL_WITH_STOREKIT
     }
 
     @try {
@@ -188,6 +191,7 @@ static NSURL *iTunesAppURL(NSString *__app) {
         err( @"Exception while loading in-app details for Apple ID: %@, %@", [PearlConfig get].appleID, [exception fullDescription] );
         [self showReview:NO];
     }
+#endif
 }
 
 - (void)shutdown:(id)caller {

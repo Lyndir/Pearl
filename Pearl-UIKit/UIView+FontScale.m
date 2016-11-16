@@ -11,11 +11,18 @@
 
 @end
 
+@interface UIApplication(FontScale)
+
+- (CGFloat)preferredContentSizeCategoryFontScale;
+
+@end
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "InfiniteRecursion"
 
 @interface UIView(FontScale_Private)
 
+@property (nonatomic) id contentSizeCategoryObserver;
 @property (nonatomic) CGFloat appliedFontScale;
 
 @end
@@ -32,7 +39,7 @@
 
     NSError *error = nil;
     for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
-        if ([type jr_swizzleMethod:@selector( layoutSubviews ) withMethod:@selector( fontScale_layoutSubviews ) error:&error] &&
+        if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontScale_updateConstraints ) error:&error] &&
             [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
         if (error)
             err( @"While installing UIView(FontScale): %@", [error fullDescription] );
@@ -45,10 +52,7 @@
         return;
 
     objc_setAssociatedObject( self, @selector(fontScale), @(fontScale), OBJC_ASSOCIATION_RETAIN );
-    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview respondsToSelector:@selector( setFont: )])
-            [subview setNeedsLayout];
-    } recurse:YES];
+    [self setNeedsUpdateFontScale];
 }
 
 - (CGFloat)fontScale {
@@ -78,13 +82,14 @@
     if (self.ignoreFontScale)
       return 1;
 
-    CGFloat inheritedFontScale = 1;
-    if (self.superview)
-        inheritedFontScale = self.superview.exportedFontScale;
-    else if (![self isKindOfClass:[UIWindow class]])
-        inheritedFontScale = [UIApp keyWindow].exportedFontScale;
+    CGFloat inheritedFontScale = [self isKindOfClass:[UIWindow class]]? 1: (self.window?: UIApp.keyWindow).exportedFontScale;
+//    CGFloat inheritedFontScale = 1;
+//    if (self.superview)
+//        inheritedFontScale = self.superview.exportedFontScale;
+//    else if (![self isKindOfClass:[UIWindow class]])
+//        inheritedFontScale = [UIApp keyWindow].exportedFontScale;
 
-    return self.fontScale * inheritedFontScale?: 1;
+    return UIApp.preferredContentSizeCategoryFontScale * (self.fontScale * inheritedFontScale?: 1);
 }
 
 /**
@@ -95,17 +100,14 @@
     return self.effectiveFontScale;
 }
 
-- (void)setAppliedFontScale:(CGFloat)appliedFontScale {
+- (id)contentSizeCategoryObserver {
 
-    objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
+    return objc_getAssociatedObject( self, @selector( contentSizeCategoryObserver ) );
+}
 
-    Weakify( self );
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        Strongify( self );
-        [self invalidateIntrinsicContentSize];
-        for (UIView *view = self; view; view = [view superview])
-            [view setNeedsLayout];
-    }];
+- (void)setContentSizeCategoryObserver:(id)observer {
+
+    objc_setAssociatedObject( self, @selector( contentSizeCategoryObserver ), observer, OBJC_ASSOCIATION_RETAIN );
 }
 
 /**
@@ -116,21 +118,52 @@
     return [objc_getAssociatedObject( self, @selector( appliedFontScale ) ) floatValue]?: 1;
 }
 
+- (void)setAppliedFontScale:(CGFloat)appliedFontScale {
+
+    if (!self.contentSizeCategoryObserver) {
+      Weakify( self );
+      self.contentSizeCategoryObserver = [[NSNotificationCenter defaultCenter]
+          addObserverForName:UIContentSizeCategoryDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            Strongify( self );
+            [self setNeedsUpdateConstraints];
+          }];
+    }
+
+    objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
+
+//  Weakify( self );
+//    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//        Strongify( self );
+//        [self invalidateIntrinsicContentSize];
+//        for (UIView *view = self; view; view = [view superview])
+//            [view setNeedsLayout];
+//    }];
+}
+
 - (void)updateFontScale {
 
     CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
     if (effectiveFontScale == appliedFontScale)
         return;
 
+    self.appliedFontScale = self.effectiveFontScale;
     UIFont *originalFont = [(UILabel *)self font];
     [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale]];
-    self.appliedFontScale = self.effectiveFontScale;
 }
 
-- (void)fontScale_layoutSubviews {
+- (void)setNeedsUpdateFontScale {
+  [self setNeedsUpdateConstraints];
+
+  for (UIView *subview in self.subviews)
+    [subview setNeedsUpdateFontScale];
+}
+
+- (void)fontScale_updateConstraints {
 
     [self updateFontScale];
-    [self fontScale_layoutSubviews];
+    [self fontScale_updateConstraints];
 }
 
 - (void)fontScale_setFont:(UIFont *)originalFont {
@@ -147,6 +180,51 @@
     else
         [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
     self.appliedFontScale = effectiveFontScale;
+}
+
+@end
+
+@implementation UIApplication (FontScale)
+
+- (CGFloat)preferredContentSizeCategoryFontScale {
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge])
+        return 23 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraExtraLarge])
+        return 22 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraLarge])
+        return 21 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityLarge])
+        return 20 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityMedium])
+        return 19 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraExtraExtraLarge])
+        return 19 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraExtraLarge])
+        return 18 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraLarge])
+        return 17 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryLarge])
+        return 1.0f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryMedium])
+        return 15 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategorySmall])
+        return 14 / 16.f;
+
+    if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraSmall])
+        return 13 / 16.f;
+
+    return 1.0f;
 }
 
 @end

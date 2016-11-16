@@ -20,4 +20,6 @@
  */
 @property(nonatomic) IBInspectable BOOL ignoreFontScale;
 
+- (void)setNeedsUpdateFontScale;
+
 @end

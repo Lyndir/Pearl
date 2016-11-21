@@ -11,15 +11,8 @@
 @interface UIView(FontScale)
 
 /**
- * The scale by which this view should scale its (and its subviews') fonts.
- */
-@property(nonatomic) IBInspectable CGFloat fontScale;
-
-/**
  * If YES, this view and its subviews ignore its and any inherited font scale.
  */
 @property(nonatomic) IBInspectable BOOL ignoreFontScale;
-
-- (void)setNeedsUpdateFontScale;
 
 @end

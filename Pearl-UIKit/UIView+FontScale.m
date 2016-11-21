@@ -46,58 +46,15 @@
     }
 }
 
-- (void)setFontScale:(CGFloat)fontScale {
-
-    if (fontScale == self.fontScale)
-        return;
-
-    objc_setAssociatedObject( self, @selector(fontScale), @(fontScale), OBJC_ASSOCIATION_RETAIN );
-    [self setNeedsUpdateFontScale];
-}
-
-- (CGFloat)fontScale {
-
-    return [objc_getAssociatedObject( self, @selector( fontScale ) ) floatValue]?: 1;
-}
-
 - (void)setIgnoreFontScale:(BOOL)ignoreFontScale {
 
     objc_setAssociatedObject( self, @selector( ignoreFontScale ), @(ignoreFontScale), OBJC_ASSOCIATION_RETAIN );
-    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
-        if ([subview respondsToSelector:@selector( setFont: )])
-            [subview setNeedsLayout];
-    } recurse:YES];
+    [self setNeedsUpdateConstraints];
 }
 
 - (BOOL)ignoreFontScale {
 
     return [objc_getAssociatedObject( self, @selector( ignoreFontScale ) ) boolValue];
-}
-
-/**
-* @return The font scale that should affect this view.  It is this view's scale modified by the scale of any of its superviews.
-*/
-- (CGFloat)effectiveFontScale {
-
-    if (self.ignoreFontScale)
-      return 1;
-
-    CGFloat inheritedFontScale = [self isKindOfClass:[UIWindow class]]? 1: (self.window?: UIApp.keyWindow).exportedFontScale;
-//    CGFloat inheritedFontScale = 1;
-//    if (self.superview)
-//        inheritedFontScale = self.superview.exportedFontScale;
-//    else if (![self isKindOfClass:[UIWindow class]])
-//        inheritedFontScale = [UIApp keyWindow].exportedFontScale;
-
-    return UIApp.preferredContentSizeCategoryFontScale * (self.fontScale * inheritedFontScale?: 1);
-}
-
-/**
-* @return The font scale that should affect our subviews.
-*/
-- (CGFloat)exportedFontScale {
-
-    return self.effectiveFontScale;
 }
 
 - (id)contentSizeCategoryObserver {
@@ -120,44 +77,33 @@
 
 - (void)setAppliedFontScale:(CGFloat)appliedFontScale {
 
-    if (!self.contentSizeCategoryObserver) {
-      Weakify( self );
-      self.contentSizeCategoryObserver = [[NSNotificationCenter defaultCenter]
-          addObserverForName:UIContentSizeCategoryDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            Strongify( self );
-            [self setNeedsUpdateConstraints];
-          }];
-    }
-
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsLayout];
-
-//  Weakify( self );
-//    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//        Strongify( self );
-//        [self invalidateIntrinsicContentSize];
-//        for (UIView *view = self; view; view = [view superview])
-//            [view setNeedsLayout];
-//    }];
 }
 
 - (void)updateFontScale {
 
-    CGFloat effectiveFontScale = [self effectiveFontScale], appliedFontScale = [self appliedFontScale];
+    Weakify( self );
+    if (!self.contentSizeCategoryObserver)
+        self.contentSizeCategoryObserver = [[NSNotificationCenter defaultCenter]
+            addObserverForName:UIContentSizeCategoryDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+              Strongify( self );
+              [self setNeedsUpdateConstraints];
+            }];
+
+    CGFloat appliedFontScale = self.appliedFontScale;
+    CGFloat effectiveFontScale = self.ignoreFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
     if (effectiveFontScale == appliedFontScale)
         return;
+    self.appliedFontScale = effectiveFontScale;
 
-    self.appliedFontScale = self.effectiveFontScale;
     UIFont *originalFont = [(UILabel *)self font];
-    [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale]];
-}
-
-- (void)setNeedsUpdateFontScale {
-  [self setNeedsUpdateConstraints];
-
-  for (UIView *subview in self.subviews)
-    [subview setNeedsUpdateFontScale];
+    UIFont *updatedFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
+    [self fontScale_setFont:updatedFont];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        Strongify( self );
+        if ([self.superview isKindOfClass:[UIControl class]])
+            [self.superview setNeedsLayout];
+    }];
 }
 
 - (void)fontScale_updateConstraints {
@@ -166,20 +112,11 @@
     [self fontScale_updateConstraints];
 }
 
-- (void)fontScale_setFont:(UIFont *)originalFont {
+- (void)fontMod_setFont:(UIFont *)originalFont {
 
-    if (!self.window) {
-        [self fontScale_setFont:originalFont];
-        [self setNeedsLayout];
-        return;
-    }
-
-    CGFloat effectiveFontScale = self.effectiveFontScale;
-    if (effectiveFontScale == 1)
-        [self fontScale_setFont:originalFont];
-    else
-        [self fontScale_setFont:[originalFont fontWithSize:originalFont.pointSize * effectiveFontScale]];
-    self.appliedFontScale = effectiveFontScale;
+    [self fontScale_setFont:originalFont];
+    [self setAppliedFontScale:1];
+    [self updateFont];
 }
 
 @end

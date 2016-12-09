@@ -19,6 +19,9 @@
 
 NSString *strf(NSString *format, ...) {
 
+    if (!format)
+        return nil;
+
     va_list argList;
     va_start( argList, format );
     NSString *string = [[NSString alloc] initWithFormat:format arguments:argList];
@@ -28,6 +31,9 @@ NSString *strf(NSString *format, ...) {
 }
 
 NSString *strl(NSString *format, ...) {
+
+    if (!format)
+        return nil;
 
     va_list argList;
     va_start( argList, format );
@@ -40,6 +46,9 @@ NSString *strl(NSString *format, ...) {
 
 NSString *strtl(NSString *tableName, NSString *format, ...) {
     
+    if (!format)
+        return nil;
+
     va_list argList;
     va_start( argList, format );
     NSString *msg = [[NSString alloc] initWithFormat:[[NSBundle mainBundle] localizedStringForKey:format value:nil table:tableName]
@@ -51,6 +60,8 @@ NSString *strtl(NSString *tableName, NSString *format, ...) {
 
 NSMutableAttributedString *stra(id string, NSDictionary *attributes) {
 
+    if (!string)
+        return nil;
     if ([string isKindOfClass:[NSMutableAttributedString class]]) {
         [string addAttributes:attributes range:NSMakeRange( 0, [string length] )];
         return string;
@@ -64,6 +75,8 @@ NSMutableAttributedString *stra(id string, NSDictionary *attributes) {
 
 NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attributes) {
 
+    if (!string)
+        return nil;
     if ([string isKindOfClass:[NSMutableAttributedString class]]) {
         [string addAttributes:attributes range:range];
         return string;
@@ -76,6 +89,9 @@ NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attribu
 }
 
 NSMutableAttributedString *straf(id format, ...) {
+
+    if (!format)
+        return nil;
 
     NSMutableAttributedString *attributedString = [format isKindOfClass:[NSMutableAttributedString class]]? format:
                                                   [format isKindOfClass:[NSAttributedString class]]?

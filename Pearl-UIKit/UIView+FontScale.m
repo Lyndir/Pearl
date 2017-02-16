@@ -40,7 +40,7 @@
     NSError *error = nil;
     for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
         if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontScale_updateConstraints ) error:&error] &&
-            [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontScale_setFont: ) error:&error])
+            [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontMod_setFont: ) error:&error])
         if (error)
             err( @"While installing UIView(FontScale): %@", [error fullDescription] );
     }
@@ -80,7 +80,7 @@
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 }
 
-- (void)updateFontScale {
+- (void)fontMod_updateFont {
 
     Weakify( self );
     if (!self.contentSizeCategoryObserver)
@@ -98,7 +98,7 @@
 
     UIFont *originalFont = [(UILabel *)self font];
     UIFont *updatedFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-    [self fontScale_setFont:updatedFont];
+    [self fontMod_setFont:updatedFont];
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         Strongify( self );
         if ([self.superview isKindOfClass:[UIControl class]])
@@ -108,15 +108,15 @@
 
 - (void)fontScale_updateConstraints {
 
-    [self updateFontScale];
-    [self fontScale_updateConstraints];
+    [self fontMod_updateFont];
+    [self updateConstraints];
 }
 
 - (void)fontMod_setFont:(UIFont *)originalFont {
 
-    [self fontScale_setFont:originalFont];
+    [self fontMod_setFont:originalFont];
     [self setAppliedFontScale:1];
-    [self updateFont];
+    [self fontMod_updateFont];
 }
 
 @end

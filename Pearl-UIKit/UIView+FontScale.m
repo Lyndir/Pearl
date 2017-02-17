@@ -39,7 +39,7 @@
 
     NSError *error = nil;
     for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
-        if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontScale_updateConstraints ) error:&error] &&
+        if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontMod_updateConstraints ) error:&error] &&
             [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontMod_setFont: ) error:&error])
         if (error)
             err( @"While installing UIView(FontScale): %@", [error fullDescription] );
@@ -106,10 +106,10 @@
     }];
 }
 
-- (void)fontScale_updateConstraints {
+- (void)fontMod_updateConstraints {
 
     [self fontMod_updateFont];
-    [self updateConstraints];
+    [self fontMod_updateConstraints];
 }
 
 - (void)fontMod_setFont:(UIFont *)originalFont {

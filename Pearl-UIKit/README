@@ -1,5 +1,6 @@
 Supported toggles for this module:
     - PEARL_WITH_MESSAGEUI: Enables messaging UI wrappers, eg. PearlEMail
+    - PEARL_WITH_STOREKIT: Enables integration with StoreKit such as opening a SKStoreProductViewController for reviews.
 
 I depend on the following external libraries:
 

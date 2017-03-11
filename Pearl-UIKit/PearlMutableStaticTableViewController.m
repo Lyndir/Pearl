@@ -111,27 +111,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         // Remove all the features in _activeSectionCells that need to be hidden.
         [activeSectionCells removeObjectsInArray:hideCells];
 
-        // Figure out where in the _activeSectionCells to insert the feature based on the original order of cells in _allSectionCells.
-        for (UITableViewCell *showCell in showCells) {
-            NSUInteger allCellsRow = [_allCellsBySection[section] indexOfObject:showCell];
-            if (allCellsRow == NSNotFound)
-                continue;
-            if ([activeSectionCells containsObject:showCell])
-                continue;
+        // Add the features to _activeSectionCells that need to be shown (but only once).
+        [activeSectionCells removeObjectsInArray:showCells];
+        [activeSectionCells addObjectsFromArray:showCells];
 
-            NSUInteger cellInsertionRow = 0;
-            NSUInteger previousAllCellRow = MAX( 1, allCellsRow ) - 1;
-            while (previousAllCellRow > 0) {
-                NSUInteger previousActiveCellRow = [activeSectionCells indexOfObject:_allCellsBySection[section][previousAllCellRow]];
-                if (previousActiveCellRow == NSNotFound)
-                    --previousAllCellRow;
-                else {
-                    cellInsertionRow = previousActiveCellRow + 1;
-                    break;
-                }
-            }
-            [activeSectionCells insertObject:showCell atIndex:cellInsertionRow];
-        }
+        // Make the order of the cells in in _activeSectionCells match the original order in _allCellsBySection.
+        [activeSectionCells sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            NSUInteger i1 = [self->_allCellsBySection[section] indexOfObject:obj1];
+            NSUInteger i2 = [self->_allCellsBySection[section] indexOfObject:obj2];
+            return i1 == i2? NSOrderedSame: i1 < i2? NSOrderedAscending: NSOrderedDescending;
+        }];
 
         if (!reloadData)
             [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:section withRowAnimation:animation];

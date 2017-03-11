@@ -26,7 +26,6 @@
 #import "PearlUINavigationBar.h"
 #import "PearlUIUtils.h"
 #import "PearlValidatingTextField.h"
-#import "PearlWebViewController.h"
 #import "UICollectionReusableView+PearlDequeue.h"
 #import "UICollectionView+PearlReloadFromArray.h"
 #import "UIControl+PearlBlocks.h"

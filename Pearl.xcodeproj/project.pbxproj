@@ -222,7 +222,6 @@
 		DAAD42A315286E9800AADDBD /* PearlUIDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE214F438D500EB000C /* PearlUIDebug.m */; };
 		DAAD42A515286E9800AADDBD /* PearlUIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE614F438D500EB000C /* PearlUIUtils.m */; };
 		DAAD42A615286E9800AADDBD /* PearlValidatingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE814F438D500EB000C /* PearlValidatingTextField.m */; };
-		DAAD42A715286E9800AADDBD /* PearlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BEA14F438D500EB000C /* PearlWebViewController.m */; };
 		DAAD42AA15286E9800AADDBD /* PearlAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */; };
 		DAAD42AD15286E9800AADDBD /* libASIHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109DCC14F45F7200EB000C /* libASIHttpRequest.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		DAAD42AE15286E9800AADDBD /* libcocos2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA109C6F14F45EBA00EB000C /* libcocos2d.a */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -268,7 +267,6 @@
 		DAAD42F115286E9800AADDBD /* PearlUIDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE114F438D500EB000C /* PearlUIDebug.h */; };
 		DAAD42F315286E9800AADDBD /* PearlUIUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE514F438D500EB000C /* PearlUIUtils.h */; };
 		DAAD42F415286E9800AADDBD /* PearlValidatingTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE714F438D500EB000C /* PearlValidatingTextField.h */; };
-		DAAD42F515286E9800AADDBD /* PearlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA109BE914F438D500EB000C /* PearlWebViewController.h */; };
 		DAAD42F915286E9800AADDBD /* PearlAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */; };
 		DAAD430E15286F4500AADDBD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAD430C15286F4500AADDBD /* InfoPlist.strings */; };
 		DAAD431115286F4500AADDBD /* PearliOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAD431015286F4500AADDBD /* PearliOSTests.m */; };
@@ -1834,8 +1832,6 @@
 		DA109BE614F438D500EB000C /* PearlUIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlUIUtils.m; sourceTree = "<group>"; };
 		DA109BE714F438D500EB000C /* PearlValidatingTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlValidatingTextField.h; sourceTree = "<group>"; };
 		DA109BE814F438D500EB000C /* PearlValidatingTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlValidatingTextField.m; sourceTree = "<group>"; };
-		DA109BE914F438D500EB000C /* PearlWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlWebViewController.h; sourceTree = "<group>"; };
-		DA109BEA14F438D500EB000C /* PearlWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlWebViewController.m; sourceTree = "<group>"; };
 		DA109BEC14F438D500EB000C /* PearlWSController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlWSController.h; sourceTree = "<group>"; };
 		DA109BED14F438D500EB000C /* PearlWSController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlWSController.m; sourceTree = "<group>"; };
 		DA109BEE14F438D500EB000C /* Pearl-WS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-WS.h"; sourceTree = "<group>"; };
@@ -2574,8 +2570,6 @@
 				DA109BE614F438D500EB000C /* PearlUIUtils.m */,
 				DA109BE714F438D500EB000C /* PearlValidatingTextField.h */,
 				DA109BE814F438D500EB000C /* PearlValidatingTextField.m */,
-				DA109BE914F438D500EB000C /* PearlWebViewController.h */,
-				DA109BEA14F438D500EB000C /* PearlWebViewController.m */,
 			);
 			path = "Pearl-UIKit";
 			sourceTree = "<group>";
@@ -4563,7 +4557,6 @@
 				DAAD42F115286E9800AADDBD /* PearlUIDebug.h in Headers */,
 				DAAD42F315286E9800AADDBD /* PearlUIUtils.h in Headers */,
 				DAAD42F415286E9800AADDBD /* PearlValidatingTextField.h in Headers */,
-				DAAD42F515286E9800AADDBD /* PearlWebViewController.h in Headers */,
 				DAAD42F915286E9800AADDBD /* PearlAppDelegate.h in Headers */,
 				DAAD43CD15299C1A00AADDBD /* PearlCryptUtils.h in Headers */,
 				DAAD43CF15299C1A00AADDBD /* PearlKeyChain.h in Headers */,
@@ -5208,7 +5201,6 @@
 				DAAD42A315286E9800AADDBD /* PearlUIDebug.m in Sources */,
 				DAAD42A515286E9800AADDBD /* PearlUIUtils.m in Sources */,
 				DAAD42A615286E9800AADDBD /* PearlValidatingTextField.m in Sources */,
-				DAAD42A715286E9800AADDBD /* PearlWebViewController.m in Sources */,
 				DAAD42AA15286E9800AADDBD /* PearlAppDelegate.m in Sources */,
 				DAAD43CE15299C1A00AADDBD /* PearlCryptUtils.m in Sources */,
 				DAAD43D015299C1A00AADDBD /* PearlKeyChain.m in Sources */,

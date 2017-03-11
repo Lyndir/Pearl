@@ -83,12 +83,12 @@ static NSURL *iTunesAppURL(NSString *__app) {
         provisioningProfileData = [provisioningProfileData subdataWithRange:
                 NSMakeRange( startRange.location, endRange.location + endRange.length - startRange.location )];
 
-        NSString *profileError = nil;
-        NSDictionary *provisioningProfile = [NSPropertyListSerialization propertyListFromData:provisioningProfileData
-                                                                             mutabilityOption:NSPropertyListImmutable
-                                                                                       format:nil errorDescription:&profileError];
+        NSError *profileError = nil;
+        NSDictionary *provisioningProfile = [NSPropertyListSerialization propertyListWithData:provisioningProfileData
+                                                                                      options:NSPropertyListImmutable format:nil
+                                                                                        error:&profileError];
         if (profileError)
-            profileString = profileError;
+            profileString = [profileError description];
         else
             profileString = strf( @"%@ (%@, devices: %ld, UUID: %@)", provisioningProfile[@"Name"],
                     [provisioningProfile[@"Entitlements"][@"get-task-allow"] boolValue]? @"debug": @"release",

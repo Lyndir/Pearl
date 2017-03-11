@@ -19,6 +19,7 @@
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif
+#include <spawn.h>
 #include <sys/sysctl.h>
 #import <mach-o/ldsyms.h>
 
@@ -54,7 +55,8 @@
 
 + (BOOL)isJailbroken {
 
-    return system( "" ) == 0;
+    char *argv[] = { "true", NULL };
+    return posix_spawn(NULL, argv[0], NULL, NULL, argv, NULL) == 0;
 }
 
 + (BOOL)isIPod {

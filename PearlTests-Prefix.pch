@@ -25,7 +25,6 @@
 #define PEARL_CRYPTO
 #define PEARL_MEDIA
 #define PEARL_WS
-#define PEARL_WITH_SCRYPT
 #if TARGET_OS_IPHONE
 #define PEARL_COCOS2D
 #define PEARL_UIKIT

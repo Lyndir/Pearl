@@ -40,37 +40,6 @@
 //    inf(@"OSX: big endian");
 //#endif
 //}
-- (void)testSCrypt {
-
-    uint64_t N;
-    uint32_t r, p;
-
-    PearlSCrypt *scrypt = [[PearlSCrypt alloc] initWithMemoryFraction:0 maximum:0 time:1];
-    [scrypt determineParametersN:&N r:&r p:&p];
-
-    inf(@"N: %llu, r: %u, p: %u", N, r, p);
-    NSDate *start = [NSDate date];
-    [scrypt deriveKeyWithLength:64
-                   fromPassword:
-                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
-                   usingSalt:
-                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]];
-    inf(@"done after %0.2fs", -[start timeIntervalSinceNow]);
-    start = [NSDate date];
-    [PearlSCrypt deriveKeyWithLength:64
-                   fromPassword:
-     [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
-                      usingSalt:
-     [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding] N:32768 r:8 p:2];
-    inf(@"done after %0.2fs", -[start timeIntervalSinceNow]);
-    for (int i = 0; i < 100; ++i)
-        [PearlSCrypt deriveKeyWithLength:64
-                            fromPassword:
-         [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
-                               usingSalt:
-         [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding] N:32768 r:8 p:2];
-    inf(@"100x done after %0.2fs", -[start timeIntervalSinceNow]);
-}
 
 //- (void)testKVC {
 //

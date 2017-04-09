@@ -41,21 +41,4 @@
 #endif
 }
 
-//- (void)testSCrypt {
-//
-//    uint64_t N;
-//    uint32_t r, p;
-//
-//    PearlSCrypt *scrypt = [[PearlSCrypt alloc] initWithMemoryFraction:0.3f maximum:0 time:3];
-//    [scrypt determineParametersN:&N r:&r p:&p];
-//
-//    inf(@"N: %u, r: %u, p: %u", N, r, p);
-//    [scrypt deriveKeyWithLength:64
-//                   fromPassword:
-//                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]
-//                   usingSalt:
-//                    [@"dkjhsdkhsadkjhsakhdaksjhdkjsahdkashkdjhaskdhsakjdhkasjhdklashdlkashdlksajhdkljashdkasjsdlhvbkdfhvsbliuawoidndUEBFLIUSDBNLUBDWDVHJABSJHjjdlhsh" dataUsingEncoding:NSUTF8StringEncoding]];
-//    inf(@"done");
-//}
-
 @end

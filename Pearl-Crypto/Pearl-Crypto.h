@@ -6,4 +6,3 @@
 #import "PearlCryptUtils.h"
 #import "PearlKeyChain.h"
 #import "PearlRSAKey.h"
-#import "PearlSCrypt.h"

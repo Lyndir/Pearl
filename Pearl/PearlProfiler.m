@@ -19,7 +19,7 @@
 #import "PearlProfiler.h"
 #import <QuartzCore/QuartzCore.h>
 
-static CFTimeInterval profilerThreshold = 1.0 / 60;
+static CFTimeInterval profilerThreshold = 1.0 / 600;
 static NSUInteger profilerJobs = 0;
 
 @interface PearlProfiler()
@@ -93,16 +93,18 @@ static NSUInteger profilerJobs = 0;
     CFTimeInterval jobTime = endTime - _startTime;
     _totalTime += jobTime;
 
-    if (jobTime >= self.threshold) {
-        NSString *job = [[NSString alloc] initWithFormat:format arguments:args];
+    NSString *job = [[NSString alloc] initWithFormat:format arguments:args];
 
-        NSMutableString *spaces = [NSMutableString stringWithCapacity:profilerJobs * 2];
-        for (NSUInteger j = 0; j < profilerJobs; ++j)
-            [spaces appendString:@"  "];
+    NSMutableString *spaces = [NSMutableString stringWithCapacity:profilerJobs * 2];
+    for (NSUInteger j = 0; j < profilerJobs; ++j)
+        [spaces appendString:@"  "];
 
+    if (jobTime >= self.threshold)
         [[PearlLogger get] inFile:fileName atLine:lineNumber fromFunction:function
                               dbg:@"[+%0.6f]  %@- [%@] %@", jobTime, spaces, self.taskName, job];
-    }
+    else
+        [[PearlLogger get] inFile:fileName atLine:lineNumber fromFunction:function
+                              trc:@"[+%0.6f]  %@- [%@] %@", jobTime, spaces, self.taskName, job];
 }
 
 - (void)logTotal {

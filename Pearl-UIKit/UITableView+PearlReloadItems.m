@@ -9,58 +9,58 @@
  */
 
 //
-//  UITableView(PearlReloadFromArray)
+//  UITableView(PearlReloadItems)
 //
 //  Created by Maarten Billemont on 2014-05-21.
 //  Copyright 2014 lhunath (Maarten Billemont). All rights reserved.
 //
 
-#import "UITableView+PearlReloadFromArray.h"
+#import "UITableView+PearlReloadItems.h"
 #import "NSMutableSet+Pearl.h"
 
-@implementation UITableView(PearlReloadFromArray)
+@implementation UITableView(PearlReloadItems)
 
-- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section {
+- (void)reloadSection:(NSInteger)section from:(NSOrderedSetOrArrayType)oldItems to:(NSOrderedSetOrArrayType)newItems {
 
-    [self reloadRowsFromArray:fromArray toArray:toArray inSection:section withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self reloadSection:section from:oldItems to:newItems withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)reloadRowsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray inSection:(NSInteger)section
-           withRowAnimation:(UITableViewRowAnimation)animation {
+- (void)reloadSection:(NSInteger)section from:(NSOrderedSetOrArrayType)oldItems to:(NSOrderedSetOrArrayType)newItems
+     withRowAnimation:(UITableViewRowAnimation)animation {
 
-    if ([fromArray isEqualToArray:toArray])
+    if ([oldItems isEqual:newItems])
         return;
 
     @try {
-        NSMutableArray *workArray = [fromArray mutableCopy];
+        NSMutableOrderedSet *workSet = [[oldItems orderedSet] mutableCopy];
         [self beginUpdates];
 
         // First remove deleted rows.
-        for (NSUInteger row = [workArray count] - 1; row < [workArray count]; --row) {
-            id item = workArray[row];
-            if (![toArray containsObject:item]) {
+        for (NSUInteger row = [workSet count] - 1; row < [workSet count]; --row) {
+            id item = workSet[row];
+            if (![newItems containsObject:item]) {
                 [self deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:section] ]
                             withRowAnimation:animation];
-                [workArray removeObjectAtIndex:row];
+                [workSet removeObjectAtIndex:row];
             }
         }
 
         // Then add inserted rows.
-        for (NSUInteger row = 0; row < [toArray count]; ++row) {
-            id item = toArray[row];
-            if (![workArray containsObject:item]) {
+        for (NSUInteger row = 0; row < [newItems count]; ++row) {
+            id item = newItems[row];
+            if (![workSet containsObject:item]) {
                 [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:(NSInteger)row inSection:section] ]
                             withRowAnimation:animation];
-                [workArray insertObject:item atIndex:MIN( [workArray count], row )];
+                [workSet insertObject:item atIndex:MIN( [workSet count], row )];
             }
         }
 
         // Then shuffle around moved rows.
-        for (NSUInteger row = 0; row < [workArray count]; ++row) {
-            id item = workArray[row];
-            NSUInteger toRow = [toArray indexOfObject:item];
+        for (NSUInteger row = 0; row < [workSet count]; ++row) {
+            id item = workSet[row];
+            NSUInteger toRow = [newItems indexOfObject:item];
             if (toRow != row)
-                [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[fromArray indexOfObject:item] inSection:section]
+                [self moveRowAtIndexPath:[NSIndexPath indexPathForRow:(NSInteger)[oldItems indexOfObject:item] inSection:section]
                              toIndexPath:[NSIndexPath indexPathForRow:(NSInteger)toRow inSection:section]];
         }
 
@@ -77,14 +77,15 @@
     }
 }
 
-- (void)reloadSectionsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray {
+- (void)reloadSectionsFrom:(NSOrderedSetOrArrayType)oldSections to:(NSOrderedSetOrArrayType)newSections {
 
-    [self reloadSectionsFromArray:fromArray toArray:toArray withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self reloadSectionsFrom:oldSections to:newSections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)reloadSectionsFromArray:(NSArray *)fromArray toArray:(NSArray *)toArray withRowAnimation:(UITableViewRowAnimation)animation {
+- (void)reloadSectionsFrom:(NSOrderedSetOrArrayType)oldSections to:(NSOrderedSetOrArrayType)newSections
+          withRowAnimation:(UITableViewRowAnimation)animation {
 
-    if ([fromArray isEqualToArray:toArray])
+    if ([oldSections isEqual:newSections])
         return;
 
     @try {
@@ -93,13 +94,13 @@
         NSMutableSet *fromItems = [NSMutableSet set];
         NSMutableArray *deletePaths = [NSMutableArray array];
         NSMutableDictionary *movedPaths = [NSMutableDictionary dictionary];
-        for (NSUInteger section = 0; section < fromArray.count; ++section) {
-            NSArray *fromRows = fromArray[section];
-            for (NSUInteger row = 0; row < fromRows.count; ++row) {
+        for (NSUInteger section = 0; section < [oldSections count]; ++section) {
+            NSArray *fromRows = oldSections[section];
+            for (NSUInteger row = 0; row < [fromRows count]; ++row) {
                 id fromItem = fromRows[row];
                 [fromItems addObject:fromItem];
                 NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
-                NSIndexPath *toIndexPath = [self indexPathForItem:fromItem inSectionsArray:toArray];
+                NSIndexPath *toIndexPath = [self indexPathForItem:fromItem inSections:newSections];
 
                 if (!toIndexPath)
                     [deletePaths addObject:fromIndexPath];
@@ -113,10 +114,10 @@
         [self deleteRowsAtIndexPaths:deletePaths withRowAnimation:animation];
 
         // Then add inserted rows.
-        for (NSUInteger section = 0; section < toArray.count; ++section) {
-            NSArray *toRows = toArray[section];
-            for (NSUInteger row = 0; row < toRows.count; ++row) {
-                if (![fromItems checkRemoveObject:toRows[row]])
+        for (NSUInteger section = 0; section < [newSections count]; ++section) {
+            NSArray *toRows = newSections[section];
+            for (NSUInteger row = 0; row < [toRows count]; ++row) {
+                if (![fromItems tryRemoveObject:toRows[row]])
                     [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:section] ]
                                 withRowAnimation:animation];
             }
@@ -140,14 +141,16 @@
     }
 }
 
-- (NSIndexPath *)indexPathForItem:(id)item inSectionsArray:(NSArray *)sectionsArray {
+- (NSIndexPath *)indexPathForItem:(id)item inSections:(id<NSOrderedSetOrArray>)sections {
 
-    for (NSUInteger section = 0; section < sectionsArray.count; ++section) {
-        NSArray *rowsArray = sectionsArray[section];
-        NSUInteger row = [rowsArray indexOfObject:item];
+    NSUInteger section = 0;
+    for (id rows in sections) {
+        NSUInteger row = [rows indexOfObject:item];
 
         if (row != NSNotFound)
             return [NSIndexPath indexPathForRow:row inSection:section];
+
+        ++section;
     }
 
     return nil;

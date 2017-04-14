@@ -34,7 +34,7 @@
 #import "UIResponder+PearlFirstResponder.h"
 #import "UIScrollView+PearlAdjustInsets.h"
 #import "UIScrollView+PearlFlashingIndicators.h"
-#import "UITableView+PearlReloadFromArray.h"
+#import "UITableView+PearlReloadItems.h"
 #import "UITableViewCell+PearlDeque.h"
 #import "UITextView+PearlAttributes.h"
 #import "UIView+FontScale.h"

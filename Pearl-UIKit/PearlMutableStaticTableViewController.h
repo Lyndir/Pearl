@@ -8,12 +8,12 @@
 
 @interface PearlMutableStaticTableViewController : UITableViewController
 
-@property(nonatomic, readonly) NSArray *allCellsBySection;
+@property(nonatomic, readonly) NSOrderedSet<NSOrderedSet *> *allCellsBySection;
 
-- (void)reloadCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells;
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells
+- (void)reloadCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells;
+- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
                 animation:(UITableViewRowAnimation)animation;
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells
+- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
                 animation:(UITableViewRowAnimation)animation reloadData:(BOOL)reloadData;
 
 @end

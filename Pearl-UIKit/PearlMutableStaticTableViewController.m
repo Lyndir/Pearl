@@ -4,11 +4,10 @@
 //
 
 #import "PearlMutableStaticTableViewController.h"
-#import "PearlProfiler.h"
 
 @implementation PearlMutableStaticTableViewController {
-    NSMutableArray *_allCellsBySection;
-    NSMutableArray *_activeCellsBySection;
+    NSMutableOrderedSet<NSMutableOrderedSet *> *_allCellsBySection;
+    NSMutableOrderedSet<NSMutableOrderedSet *> *_activeCellsBySection;
 }
 
 #pragma mark - Life
@@ -18,12 +17,12 @@
     [super viewDidLoad];
 
     NSUInteger sections = (NSUInteger)[super numberOfSectionsInTableView:self.tableView];
-    _allCellsBySection = [NSMutableArray arrayWithCapacity:sections];
-    _activeCellsBySection = [NSMutableArray arrayWithCapacity:sections];
+    _allCellsBySection = [NSMutableOrderedSet orderedSetWithCapacity:sections];
+    _activeCellsBySection = [NSMutableOrderedSet orderedSetWithCapacity:sections];
     for (NSUInteger section = 0; section < sections; ++section) {
         NSUInteger rows = (NSUInteger)[super tableView:self.tableView numberOfRowsInSection:section];
-        NSMutableArray *allSectionCells = [NSMutableArray arrayWithCapacity:rows];
-        NSMutableArray *activeSectionCells = [NSMutableArray arrayWithCapacity:rows];
+        NSMutableOrderedSet *allSectionCells = [NSMutableOrderedSet orderedSetWithCapacity:rows];
+        NSMutableOrderedSet *activeSectionCells = [NSMutableOrderedSet orderedSetWithCapacity:rows];
         [_allCellsBySection addObject:allSectionCells];
         [_activeCellsBySection addObject:activeSectionCells];
 
@@ -81,39 +80,44 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - State
 
-- (NSArray *)allCellsBySection {
+- (NSOrderedSet *)allCellsBySection {
 
     return _allCellsBySection;
 }
 
 #pragma mark - Behavior
 
-- (void)reloadCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells {
+- (void)reloadCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells {
 
     [self updateCellsHiding:hideCells showing:showCells animation:UITableViewRowAnimationNone reloadData:YES];
 }
 
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animation:(UITableViewRowAnimation)animation {
+- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
+                animation:(UITableViewRowAnimation)animation {
 
     [self updateCellsHiding:hideCells showing:showCells animation:animation reloadData:NO];
 }
 
-- (void)updateCellsHiding:(NSArray *)hideCells showing:(NSArray *)showCells animation:(UITableViewRowAnimation)animation
-               reloadData:(BOOL)reloadData {
+- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
+                animation:(UITableViewRowAnimation)animation reloadData:(BOOL)reloadData {
+
+    NSOrderedSet *hideCellsSet = [hideCells orderedSet];
+    NSOrderedSet *showCellsSet = [showCells orderedSet];
 
     if (!reloadData)
         [self.tableView beginUpdates];
 
     for (NSUInteger section = 0; section < [_activeCellsBySection count]; ++section) {
-        NSMutableArray *activeSectionCells = _activeCellsBySection[section];
-        NSArray *oldSectionCells = [activeSectionCells copy];
+        NSMutableOrderedSet *activeSectionCells = _activeCellsBySection[section];
+        NSMutableOrderedSet *oldSectionCells = [activeSectionCells copy];
 
         // Remove all the features in _activeSectionCells that need to be hidden.
-        [activeSectionCells removeObjectsInArray:hideCells];
+        [activeSectionCells minusOrderedSet:hideCellsSet];
 
         // Add the features to _activeSectionCells that need to be shown (but only once).
-        [activeSectionCells removeObjectsInArray:showCells];
-        [activeSectionCells addObjectsFromArray:showCells];
+        NSMutableOrderedSet *showSectionCells = [self->_allCellsBySection[section] mutableCopy];
+        [showSectionCells intersectOrderedSet:showCellsSet];
+        [activeSectionCells unionOrderedSet:showSectionCells];
 
         // Make the order of the cells in in _activeSectionCells match the original order in _allCellsBySection.
         [activeSectionCells sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -123,26 +127,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }];
 
         if (!reloadData)
-            [self.tableView reloadRowsFromArray:oldSectionCells toArray:activeSectionCells inSection:section withRowAnimation:animation];
+            [self.tableView reloadSection:section from:oldSectionCells to:activeSectionCells withRowAnimation:animation];
     }
 
     if (reloadData)
         [self.tableView reloadData];
     else
         [self.tableView endUpdates];
-}
-
-#pragma mark - Private
-
-- (NSIndexPath *)originalIndexPathForIndexPath:(NSIndexPath *)indexPath {
-
-    UITableViewCell *cell = _activeCellsBySection[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
-    for (NSUInteger section = 0; section < [_allCellsBySection count]; ++section)
-        for (NSUInteger row = 0; row < [_allCellsBySection[section] count]; ++row)
-            if (_allCellsBySection[section][row] == cell)
-                return [NSIndexPath indexPathForRow:row inSection:section];
-
-    return nil;
 }
 
 @end

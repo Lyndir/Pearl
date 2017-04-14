@@ -7,7 +7,7 @@
 
 @implementation NSMutableSet (Pearl)
 
-- (BOOL)checkRemoveObject:(id)object {
+- (BOOL)tryRemoveObject:(id)object {
 
     NSUInteger count = [self count];
     [self removeObject:object];

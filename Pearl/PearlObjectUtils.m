@@ -30,24 +30,14 @@ BOOL PearlMainQueue(void (^block)()) {
     return NO;
 }
 
-BOOL PearlMainQueueWait(void (^block)()) {
+BOOL PearlNotMainQueue(void (^block)()) {
 
-    if ([NSThread isMainThread]) {
+    if (![NSThread isMainThread]) {
         block();
         return YES;
     }
 
-    dispatch_group_t waitGroup = dispatch_group_create();
-    dispatch_group_enter( waitGroup );
-    dispatch_async( dispatch_get_main_queue(), ^{
-        @try {
-            block();
-        }
-        @finally {
-            dispatch_group_leave( waitGroup );
-        }
-    } );
-    dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
+    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), block );
     return NO;
 }
 
@@ -68,14 +58,61 @@ NSBlockOperation *PearlNotMainQueueOperation(void (^block)()) {
   return blockOperation;
 }
 
-BOOL PearlNotMainQueue(void (^block)()) {
+id PearlAwait(void (^block)(void (^setResult)(id result))) {
 
-    if (![NSThread isMainThread]) {
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter( group );
+    __block id result = nil;
+    block( ^(id result_) {
+        @try {
+            result = result_;
+        } @finally {
+            dispatch_group_leave( group );
+        }
+    } );
+    dispatch_group_wait( group, DISPATCH_TIME_FOREVER );
+
+    return result;
+}
+
+id PearlMainQueueAwait(id (^block)()) {
+
+    if ([NSThread isMainThread])
+        return block();
+
+    __block id result = nil;
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter( group );
+    dispatch_async( dispatch_get_main_queue(), ^{
+        @try {
+            result = block();
+        } @finally {
+            dispatch_group_leave( group );
+        }
+    } );
+    dispatch_group_wait( group, DISPATCH_TIME_FOREVER );
+
+    return result;
+}
+
+BOOL PearlMainQueueWait(void (^block)()) {
+
+    if ([NSThread isMainThread]) {
         block();
         return YES;
     }
 
-    dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+    dispatch_group_t waitGroup = dispatch_group_create();
+    dispatch_group_enter( waitGroup );
+    dispatch_async( dispatch_get_main_queue(), ^{
+        @try {
+            block();
+        }
+        @finally {
+            dispatch_group_leave( waitGroup );
+        }
+    } );
+    dispatch_group_wait( waitGroup, DISPATCH_TIME_FOREVER );
     return NO;
 }
 

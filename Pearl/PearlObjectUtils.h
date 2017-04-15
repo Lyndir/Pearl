@@ -185,6 +185,13 @@ extern NSBlockOperation *PearlMainQueueOperation(void (^block)());
 /* Schedule a block to run on a background queue.  Use the current queue if currently on one, otherwise schedule it on a new queue. */
 extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)());
 
+/* Run a block and suspend the current thread until its setResult() is called.
+ * @return the object passed to setResult. */
+extern id PearlAwait(void (^block)(void (^setResult)(id result)));
+/* Run a block on the main queue and suspend the current thread until it returns. If already on the main queue, run it synchronously.
+ * @return the object returned from the block. */
+extern id PearlMainQueueAwait(id (^block)());
+
 /* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously.
  * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on the main queue. */
 extern BOOL PearlMainQueueWait(void (^block)());

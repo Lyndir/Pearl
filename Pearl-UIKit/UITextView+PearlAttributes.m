@@ -23,12 +23,13 @@
 
 - (NSDictionary *)textAttributes {
 
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    style.alignment = self.textAlignment;
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraph.alignment = self.textAlignment;
+
     return @{
             NSFontAttributeName            : self.font,
             NSForegroundColorAttributeName : self.textColor,
-            NSParagraphStyleAttributeName  : style,
+            NSParagraphStyleAttributeName  : paragraph,
     };
 }
 
@@ -38,12 +39,18 @@
 
 - (NSDictionary *)textAttributes {
 
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    style.alignment = self.textAlignment;
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraph.alignment = self.textAlignment;
+
+    NSShadow *shadow = [NSShadow new];
+    shadow.shadowColor = self.shadowColor;
+    shadow.shadowOffset = self.shadowOffset;
+
     return @{
             NSFontAttributeName            : self.font,
             NSForegroundColorAttributeName : self.textColor,
-            NSParagraphStyleAttributeName  : style,
+            NSParagraphStyleAttributeName  : paragraph,
+            NSShadowAttributeName          : shadow,
     };
 }
 
@@ -53,12 +60,13 @@
 
 - (NSDictionary *)textAttributes {
 
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
-    style.alignment = self.textAlignment;
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraph.alignment = self.textAlignment;
+
     return @{
             NSFontAttributeName            : self.font,
             NSForegroundColorAttributeName : self.textColor,
-            NSParagraphStyleAttributeName  : style,
+            NSParagraphStyleAttributeName  : paragraph,
     };
 }
 

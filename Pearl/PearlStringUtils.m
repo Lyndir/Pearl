@@ -88,6 +88,25 @@ NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attribu
     return strra( [string description], range, attributes );
 }
 
+NSMutableAttributedString *strarm(id string, id attributes, ...) {
+
+    if (!string)
+        return nil;
+    if ([string isKindOfClass:[NSMutableAttributedString class]]) {
+        va_list attributesList;
+        va_start( attributesList, attributes );
+        for (id attribute = attributes; attribute; attribute = va_arg( attributesList, id ))
+            [string removeAttribute:attribute range:NSMakeRange( 0, [string length] )];
+        va_end( attributesList );
+        return string;
+    }
+    if ([string isKindOfClass:[NSAttributedString class]])
+        return stra( [string mutableCopy], attributes );
+    if ([string isKindOfClass:[NSString class]])
+        return [[NSMutableAttributedString alloc] initWithString:string];
+    return [[NSMutableAttributedString alloc] initWithString:[string description]];
+}
+
 NSMutableAttributedString *straf(id format, ...) {
 
     if (!format)

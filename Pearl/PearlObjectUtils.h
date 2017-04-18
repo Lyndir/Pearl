@@ -69,6 +69,9 @@
             ({ __typeof__(__N) __n = __N; (id __nonnull) (NSNullToNil(__n)? __n: __NN); })
 /** @return a nil object */
 #define PearlNil (id)(__bridge void *)nil
+
+typedef void(^VoidBlock)(void);
+
 /** @return the set resulting from setByAddingObjectsFromSet of both arguments, in a nil-safe manner */
 #define NSSetUnion(__s1, __s2) (__s1? [__s1 setByAddingObjectsFromSet:__s2]: [__s2 setByAddingObjectsFromSet:__s1])
 

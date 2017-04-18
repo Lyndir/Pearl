@@ -23,6 +23,7 @@ static char NotificationObserversKey;
 /** Observe the given notification on the given object using the given block, optionally scheduled on the given queue.
  *  By default, 'self' retains the notification observer and is passed in as the first argument to the block
  *  to help you avoid a cyclic reference to it.
+ * @param _block A block of type `^(id host, NSNotification *note)` invoked when the notification is fired.
  * @return The opaque observer instance needed for manually unregistering it or nil if the notification is not supported on the current OS. */
 #define PearlAddNotificationObserver(_name, _object, _queue, _block) \
     PearlAddNotificationObserverTo( self, _name, _object, _queue, _block )

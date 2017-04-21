@@ -37,6 +37,8 @@
 #import "UITableView+PearlReloadItems.h"
 #import "UITableViewCell+PearlDeque.h"
 #import "UITextView+PearlAttributes.h"
+#import "UIView+AlphaScale.h"
 #import "UIView+FontScale.h"
+#import "UIView+Visible.h"
 #import "UIView+LayoutGone.h"
 #import "UIView+Touches.h"

@@ -22,7 +22,6 @@
 
 @interface UIView(FontScale_Private)
 
-@property (nonatomic) id contentSizeCategoryObserver;
 @property (nonatomic) CGFloat appliedFontScale;
 
 @end
@@ -38,11 +37,11 @@
     }
 
     NSError *error = nil;
-    for (Class type in @[[UILabel class], [UITextField class], [UITextView class]]) {
+    for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
         if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontMod_updateConstraints ) error:&error] &&
             [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontMod_setFont: ) error:&error])
-        if (error)
-            err( @"While installing UIView(FontScale): %@", [error fullDescription] );
+            if (error)
+                err( @"While installing UIView(FontScale): %@", [error fullDescription] );
     }
 }
 
@@ -55,16 +54,6 @@
 - (BOOL)ignoreFontScale {
 
     return [objc_getAssociatedObject( self, @selector( ignoreFontScale ) ) boolValue];
-}
-
-- (id)contentSizeCategoryObserver {
-
-    return objc_getAssociatedObject( self, @selector( contentSizeCategoryObserver ) );
-}
-
-- (void)setContentSizeCategoryObserver:(id)observer {
-
-    objc_setAssociatedObject( self, @selector( contentSizeCategoryObserver ), observer, OBJC_ASSOCIATION_RETAIN );
 }
 
 /**
@@ -82,13 +71,10 @@
 
 - (void)fontMod_updateFont {
 
-    Weakify( self );
-    if (!self.contentSizeCategoryObserver)
-        self.contentSizeCategoryObserver = [[NSNotificationCenter defaultCenter]
-            addObserverForName:UIContentSizeCategoryDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-              Strongify( self );
-              [self setNeedsUpdateConstraints];
-            }];
+    PearlAddNotificationObserver( UIContentSizeCategoryDidChangeNotification, nil, [NSOperationQueue mainQueue],
+            ^(id self, NSNotification *note) {
+                [self setNeedsUpdateConstraints];
+            } );
 
     CGFloat appliedFontScale = self.appliedFontScale;
     CGFloat effectiveFontScale = self.ignoreFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
@@ -97,10 +83,10 @@
     self.appliedFontScale = effectiveFontScale;
 
     UIFont *originalFont = [(UILabel *)self font];
-    UIFont *updatedFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-    [self fontMod_setFont:updatedFont];
+    UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
+    [self fontMod_setFont:scaledFont];
+
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        Strongify( self );
         if ([self.superview isKindOfClass:[UIControl class]])
             [self.superview setNeedsLayout];
     }];
@@ -112,11 +98,11 @@
     [self fontMod_updateConstraints];
 }
 
-- (void)fontMod_setFont:(UIFont *)originalFont {
+- (void)fontMod_setFont:(UIFont *)newFont {
 
-    [self fontMod_setFont:originalFont];
+    [self fontMod_setFont:newFont];
     [self setAppliedFontScale:1];
-    [self fontMod_updateFont];
+    [self setNeedsUpdateConstraints];
 }
 
 @end

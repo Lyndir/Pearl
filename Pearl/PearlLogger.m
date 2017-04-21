@@ -114,8 +114,13 @@ id returnArg(id arg) {
 
     self.messages = [NSMutableArray arrayWithCapacity:20];
     self.listeners = [NSMutableArray array];
+#if DEBUG
+    self.printLevel = PearlLogLevelDebug;
+    self.historyLevel = PearlLogLevelDebug;
+#else
     self.printLevel = PearlLogLevelInfo;
     self.historyLevel = PearlLogLevelWarn;
+#endif
 
     return self;
 }

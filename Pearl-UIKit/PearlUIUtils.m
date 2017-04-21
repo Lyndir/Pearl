@@ -634,11 +634,14 @@ static NSMutableSet *dismissableResponders;
     while ([nextResponder isKindOfClass:[UIView class]])
         nextResponder = [nextResponder nextResponder];
     UIViewController *viewController = nil;
-    if ([nextResponder isKindOfClass:[UIViewController class]]) if ((viewController = (UIViewController *)nextResponder).view != self)
-        viewController = nil;
+    if ([nextResponder isKindOfClass:[UIViewController class]])
+        if ((viewController = (UIViewController *)nextResponder).view != self)
+            viewController = nil;
+    NSString *property = [viewController propertyWithValue:self];
 
-    return strf( strf( @"%@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", viewController? @"+ %@(%@)": @"- %@%@" ),
-            NSStringFromClass( [viewController class] )?: @"", [self class], self.tag, self.alpha, @(self.hidden), backgroundString,
+    return strf( strf( @"%@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", viewController? @"+ %@ (%@)%@": @"- %@%@%@" ),
+            NSStringFromClass( [viewController class] )?: @"", [self class], property?: @"",
+            self.tag, self.alpha, @(self.hidden), backgroundString,
             NSStringFromCGRect( self.frame ), [self debugDescription] );
 }
 

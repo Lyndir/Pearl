@@ -48,13 +48,12 @@
 - (void)setNoFontScale:(BOOL)noFontScale {
 
     objc_setAssociatedObject( self, @selector( noFontScale ), @(noFontScale), OBJC_ASSOCIATION_RETAIN );
-    [self setNeedsUpdateConstraints];
+    [self fontMod_updateFont];
 }
 
 - (BOOL)noFontScale {
 
-    return ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]) ||
-           [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue];
+    return [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue];
 }
 
 /**
@@ -74,23 +73,34 @@
 
     PearlAddNotificationObserver( UIContentSizeCategoryDidChangeNotification, nil, [NSOperationQueue mainQueue],
             ^(id self, NSNotification *note) {
-                [self setNeedsUpdateConstraints];
+                [self fontMod_updateFont];
             } );
 
-    CGFloat appliedFontScale = self.appliedFontScale;
+    UIFont *originalFont = [(UILabel *)self font];
+    UIFont *scaledFont = [self fontMod_scaledFontFor:originalFont appliedFontScale:self.appliedFontScale];
+    if (scaledFont != originalFont) {
+        [self fontMod_setFont:scaledFont];
+        [self setNeedsUpdateConstraints];
+
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if ([self.superview isKindOfClass:[UIControl class]])
+                [self.superview setNeedsLayout];
+        }];
+    }
+}
+
+- (UIFont *)fontMod_scaledFontFor:(UIFont *)originalFont appliedFontScale:(CGFloat)appliedFontScale {
+
+    if ([originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"])
+        return originalFont;
+    if ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory])
+        return originalFont;
     CGFloat effectiveFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
     if (effectiveFontScale == appliedFontScale)
-        return;
+        return originalFont;
+
     self.appliedFontScale = effectiveFontScale;
-
-    UIFont *originalFont = [(UILabel *)self font];
-    UIFont *scaledFont = [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
-    [self fontMod_setFont:scaledFont];
-
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        if ([self.superview isKindOfClass:[UIControl class]])
-            [self.superview setNeedsLayout];
-    }];
+    return [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
 }
 
 - (void)fontMod_updateConstraints {
@@ -101,9 +111,7 @@
 
 - (void)fontMod_setFont:(UIFont *)newFont {
 
-    [self fontMod_setFont:newFont];
-    [self setAppliedFontScale:1];
-    [self setNeedsUpdateConstraints];
+    [self fontMod_setFont:[self fontMod_scaledFontFor:newFont appliedFontScale:1]];
 }
 
 @end
@@ -111,42 +119,43 @@
 @implementation UIApplication (FontScale)
 
 - (CGFloat)preferredContentSizeCategoryFontScale {
+    // Based on UIFontTextStyleBody
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge])
-        return 23 / 16.f;
+        return 21 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraExtraLarge])
-        return 22 / 16.f;
+        return 20 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraLarge])
-        return 21 / 16.f;
+        return 19 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityLarge])
-        return 20 / 16.f;
+        return 19 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityMedium])
-        return 19 / 16.f;
+        return 18 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraExtraExtraLarge])
-        return 19 / 16.f;
+        return 18 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraExtraLarge])
-        return 18 / 16.f;
+        return 17 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraLarge])
-        return 17 / 16.f;
+        return 16 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryLarge])
-        return 1.0f;
+        return 15 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryMedium])
-        return 15 / 16.f;
+        return 14 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategorySmall])
-        return 14 / 16.f;
+        return 13 / 15.f;
 
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryExtraSmall])
-        return 13 / 16.f;
+        return 12 / 15.f;
 
     return 1.0f;
 }

@@ -45,13 +45,13 @@
 
 - (BOOL)noAlphaScale {
 
-    NSNumber *ignoreAlphaScale = objc_getAssociatedObject( self, @selector( noAlphaScale ) );
-    if (!ignoreAlphaScale)
+    NSNumber *noAlphaScale = objc_getAssociatedObject( self, @selector( noAlphaScale ) );
+    if (!noAlphaScale)
         if ([self isKindOfClass:[UITabBar class]] || [self isKindOfClass:[UIToolbar class]]
             || [self isKindOfClass:[UINavigationBar class]] || [self isKindOfClass:[UISearchBar class]])
             return YES;
 
-    return [ignoreAlphaScale boolValue];
+    return [noAlphaScale boolValue];
 }
 
 /**

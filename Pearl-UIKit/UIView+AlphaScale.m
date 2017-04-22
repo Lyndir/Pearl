@@ -37,15 +37,15 @@
             err( @"While installing UIView(AlphaScale): %@", [error fullDescription] );
 }
 
-- (void)setIgnoreAlphaScale:(BOOL)ignoreAlphaScale {
+- (void)setNoAlphaScale:(BOOL)noAlphaScale {
 
-    objc_setAssociatedObject( self, @selector( ignoreAlphaScale ), @(ignoreAlphaScale), OBJC_ASSOCIATION_RETAIN );
+    objc_setAssociatedObject( self, @selector( noAlphaScale ), @(noAlphaScale), OBJC_ASSOCIATION_RETAIN );
     [self alphaMod_updateAlpha];
 }
 
-- (BOOL)ignoreAlphaScale {
+- (BOOL)noAlphaScale {
 
-    NSNumber *ignoreAlphaScale = objc_getAssociatedObject( self, @selector( ignoreAlphaScale ) );
+    NSNumber *ignoreAlphaScale = objc_getAssociatedObject( self, @selector( noAlphaScale ) );
     if (!ignoreAlphaScale)
         if ([self isKindOfClass:[UITabBar class]] || [self isKindOfClass:[UIToolbar class]]
             || [self isKindOfClass:[UINavigationBar class]] || [self isKindOfClass:[UISearchBar class]])
@@ -75,7 +75,7 @@
             });
 
     BOOL alphaScaleApplied = self.alphaScaleApplied;
-    BOOL alphaScaleRequested = !self.ignoreAlphaScale && UIAccessibilityIsReduceTransparencyEnabled();
+    BOOL alphaScaleRequested = !self.noAlphaScale && UIAccessibilityIsReduceTransparencyEnabled();
     if (alphaScaleRequested == alphaScaleApplied)
         return;
     self.alphaScaleApplied = alphaScaleRequested;

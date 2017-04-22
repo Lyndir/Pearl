@@ -45,15 +45,16 @@
     }
 }
 
-- (void)setIgnoreFontScale:(BOOL)ignoreFontScale {
+- (void)setNoFontScale:(BOOL)noFontScale {
 
-    objc_setAssociatedObject( self, @selector( ignoreFontScale ), @(ignoreFontScale), OBJC_ASSOCIATION_RETAIN );
+    objc_setAssociatedObject( self, @selector( noFontScale ), @(noFontScale), OBJC_ASSOCIATION_RETAIN );
     [self setNeedsUpdateConstraints];
 }
 
-- (BOOL)ignoreFontScale {
+- (BOOL)noFontScale {
 
-    return [objc_getAssociatedObject( self, @selector( ignoreFontScale ) ) boolValue];
+    return ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]) ||
+           [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue];
 }
 
 /**
@@ -77,7 +78,7 @@
             } );
 
     CGFloat appliedFontScale = self.appliedFontScale;
-    CGFloat effectiveFontScale = self.ignoreFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
+    CGFloat effectiveFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
     if (effectiveFontScale == appliedFontScale)
         return;
     self.appliedFontScale = effectiveFontScale;

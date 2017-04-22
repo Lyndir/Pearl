@@ -1,18 +1,17 @@
 //
 // Created by Maarten Billemont on 2014-07-18.
-// Copyright (c) 2014 Tristan Interactive. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 /**
-* A category which allows you to scale the font point sizes of this view and all its subviews with a single assignment.
+* Automatically scales to font size to match the accessible content size category
 */
 @interface UIView(FontScale)
 
 /**
- * If YES, this view and its subviews ignore its and any inherited font scale.
+ * If YES, this view does not partake in automatic dynamic font size scaling.
  */
-@property(nonatomic) IBInspectable BOOL ignoreFontScale;
+@property(nonatomic) IBInspectable BOOL noFontScale;
 
 @end

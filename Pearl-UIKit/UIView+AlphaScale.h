@@ -10,8 +10,8 @@
 @interface UIView(AlphaScale)
 
 /**
- * If YES, this view and its subviews ignore alpha scaling.
+ * If YES, this view does not partake in automatic accessibility translucency scaling.
  */
-@property(nonatomic) IBInspectable BOOL ignoreAlphaScale;
+@property(nonatomic) IBInspectable BOOL noAlphaScale;
 
 @end

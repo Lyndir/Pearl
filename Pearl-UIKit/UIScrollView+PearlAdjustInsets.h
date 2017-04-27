@@ -32,10 +32,9 @@
 /**
 * Installs a keyboard appearance observer which adjusts the content insets of this scrollView to prevent occlusion.
 *
-* @return The NSNotificationCenter observer to make the magic happen.
-* You can also remove this observer with PearlRemoveNotificationObserversFrom( [scrollView] )
+* You can remove this observer with PearlRemoveNotificationObserversFrom( [scrollView] )
 */
-- (id)automaticallyAdjustInsetsForKeyboard;
+- (void)automaticallyAdjustInsetsForKeyboard;
 
 /**
 * Apply the occludedInsets to the current content insets.

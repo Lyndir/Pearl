@@ -9,29 +9,30 @@
  */
 
 //
-//  UITableView(PearlReloadItems)
+//  UICollectionView(PearlReloadFromArray).h
+//  UICollectionView(PearlReloadFromArray)
 //
-//  Created by Maarten Billemont on 2014-05-21.
-//  Copyright 2014 lhunath (Maarten Billemont). All rights reserved.
+//  Created by lhunath on 2014-08-21.
+//  Copyright, lhunath (Maarten Billemont) 2014. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 /**
- * Automatically calculate the necessary section and row animations to update the data in a dataSource.
+ * Automatically calculate the necessary section and item animations to update the data in a dataSource.
  *
  * NOTE: This code relies on the row items being unique in terms of -hash and -isEqual.
  */
-@interface UITableView(PearlReloadItems)
+@interface UICollectionView(PearlReloadItems)
 
 /**
  * Updates the dataSource collection to become the same as the newSections collection while animating the changes.
  *
- * @param dataSource This should be the collection that is backing your UITableViewDataSource delegate methods.
+ * @param dataSource This should be the collection that is backing your UICollectionViewDataSource delegate methods.
  * @param newSections A new collection of the same structure as the dataSource.
  * @param reloadItems A collection of dataSource items to reload OR the dataSource itself to reload all items.
  */
 - (void)updateDataSource:(NSMutableOrderedSetOrArrayType)dataSource toSections:(NSOrderedSetOrArrayType)newSections
-             reloadItems:(NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation;
+             reloadItems:(NSSetOrArrayType)reloadItems completion:(void ( ^ )(BOOL finished))completion;
 
 @end

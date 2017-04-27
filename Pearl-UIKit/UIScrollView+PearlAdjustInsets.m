@@ -29,11 +29,12 @@
             if (occludingView.hidden || occludingView.alpha < DBL_EPSILON)
                 continue;
 
-            CGRect contentRect = [self convertRect:self.frame fromView:self.superview];
-            CGRect occludingRect = [self convertRect:occludingView.frame fromView:superview];
+            CGRect contentRect = [self convertRect:self.frame fromView:self];
+            CGRect occludingRect = [self convertRect:occludingView.frame fromView:self];
             CGRect insetContentRect = UIEdgeInsetsInsetRect( contentRect, insets );
 
             UIEdgeInsets verticalOccludingInsets = UIEdgeInsetsForRectSubtractingRect( insetContentRect, occludingRect );
+
             verticalOccludingInsets.left = verticalOccludingInsets.right = 0;
             insetContentRect = UIEdgeInsetsInsetRect( insetContentRect, verticalOccludingInsets );
 
@@ -53,10 +54,14 @@
 
 @implementation UIScrollView(PearlAdjustInsets)
 
-- (id)automaticallyAdjustInsetsForKeyboard {
+- (void)automaticallyAdjustInsetsForKeyboard {
 
-    UIEdgeInsets originalInsets = self.contentInset;
-    return PearlAddNotificationObserver( UIKeyboardWillChangeFrameNotification, nil, nil, ^(UIScrollView *self, NSNotification *note) {
+    static char beforeKeyboardContentInset;
+    PearlAddNotificationObserver( UIKeyboardWillShowNotification, nil, nil, ^(UIScrollView *self, NSNotification *note) {
+        objc_setAssociatedObject( self, &beforeKeyboardContentInset, [NSValue valueWithUIEdgeInsets:self.contentInset], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+    } );
+    PearlAddNotificationObserver( UIKeyboardDidChangeFrameNotification, nil, nil, ^(UIScrollView *self, NSNotification *note) {
+        UIEdgeInsets originalInsets = [objc_getAssociatedObject( self, &beforeKeyboardContentInset ) UIEdgeInsetsValue];
         CGRect frameFromScreen = [note.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
         CGRect frameToScreen = [note.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         CGRect frameFrom = [self convertRect:[self.window convertRect:frameFromScreen fromWindow:nil] fromView:self.window];
@@ -69,7 +74,12 @@
         self.contentInset = insetsFrom;
         [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue] delay:0
                             options:UIViewAnimationCurveToOptions( [note.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue] )
-                         animations:^{ self.contentInset = insetsTo; } completion:nil];
+                         animations:^{
+                             self.contentInset = insetsTo;
+                             if ([self isKindOfClass:[UICollectionView class]]) {
+                                 [((UICollectionView *)self).collectionViewLayout invalidateLayout];
+                             }
+                         } completion:nil];
     });
 }
 

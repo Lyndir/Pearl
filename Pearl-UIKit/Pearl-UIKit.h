@@ -27,7 +27,7 @@
 #import "PearlUIUtils.h"
 #import "PearlValidatingTextField.h"
 #import "UICollectionReusableView+PearlDequeue.h"
-#import "UICollectionView+PearlReloadFromArray.h"
+#import "UICollectionView+PearlReloadItems.h"
 #import "UIControl+PearlBlocks.h"
 #import "UIControl+PearlSelect.h"
 #import "UIImage+PearlScaling.h"

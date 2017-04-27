@@ -5,24 +5,52 @@
 
 #import <Foundation/Foundation.h>
 
+#define NSSetOrArrayType id<NSObject, NSSetOrArray>
+#define NSSetOrArrayFrom( o ) ({ \
+    NSAssert([o isKindOfClass:[NSArray class]] || [o isKindOfClass:[NSSet class]], @"Object must be an array or set."); \
+    (NSSetOrArrayType) o; \
+})
 #define NSOrderedSetOrArrayType id<NSObject, NSOrderedSetOrArray>
 #define NSOrderedSetOrArrayFrom( o ) ({ \
     NSAssert([o isKindOfClass:[NSArray class]] || [o isKindOfClass:[NSOrderedSet class]], @"Object must be an array or ordered set."); \
     (NSOrderedSetOrArrayType) o; \
 })
+#define NSMutableOrderedSetOrArrayType id<NSObject, NSMutableOrderedSetOrArray>
+#define NSMutableOrderedSetOrArrayFrom( o ) ({ \
+    NSAssert([o isKindOfClass:[NSMutableArray class]] || [o isKindOfClass:[NSMutableOrderedSet class]], @"Object must be a mutable array or ordered set."); \
+    (NSMutableOrderedSetOrArrayType) o; \
+})
+
+/**
+ * This describes all the API that NSArray, NSSet and NSOrderedSet have in common.
+ */
+@protocol NSSetOrArray<NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration>
+
+@property(readonly, strong) NSArray *array;
+@property(readonly, strong) NSOrderedSet *orderedSet;
+@property(readonly, strong) NSSet *set;
+
+@property(readonly) NSUInteger count;
+- (id)copy;
+- (id)mutableCopy;
+- (BOOL)containsObject:(id)anObject;
+- (NSEnumerator *)objectEnumerator;
+- (void)makeObjectsPerformSelector:(SEL)aSelector NS_SWIFT_UNAVAILABLE( "Use a for loop instead" );
+- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument NS_SWIFT_UNAVAILABLE("Use a for loop instead" );
+
+@end
 
 /**
  * This describes all the API that NSArray and NSOrderedSet have in common.
- *
- * TODO: Make an equivalent NSMutableOrderedSetOrArray
  */
-@protocol NSOrderedSetOrArray<NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration>
+@protocol NSOrderedSetOrArray<NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration, NSSetOrArray>
 
-@property(readonly, strong) NSArray * array;
-@property(readonly, strong) NSOrderedSet * orderedSet;
-@property(readonly, strong) NSSet * set;
+@property(readonly, strong) NSArray *array;
+@property(readonly, strong) NSOrderedSet *orderedSet;
+@property(readonly, strong) NSSet *set;
 
 @property (readonly) NSUInteger count;
+- (id)copy;
 - (id)mutableCopy;
 - (id)objectAtIndex:(NSUInteger)index;
 - (NSUInteger)indexOfObject:(id)anObject;
@@ -49,11 +77,44 @@
 
 @end
 
-@interface NSArray (NSOrderedSetOrArray) <NSOrderedSetOrArray>
+/**
+ * This describes all the API that NSMutableArray and NSMutableOrderedSet have in common.
+ */
+@protocol NSMutableOrderedSetOrArray<NSOrderedSetOrArray>
+
+@property(readonly, strong) NSMutableArray *mutableArray;
+@property(readonly, strong) NSMutableOrderedSet *mutableOrderedSet;
+
+- (void)addObject:(id)anObject;
+- (void)addObjectsFromArray:(NSArray *)otherArray;
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index;
+- (void)insertObjects:(NSArray *)objects atIndexes:(NSIndexSet *)indexes;
+- (void)removeObjectAtIndex:(NSUInteger)index;
+- (void)removeAllObjects;
+- (void)removeObjectsInRange:(NSRange)range;
+- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes;
+- (void)removeObject:(id)anObject;
+- (void)removeObjectsInArray:(NSArray *)otherArray;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
+- (void)replaceObjectsAtIndexes:(NSIndexSet *)indexes withObjects:(NSArray *)objects;
+- (void)exchangeObjectAtIndex:(NSUInteger)idx1 withObjectAtIndex:(NSUInteger)idx2;
+- (void)setObject:(id)obj atIndexedSubscript:(NSUInteger)idx NS_AVAILABLE( 10_8, 6_0 );
+- (void)sortUsingComparator:(NSComparator NS_NOESCAPE)cmptr NS_AVAILABLE( 10_6, 4_0 );
+- (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator NS_NOESCAPE)cmptr NS_AVAILABLE( 10_6, 4_0 );
 
 @end
 
+@interface NSSet (NSOrderedSetOrArray) <NSSetOrArray>
+@end
+
+@interface NSArray (NSOrderedSetOrArray) <NSOrderedSetOrArray>
+@end
 
 @interface NSOrderedSet (NSOrderedSetOrArray) <NSOrderedSetOrArray>
+@end
 
+@interface NSMutableArray (NSMutableOrderedSetOrArray) <NSMutableOrderedSetOrArray>
+@end
+
+@interface NSMutableOrderedSet (NSMutableOrderedSetOrArray) <NSMutableOrderedSetOrArray>
 @end

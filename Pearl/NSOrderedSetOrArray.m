@@ -10,6 +10,25 @@
 
 #import "NSOrderedSetOrArray.h"
 
+@implementation NSSet (NSOrderedSetOrArray)
+
+- (NSSet *)set {
+
+    return self;
+}
+
+- (NSOrderedSet *)orderedSet {
+
+    return [NSOrderedSet orderedSetWithSet:self];
+}
+
+- (NSArray *)array {
+
+    return [self allObjects];
+}
+
+@end
+
 @implementation NSArray (NSOrderedSetOrArray)
 
 - (NSSet *)set {
@@ -34,6 +53,44 @@
 - (NSOrderedSet *)orderedSet {
 
     return self;
+}
+
+- (void)makeObjectsPerformSelector:(SEL)aSelector {
+
+    [[self array] makeObjectsPerformSelector:aSelector];
+}
+
+- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(nullable id)argument {
+
+    [[self array] makeObjectsPerformSelector:aSelector withObject:argument];
+}
+
+@end
+
+@implementation NSMutableArray (NSMutableOrderedSetOrArray)
+
+- (NSMutableOrderedSet *)mutableOrderedSet {
+
+    return [[NSMutableOrderedSet alloc] initWithArray:self];
+}
+
+- (NSMutableArray *)mutableArray {
+
+    return self;
+}
+
+@end
+
+@implementation NSMutableOrderedSet (NSMutableOrderedSetOrArray)
+
+- (NSMutableOrderedSet *)mutableOrderedSet {
+
+    return self;
+}
+
+- (NSMutableArray *)mutableArray {
+
+    return [[self array] mutableCopy];
 }
 
 @end

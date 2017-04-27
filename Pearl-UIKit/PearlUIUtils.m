@@ -155,10 +155,10 @@ UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtrac
     CGPoint topLeftInset = CGPointMinusCGPoint( bottomRightFrom, topLeftBounds );
     CGPoint bottomRightInset = CGPointMinusCGPoint( bottomRightBounds, topLeftFrom );
 
-    CGFloat top = topLeftFrom.y <= 0 && bottomRightFrom.y < insetRect.size.height? MAX( 0, topLeftInset.y ): 0;
-    CGFloat left = topLeftFrom.x <= 0 && bottomRightFrom.x < insetRect.size.width? MAX( 0, topLeftInset.x ): 0;
-    CGFloat bottom = bottomRightFrom.y >= insetRect.size.height && topLeftFrom.y > 0? MAX( 0, bottomRightInset.y ): 0;
-    CGFloat right = bottomRightFrom.x >= insetRect.size.width && topLeftFrom.x > 0? MAX( 0, bottomRightInset.x ): 0;
+    CGFloat top = topLeftFrom.y <= insetRect.origin.y && bottomRightFrom.y < insetRect.size.height? MAX( 0, topLeftInset.y ): 0;
+    CGFloat left = topLeftFrom.x <= insetRect.origin.x && bottomRightFrom.x < insetRect.size.width? MAX( 0, topLeftInset.x ): 0;
+    CGFloat bottom = topLeftFrom.y > insetRect.origin.y && bottomRightFrom.y >= insetRect.size.height? MAX( 0, bottomRightInset.y ): 0;
+    CGFloat right = topLeftFrom.x > insetRect.origin.y && bottomRightFrom.x >= insetRect.size.width? MAX( 0, bottomRightInset.x ): 0;
 
     return UIEdgeInsetsMake( top, left, bottom, right );
 }
@@ -691,7 +691,6 @@ static NSMutableSet *dismissableResponders;
 
 - (void)showBoundingBoxOfColor:(UIColor *)color {
 
-    dbg( @"Showing bounding box for view: %@", self );
     PearlBoxView *box = [PearlBoxView boxWithFrame:(CGRect){ CGPointZero, self.bounds.size } color:color];
     [self addSubview:box];
     [self addObserver:box forKeyPath:@"bounds" options:0 context:nil];

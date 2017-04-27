@@ -33,7 +33,7 @@ static char NotificationObserversKey;
         id observer = nil; \
         if (&_name) { \
             __weak typeof(_host) wHost = _host; \
-            void (^__noteblock)(id _self, NSNotification *note) = [_block copy]; \
+            void (^__noteblock)(id _self, NSNotification *note) = [(_block) copy]; \
             NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
             if (!notificationObservers) \
                 objc_setAssociatedObject( _host, &NotificationObserversKey, \
@@ -43,11 +43,14 @@ static char NotificationObserversKey;
                 [[NSNotificationCenter defaultCenter] removeObserver:observer name:(_name) object:nil]; \
             observer = [[NSNotificationCenter defaultCenter] \
                     addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
-                        __noteblock(wHost, note); \
+                        if (wHost) \
+                            __noteblock(wHost, note); \
+                        else \
+                            [[NSNotificationCenter defaultCenter] removeObserver:observer]; \
                     }]; \
             [notificationObservers setObject:observer forKey:(_name)]; \
         } \
-        observer; \
+        (observer); \
     } )
 
 /** Remove the observer for the given notification registered using the method above with 'self' as the host. */

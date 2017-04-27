@@ -6,8 +6,8 @@
 #import "PearlMutableStaticTableViewController.h"
 
 @implementation PearlMutableStaticTableViewController {
-    NSMutableOrderedSet<NSMutableOrderedSet *> *_allCellsBySection;
-    NSMutableOrderedSet<NSMutableOrderedSet *> *_activeCellsBySection;
+    NSMutableArray<NSMutableOrderedSet *> *_allCellsBySection;
+    NSMutableArray<NSMutableOrderedSet *> *_activeCellsBySection;
 }
 
 #pragma mark - Life
@@ -17,8 +17,8 @@
     [super viewDidLoad];
 
     NSUInteger sections = (NSUInteger)[super numberOfSectionsInTableView:self.tableView];
-    _allCellsBySection = [NSMutableOrderedSet orderedSetWithCapacity:sections];
-    _activeCellsBySection = [NSMutableOrderedSet orderedSetWithCapacity:sections];
+    _allCellsBySection = [NSMutableArray arrayWithCapacity:sections];
+    _activeCellsBySection = [NSMutableArray arrayWithCapacity:sections];
     for (NSUInteger section = 0; section < sections; ++section) {
         NSUInteger rows = (NSUInteger)[super tableView:self.tableView numberOfRowsInSection:section];
         NSMutableOrderedSet *allSectionCells = [NSMutableOrderedSet orderedSetWithCapacity:rows];
@@ -27,8 +27,8 @@
         [_activeCellsBySection addObject:activeSectionCells];
 
         for (NSUInteger row = 0; row < rows; ++row) {
-            UITableViewCell
-                    *cell = [super tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
+            UITableViewCell *cell =
+                    [super tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
             [allSectionCells addObject:cell];
             [activeSectionCells addObject:cell];
         }
@@ -36,6 +36,11 @@
 }
 
 #pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+
+    return [_activeCellsBySection count];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
@@ -45,11 +50,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     return _activeCellsBySection[(NSUInteger)indexPath.section][(NSUInteger)indexPath.row];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-
-    return [_activeCellsBySection count];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
@@ -80,60 +80,58 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - State
 
-- (NSOrderedSet *)allCellsBySection {
+- (NSArray *)allCellsBySection {
 
     return _allCellsBySection;
 }
 
 #pragma mark - Behavior
 
-- (void)reloadCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells {
+- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells {
 
-    [self updateCellsHiding:hideCells showing:showCells animation:UITableViewRowAnimationNone reloadData:YES];
-}
-
-- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
-                animation:(UITableViewRowAnimation)animation {
-
-    [self updateCellsHiding:hideCells showing:showCells animation:animation reloadData:NO];
-}
-
-- (void)updateCellsHiding:(NSOrderedSetOrArrayType)hideCells showing:(NSOrderedSetOrArrayType)showCells
-                animation:(UITableViewRowAnimation)animation reloadData:(BOOL)reloadData {
-
+    [self print:_activeCellsBySection prefix:@"old pre"];
     NSOrderedSet *hideCellsSet = [hideCells orderedSet];
     NSOrderedSet *showCellsSet = [showCells orderedSet];
+    NSMutableArray<NSMutableOrderedSet *> *newActiveCellsBySection = [_activeCellsBySection mutableCopy];
 
-    if (!reloadData)
-        [self.tableView beginUpdates];
-
-    for (NSUInteger section = 0; section < [_activeCellsBySection count]; ++section) {
-        NSMutableOrderedSet *activeSectionCells = _activeCellsBySection[section];
-        NSMutableOrderedSet *oldSectionCells = [activeSectionCells copy];
+    for (NSUInteger section = 0; section < [newActiveCellsBySection count]; ++section) {
+        NSMutableOrderedSet *activeSectionCells = newActiveCellsBySection[section] =
+                [newActiveCellsBySection[section] mutableCopy];
 
         // Remove all the features in _activeSectionCells that need to be hidden.
         [activeSectionCells minusOrderedSet:hideCellsSet];
 
         // Add the features to _activeSectionCells that need to be shown (but only once).
-        NSMutableOrderedSet *showSectionCells = [self->_allCellsBySection[section] mutableCopy];
+        NSMutableOrderedSet *showSectionCells = [_allCellsBySection[section] mutableCopy];
         [showSectionCells intersectOrderedSet:showCellsSet];
         [activeSectionCells unionOrderedSet:showSectionCells];
 
         // Make the order of the cells in in _activeSectionCells match the original order in _allCellsBySection.
         [activeSectionCells sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            NSUInteger i1 = [self->_allCellsBySection[section] indexOfObject:obj1];
-            NSUInteger i2 = [self->_allCellsBySection[section] indexOfObject:obj2];
+            NSUInteger i1 = [_allCellsBySection[section] indexOfObject:obj1];
+            NSUInteger i2 = [_allCellsBySection[section] indexOfObject:obj2];
             return i1 == i2? NSOrderedSame: i1 < i2? NSOrderedAscending: NSOrderedDescending;
         }];
-
-        if (!reloadData)
-            [self.tableView reloadSection:section from:oldSectionCells to:activeSectionCells withRowAnimation:animation];
     }
 
-    if (reloadData)
-        [self.tableView reloadData];
-    else
-        [self.tableView endUpdates];
+    [self print:_activeCellsBySection prefix:@"old post"];
+    [self print:newActiveCellsBySection prefix:@"new"];
+
+    [self.tableView updateDataSource:_activeCellsBySection toSections:newActiveCellsBySection
+                         reloadItems:nil withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    [self print:_activeCellsBySection prefix:@"done"];
+}
+
+- (void)print:(NSOrderedSetOrArrayType)array prefix:(NSString *)prefix {
+
+    int section = 0;
+    for (id sectionItems in array) {
+        dbg( @"[%@] Section %d", prefix, section++ );
+        int index = 0;
+        for (id item in sectionItems)
+            dbg( @"[%@]   - Item %d: %@", prefix, index++, item );
+    }
 }
 
 @end

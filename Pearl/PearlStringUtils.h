@@ -19,9 +19,9 @@
 #import <Foundation/Foundation.h>
 
 __BEGIN_DECLS
-extern NSString *strf(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
-extern NSString *strl(NSString *format, ...) NS_FORMAT_FUNCTION(1, 0);
-extern NSString *strtl(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION(2, 0);
+extern NSString *strf(NSString *format, ...) NS_FORMAT_FUNCTION( 1, 2 );
+extern NSString *strl(NSString *format, ...) NS_FORMAT_FUNCTION( 1, 0 );
+extern NSString *strtl(NSString *tableName, NSString *format, ...) NS_FORMAT_FUNCTION( 2, 0 );
 extern NSMutableAttributedString *stra(id string, NSDictionary *attributes);
 extern NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attributes);
 extern NSMutableAttributedString *strarm(id string, id attributes, ...) NS_REQUIRES_NIL_TERMINATION;
@@ -56,5 +56,9 @@ __END_DECLS
 
 - (NSString *)stringByReplacingMatchesOf:(NSString *)pattern withTemplate:(NSString *)templ;
 - (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression withTemplate:(NSString *)templ;
+
+/** Returns an array with substrings of this string matching the capture groups in the expression for the first match of the expression against this string.
+ * Note: Returns NSNull for groups that did not participate in the match. */
+- (NSArray<NSString *> *)firstMatchGroupsOfExpression:(NSRegularExpression *)expression;
 
 @end

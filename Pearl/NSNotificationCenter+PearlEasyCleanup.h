@@ -33,7 +33,7 @@ static char NotificationObserversKey;
         id observer = nil; \
         if (&_name) { \
             __weak typeof(_host) wHost = _host; \
-            void (^__noteblock)(id _self, NSNotification *note) = [(_block) copy]; \
+            void (^__noteblock)(id _self, NSNotification *note) = (_block); \
             NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
             if (!notificationObservers) \
                 objc_setAssociatedObject( _host, &NotificationObserversKey, \
@@ -48,7 +48,7 @@ static char NotificationObserversKey;
                         else \
                             [[NSNotificationCenter defaultCenter] removeObserver:observer]; \
                     }]; \
-            [notificationObservers setObject:observer forKey:(_name)]; \
+            notificationObservers[(_name)] = observer; \
         } \
         (observer); \
     } )

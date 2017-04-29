@@ -257,4 +257,16 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     return [expression stringByReplacingMatchesInString:self options:0 range:NSMakeRange( 0, self.length ) withTemplate:templ];
 }
 
+- (NSArray *)firstMatchGroupsOfExpression:(NSRegularExpression *)expression {
+
+    NSTextCheckingResult *result = [expression firstMatchInString:self options:0 range:NSMakeRange( 0, self.length )];
+    NSMutableArray *groups = [NSMutableArray arrayWithCapacity:result.numberOfRanges];
+    for (NSUInteger g = 0; g < result.numberOfRanges; ++g) {
+        NSRange range = [result rangeAtIndex:g];
+        [groups addObject:range.location == NSNotFound? [NSNull null]: [self substringWithRange:range]];
+    }
+
+    return groups;
+}
+
 @end

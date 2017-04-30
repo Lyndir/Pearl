@@ -22,22 +22,23 @@
 - (void)updateDataSource:(NSMutableOrderedSetOrArrayType)dataSource toSections:(NSOrderedSetOrArrayType)newSections
              reloadItems:(NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation {
 
-    if ([dataSource isEqual:newSections]) {
+    if (!newSections || [dataSource isEqual:newSections]) {
         if ([reloadItems count]) {
             [self beginUpdates];
-            for (NSUInteger section = 0; section < [dataSource count]; ++section) {
-                NSArray *sectionItems = dataSource[section];
-                for (NSUInteger index = 0; index < [sectionItems count]; ++index) {
-                    if (reloadItems == dataSource ||
-                        [reloadItems containsObject:sectionItems[index]] ||
-                        ([reloadItems[section] respondsToSelector:@selector( objectAtIndexedSubscript: )] &&
-                         NSNullToNil( reloadItems[section][index] ))) {
-                        trc( @"reload item %@", [NSIndexPath indexPathForItem:index inSection:section] );
-                        [self reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForItem:index inSection:section] ]
-                                    withRowAnimation:animation];
-                    }
+            if ([reloadItems[0] isKindOfClass:[NSIndexPath class]])
+                [self reloadRowsAtIndexPaths:[reloadItems array] withRowAnimation:animation];
+            else
+                for (NSUInteger section = 0; section < [dataSource count]; ++section) {
+                    NSArray *sectionItems = dataSource[section];
+                    for (NSUInteger index = 0; index < [sectionItems count]; ++index)
+                        if (reloadItems == dataSource ||
+                            [reloadItems containsObject:sectionItems[index]] ||
+                            [reloadItems containsObject:sectionItems]) {
+                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
+                            trc( @"reload item %@", indexPath );
+                            [self reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:animation];
+                        }
                 }
-            }
             [self endUpdates];
         }
         return;
@@ -102,9 +103,9 @@
             NSArray *newSectionItems = newSections[section];
             for (NSUInteger index = 0; index < [newSectionItems count]; ++index)
                 if (![oldItems tryRemoveObject:newSectionItems[index]]) {
-                    trc( @"insert item %@", [NSIndexPath indexPathForRow:index inSection:section] );
-                    [self insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:index inSection:section] ]
-                                withRowAnimation:animation];
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
+                    trc( @"insert item %@", indexPath );
+                    [self insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:animation];
                 }
         }
 
@@ -132,11 +133,11 @@
 - (NSIndexPath *)indexPathForItem:(id)item inSections:(id<NSOrderedSetOrArray>)sections {
 
     NSUInteger section = 0;
-    for (id rows in sections) {
-        NSUInteger row = [rows indexOfObject:item];
+    for (id sectionItems in sections) {
+        NSUInteger index = [sectionItems indexOfObject:item];
 
-        if (row != NSNotFound)
-            return [NSIndexPath indexPathForRow:row inSection:section];
+        if (index != NSNotFound)
+            return [NSIndexPath indexPathForRow:index inSection:section];
 
         ++section;
     }

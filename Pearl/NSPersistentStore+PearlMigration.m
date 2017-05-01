@@ -28,26 +28,27 @@
 @implementation NSPersistentStore(PearlMigration)
 
 + (BOOL)migrateStore:(NSURL *)migratingStoreURL withOptions:(NSDictionary *)migratingStoreOptions toStore:(NSURL *)targetStoreURL
-         withOptions:(NSDictionary *)targetStoreOptions model:(NSManagedObjectModel *)model error:(__autoreleasing NSError **)error {
+         withOptions:(NSDictionary *)targetStoreOptions error:(__autoreleasing NSError **)error {
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:PearlNotNull(targetStoreURL.path)])
+    if ([[NSFileManager defaultManager] fileExistsAtPath:PearlNotNull( targetStoreURL.path )])
         return [self copyMigrateStore:migratingStoreURL withOptions:migratingStoreOptions
-                              toStore:targetStoreURL withOptions:targetStoreOptions
-                                model:model error:error];
+                              toStore:targetStoreURL withOptions:targetStoreOptions error:error];
 
     return [self systemMigrateStore:migratingStoreURL withOptions:migratingStoreOptions
-                            toStore:targetStoreURL withOptions:targetStoreOptions
-                              model:model error:error];
+                            toStore:targetStoreURL withOptions:targetStoreOptions error:error];
 }
 
 + (BOOL)systemMigrateStore:(NSURL *)migratingStoreURL withOptions:(NSDictionary *)migratingStoreOptions
-                   toStore:(NSURL *)targetStoreURL withOptions:(NSDictionary *)targetStoreOptions
-                     model:(NSManagedObjectModel *)model error:(__autoreleasing NSError **)error {
+                   toStore:(NSURL *)targetStoreURL withOptions:(NSDictionary *)targetStoreOptions error:(__autoreleasing NSError **)error {
 
-    if (!model)
-        model = [NSManagedObjectModel mergedModelFromBundles:nil];
-
-    NSPersistentStoreCoordinator *migratingCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    // Open migrating store.
+    NSDictionary<NSString *, id> *metadata = [NSPersistentStore metadataForPersistentStoreWithURL:migratingStoreURL error:error];
+    if (!metadata) {
+        wrn( @"Migration failed, couldn't inspect metadata for migrating store: %@\n%@", migratingStoreURL, [*error fullDescription] );
+        return NO;
+    }
+    NSPersistentStoreCoordinator *migratingCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:
+            [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:metadata]];
     NSPersistentStore *migratingStore = [migratingCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil
                                                                                      URL:migratingStoreURL options:migratingStoreOptions
                                                                                    error:error];
@@ -56,7 +57,7 @@
         return NO;
     }
 
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull([targetStoreURL URLByDeletingLastPathComponent])
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull( [targetStoreURL URLByDeletingLastPathComponent] )
                                   withIntermediateDirectories:YES attributes:nil error:error]) {
         wrn( @"Migration failed, couldn't create location for target store: %@\n%@",
                 [targetStoreURL URLByDeletingLastPathComponent], [*error fullDescription] );
@@ -77,14 +78,16 @@
 }
 
 + (BOOL)copyMigrateStore:(NSURL *)migratingStoreURL withOptions:(NSDictionary *)migratingStoreOptions
-                 toStore:(NSURL *)targetStoreURL withOptions:(NSDictionary *)targetStoreOptions
-                   model:(NSManagedObjectModel *)model error:(__autoreleasing NSError **)error {
-
-    if (!model)
-        model = [NSManagedObjectModel mergedModelFromBundles:nil];
+                 toStore:(NSURL *)targetStoreURL withOptions:(NSDictionary *)targetStoreOptions error:(__autoreleasing NSError **)error {
 
     // Open migrating store.
-    NSPersistentStoreCoordinator *migratingCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    NSDictionary<NSString *, id> *migratingMetadata = [NSPersistentStore metadataForPersistentStoreWithURL:migratingStoreURL error:error];
+    if (!migratingMetadata) {
+        wrn( @"Migration failed, couldn't inspect metadata for migrating store: %@\n%@", migratingStoreURL, [*error fullDescription] );
+        return NO;
+    }
+    NSPersistentStoreCoordinator *migratingCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:
+            [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:migratingMetadata]];
     NSPersistentStore *migratingStore = [migratingCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil
                                                                                      URL:migratingStoreURL options:migratingStoreOptions
                                                                                    error:error];
@@ -94,13 +97,16 @@
     }
 
     // Open target store.
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull([targetStoreURL URLByDeletingLastPathComponent])
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:PearlNotNull( [targetStoreURL URLByDeletingLastPathComponent] )
                                   withIntermediateDirectories:YES attributes:nil error:error]) {
         wrn( @"Migration failed, couldn't create location for target store: %@\n%@",
                 [targetStoreURL URLByDeletingLastPathComponent], [*error fullDescription] );
         return NO;
     }
-    NSPersistentStoreCoordinator *targetCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    NSDictionary<NSString *, id> *targetMetadata = [NSPersistentStore metadataForPersistentStoreWithURL:targetStoreURL error:nil];
+    NSPersistentStoreCoordinator *targetCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:
+            targetMetadata? [NSManagedObjectModel mergedModelFromBundles:nil forStoreMetadata:migratingMetadata]
+                          : [NSManagedObjectModel mergedModelFromBundles:nil]];
     NSPersistentStore *targetStore = [targetCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil
                                                                                URL:targetStoreURL options:targetStoreOptions
                                                                              error:error];
@@ -127,7 +133,7 @@
     // Migrate entities.
     BOOL migratingFailure = NO;
     NSMutableDictionary *migratedIDsBySourceID = [[NSMutableDictionary alloc] initWithCapacity:500];
-    for (NSEntityDescription *entity in model.entities) {
+    for (NSEntityDescription *entity in migratingCoordinator.managedObjectModel.entities) {
         NSFetchRequest *fetch = [NSFetchRequest new];
         fetch.entity = entity;
         fetch.fetchBatchSize = 500;
@@ -168,7 +174,7 @@
     @autoreleasepool {
         // Create migrated object.
         NSEntityDescription *entity = self.entity;
-        NSManagedObject *destinationObject = [NSEntityDescription insertNewObjectForEntityForName:PearlNotNull(entity.name)
+        NSManagedObject *destinationObject = [NSEntityDescription insertNewObjectForEntityForName:PearlNotNull( entity.name )
                                                                            inManagedObjectContext:destinationContext];
         migratedIDsBySourceID[self.objectID] = destinationObject.objectID;
 

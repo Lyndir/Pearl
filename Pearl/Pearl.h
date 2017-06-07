@@ -22,6 +22,7 @@
 #import "PearlCodeUtils.h"
 #import "PearlConfig.h"
 #import "PearlDeviceUtils.h"
+#import "PearlHangDetector.h"
 #import "PearlInfoPlist.h"
 #import "PearlLazy.h"
 #import "PearlLogger.h"

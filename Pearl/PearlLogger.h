@@ -61,7 +61,6 @@ typedef NS_ENUM(NSUInteger, PearlLogLevel) {
 };
 
 extern const char *PearlLogLevelStr(PearlLogLevel level);
-extern const NSString *errstr(void);
 extern id returnArg(id arg);
 __END_DECLS
 

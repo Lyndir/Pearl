@@ -51,7 +51,7 @@ uint64_t PearlSecureRandom() {
     uint64_t random = 0;
 #if TARGET_OS_IPHONE
     if (!SecRandomCopyBytes( kSecRandomDefault, sizeof(random) / sizeof(uint8_t), (uint8_t *)&random )) {
-        wrn(@"Couldn't produce random bytes: %@", errstr());
+        wrn(@"Couldn't produce random bytes: %s", strerror( errno ));
         random = (((uint64_t)arc4random()) << 32) | (uint64_t)arc4random();
     }
 #else
@@ -60,7 +60,7 @@ uint64_t PearlSecureRandom() {
         for (size_t i=0; i < sizeof(random); ++i)
             random |= ((uint64_t)fgetc(fp) << (8 * i));
     } else {
-        wrn(@"Couldn't open /dev/random: %@", errstr());
+        wrn(@"Couldn't open /dev/random: %s", strerror( errno ));
         random = (((uint64_t)arc4random()) << 32) | (uint64_t)arc4random();
     }
 #endif

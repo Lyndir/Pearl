@@ -76,7 +76,7 @@
     size_t signedHashBytesSize = SecKeyGetBlockSize( privateKey );
     uint8_t *signedHashBytes = calloc( signedHashBytesSize, sizeof(uint8_t) );
     if (!signedHashBytes) {
-        err(@"Couldn't allocate signed hash bytes: %@", errstr());
+        err(@"Couldn't allocate signed hash bytes: %s", strerror( errno ));
         return nil;
     }
 

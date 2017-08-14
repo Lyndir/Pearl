@@ -110,6 +110,19 @@ extern CGPoint CGPointMultiplyCGPoint(const CGPoint origin, const CGPoint multip
 extern CGPoint CGPointDistanceBetweenCGPoints(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPointsSq(CGPoint from, CGPoint to);
 extern CGFloat DistanceBetweenCGPoints(CGPoint from, CGPoint to);
+
+typedef struct PearlLayout {
+    CGFloat left;
+    CGFloat top;
+    CGFloat width;
+    CGFloat height;
+    CGFloat bottom;
+    CGFloat right;
+} PearlLayout;
+
+typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
+    PearlLayoutOptionConstrainSize = 2 >> 1,
+};
 __END_DECLS
 
 @interface UIImage(PearlUIUtils)
@@ -174,12 +187,50 @@ __END_DECLS
 /** @return All constraints in the view hierarchy that apply to this view. */
 - (NSArray *)applicableConstraints;
 - (NSDictionary *)applicableConstraintsByHolder;
-/** @return The only constraint that applies to this view's given attribute. Aborts DEBUG builds if multiple matching contraints exist. */
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute;
-/** @return The only constraint that applies to this view's given attribute and relates to the given other view. Aborts DEBUG builds if multiple matching contraints exist. */
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
-- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
+/** @return The first constraint that applies to this view's given attribute. */
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
+/** @return The first constraint that applies to this view's given attribute and relates to the given other view. */
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
+- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                                            bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left constrainSize:(BOOL)constrainSize;
+
+/**
+ * Set the layout of the view based on the given layout string.
+ *
+ * @"left | top [ width / height ] bottom | right"
+ *
+ * A "-" padding = parent's layout margin, a "-" size = 44.
+ * An "=" dimension retains its current value.
+ * A ">" left/top or "<" right/bottom padding = expand.
+ * Empty padding = 0, empty size = fit or expand if both paddings are fixed.
+ * An "x", "y" or "z" will be replaced with the x, y and z parameter value.
+ * Spaces around operators are permitted.
+ *
+ * @"-[  ]-"       // Use the superview's left and right layout margin, top and bottom default to 0.
+ *                 // Since width and height are unspecified but edges are fixed, they will fill available space.
+ *
+ * @"[  ]20"       // Left defaults to 0 and right is fixed to 20.  Top and bottom also default to 0.
+ *                 // Since width and height are unspecified but edges are fixed, they will fill available space.
+ *
+ * @">[  ]<"       // Left and right edges expand, top and bottom default to 0.
+ *                 // Width is unspecified but at least one horizontal edge wants to expand, so use the fitting width.
+ *                 // Height is unspecified but the vertical edges are fixed, so height will still fill available space.
+ *
+ * @">|-[  ]-|-"  // expand left, 8pt from right, 5pt width.  8pt from top and bottom, expand height.
+ * @">[ -/30 ]-|"   // expand left, fixed to right.  Fixed to top, 8pt from bottom,  44pt height.
+ */
+- (void)setFrameFrom:(NSString *)layoutString;
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x;
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y;
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z;
+- (void)setFrameFrom:(NSString *)layoutString using:(PearlLayout)layoutOverrides;
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides;
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
+             options:(PearlLayoutOption)options;
 
 /** Return the view or the first parent of it that is of the receiver's type. */
 + (instancetype)findAsSuperviewOf:(UIView *)view;

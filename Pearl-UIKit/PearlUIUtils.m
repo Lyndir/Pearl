@@ -229,7 +229,7 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
             left = parent.size.width - size.width - right;
     }
 
-    return CGRectFromOriginWithSize( CGPointMake( parent.origin.x + left, parent.origin.y + top ), size );
+    return CGRectFromOriginWithSize( CGPointMake( left, top ), size );
 }
 
 CGPoint CGPointMinusCGPoint(const CGPoint origin, const CGPoint subtract) {
@@ -528,23 +528,18 @@ static NSMutableSet *dismissableResponders;
     return constraintsByHolder;
 }
 
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute {
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute {
 
-    return [self constraintForAttribute:attribute otherView:nil];
+    return [self firstConstraintForAttribute:attribute otherView:nil];
 }
 
-- (NSLayoutConstraint *)constraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
+- (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView {
 
-    for (NSLayoutConstraint *constraint in self.applicableConstraints) {
-        if ([constraint class] != [NSLayoutConstraint class])
-            // Skip custom layout constraints such as internal system constraints (eg. NSContentSizeLayoutConstraint).
-            continue;
-
+    for (NSLayoutConstraint *constraint in self.applicableConstraints)
         if (((constraint.firstItem == self && constraint.firstAttribute == attribute) ||
              (constraint.secondItem == self && constraint.secondAttribute == attribute)) &&
             (!otherView || constraint.firstItem == otherView || constraint.secondItem == otherView))
             return constraint;
-    }
 
     return nil;
 }
@@ -554,16 +549,217 @@ static NSMutableSet *dismissableResponders;
     [self setFrameFromSize:self.frame.size andParentPaddingTop:top right:right bottom:bottom left:left];
 }
 
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+- (void)setFrameFrom:(NSString *)layoutString {
 
-    CGRectSetSize( self.frame, CGSizeZero );
-    [self sizeToFit];
-    if (size.width == CGFLOAT_MIN)
-        size.width = self.frame.size.width;
-    if (size.height == CGFLOAT_MIN)
-        size.height = self.frame.size.height;
+    [self setFrameFrom:layoutString using:(PearlLayout){}];
+}
 
-    self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, size, top, right, bottom, left );
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x {
+
+    [self setFrameFrom:layoutString x:x y:0 z:0 using:(PearlLayout){}];
+}
+
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y {
+
+    [self setFrameFrom:layoutString x:x y:y z:0 using:(PearlLayout){}];
+}
+
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z {
+
+    [self setFrameFrom:layoutString x:x y:y z:z using:(PearlLayout){}];
+}
+
+- (void)setFrameFrom:(NSString *)layoutString using:(PearlLayout)layoutOverrides {
+
+    [self setFrameFrom:layoutString x:0 y:0 z:0 using:layoutOverrides];
+}
+
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides {
+
+    [self setFrameFrom:layoutString x:x y:y z:z using:layoutOverrides options:(PearlLayoutOption)0];
+}
+
+- (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
+             options:(PearlLayoutOption)options {
+
+    static NSRegularExpression *layoutRE = nil;
+    static dispatch_once_t once = 0;
+    dispatch_once( &once, ^{
+        layoutRE = [[NSRegularExpression alloc] initWithPattern:
+                        @" *([^\\[| ]*)(?: *\\| *([^\\] ]*))? *\\[ *([\\|]*) *([^\\]\\|/ ]*)(?: */ *([^\\]\\|/ ]*))? *(?:[\\|]*) *\\] *(?:([^|]*) *\\| *)?([^,]*) *"
+                                                        options:0 error:nil];
+    } );
+
+    // Parse
+    NSTextCheckingResult
+            *layoutComponents = [layoutRE firstMatchInString:layoutString options:0 range:NSMakeRange( 0, layoutString.length )];
+    NSString *leftLayoutString = [layoutComponents rangeAtIndex:1].location == NSNotFound? nil:
+                                 [layoutString substringWithRange:[layoutComponents rangeAtIndex:1]];
+    NSString *topLayoutString = [layoutComponents rangeAtIndex:2].location == NSNotFound? nil:
+                                [layoutString substringWithRange:[layoutComponents rangeAtIndex:2]];
+    NSString *sizeLayoutString = [layoutComponents rangeAtIndex:3].location == NSNotFound? nil:
+                                 [layoutString substringWithRange:[layoutComponents rangeAtIndex:3]];
+    NSString *widthLayoutString = [layoutComponents rangeAtIndex:4].location == NSNotFound? nil:
+                                  [layoutString substringWithRange:[layoutComponents rangeAtIndex:4]];
+    NSString *heightLayoutString = [layoutComponents rangeAtIndex:5].location == NSNotFound? nil:
+                                   [layoutString substringWithRange:[layoutComponents rangeAtIndex:5]];
+    NSString *bottomLayoutString = [layoutComponents rangeAtIndex:6].location == NSNotFound? nil:
+                                   [layoutString substringWithRange:[layoutComponents rangeAtIndex:6]];
+    NSString *rightLayoutString = [layoutComponents rangeAtIndex:7].location == NSNotFound? nil:
+                                  [layoutString substringWithRange:[layoutComponents rangeAtIndex:7]];
+    CGFloat leftLayoutValue = [leftLayoutString floatValue], rightLayoutValue = [rightLayoutString floatValue];
+    CGFloat widthLayoutValue = [widthLayoutString floatValue], heightLayoutValue = [heightLayoutString floatValue];
+    CGFloat topLayoutValue = [topLayoutString floatValue], bottomLayoutValue = [bottomLayoutString floatValue];
+
+    // Overrides
+    if (layoutOverrides.left)
+        leftLayoutValue = layoutOverrides.left;
+    if (layoutOverrides.top)
+        topLayoutValue = layoutOverrides.top;
+    if (layoutOverrides.width)
+        widthLayoutValue = layoutOverrides.width;
+    if (layoutOverrides.height)
+        heightLayoutValue = layoutOverrides.height;
+    if (layoutOverrides.bottom)
+        bottomLayoutValue = layoutOverrides.bottom;
+    if (layoutOverrides.right)
+        rightLayoutValue = layoutOverrides.right;
+
+    // Options
+    if ([sizeLayoutString rangeOfString:@"|"].location != NSNotFound)
+        options |= PearlLayoutOptionConstrainSize;
+
+    // Left
+    if ([leftLayoutString isEqualToString:@">"])
+        leftLayoutValue = CGFLOAT_MAX;
+    else if ([leftLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+        leftLayoutValue = self.superview.layoutMargins.left;
+    else if ([leftLayoutString isEqualToString:@"="])
+        leftLayoutValue = self.frame.origin.x;
+    else if ([leftLayoutString isEqualToString:@"x"])
+        leftLayoutValue = x;
+    else if ([leftLayoutString isEqualToString:@"y"])
+        leftLayoutValue = y;
+    else if ([leftLayoutString isEqualToString:@"z"])
+        leftLayoutValue = z;
+
+    // Right
+    if ([rightLayoutString isEqualToString:@"<"])
+        rightLayoutValue = CGFLOAT_MAX;
+    else if ([rightLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+        rightLayoutValue = self.superview.layoutMargins.right;
+    else if ([rightLayoutString isEqualToString:@"="])
+        rightLayoutValue = CGRectGetRight( self.superview.bounds ).x - CGRectGetRight( self.frame ).x;
+    else if ([rightLayoutString isEqualToString:@"x"])
+        rightLayoutValue = x;
+    else if ([rightLayoutString isEqualToString:@"y"])
+        rightLayoutValue = y;
+    else if ([rightLayoutString isEqualToString:@"z"])
+        rightLayoutValue = z;
+
+    // Top
+    if ([topLayoutString isEqualToString:@">"])
+        topLayoutValue = CGFLOAT_MAX;
+    else if ([topLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+        topLayoutValue = self.superview.layoutMargins.top;
+    else if ([topLayoutString isEqualToString:@"="])
+        topLayoutValue = self.frame.origin.y;
+    else if ([topLayoutString isEqualToString:@"x"])
+        topLayoutValue = x;
+    else if ([topLayoutString isEqualToString:@"y"])
+        topLayoutValue = y;
+    else if ([topLayoutString isEqualToString:@"z"])
+        topLayoutValue = z;
+
+    // Bottom
+    if ([bottomLayoutString isEqualToString:@"<"])
+        bottomLayoutValue = CGFLOAT_MAX;
+    else if ([bottomLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+        bottomLayoutValue = self.superview.layoutMargins.bottom;
+    else if ([bottomLayoutString isEqualToString:@"="])
+        bottomLayoutValue = CGRectGetBottom( self.superview.bounds ).y - CGRectGetBottom( self.frame ).y;
+    else if ([bottomLayoutString isEqualToString:@"x"])
+        bottomLayoutValue = x;
+    else if ([bottomLayoutString isEqualToString:@"y"])
+        bottomLayoutValue = y;
+    else if ([bottomLayoutString isEqualToString:@"z"])
+        bottomLayoutValue = z;
+
+    // Width
+    if ([widthLayoutString isEqualToString:@"-"])
+        widthLayoutValue = 44;
+    else if ([widthLayoutString isEqualToString:@"="])
+        widthLayoutValue = self.frame.size.width;
+    else if ([widthLayoutString isEqualToString:@"x"])
+        widthLayoutValue = x;
+    else if ([widthLayoutString isEqualToString:@"y"])
+        widthLayoutValue = y;
+    else if ([widthLayoutString isEqualToString:@"z"])
+        widthLayoutValue = z;
+    else if (!widthLayoutString.length)
+        widthLayoutValue = CGFLOAT_MIN;
+    if (leftLayoutValue < CGFLOAT_MAX && rightLayoutValue < CGFLOAT_MAX) {
+        NSAssert( widthLayoutValue == CGFLOAT_MIN, @"Cannot have fixed left, right and width values." );
+        widthLayoutValue = CGFLOAT_MAX;
+    }
+
+    // Height
+    if ([heightLayoutString isEqualToString:@"-"])
+        heightLayoutValue = 44;
+    else if ([heightLayoutString isEqualToString:@"="])
+        heightLayoutValue = self.frame.size.height;
+    else if ([heightLayoutString isEqualToString:@"x"])
+        heightLayoutValue = x;
+    else if ([heightLayoutString isEqualToString:@"y"])
+        heightLayoutValue = y;
+    else if ([heightLayoutString isEqualToString:@"z"])
+        heightLayoutValue = z;
+    else if (!heightLayoutString.length)
+        heightLayoutValue = CGFLOAT_MIN;
+    if (topLayoutValue < CGFLOAT_MAX && bottomLayoutValue < CGFLOAT_MAX) {
+        NSAssert( heightLayoutValue == CGFLOAT_MIN, @"Cannot have fixed top, bottom and height values." );
+        heightLayoutValue = CGFLOAT_MAX;
+    }
+
+    // Apply layout
+    [self setFrameFromSize:CGSizeMake( widthLayoutValue, heightLayoutValue )
+       andParentPaddingTop:topLayoutValue right:rightLayoutValue bottom:bottomLayoutValue left:leftLayoutValue
+             constrainSize:options & PearlLayoutOptionConstrainSize];
+}
+
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left {
+
+    [self setFrameFromSize:size andParentPaddingTop:top right:right bottom:bottom left:left constrainSize:NO];
+}
+
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left constrainSize:(BOOL)constrainSize {
+
+    CGFloat availableWidth = self.superview.bounds.size.width -
+                             (left == CGFLOAT_MAX? 0: left) - (right == CGFLOAT_MAX? 0: right);
+    CGFloat availableHeight = self.superview.bounds.size.height -
+                              (top == CGFLOAT_MAX? 0: top) - (bottom == CGFLOAT_MAX? 0: bottom);
+    CGSize resolvedSize = size;
+
+    // Resolve our minimal size dimensions with the view's fitting size.
+    if (size.width == CGFLOAT_MIN || size.height == CGFLOAT_MIN) {
+        // For the fitting size, use 0 for unknown minimal bounds and the available space for unknown maximal bounds.
+        resolvedSize = [self sizeThatFits:(CGSize){
+                .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
+                .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
+        }];
+        resolvedSize = CGSizeMake(
+                size.width == CGFLOAT_MIN? resolvedSize.width: size.width,
+                size.height == CGFLOAT_MIN? resolvedSize.height: size.height );
+    }
+    if (constrainSize)
+        resolvedSize = CGSizeMake(
+                resolvedSize.width == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.width, availableWidth ),
+                resolvedSize.height == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.height, availableHeight ) );
+
+    // Resolve the frame based on the parent's bounds and our layout parameters.
+    self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, resolvedSize, top, right, bottom, left );
 }
 
 + (instancetype)findAsSuperviewOf:(UIView *)view {

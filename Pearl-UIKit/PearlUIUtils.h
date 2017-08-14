@@ -165,12 +165,12 @@ __END_DECLS
 @interface UIView(PearlUIUtils)
 
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
-+ (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void (^)(void))uiAnimations caAnimations:(void (^)(void))caAnimations
-                 completion:(void (^)(BOOL finished))completion;
++ (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void ( ^ )(void))uiAnimations caAnimations:(void ( ^ )(void))caAnimations
+                 completion:(void ( ^ )(BOOL finished))completion;
 - (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
-                               metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
+                                    metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 - (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
-                                metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
+                                     metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 /** @return All constraints in the view hierarchy that apply to this view. */
 - (NSArray *)applicableConstraints;
 - (NSDictionary *)applicableConstraintsByHolder;
@@ -184,7 +184,7 @@ __END_DECLS
 /** Return the view or the first parent of it that is of the receiver's type. */
 + (instancetype)findAsSuperviewOf:(UIView *)view;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
-- (BOOL)enumerateViews:(void (^)(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
+- (BOOL)enumerateViews:(void ( ^ )(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
 /** Return a string that briefly describes this view. */

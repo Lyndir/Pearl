@@ -95,47 +95,47 @@ CGPoint CGRectGetBottomLeft(CGRect rect) {
 
 CGRect CGRectWithCenter(CGRect rect, CGPoint newCenter) {
 
-  return CGRectFromCenterWithSize( newCenter, rect.size );
+    return CGRectFromCenterWithSize( newCenter, rect.size );
 }
 
 CGRect CGRectWithTop(CGRect rect, CGPoint newTop) {
 
-  return CGRectFromCenterWithSize( CGPointMake( newTop.x, newTop.y + rect.size.height / 2 ), rect.size );
+    return CGRectFromCenterWithSize( CGPointMake( newTop.x, newTop.y + rect.size.height / 2 ), rect.size );
 }
 
 CGRect CGRectWithRight(CGRect rect, CGPoint newRight) {
 
-  return CGRectFromCenterWithSize( CGPointMake( newRight.x - rect.size.width / 2, newRight.y ), rect.size );
+    return CGRectFromCenterWithSize( CGPointMake( newRight.x - rect.size.width / 2, newRight.y ), rect.size );
 }
 
 CGRect CGRectWithBottom(CGRect rect, CGPoint newBottom) {
 
-  return CGRectFromCenterWithSize( CGPointMake( newBottom.x, newBottom.y - rect.size.height / 2 ), rect.size );
+    return CGRectFromCenterWithSize( CGPointMake( newBottom.x, newBottom.y - rect.size.height / 2 ), rect.size );
 }
 
 CGRect CGRectWithLeft(CGRect rect, CGPoint newLeft) {
 
-  return CGRectFromCenterWithSize( CGPointMake( newLeft.x + rect.size.width / 2, newLeft.y ), rect.size );
+    return CGRectFromCenterWithSize( CGPointMake( newLeft.x + rect.size.width / 2, newLeft.y ), rect.size );
 }
 
 CGRect CGRectWithTopLeft(CGRect rect, CGPoint newTopLeft) {
 
-  return CGRectFromOriginWithSize( newTopLeft, rect.size );
+    return CGRectFromOriginWithSize( newTopLeft, rect.size );
 }
 
 CGRect CGRectWithTopRight(CGRect rect, CGPoint newTopRight) {
 
-  return CGRectFromOriginWithSize( CGPointMake( newTopRight.x - rect.size.width, newTopRight.y ), rect.size );
+    return CGRectFromOriginWithSize( CGPointMake( newTopRight.x - rect.size.width, newTopRight.y ), rect.size );
 }
 
 CGRect CGRectWithBottomRight(CGRect rect, CGPoint newBottomRight) {
 
-  return CGRectFromOriginWithSize( CGPointMake( newBottomRight.x - rect.size.width, newBottomRight.y - rect.size.height ), rect.size );
+    return CGRectFromOriginWithSize( CGPointMake( newBottomRight.x - rect.size.width, newBottomRight.y - rect.size.height ), rect.size );
 }
 
 CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft) {
 
-  return CGRectFromOriginWithSize( CGPointMake( newBottomLeft.x, newBottomLeft.y - rect.size.height ), rect.size );
+    return CGRectFromOriginWithSize( CGPointMake( newBottomLeft.x, newBottomLeft.y - rect.size.height ), rect.size );
 }
 
 UIEdgeInsets UIEdgeInsetsUnionEdgeInsets(UIEdgeInsets a, UIEdgeInsets b) {
@@ -513,15 +513,15 @@ static NSMutableSet *dismissableResponders;
 
     NSMutableDictionary *constraintsByHolder = [NSMutableDictionary new];
     for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview]) {
-      NSValue *holderKey = [NSValue valueWithPointer:(__bridge void *)constraintHolder];
-      [constraintHolder updateConstraintsIfNeeded];
+        NSValue *holderKey = [NSValue valueWithPointer:(__bridge void *)constraintHolder];
+        [constraintHolder updateConstraintsIfNeeded];
 
-      NSMutableArray *holderConstraints = constraintsByHolder[holderKey];
-      if (!holderConstraints)
-        constraintsByHolder[holderKey] = holderConstraints = [NSMutableArray new];
-      for (NSLayoutConstraint *constraint in constraintHolder.constraints)
+        NSMutableArray *holderConstraints = constraintsByHolder[holderKey];
+        if (!holderConstraints)
+            constraintsByHolder[holderKey] = holderConstraints = [NSMutableArray new];
+        for (NSLayoutConstraint *constraint in constraintHolder.constraints)
             if (constraint.firstItem == self || constraint.secondItem == self) {
-              [holderConstraints addObject:constraint];
+                [holderConstraints addObject:constraint];
             }
     }
 
@@ -615,7 +615,7 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg( strf(@"%%%lds %%@", (long)indent), "", [self infoDescription] );
+    dbg( strf( @"%%%lds %%@", (long)indent ), "", [self infoDescription] );
 
     for (UIView *child in self.subviews)
         [child printChildHierarchyWithIndent:indent + 4];
@@ -647,17 +647,17 @@ static NSMutableSet *dismissableResponders;
 
 - (NSString *)layoutDescription {
 
-  NSMutableString *layout = [NSMutableString new], *ancestry = [NSMutableString new];
-  [layout appendFormat:@"Constraints affecting: %@", [self infoDescription]];
-  for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview], [ancestry appendString:@":"])
-    for (NSLayoutConstraint *constraint in constraintHolder.constraints) {
-      if (constraint.firstItem != self && constraint.secondItem != self)
-        continue;
+    NSMutableString *layout = [NSMutableString new], *ancestry = [NSMutableString new];
+    [layout appendFormat:@"Constraints affecting: %@", [self infoDescription]];
+    for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview], [ancestry appendString:@":"])
+        for (NSLayoutConstraint *constraint in constraintHolder.constraints) {
+            if (constraint.firstItem != self && constraint.secondItem != self)
+                continue;
 
-      [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder class], [constraint debugDescription]];
-    }
+            [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder class], [constraint debugDescription]];
+        }
 
-  return layout;
+    return layout;
 }
 
 - (UIView *)subviewClosestTo:(CGPoint)point {
@@ -677,7 +677,7 @@ static NSMutableSet *dismissableResponders;
         for (UIView *subview in self.subviews)
             if (!subview.hidden && subview.alpha > DBL_EPSILON && ![ignoredSubviewsArray containsObject:subview])
                 contentRect = CGRectUnion( contentRect,
-                        [self convertRect:
+                        [self    convertRect:
                                         [subview contentBoundsIgnoringSubviewsArray:ignoredSubviewsArray]
                                  fromView:subview] );
 

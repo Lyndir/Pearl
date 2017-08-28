@@ -760,6 +760,13 @@ static NSMutableSet *dismissableResponders;
 
     // Resolve the frame based on the parent's bounds and our layout parameters.
     self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, resolvedSize, top, right, bottom, left );
+    self.autoresizingMask = (UIViewAutoresizing)(
+            (top == CGFLOAT_MAX? UIViewAutoresizingFlexibleTopMargin: 0) |
+            (right == CGFLOAT_MAX? UIViewAutoresizingFlexibleRightMargin: 0) |
+            (bottom == CGFLOAT_MAX? UIViewAutoresizingFlexibleBottomMargin: 0) |
+            (left == CGFLOAT_MAX? UIViewAutoresizingFlexibleLeftMargin: 0) |
+            (resolvedSize.width == CGFLOAT_MAX? UIViewAutoresizingFlexibleWidth: 0) |
+            (resolvedSize.height == CGFLOAT_MAX? UIViewAutoresizingFlexibleHeight: 0));
 }
 
 + (instancetype)findAsSuperviewOf:(UIView *)view {

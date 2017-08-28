@@ -12,8 +12,6 @@
 #import "PearlEMail.h"
 #import "PearlFixedTableView.h"
 #import "PearlGradientView.h"
-#import "PearlLayout.h"
-#import "PearlLayoutView.h"
 #import "PearlLinks.h"
 #import "PearlMessageView.h"
 #import "PearlMutableStaticTableViewController.h"

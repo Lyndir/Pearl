@@ -137,8 +137,6 @@
 		DA35097E15EE1A2900C14A8E /* PearlEMail.h in Headers */ = {isa = PBXBuildFile; fileRef = DA35097C15EE1A2900C14A8E /* PearlEMail.h */; };
 		DA35097F15EE1A2900C14A8E /* PearlEMail.m in Sources */ = {isa = PBXBuildFile; fileRef = DA35097D15EE1A2900C14A8E /* PearlEMail.m */; };
 		DA35098115EE1A3A00C14A8E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA35098015EE1A3A00C14A8E /* MessageUI.framework */; };
-		DA3EF1C115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */; };
-		DA3EF1C215A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */; };
 		DA3EF1C315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h in Headers */ = {isa = PBXBuildFile; fileRef = DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */; };
 		DA3EF1C415A4CE6A003ABF4E /* NSDateFormatter+RFC3339.m in Sources */ = {isa = PBXBuildFile; fileRef = DA3EF1B315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.m */; };
 		DA3EF1C515A4CE6A003ABF4E /* NSObject+PearlExport.h in Headers */ = {isa = PBXBuildFile; fileRef = DA3EF1B415A4CE6A003ABF4E /* NSObject+PearlExport.h */; };
@@ -181,6 +179,70 @@
 		DA4425991555734A0052177D /* PearlGLShaderPointSprite_frag.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */; };
 		DA44259A1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
 		DA44259B1555734A0052177D /* PearlGLShaderPointSprite_vert.h in Headers */ = {isa = PBXBuildFile; fileRef = DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */; };
+		DA456CC01F54DEC900D54152 /* NSPersistentStore+PearlMigration.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CA51F54DEC900D54152 /* NSPersistentStore+PearlMigration.h */; };
+		DA456CC11F54DEC900D54152 /* NSPersistentStore+PearlMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CA61F54DEC900D54152 /* NSPersistentStore+PearlMigration.m */; };
+		DA456CC21F54DEC900D54152 /* PearlHangDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CA71F54DEC900D54152 /* PearlHangDetector.h */; };
+		DA456CC31F54DEC900D54152 /* PearlHangDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CA81F54DEC900D54152 /* PearlHangDetector.m */; };
+		DA456CC41F54DEC900D54152 /* NSMutableSet+Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CA91F54DEC900D54152 /* NSMutableSet+Pearl.h */; };
+		DA456CC51F54DEC900D54152 /* NSMutableSet+Pearl.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CAA1F54DEC900D54152 /* NSMutableSet+Pearl.m */; };
+		DA456CC61F54DEC900D54152 /* NSNotificationCenter+PearlEasyCleanup.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CAB1F54DEC900D54152 /* NSNotificationCenter+PearlEasyCleanup.h */; };
+		DA456CC71F54DEC900D54152 /* NSOrderedSetOrArray.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CAC1F54DEC900D54152 /* NSOrderedSetOrArray.h */; };
+		DA456CC81F54DEC900D54152 /* NSOrderedSetOrArray.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CAD1F54DEC900D54152 /* NSOrderedSetOrArray.m */; };
+		DA456CC91F54DEC900D54152 /* PearlProfiler.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CAE1F54DEC900D54152 /* PearlProfiler.m */; };
+		DA456CCA1F54DEC900D54152 /* NSArray+Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CAF1F54DEC900D54152 /* NSArray+Pearl.h */; };
+		DA456CCB1F54DEC900D54152 /* NSArray+Pearl.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CB01F54DEC900D54152 /* NSArray+Pearl.m */; };
+		DA456CCC1F54DEC900D54152 /* NSError+PearlFullDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CB11F54DEC900D54152 /* NSError+PearlFullDescription.m */; };
+		DA456CCD1F54DEC900D54152 /* NSManagedObject+Pearl.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CB21F54DEC900D54152 /* NSManagedObject+Pearl.m */; };
+		DA456CCE1F54DEC900D54152 /* PearlLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA456CB31F54DEC900D54152 /* PearlLogger.swift */; };
+		DA456CCF1F54DEC900D54152 /* PearlProfiler.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CB41F54DEC900D54152 /* PearlProfiler.h */; };
+		DA456CD01F54DEC900D54152 /* PearlStringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA456CB51F54DEC900D54152 /* PearlStringUtils.swift */; };
+		DA456CD11F54DEC900D54152 /* map-macro.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CB71F54DEC900D54152 /* map-macro.h */; };
+		DA456CD21F54DEC900D54152 /* NSError+PearlFullDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CB81F54DEC900D54152 /* NSError+PearlFullDescription.h */; };
+		DA456CD31F54DEC900D54152 /* NSManagedObject+Pearl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CB91F54DEC900D54152 /* NSManagedObject+Pearl.h */; };
+		DA456CD41F54DEC900D54152 /* PearlTween.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CBA1F54DEC900D54152 /* PearlTween.h */; };
+		DA456CD51F54DEC900D54152 /* PearlTween.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CBB1F54DEC900D54152 /* PearlTween.m */; };
+		DA4570EC1F54DF0E00D54152 /* PearlLinks.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CD61F54DF0900D54152 /* PearlLinks.h */; };
+		DA4570ED1F54DF0E00D54152 /* PearlLinks.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CD71F54DF0900D54152 /* PearlLinks.m */; };
+		DA4570EE1F54DF0E00D54152 /* UICollectionView+PearlReloadItems.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CD81F54DF0900D54152 /* UICollectionView+PearlReloadItems.h */; };
+		DA4570EF1F54DF0E00D54152 /* UICollectionView+PearlReloadItems.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CD91F54DF0900D54152 /* UICollectionView+PearlReloadItems.m */; };
+		DA4570F01F54DF0E00D54152 /* UITableView+PearlReloadItems.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CDA1F54DF0900D54152 /* UITableView+PearlReloadItems.h */; };
+		DA4570F11F54DF0E00D54152 /* UITableView+PearlReloadItems.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CDB1F54DF0900D54152 /* UITableView+PearlReloadItems.m */; };
+		DA4570F21F54DF0E00D54152 /* PearlMutableStaticTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CDC1F54DF0900D54152 /* PearlMutableStaticTableViewController.h */; };
+		DA4570F31F54DF0E00D54152 /* PearlMutableStaticTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CDD1F54DF0900D54152 /* PearlMutableStaticTableViewController.m */; };
+		DA4570F41F54DF0E00D54152 /* UIScrollView+PearlAdjustInsets.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CDE1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.h */; };
+		DA4570F51F54DF0E00D54152 /* UIScrollView+PearlAdjustInsets.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CDF1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.m */; };
+		DA4570F61F54DF0E00D54152 /* UITextView+PearlAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CE01F54DF0900D54152 /* UITextView+PearlAttributes.m */; };
+		DA4570F71F54DF0E00D54152 /* UIView+AlphaScale.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE11F54DF0900D54152 /* UIView+AlphaScale.h */; };
+		DA4570F81F54DF0E00D54152 /* UIView+AlphaScale.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CE21F54DF0900D54152 /* UIView+AlphaScale.m */; };
+		DA4570F91F54DF0E00D54152 /* UIView+FontScale.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE31F54DF0900D54152 /* UIView+FontScale.h */; };
+		DA4570FA1F54DF0E00D54152 /* UIView+FontScale.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CE41F54DF0900D54152 /* UIView+FontScale.m */; };
+		DA4570FB1F54DF0E00D54152 /* UIView+Visible.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE51F54DF0900D54152 /* UIView+Visible.h */; };
+		DA4570FC1F54DF0E00D54152 /* UIView+Visible.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CE61F54DF0900D54152 /* UIView+Visible.m */; };
+		DA4570FD1F54DF0E00D54152 /* PearlNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE71F54DF0900D54152 /* PearlNavigationController.h */; };
+		DA4570FE1F54DF0E00D54152 /* PearlUINavigationBar.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE81F54DF0900D54152 /* PearlUINavigationBar.h */; };
+		DA4570FF1F54DF0E00D54152 /* UITableViewCell+PearlDeque.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CE91F54DF0900D54152 /* UITableViewCell+PearlDeque.h */; };
+		DA4571001F54DF0E00D54152 /* UITableViewCell+PearlDeque.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CEA1F54DF0900D54152 /* UITableViewCell+PearlDeque.m */; };
+		DA4571011F54DF0E00D54152 /* UITextView+PearlAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CEB1F54DF0900D54152 /* UITextView+PearlAttributes.h */; };
+		DA4571021F54DF0E00D54152 /* UIView+LayoutGone.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CEC1F54DF0900D54152 /* UIView+LayoutGone.m */; };
+		DA4571031F54DF0E00D54152 /* UIView+Touches.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CED1F54DF0900D54152 /* UIView+Touches.h */; };
+		DA4571041F54DF0E00D54152 /* NSLayoutConstraint+PearlUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CEE1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.h */; };
+		DA4571051F54DF0E00D54152 /* NSLayoutConstraint+PearlUIKit.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CEF1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.m */; };
+		DA4571061F54DF0E00D54152 /* PearlFixedTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CF01F54DF0900D54152 /* PearlFixedTableView.h */; };
+		DA4571071F54DF0E00D54152 /* PearlFixedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF11F54DF0900D54152 /* PearlFixedTableView.m */; };
+		DA4571081F54DF0E00D54152 /* PearlNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF21F54DF0900D54152 /* PearlNavigationController.m */; };
+		DA4571091F54DF0E00D54152 /* PearlOverlay.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CF31F54DF0900D54152 /* PearlOverlay.h */; };
+		DA45710A1F54DF0E00D54152 /* PearlOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF41F54DF0900D54152 /* PearlOverlay.m */; };
+		DA45710B1F54DF0E00D54152 /* PearlSizedTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CF51F54DF0900D54152 /* PearlSizedTextView.h */; };
+		DA45710C1F54DF0E00D54152 /* PearlSizedTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF61F54DF0900D54152 /* PearlSizedTextView.m */; };
+		DA45710D1F54DF0E00D54152 /* PearlUICollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA456CF71F54DF0900D54152 /* PearlUICollectionView.h */; };
+		DA45710E1F54DF0E00D54152 /* PearlUICollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF81F54DF0900D54152 /* PearlUICollectionView.m */; };
+		DA45710F1F54DF0E00D54152 /* PearlUINavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = DA456CF91F54DF0900D54152 /* PearlUINavigationBar.m */; };
+		DA4571101F54DF0F00D54152 /* UICollectionReusableView+PearlDequeue.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4570E61F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.h */; };
+		DA4571111F54DF0F00D54152 /* UICollectionReusableView+PearlDequeue.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4570E71F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.m */; };
+		DA4571121F54DF0F00D54152 /* UIResponder+PearlFirstResponder.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4570E81F54DF0E00D54152 /* UIResponder+PearlFirstResponder.h */; };
+		DA4571131F54DF0F00D54152 /* UIResponder+PearlFirstResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4570E91F54DF0E00D54152 /* UIResponder+PearlFirstResponder.m */; };
+		DA4571141F54DF0F00D54152 /* UIView+LayoutGone.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4570EA1F54DF0E00D54152 /* UIView+LayoutGone.h */; };
+		DA4571151F54DF0F00D54152 /* UIView+Touches.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4570EB1F54DF0E00D54152 /* UIView+Touches.m */; };
 		DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4416BAC40100F14463 /* NSArray+Indexing.h */; };
 		DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */ = {isa = PBXBuildFile; fileRef = DA692D4516BAC40100F14463 /* NSArray+Indexing.m */; };
 		DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */ = {isa = PBXBuildFile; fileRef = DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */; };
@@ -214,8 +276,6 @@
 		DAAD429B15286E9800AADDBD /* PearlArrayTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E114F438D400EB000C /* PearlArrayTVC.m */; };
 		DAAD429C15286E9800AADDBD /* PearlBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E314F438D400EB000C /* PearlBoxView.m */; };
 		DAAD429D15286E9800AADDBD /* PearlGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E714F438D400EB000C /* PearlGradientView.m */; };
-		DAAD429E15286E9800AADDBD /* PearlLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097E914F438D400EB000C /* PearlLayout.m */; };
-		DAAD429F15286E9800AADDBD /* PearlLayoutView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097EB14F438D400EB000C /* PearlLayoutView.m */; };
 		DAAD42A015286E9800AADDBD /* PearlMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA1097ED14F438D400EB000C /* PearlMessageView.m */; };
 		DAAD42A115286E9800AADDBD /* PearlRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BDE14F438D500EB000C /* PearlRootViewController.m */; };
 		DAAD42A215286E9800AADDBD /* PearlSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = DA109BE014F438D500EB000C /* PearlSheet.m */; };
@@ -257,8 +317,6 @@
 		DAAD42E715286E9800AADDBD /* PearlArrayTVC.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E014F438D400EB000C /* PearlArrayTVC.h */; };
 		DAAD42E815286E9800AADDBD /* PearlBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E214F438D400EB000C /* PearlBoxView.h */; };
 		DAAD42E915286E9800AADDBD /* PearlGradientView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E614F438D400EB000C /* PearlGradientView.h */; };
-		DAAD42EA15286E9800AADDBD /* PearlLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097E814F438D400EB000C /* PearlLayout.h */; };
-		DAAD42EB15286E9800AADDBD /* PearlLayoutView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EA14F438D400EB000C /* PearlLayoutView.h */; };
 		DAAD42EC15286E9800AADDBD /* PearlMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EC14F438D400EB000C /* PearlMessageView.h */; };
 		DAAD42ED15286E9800AADDBD /* Pearl-UIKit-Dependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */; };
 		DAAD42EE15286E9800AADDBD /* Pearl-UIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = DA1097EF14F438D400EB000C /* Pearl-UIKit.h */; };
@@ -747,10 +805,6 @@
 		DA1097E314F438D400EB000C /* PearlBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlBoxView.m; sourceTree = "<group>"; };
 		DA1097E614F438D400EB000C /* PearlGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGradientView.h; sourceTree = "<group>"; };
 		DA1097E714F438D400EB000C /* PearlGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlGradientView.m; sourceTree = "<group>"; };
-		DA1097E814F438D400EB000C /* PearlLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlLayout.h; sourceTree = "<group>"; };
-		DA1097E914F438D400EB000C /* PearlLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlLayout.m; sourceTree = "<group>"; };
-		DA1097EA14F438D400EB000C /* PearlLayoutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlLayoutView.h; sourceTree = "<group>"; };
-		DA1097EB14F438D400EB000C /* PearlLayoutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlLayoutView.m; sourceTree = "<group>"; };
 		DA1097EC14F438D400EB000C /* PearlMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlMessageView.h; sourceTree = "<group>"; };
 		DA1097ED14F438D400EB000C /* PearlMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlMessageView.m; sourceTree = "<group>"; };
 		DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Pearl-UIKit-Dependencies.h"; sourceTree = "<group>"; };
@@ -1854,8 +1908,6 @@
 		DA35097C15EE1A2900C14A8E /* PearlEMail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlEMail.h; sourceTree = "<group>"; };
 		DA35097D15EE1A2900C14A8E /* PearlEMail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlEMail.m; sourceTree = "<group>"; };
 		DA35098015EE1A3A00C14A8E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+PearlMutableInfo.h"; sourceTree = "<group>"; };
-		DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+PearlMutableInfo.m"; sourceTree = "<group>"; };
 		DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+RFC3339.h"; sourceTree = "<group>"; };
 		DA3EF1B315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+RFC3339.m"; sourceTree = "<group>"; };
 		DA3EF1B415A4CE6A003ABF4E /* NSObject+PearlExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PearlExport.h"; sourceTree = "<group>"; };
@@ -1892,6 +1944,70 @@
 		DA44258D1555734A0052177D /* PearlGLShaderPointSize_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSize_vert.h; sourceTree = "<group>"; };
 		DA44258E1555734A0052177D /* PearlGLShaderPointSprite_frag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_frag.h; sourceTree = "<group>"; };
 		DA44258F1555734A0052177D /* PearlGLShaderPointSprite_vert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlGLShaderPointSprite_vert.h; sourceTree = "<group>"; };
+		DA456CA51F54DEC900D54152 /* NSPersistentStore+PearlMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStore+PearlMigration.h"; sourceTree = "<group>"; };
+		DA456CA61F54DEC900D54152 /* NSPersistentStore+PearlMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStore+PearlMigration.m"; sourceTree = "<group>"; };
+		DA456CA71F54DEC900D54152 /* PearlHangDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlHangDetector.h; sourceTree = "<group>"; };
+		DA456CA81F54DEC900D54152 /* PearlHangDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlHangDetector.m; sourceTree = "<group>"; };
+		DA456CA91F54DEC900D54152 /* NSMutableSet+Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Pearl.h"; sourceTree = "<group>"; };
+		DA456CAA1F54DEC900D54152 /* NSMutableSet+Pearl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Pearl.m"; sourceTree = "<group>"; };
+		DA456CAB1F54DEC900D54152 /* NSNotificationCenter+PearlEasyCleanup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNotificationCenter+PearlEasyCleanup.h"; sourceTree = "<group>"; };
+		DA456CAC1F54DEC900D54152 /* NSOrderedSetOrArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOrderedSetOrArray.h; sourceTree = "<group>"; };
+		DA456CAD1F54DEC900D54152 /* NSOrderedSetOrArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOrderedSetOrArray.m; sourceTree = "<group>"; };
+		DA456CAE1F54DEC900D54152 /* PearlProfiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlProfiler.m; sourceTree = "<group>"; };
+		DA456CAF1F54DEC900D54152 /* NSArray+Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Pearl.h"; sourceTree = "<group>"; };
+		DA456CB01F54DEC900D54152 /* NSArray+Pearl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Pearl.m"; sourceTree = "<group>"; };
+		DA456CB11F54DEC900D54152 /* NSError+PearlFullDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+PearlFullDescription.m"; sourceTree = "<group>"; };
+		DA456CB21F54DEC900D54152 /* NSManagedObject+Pearl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Pearl.m"; sourceTree = "<group>"; };
+		DA456CB31F54DEC900D54152 /* PearlLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PearlLogger.swift; sourceTree = "<group>"; };
+		DA456CB41F54DEC900D54152 /* PearlProfiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlProfiler.h; sourceTree = "<group>"; };
+		DA456CB51F54DEC900D54152 /* PearlStringUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PearlStringUtils.swift; sourceTree = "<group>"; };
+		DA456CB71F54DEC900D54152 /* map-macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "map-macro.h"; sourceTree = "<group>"; };
+		DA456CB81F54DEC900D54152 /* NSError+PearlFullDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+PearlFullDescription.h"; sourceTree = "<group>"; };
+		DA456CB91F54DEC900D54152 /* NSManagedObject+Pearl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+Pearl.h"; sourceTree = "<group>"; };
+		DA456CBA1F54DEC900D54152 /* PearlTween.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlTween.h; sourceTree = "<group>"; };
+		DA456CBB1F54DEC900D54152 /* PearlTween.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlTween.m; sourceTree = "<group>"; };
+		DA456CD61F54DF0900D54152 /* PearlLinks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlLinks.h; sourceTree = "<group>"; };
+		DA456CD71F54DF0900D54152 /* PearlLinks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlLinks.m; sourceTree = "<group>"; };
+		DA456CD81F54DF0900D54152 /* UICollectionView+PearlReloadItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+PearlReloadItems.h"; sourceTree = "<group>"; };
+		DA456CD91F54DF0900D54152 /* UICollectionView+PearlReloadItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UICollectionView+PearlReloadItems.m"; sourceTree = "<group>"; };
+		DA456CDA1F54DF0900D54152 /* UITableView+PearlReloadItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+PearlReloadItems.h"; sourceTree = "<group>"; };
+		DA456CDB1F54DF0900D54152 /* UITableView+PearlReloadItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+PearlReloadItems.m"; sourceTree = "<group>"; };
+		DA456CDC1F54DF0900D54152 /* PearlMutableStaticTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlMutableStaticTableViewController.h; sourceTree = "<group>"; };
+		DA456CDD1F54DF0900D54152 /* PearlMutableStaticTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlMutableStaticTableViewController.m; sourceTree = "<group>"; };
+		DA456CDE1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+PearlAdjustInsets.h"; sourceTree = "<group>"; };
+		DA456CDF1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+PearlAdjustInsets.m"; sourceTree = "<group>"; };
+		DA456CE01F54DF0900D54152 /* UITextView+PearlAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PearlAttributes.m"; sourceTree = "<group>"; };
+		DA456CE11F54DF0900D54152 /* UIView+AlphaScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AlphaScale.h"; sourceTree = "<group>"; };
+		DA456CE21F54DF0900D54152 /* UIView+AlphaScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AlphaScale.m"; sourceTree = "<group>"; };
+		DA456CE31F54DF0900D54152 /* UIView+FontScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FontScale.h"; sourceTree = "<group>"; };
+		DA456CE41F54DF0900D54152 /* UIView+FontScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FontScale.m"; sourceTree = "<group>"; };
+		DA456CE51F54DF0900D54152 /* UIView+Visible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Visible.h"; sourceTree = "<group>"; };
+		DA456CE61F54DF0900D54152 /* UIView+Visible.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Visible.m"; sourceTree = "<group>"; };
+		DA456CE71F54DF0900D54152 /* PearlNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlNavigationController.h; sourceTree = "<group>"; };
+		DA456CE81F54DF0900D54152 /* PearlUINavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlUINavigationBar.h; sourceTree = "<group>"; };
+		DA456CE91F54DF0900D54152 /* UITableViewCell+PearlDeque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+PearlDeque.h"; sourceTree = "<group>"; };
+		DA456CEA1F54DF0900D54152 /* UITableViewCell+PearlDeque.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+PearlDeque.m"; sourceTree = "<group>"; };
+		DA456CEB1F54DF0900D54152 /* UITextView+PearlAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PearlAttributes.h"; sourceTree = "<group>"; };
+		DA456CEC1F54DF0900D54152 /* UIView+LayoutGone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+LayoutGone.m"; sourceTree = "<group>"; };
+		DA456CED1F54DF0900D54152 /* UIView+Touches.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Touches.h"; sourceTree = "<group>"; };
+		DA456CEE1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLayoutConstraint+PearlUIKit.h"; sourceTree = "<group>"; };
+		DA456CEF1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+PearlUIKit.m"; sourceTree = "<group>"; };
+		DA456CF01F54DF0900D54152 /* PearlFixedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlFixedTableView.h; sourceTree = "<group>"; };
+		DA456CF11F54DF0900D54152 /* PearlFixedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlFixedTableView.m; sourceTree = "<group>"; };
+		DA456CF21F54DF0900D54152 /* PearlNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlNavigationController.m; sourceTree = "<group>"; };
+		DA456CF31F54DF0900D54152 /* PearlOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlOverlay.h; sourceTree = "<group>"; };
+		DA456CF41F54DF0900D54152 /* PearlOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlOverlay.m; sourceTree = "<group>"; };
+		DA456CF51F54DF0900D54152 /* PearlSizedTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlSizedTextView.h; sourceTree = "<group>"; };
+		DA456CF61F54DF0900D54152 /* PearlSizedTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlSizedTextView.m; sourceTree = "<group>"; };
+		DA456CF71F54DF0900D54152 /* PearlUICollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlUICollectionView.h; sourceTree = "<group>"; };
+		DA456CF81F54DF0900D54152 /* PearlUICollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlUICollectionView.m; sourceTree = "<group>"; };
+		DA456CF91F54DF0900D54152 /* PearlUINavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlUINavigationBar.m; sourceTree = "<group>"; };
+		DA4570E61F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionReusableView+PearlDequeue.h"; sourceTree = "<group>"; };
+		DA4570E71F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UICollectionReusableView+PearlDequeue.m"; sourceTree = "<group>"; };
+		DA4570E81F54DF0E00D54152 /* UIResponder+PearlFirstResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+PearlFirstResponder.h"; sourceTree = "<group>"; };
+		DA4570E91F54DF0E00D54152 /* UIResponder+PearlFirstResponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+PearlFirstResponder.m"; sourceTree = "<group>"; };
+		DA4570EA1F54DF0E00D54152 /* UIView+LayoutGone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+LayoutGone.h"; sourceTree = "<group>"; };
+		DA4570EB1F54DF0E00D54152 /* UIView+Touches.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Touches.m"; sourceTree = "<group>"; };
 		DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PearlAppDelegate.h; sourceTree = "<group>"; };
 		DA600BD2150411D5008E9AB6 /* PearlAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PearlAppDelegate.m; sourceTree = "<group>"; };
 		DA692D4416BAC40100F14463 /* NSArray+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Indexing.h"; sourceTree = "<group>"; };
@@ -2287,19 +2403,19 @@
 		DA10976714F438D400EB000C /* Pearl-Cocos2D */ = {
 			isa = PBXGroup;
 			children = (
+				DA10976A14F438D400EB000C /* Actions */,
+				DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */,
+				DA10977214F438D400EB000C /* Pearl-Cocos2D.h */,
 				DA3EF1D215A4CE80003ABF4E /* Pearl-Cocos2D.m */,
+				DA10976F14F438D400EB000C /* PearlCCDebug.h */,
+				DA10977014F438D400EB000C /* PearlCCDebug.m */,
+				DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */,
+				DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */,
+				DA10977314F438D400EB000C /* PearlCocos2DStrings.h */,
+				DA10977414F438D400EB000C /* PearlCocos2DStrings.m */,
 				DA442589155573490052177D /* PearlGLShaders.h */,
 				DA44258A155573490052177D /* PearlGLShaders.m */,
 				DA44258B1555734A0052177D /* private */,
-				DA10976814F438D400EB000C /* PearlCocos2DAppDelegate.h */,
-				DA10976914F438D400EB000C /* PearlCocos2DAppDelegate.m */,
-				DA10976A14F438D400EB000C /* Actions */,
-				DA10976F14F438D400EB000C /* PearlCCDebug.h */,
-				DA10977014F438D400EB000C /* PearlCCDebug.m */,
-				DA10977114F438D400EB000C /* Pearl-Cocos2D-Dependencies.h */,
-				DA10977214F438D400EB000C /* Pearl-Cocos2D.h */,
-				DA10977314F438D400EB000C /* PearlCocos2DStrings.h */,
-				DA10977414F438D400EB000C /* PearlCocos2DStrings.m */,
 				DA10977514F438D400EB000C /* README */,
 				DA10977614F438D400EB000C /* Resources */,
 				DA1097A314F438D400EB000C /* View */,
@@ -2421,15 +2537,15 @@
 			isa = PBXGroup;
 			children = (
 				DAFFC61417ED44A1007BB020 /* lib */,
+				DA1097D314F438D400EB000C /* Pearl-Crypto.h */,
 				DA3EF1D415A4CEBB003ABF4E /* Pearl-Crypto.m */,
 				DA1097CF14F438D400EB000C /* PearlCryptUtils.h */,
 				DA1097D014F438D400EB000C /* PearlCryptUtils.m */,
 				DA1097D114F438D400EB000C /* PearlKeyChain.h */,
 				DA1097D214F438D400EB000C /* PearlKeyChain.m */,
-				DA1097D314F438D400EB000C /* Pearl-Crypto.h */,
-				DA1097D414F438D400EB000C /* README */,
 				DA1097D514F438D400EB000C /* PearlRSAKey.h */,
 				DA1097D614F438D400EB000C /* PearlRSAKey.m */,
+				DA1097D414F438D400EB000C /* README */,
 			);
 			path = "Pearl-Crypto";
 			sourceTree = "<group>";
@@ -2437,10 +2553,10 @@
 		DA1097D914F438D400EB000C /* Pearl-Media */ = {
 			isa = PBXGroup;
 			children = (
+				DA1097DC14F438D400EB000C /* Pearl-Media.h */,
 				DA3EF1D715A4CEC9003ABF4E /* Pearl-Media.m */,
 				DA1097DA14F438D400EB000C /* PearlAudioController.h */,
 				DA1097DB14F438D400EB000C /* PearlAudioController.m */,
-				DA1097DC14F438D400EB000C /* Pearl-Media.h */,
 			);
 			path = "Pearl-Media";
 			sourceTree = "<group>";
@@ -2448,17 +2564,11 @@
 		DA1097DD14F438D400EB000C /* Pearl-UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				DA35097C15EE1A2900C14A8E /* PearlEMail.h */,
-				DA35097D15EE1A2900C14A8E /* PearlEMail.m */,
+				DA456CEE1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.h */,
+				DA456CEF1F54DF0900D54152 /* NSLayoutConstraint+PearlUIKit.m */,
+				DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */,
+				DA1097EF14F438D400EB000C /* Pearl-UIKit.h */,
 				DA3EF1DA15A4CEF9003ABF4E /* Pearl-UIKit.m */,
-				DA3EF1DB15A4CEF9003ABF4E /* UIControl+PearlBlocks.h */,
-				DA3EF1DC15A4CEF9003ABF4E /* UIControl+PearlBlocks.m */,
-				DA3EF1DD15A4CEF9003ABF4E /* UIControl+PearlSelect.h */,
-				DA3EF1DE15A4CEF9003ABF4E /* UIControl+PearlSelect.m */,
-				DA3EF1DF15A4CEF9003ABF4E /* UIImage+PearlScaling.h */,
-				DA3EF1E015A4CEF9003ABF4E /* UIImage+PearlScaling.m */,
-				DA3EF1E115A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.h */,
-				DA3EF1E215A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.m */,
 				DA1097DE14F438D400EB000C /* PearlAlert.h */,
 				DA1097DF14F438D400EB000C /* PearlAlert.m */,
 				DA600BD1150411D5008E9AB6 /* PearlAppDelegate.h */,
@@ -2467,28 +2577,72 @@
 				DA1097E114F438D400EB000C /* PearlArrayTVC.m */,
 				DA1097E214F438D400EB000C /* PearlBoxView.h */,
 				DA1097E314F438D400EB000C /* PearlBoxView.m */,
+				DA35097C15EE1A2900C14A8E /* PearlEMail.h */,
+				DA35097D15EE1A2900C14A8E /* PearlEMail.m */,
+				DA456CF01F54DF0900D54152 /* PearlFixedTableView.h */,
+				DA456CF11F54DF0900D54152 /* PearlFixedTableView.m */,
 				DA1097E614F438D400EB000C /* PearlGradientView.h */,
 				DA1097E714F438D400EB000C /* PearlGradientView.m */,
-				DA1097E814F438D400EB000C /* PearlLayout.h */,
-				DA1097E914F438D400EB000C /* PearlLayout.m */,
-				DA1097EA14F438D400EB000C /* PearlLayoutView.h */,
-				DA1097EB14F438D400EB000C /* PearlLayoutView.m */,
+				DA456CD61F54DF0900D54152 /* PearlLinks.h */,
+				DA456CD71F54DF0900D54152 /* PearlLinks.m */,
 				DA1097EC14F438D400EB000C /* PearlMessageView.h */,
 				DA1097ED14F438D400EB000C /* PearlMessageView.m */,
-				DA1097EE14F438D400EB000C /* Pearl-UIKit-Dependencies.h */,
-				DA1097EF14F438D400EB000C /* Pearl-UIKit.h */,
-				DA1097F014F438D400EB000C /* README */,
-				DA1097F114F438D400EB000C /* Resources */,
+				DA456CDC1F54DF0900D54152 /* PearlMutableStaticTableViewController.h */,
+				DA456CDD1F54DF0900D54152 /* PearlMutableStaticTableViewController.m */,
+				DA456CE71F54DF0900D54152 /* PearlNavigationController.h */,
+				DA456CF21F54DF0900D54152 /* PearlNavigationController.m */,
+				DA456CF31F54DF0900D54152 /* PearlOverlay.h */,
+				DA456CF41F54DF0900D54152 /* PearlOverlay.m */,
 				DA109BDD14F438D500EB000C /* PearlRootViewController.h */,
 				DA109BDE14F438D500EB000C /* PearlRootViewController.m */,
 				DA109BDF14F438D500EB000C /* PearlSheet.h */,
 				DA109BE014F438D500EB000C /* PearlSheet.m */,
+				DA456CF51F54DF0900D54152 /* PearlSizedTextView.h */,
+				DA456CF61F54DF0900D54152 /* PearlSizedTextView.m */,
+				DA456CF71F54DF0900D54152 /* PearlUICollectionView.h */,
+				DA456CF81F54DF0900D54152 /* PearlUICollectionView.m */,
 				DA109BE114F438D500EB000C /* PearlUIDebug.h */,
 				DA109BE214F438D500EB000C /* PearlUIDebug.m */,
+				DA456CE81F54DF0900D54152 /* PearlUINavigationBar.h */,
+				DA456CF91F54DF0900D54152 /* PearlUINavigationBar.m */,
 				DA109BE514F438D500EB000C /* PearlUIUtils.h */,
 				DA109BE614F438D500EB000C /* PearlUIUtils.m */,
 				DA109BE714F438D500EB000C /* PearlValidatingTextField.h */,
 				DA109BE814F438D500EB000C /* PearlValidatingTextField.m */,
+				DA1097F014F438D400EB000C /* README */,
+				DA1097F114F438D400EB000C /* Resources */,
+				DA4570E61F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.h */,
+				DA4570E71F54DF0E00D54152 /* UICollectionReusableView+PearlDequeue.m */,
+				DA456CD81F54DF0900D54152 /* UICollectionView+PearlReloadItems.h */,
+				DA456CD91F54DF0900D54152 /* UICollectionView+PearlReloadItems.m */,
+				DA3EF1DB15A4CEF9003ABF4E /* UIControl+PearlBlocks.h */,
+				DA3EF1DC15A4CEF9003ABF4E /* UIControl+PearlBlocks.m */,
+				DA3EF1DD15A4CEF9003ABF4E /* UIControl+PearlSelect.h */,
+				DA3EF1DE15A4CEF9003ABF4E /* UIControl+PearlSelect.m */,
+				DA3EF1DF15A4CEF9003ABF4E /* UIImage+PearlScaling.h */,
+				DA3EF1E015A4CEF9003ABF4E /* UIImage+PearlScaling.m */,
+				DA4570E81F54DF0E00D54152 /* UIResponder+PearlFirstResponder.h */,
+				DA4570E91F54DF0E00D54152 /* UIResponder+PearlFirstResponder.m */,
+				DA456CDE1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.h */,
+				DA456CDF1F54DF0900D54152 /* UIScrollView+PearlAdjustInsets.m */,
+				DA3EF1E115A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.h */,
+				DA3EF1E215A4CEF9003ABF4E /* UIScrollView+PearlFlashingIndicators.m */,
+				DA456CDA1F54DF0900D54152 /* UITableView+PearlReloadItems.h */,
+				DA456CDB1F54DF0900D54152 /* UITableView+PearlReloadItems.m */,
+				DA456CE91F54DF0900D54152 /* UITableViewCell+PearlDeque.h */,
+				DA456CEA1F54DF0900D54152 /* UITableViewCell+PearlDeque.m */,
+				DA456CEB1F54DF0900D54152 /* UITextView+PearlAttributes.h */,
+				DA456CE01F54DF0900D54152 /* UITextView+PearlAttributes.m */,
+				DA456CE11F54DF0900D54152 /* UIView+AlphaScale.h */,
+				DA456CE21F54DF0900D54152 /* UIView+AlphaScale.m */,
+				DA456CE31F54DF0900D54152 /* UIView+FontScale.h */,
+				DA456CE41F54DF0900D54152 /* UIView+FontScale.m */,
+				DA4570EA1F54DF0E00D54152 /* UIView+LayoutGone.h */,
+				DA456CEC1F54DF0900D54152 /* UIView+LayoutGone.m */,
+				DA456CED1F54DF0900D54152 /* UIView+Touches.h */,
+				DA4570EB1F54DF0E00D54152 /* UIView+Touches.m */,
+				DA456CE51F54DF0900D54152 /* UIView+Visible.h */,
+				DA456CE61F54DF0900D54152 /* UIView+Visible.m */,
 			);
 			path = "Pearl-UIKit";
 			sourceTree = "<group>";
@@ -3520,10 +3674,10 @@
 		DA109BEB14F438D500EB000C /* Pearl-WS */ = {
 			isa = PBXGroup;
 			children = (
+				DA109BEE14F438D500EB000C /* Pearl-WS.h */,
 				DA3EF1EC15A4CF07003ABF4E /* Pearl-WS.m */,
 				DA109BEC14F438D500EB000C /* PearlWSController.h */,
 				DA109BED14F438D500EB000C /* PearlWSController.m */,
-				DA109BEE14F438D500EB000C /* Pearl-WS.h */,
 				DA109BEF14F438D500EB000C /* PearlWSStrings.h */,
 				DA109BF014F438D500EB000C /* PearlWSStrings.m */,
 				DA109BF114F438D500EB000C /* README */,
@@ -3858,6 +4012,14 @@
 			path = private;
 			sourceTree = "<group>";
 		};
+		DA456CB61F54DEC900D54152 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				DA456CB71F54DEC900D54152 /* map-macro.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 		DAAD42391528648000AADDBD /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -3976,30 +4138,38 @@
 		DADD1E2414F3BE5500413D09 /* Pearl */ = {
 			isa = PBXGroup;
 			children = (
+				DA456CB61F54DEC900D54152 /* include */,
 				DA692D4416BAC40100F14463 /* NSArray+Indexing.h */,
 				DA692D4516BAC40100F14463 /* NSArray+Indexing.m */,
-				DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */,
-				DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */,
-				DA3EF1B015A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h */,
-				DA3EF1B115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m */,
+				DA456CAF1F54DEC900D54152 /* NSArray+Pearl.h */,
+				DA456CB01F54DEC900D54152 /* NSArray+Pearl.m */,
 				DA3EF1B215A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h */,
 				DA3EF1B315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.m */,
+				DA692D4616BAC40100F14463 /* NSDictionary+Indexing.h */,
+				DA692D4716BAC40100F14463 /* NSDictionary+Indexing.m */,
+				DA456CB81F54DEC900D54152 /* NSError+PearlFullDescription.h */,
+				DA456CB11F54DEC900D54152 /* NSError+PearlFullDescription.m */,
+				DA456CB91F54DEC900D54152 /* NSManagedObject+Pearl.h */,
+				DA456CB21F54DEC900D54152 /* NSManagedObject+Pearl.m */,
+				DA456CA91F54DEC900D54152 /* NSMutableSet+Pearl.h */,
+				DA456CAA1F54DEC900D54152 /* NSMutableSet+Pearl.m */,
+				DA456CAB1F54DEC900D54152 /* NSNotificationCenter+PearlEasyCleanup.h */,
 				DA3EF1B415A4CE6A003ABF4E /* NSObject+PearlExport.h */,
 				DA3EF1B515A4CE6A003ABF4E /* NSObject+PearlExport.m */,
 				DA3EF1B615A4CE6A003ABF4E /* NSObject+PearlKVO.h */,
 				DA3EF1B715A4CE6A003ABF4E /* NSObject+PearlKVO.m */,
+				DA456CAC1F54DEC900D54152 /* NSOrderedSetOrArray.h */,
+				DA456CAD1F54DEC900D54152 /* NSOrderedSetOrArray.m */,
+				DA456CA51F54DEC900D54152 /* NSPersistentStore+PearlMigration.h */,
+				DA456CA61F54DEC900D54152 /* NSPersistentStore+PearlMigration.m */,
 				DA3EF1B815A4CE6A003ABF4E /* NSString+PearlNSArrayFormat.h */,
 				DA3EF1B915A4CE6A003ABF4E /* NSString+PearlNSArrayFormat.m */,
 				DA3EF1BA15A4CE6A003ABF4E /* NSString+PearlSEL.h */,
 				DA3EF1BB15A4CE6A003ABF4E /* NSString+PearlSEL.m */,
-				DA3EF1BC15A4CE6A003ABF4E /* Pearl.m */,
-				DA3EF1BD15A4CE6A003ABF4E /* PearlLazy.h */,
-				DA3EF1BE15A4CE6A003ABF4E /* PearlLazy.m */,
-				DA3EF1BF15A4CE6A003ABF4E /* PearlQueue.h */,
-				DA3EF1C015A4CE6A003ABF4E /* PearlQueue.m */,
-				DA10972314F438C300EB000C /* PearlInfoPlist.h */,
-				DA10972414F438C300EB000C /* PearlInfoPlist.m */,
+				93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */,
+				93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */,
 				DA10972B14F438C300EB000C /* Pearl.h */,
+				DA3EF1BC15A4CE6A003ABF4E /* Pearl.m */,
 				DA10972C14F438C300EB000C /* PearlAbstractStrings.h */,
 				DA10972D14F438C300EB000C /* PearlAbstractStrings.m */,
 				DA10973014F438C300EB000C /* PearlCodeUtils.h */,
@@ -4008,21 +4178,33 @@
 				DA10973314F438C300EB000C /* PearlConfig.m */,
 				DA10973414F438C300EB000C /* PearlDeviceUtils.h */,
 				DA10973514F438C300EB000C /* PearlDeviceUtils.m */,
+				DA456CA71F54DEC900D54152 /* PearlHangDetector.h */,
+				DA456CA81F54DEC900D54152 /* PearlHangDetector.m */,
+				DA10972314F438C300EB000C /* PearlInfoPlist.h */,
+				DA10972414F438C300EB000C /* PearlInfoPlist.m */,
+				DA3EF1BD15A4CE6A003ABF4E /* PearlLazy.h */,
+				DA3EF1BE15A4CE6A003ABF4E /* PearlLazy.m */,
 				DA10973614F438C300EB000C /* PearlLogger.h */,
 				DA10973714F438C300EB000C /* PearlLogger.m */,
+				DA456CB31F54DEC900D54152 /* PearlLogger.swift */,
 				DA10973814F438C300EB000C /* PearlMathUtils.h */,
 				DA10973914F438C300EB000C /* PearlMathUtils.m */,
 				DA10973A14F438C300EB000C /* PearlObjectUtils.h */,
 				DA10973B14F438C300EB000C /* PearlObjectUtils.m */,
+				DA456CB41F54DEC900D54152 /* PearlProfiler.h */,
+				DA456CAE1F54DEC900D54152 /* PearlProfiler.m */,
+				DA3EF1BF15A4CE6A003ABF4E /* PearlQueue.h */,
+				DA3EF1C015A4CE6A003ABF4E /* PearlQueue.m */,
 				DA10973C14F438C300EB000C /* PearlResettable.h */,
 				DA10973D14F438C300EB000C /* PearlStrings.h */,
 				DA10973E14F438C300EB000C /* PearlStrings.m */,
-				DA10974114F438C300EB000C /* README */,
-				DA10974214F438C300EB000C /* Resources */,
 				DA10974514F438C300EB000C /* PearlStringUtils.h */,
 				DA10974614F438C300EB000C /* PearlStringUtils.m */,
-				93D391A46267B4D9BF7B9FC9 /* NSTimer+PearlBlock.h */,
-				93D39548E879DA5A0ABD6A19 /* NSTimer+PearlBlock.m */,
+				DA456CB51F54DEC900D54152 /* PearlStringUtils.swift */,
+				DA456CBA1F54DEC900D54152 /* PearlTween.h */,
+				DA456CBB1F54DEC900D54152 /* PearlTween.m */,
+				DA10974114F438C300EB000C /* README */,
+				DA10974214F438C300EB000C /* Resources */,
 			);
 			path = Pearl;
 			sourceTree = "<group>";
@@ -4443,8 +4625,6 @@
 				DAAD42E715286E9800AADDBD /* PearlArrayTVC.h in Headers */,
 				DAAD42E815286E9800AADDBD /* PearlBoxView.h in Headers */,
 				DAAD42E915286E9800AADDBD /* PearlGradientView.h in Headers */,
-				DAAD42EA15286E9800AADDBD /* PearlLayout.h in Headers */,
-				DAAD42EB15286E9800AADDBD /* PearlLayoutView.h in Headers */,
 				DAAD42EC15286E9800AADDBD /* PearlMessageView.h in Headers */,
 				DAAD42ED15286E9800AADDBD /* Pearl-UIKit-Dependencies.h in Headers */,
 				DAAD42EE15286E9800AADDBD /* Pearl-UIKit.h in Headers */,
@@ -4486,34 +4666,65 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA4570F91F54DF0E00D54152 /* UIView+FontScale.h in Headers */,
 				DA10974714F438C300EB000C /* PearlInfoPlist.h in Headers */,
+				DA456CCF1F54DEC900D54152 /* PearlProfiler.h in Headers */,
 				DA10974F14F438C300EB000C /* Pearl.h in Headers */,
+				DA4571011F54DF0E00D54152 /* UITextView+PearlAttributes.h in Headers */,
+				DA4570F71F54DF0E00D54152 /* UIView+AlphaScale.h in Headers */,
 				DA10975014F438C300EB000C /* PearlAbstractStrings.h in Headers */,
+				DA456CC21F54DEC900D54152 /* PearlHangDetector.h in Headers */,
+				DA456CCA1F54DEC900D54152 /* NSArray+Pearl.h in Headers */,
+				DA456CD21F54DEC900D54152 /* NSError+PearlFullDescription.h in Headers */,
 				DA10975414F438C300EB000C /* PearlCodeUtils.h in Headers */,
 				DA10975614F438C300EB000C /* PearlConfig.h in Headers */,
 				DA10975814F438C300EB000C /* PearlDeviceUtils.h in Headers */,
+				DA4570F41F54DF0E00D54152 /* UIScrollView+PearlAdjustInsets.h in Headers */,
+				DA4570EC1F54DF0E00D54152 /* PearlLinks.h in Headers */,
 				DA10975A14F438C300EB000C /* PearlLogger.h in Headers */,
 				DA10975C14F438C300EB000C /* PearlMathUtils.h in Headers */,
+				DA45710B1F54DF0E00D54152 /* PearlSizedTextView.h in Headers */,
 				DA10975E14F438C300EB000C /* PearlObjectUtils.h in Headers */,
+				DA456CD31F54DEC900D54152 /* NSManagedObject+Pearl.h in Headers */,
 				DA10976014F438C300EB000C /* PearlResettable.h in Headers */,
+				DA4570FE1F54DF0E00D54152 /* PearlUINavigationBar.h in Headers */,
 				DA10976114F438C300EB000C /* PearlStrings.h in Headers */,
+				DA4571041F54DF0E00D54152 /* NSLayoutConstraint+PearlUIKit.h in Headers */,
 				DA10976514F438C300EB000C /* PearlStringUtils.h in Headers */,
 				DA109C3214F438D600EB000C /* PearlAudioController.h in Headers */,
+				DA456CD41F54DEC900D54152 /* PearlTween.h in Headers */,
 				DA109C3414F438D600EB000C /* Pearl-Media.h in Headers */,
+				DA4571141F54DF0F00D54152 /* UIView+LayoutGone.h in Headers */,
+				DA4570FB1F54DF0E00D54152 /* UIView+Visible.h in Headers */,
 				DA109C5514F438D600EB000C /* PearlWSController.h in Headers */,
+				DA45710D1F54DF0E00D54152 /* PearlUICollectionView.h in Headers */,
 				DA109C5714F438D600EB000C /* Pearl-WS.h in Headers */,
 				DA109C5814F438D600EB000C /* PearlWSStrings.h in Headers */,
-				DA3EF1C115A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.h in Headers */,
+				DA4571031F54DF0E00D54152 /* UIView+Touches.h in Headers */,
 				DA3EF1C315A4CE6A003ABF4E /* NSDateFormatter+RFC3339.h in Headers */,
+				DA456CC71F54DEC900D54152 /* NSOrderedSetOrArray.h in Headers */,
+				DA4570F21F54DF0E00D54152 /* PearlMutableStaticTableViewController.h in Headers */,
+				DA456CC41F54DEC900D54152 /* NSMutableSet+Pearl.h in Headers */,
+				DA456CC01F54DEC900D54152 /* NSPersistentStore+PearlMigration.h in Headers */,
 				DA3EF1C515A4CE6A003ABF4E /* NSObject+PearlExport.h in Headers */,
+				DA456CD11F54DEC900D54152 /* map-macro.h in Headers */,
+				DA4570FD1F54DF0E00D54152 /* PearlNavigationController.h in Headers */,
+				DA4570EE1F54DF0E00D54152 /* UICollectionView+PearlReloadItems.h in Headers */,
+				DA4570F01F54DF0E00D54152 /* UITableView+PearlReloadItems.h in Headers */,
+				DA4571101F54DF0F00D54152 /* UICollectionReusableView+PearlDequeue.h in Headers */,
 				DA3EF1C715A4CE6A003ABF4E /* NSObject+PearlKVO.h in Headers */,
 				DA3EF1C915A4CE6A003ABF4E /* NSString+PearlNSArrayFormat.h in Headers */,
+				DA4571091F54DF0E00D54152 /* PearlOverlay.h in Headers */,
+				DA4571121F54DF0F00D54152 /* UIResponder+PearlFirstResponder.h in Headers */,
 				DA3EF1CB15A4CE6A003ABF4E /* NSString+PearlSEL.h in Headers */,
 				DA3EF1CE15A4CE6A003ABF4E /* PearlLazy.h in Headers */,
 				DA3EF1D015A4CE6A003ABF4E /* PearlQueue.h in Headers */,
 				93D39E4DFC95FC5F749CEFF7 /* NSTimer+PearlBlock.h in Headers */,
 				DA692D4816BAC40100F14463 /* NSArray+Indexing.h in Headers */,
+				DA4571061F54DF0E00D54152 /* PearlFixedTableView.h in Headers */,
 				DA692D4A16BAC40100F14463 /* NSDictionary+Indexing.h in Headers */,
+				DA456CC61F54DEC900D54152 /* NSNotificationCenter+PearlEasyCleanup.h in Headers */,
+				DA4570FF1F54DF0E00D54152 /* UITableViewCell+PearlDeque.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4749,6 +4960,11 @@
 				CLASSPREFIX = Pearl;
 				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = Lyndir;
+				TargetAttributes = {
+					DADD1E1E14F3BE5500413D09 = {
+						LastSwiftMigration = 0830;
+					};
+				};
 			};
 			buildConfigurationList = DADD1E1914F3BE5500413D09 /* Build configuration list for PBXProject "Pearl" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -4762,6 +4978,7 @@
 				ja,
 				ru,
 				"zh-Hans",
+				nl,
 			);
 			mainGroup = DADD1E1414F3BE5500413D09;
 			productRefGroup = DADD1E2014F3BE5500413D09 /* Products */;
@@ -5032,8 +5249,6 @@
 				DAAD429B15286E9800AADDBD /* PearlArrayTVC.m in Sources */,
 				DAAD429C15286E9800AADDBD /* PearlBoxView.m in Sources */,
 				DAAD429D15286E9800AADDBD /* PearlGradientView.m in Sources */,
-				DAAD429E15286E9800AADDBD /* PearlLayout.m in Sources */,
-				DAAD429F15286E9800AADDBD /* PearlLayoutView.m in Sources */,
 				DAAD42A015286E9800AADDBD /* PearlMessageView.m in Sources */,
 				DAAD42A115286E9800AADDBD /* PearlRootViewController.m in Sources */,
 				DAAD42A215286E9800AADDBD /* PearlSheet.m in Sources */,
@@ -5089,32 +5304,63 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA456CCD1F54DEC900D54152 /* NSManagedObject+Pearl.m in Sources */,
 				DA10974814F438C300EB000C /* PearlInfoPlist.m in Sources */,
+				DA456CC91F54DEC900D54152 /* PearlProfiler.m in Sources */,
 				DA10975114F438C300EB000C /* PearlAbstractStrings.m in Sources */,
 				DA10975514F438C300EB000C /* PearlCodeUtils.m in Sources */,
+				DA4570FC1F54DF0E00D54152 /* UIView+Visible.m in Sources */,
 				DA10975714F438C300EB000C /* PearlConfig.m in Sources */,
 				DA10975914F438C300EB000C /* PearlDeviceUtils.m in Sources */,
+				DA456CC11F54DEC900D54152 /* NSPersistentStore+PearlMigration.m in Sources */,
+				DA456CD51F54DEC900D54152 /* PearlTween.m in Sources */,
 				DA10975B14F438C300EB000C /* PearlLogger.m in Sources */,
+				DA4570FA1F54DF0E00D54152 /* UIView+FontScale.m in Sources */,
+				DA456CCC1F54DEC900D54152 /* NSError+PearlFullDescription.m in Sources */,
 				DA10975D14F438C300EB000C /* PearlMathUtils.m in Sources */,
 				DA10975F14F438C300EB000C /* PearlObjectUtils.m in Sources */,
+				DA4571131F54DF0F00D54152 /* UIResponder+PearlFirstResponder.m in Sources */,
+				DA456CC51F54DEC900D54152 /* NSMutableSet+Pearl.m in Sources */,
+				DA4570F61F54DF0E00D54152 /* UITextView+PearlAttributes.m in Sources */,
+				DA456CC81F54DEC900D54152 /* NSOrderedSetOrArray.m in Sources */,
+				DA4570F81F54DF0E00D54152 /* UIView+AlphaScale.m in Sources */,
+				DA4571071F54DF0E00D54152 /* PearlFixedTableView.m in Sources */,
+				DA456CCB1F54DEC900D54152 /* NSArray+Pearl.m in Sources */,
+				DA456CC31F54DEC900D54152 /* PearlHangDetector.m in Sources */,
 				DA10976214F438C300EB000C /* PearlStrings.m in Sources */,
+				DA4571111F54DF0F00D54152 /* UICollectionReusableView+PearlDequeue.m in Sources */,
 				DA10976614F438C300EB000C /* PearlStringUtils.m in Sources */,
 				DA109C3314F438D600EB000C /* PearlAudioController.m in Sources */,
+				DA4571081F54DF0E00D54152 /* PearlNavigationController.m in Sources */,
+				DA4571001F54DF0E00D54152 /* UITableViewCell+PearlDeque.m in Sources */,
+				DA4571021F54DF0E00D54152 /* UIView+LayoutGone.m in Sources */,
 				DA109C5614F438D600EB000C /* PearlWSController.m in Sources */,
+				DA45710F1F54DF0E00D54152 /* PearlUINavigationBar.m in Sources */,
 				DA109C5914F438D600EB000C /* PearlWSStrings.m in Sources */,
-				DA3EF1C215A4CE6A003ABF4E /* NSBundle+PearlMutableInfo.m in Sources */,
 				DA3EF1C415A4CE6A003ABF4E /* NSDateFormatter+RFC3339.m in Sources */,
+				DA4571151F54DF0F00D54152 /* UIView+Touches.m in Sources */,
+				DA45710E1F54DF0E00D54152 /* PearlUICollectionView.m in Sources */,
+				DA45710A1F54DF0E00D54152 /* PearlOverlay.m in Sources */,
 				DA3EF1C615A4CE6A003ABF4E /* NSObject+PearlExport.m in Sources */,
+				DA456CCE1F54DEC900D54152 /* PearlLogger.swift in Sources */,
+				DA456CD01F54DEC900D54152 /* PearlStringUtils.swift in Sources */,
+				DA4570F51F54DF0E00D54152 /* UIScrollView+PearlAdjustInsets.m in Sources */,
+				DA45710C1F54DF0E00D54152 /* PearlSizedTextView.m in Sources */,
 				DA3EF1C815A4CE6A003ABF4E /* NSObject+PearlKVO.m in Sources */,
 				DA3EF1CA15A4CE6A003ABF4E /* NSString+PearlNSArrayFormat.m in Sources */,
 				DA3EF1CC15A4CE6A003ABF4E /* NSString+PearlSEL.m in Sources */,
 				DA3EF1CD15A4CE6A003ABF4E /* Pearl.m in Sources */,
+				DA4570F31F54DF0E00D54152 /* PearlMutableStaticTableViewController.m in Sources */,
+				DA4570EF1F54DF0E00D54152 /* UICollectionView+PearlReloadItems.m in Sources */,
 				DA3EF1CF15A4CE6A003ABF4E /* PearlLazy.m in Sources */,
 				DA3EF1D115A4CE6A003ABF4E /* PearlQueue.m in Sources */,
+				DA4570ED1F54DF0E00D54152 /* PearlLinks.m in Sources */,
+				DA4570F11F54DF0E00D54152 /* UITableView+PearlReloadItems.m in Sources */,
 				DA3EF1D915A4CECF003ABF4E /* Pearl-Media.m in Sources */,
 				DA3EF1ED15A4CF07003ABF4E /* Pearl-WS.m in Sources */,
 				93D39560B9BAA9FEC56C2EF8 /* NSTimer+PearlBlock.m in Sources */,
 				DA692D4916BAC40100F14463 /* NSArray+Indexing.m in Sources */,
+				DA4571051F54DF0E00D54152 /* NSLayoutConstraint+PearlUIKit.m in Sources */,
 				DA692D4B16BAC40100F14463 /* NSDictionary+Indexing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5466,13 +5712,17 @@
 		DAAD42511528652F00AADDBD /* Debug-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = "Debug-OSX";
 		};
@@ -5600,13 +5850,16 @@
 		DAAD42591528653800AADDBD /* Release-OSX */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
+				SWIFT_VERSION = 3.0;
 			};
 			name = "Release-OSX";
 		};
@@ -6095,26 +6348,33 @@
 		DADD1E4414F3BE5500413D09 /* Debug-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = "Debug-iOS";
 		};
 		DADD1E4514F3BE5500413D09 /* Release-iOS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PearlTests-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Pearl-Crypto/lib\"",
 				);
+				SWIFT_VERSION = 3.0;
 			};
 			name = "Release-iOS";
 		};

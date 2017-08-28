@@ -16,7 +16,6 @@
 //
 
 #import "PearlCCBoxLayer.h"
-#import "PearlLayout.h"
 #import "PearlGLUtils.h"
 #import "PearlUIUtils.h"
 

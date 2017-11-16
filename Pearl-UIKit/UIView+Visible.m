@@ -2,14 +2,7 @@
 // Created by Maarten Billemont on 2014-07-18.
 //
 
-#import <Foundation/Foundation.h>
 #import "UIView+Visible.h"
-
-@interface NSObject(Visible_JRSwizzle)
-
-+ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
-
-@end
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "InfiniteRecursion"
@@ -17,17 +10,7 @@
 @implementation UIView(Visible)
 
 + (void)load {
-
-    // JRSwizzle must be present
-    if (![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )]) {
-        wrn( @"Missing JRSwizzle, cannot load UIView(Visible)" );
-        return;
-    }
-
-    NSError *error = nil;
-    if ([self jr_swizzleMethod:@selector( setAlpha: ) withMethod:@selector( visible_setAlpha: ) error:&error])
-        if (error)
-            err( @"While installing UIView(Visible): %@", [error fullDescription] );
+    PearlSwizzle( self, @selector( setAlpha: ), @selector( visible_setAlpha: ) );
 }
 
 - (void)setVisible:(BOOL)visible {

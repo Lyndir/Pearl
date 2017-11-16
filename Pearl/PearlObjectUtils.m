@@ -172,6 +172,18 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     return hashCode;
 }
 
+void PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
+    class_addMethod( type, fromSel,
+        class_getMethodImplementation( type, fromSel ),
+        method_getTypeEncoding( class_getInstanceMethod( type, fromSel ) ) );
+    class_addMethod( type, toSel,
+        class_getMethodImplementation( type, toSel ),
+        method_getTypeEncoding( class_getInstanceMethod( type, toSel ) ) );
+    method_exchangeImplementations(
+        class_getInstanceMethod( type, fromSel ),
+        class_getInstanceMethod( type, toSel ) );
+}
+
 @implementation PearlWeakReference
 
 + (instancetype)referenceWithObject:(id)object {

@@ -17,7 +17,6 @@
 
 #import "PearlCCDebug.h"
 #import "PearlStringUtils.h"
-#import "JRSwizzle.h"
 
 
 static NSMutableDictionary *PearlCCDebugDrawOrder;

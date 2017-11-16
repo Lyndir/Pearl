@@ -234,6 +234,8 @@ extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void
 extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
+
+extern void PearlSwizzle(Class type, SEL fromSel, SEL toSel);
 __END_DECLS
 
 @interface PearlWeakReference<ObjectType> : NSObject

@@ -2,20 +2,12 @@
 // Created by Maarten Billemont on 2014-07-18.
 //
 
-#import <Foundation/Foundation.h>
 #import "UIView+AlphaScale.h"
-#import "PearlMathUtils.h"
-
-@interface NSObject(AlphaScale_JRSwizzle)
-
-+ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
-
-@end
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "InfiniteRecursion"
 
-@interface UIView(AlphaScale_JRSwizzle)
+@interface UIView(AlphaScale_Private)
 
 @property(nonatomic) BOOL alphaScaleApplied;
 
@@ -25,16 +17,7 @@
 
 + (void)load {
 
-    // JRSwizzle must be present
-    if (![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )]) {
-        wrn( @"Missing JRSwizzle, cannot load UIView(AlphaScale)" );
-        return;
-    }
-
-    NSError *error = nil;
-    if ([self jr_swizzleMethod:@selector( setAlpha: ) withMethod:@selector( alphaMod_setAlpha: ) error:&error])
-        if (error)
-            err( @"While installing UIView(AlphaScale): %@", [error fullDescription] );
+    PearlSwizzle( self, @selector( setAlpha: ), @selector( alphaMod_setAlpha: ) );
 }
 
 - (void)setNoAlphaScale:(BOOL)noAlphaScale {

@@ -5,12 +5,6 @@
 
 #import "UIView+FontScale.h"
 
-@interface NSObject(FontScale_JRSwizzle)
-
-+ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
-
-@end
-
 @interface UIApplication(FontScale)
 
 - (CGFloat)preferredContentSizeCategoryFontScale;
@@ -30,18 +24,9 @@
 
 + (void)load {
 
-    // JRSwizzle must be present
-    if (![self respondsToSelector:@selector( jr_swizzleMethod:withMethod:error: )]) {
-        wrn( @"Missing JRSwizzle, cannot load UIView(FontScale)" );
-        return;
-    }
-
-    NSError *error = nil;
     for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
-        if ([type jr_swizzleMethod:@selector( updateConstraints ) withMethod:@selector( fontMod_updateConstraints ) error:&error] &&
-            [type jr_swizzleMethod:@selector( setFont: ) withMethod:@selector( fontMod_setFont: ) error:&error])
-            if (error)
-                err( @"While installing UIView(FontScale): %@", [error fullDescription] );
+        PearlSwizzle( type, @selector( updateConstraints ), @selector( fontMod_updateConstraints ) );
+        PearlSwizzle( type, @selector( setFont: ), @selector( fontMod_setFont: ) );
     }
 }
 

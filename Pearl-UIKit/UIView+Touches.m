@@ -17,13 +17,6 @@
 //
 
 #import "UIView+Touches.h"
-#import "JRSwizzle.h"
-
-@interface NSObject(Touches_JRSwizzle)
-
-+ (BOOL)jr_swizzleMethod:(SEL)origSel_ withMethod:(SEL)altSel_ error:(NSError **)error_;
-
-@end
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "InfiniteRecursion"
@@ -38,9 +31,7 @@ static char *PearlIgnoreTouches;
 
     static dispatch_once_t once = 0;
     dispatch_once( &once, ^{
-        NSError *error;
-        if (![UIView jr_swizzleMethod:@selector( hitTest:withEvent: ) withMethod:@selector( pearl_hitTest:withEvent: ) error:&error])
-            err( @"Failed to swizzle hitTest:withEvent:.  ignoreTouches will have no effect.  Cause: %@", [error fullDescription] );
+      PearlSwizzle( [UIView class], @selector( hitTest:withEvent: ), @selector( pearl_hitTest:withEvent: ) );
     } );
 }
 

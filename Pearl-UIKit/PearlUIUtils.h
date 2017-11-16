@@ -220,8 +220,8 @@ __END_DECLS
  *                 // Width is unspecified but at least one horizontal edge wants to expand, so use the fitting width.
  *                 // Height is unspecified but the vertical edges are fixed, so height will still fill available space.
  *
- * @">|-[  ]-|-"  // expand left, 8pt from right, 5pt width.  8pt from top and bottom, expand height.
- * @">[ -/30 ]-|"   // expand left, fixed to right.  Fixed to top, 8pt from bottom,  44pt height.
+ * @">|-[  ]-|-"   // expand left, 8pt from right, 5pt width.  8pt from top and bottom, expand height.
+ * @">[ -/30 ]-|"  // expand left, fixed to right.  Fixed to top, 8pt from bottom,  44pt height.
  */
 - (void)setFrameFrom:(NSString *)layoutString;
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x;

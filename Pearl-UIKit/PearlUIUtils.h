@@ -121,7 +121,9 @@ typedef struct PearlLayout {
 } PearlLayout;
 
 typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
-    PearlLayoutOptionConstrainSize = 2 >> 1,
+    PearlLayoutOptionNone = 0,
+    /** Constrain size to superview's available size. */
+    PearlLayoutOptionConstrainSize = 1 << 0,
 };
 __END_DECLS
 
@@ -191,23 +193,26 @@ __END_DECLS
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 /** @return The first constraint that applies to this view's given attribute and relates to the given other view. */
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
+
 - (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right
                                             bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left constrainSize:(BOOL)constrainSize;
+                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
 
 /**
  * Set the layout of the view based on the given layout string.
  *
- * @"left | top [ width / height ] bottom | right"
+ * @"left | top [ s_opt width / height ] bottom | right"
  *
  * A "-" padding = parent's layout margin, a "-" size = 44.
  * An "=" dimension retains its current value.
+ * An "S" dimension substitutes the offset to bring the view inside the safe area.
  * A ">" left/top or "<" right/bottom padding = expand.
  * Empty padding = 0, empty size = fit or expand if both paddings are fixed.
  * An "x", "y" or "z" will be replaced with the x, y and z parameter value.
+ * s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize
  * Spaces around operators are permitted.
  *
  * @"-[  ]-"       // Use the superview's left and right layout margin, top and bottom default to 0.

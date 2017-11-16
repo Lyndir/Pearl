@@ -576,7 +576,7 @@ static NSMutableSet *dismissableResponders;
 
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides {
 
-    [self setFrameFrom:layoutString x:x y:y z:z using:layoutOverrides options:(PearlLayoutOption)0];
+    [self setFrameFrom:layoutString x:x y:y z:z using:layoutOverrides options:PearlLayoutOptionNone];
 }
 
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
@@ -636,6 +636,9 @@ static NSMutableSet *dismissableResponders;
         leftLayoutValue = self.superview.layoutMargins.left;
     else if ([leftLayoutString isEqualToString:@"="])
         leftLayoutValue = self.frame.origin.x;
+    else if ([leftLayoutString isEqualToString:@"S"])
+//        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( self.frame ) );
+        leftLayoutValue = 0;
     else if ([leftLayoutString isEqualToString:@"x"])
         leftLayoutValue = x;
     else if ([leftLayoutString isEqualToString:@"y"])
@@ -650,6 +653,9 @@ static NSMutableSet *dismissableResponders;
         rightLayoutValue = self.superview.layoutMargins.right;
     else if ([rightLayoutString isEqualToString:@"="])
         rightLayoutValue = CGRectGetRight( self.superview.bounds ).x - CGRectGetRight( self.frame ).x;
+    else if ([rightLayoutString isEqualToString:@"S"])
+//        rightLayoutValue = MAX( 0, CGRectGetMaxX( self.frame ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
+        rightLayoutValue = 0;
     else if ([rightLayoutString isEqualToString:@"x"])
         rightLayoutValue = x;
     else if ([rightLayoutString isEqualToString:@"y"])
@@ -664,6 +670,9 @@ static NSMutableSet *dismissableResponders;
         topLayoutValue = self.superview.layoutMargins.top;
     else if ([topLayoutString isEqualToString:@"="])
         topLayoutValue = self.frame.origin.y;
+    else if ([topLayoutString isEqualToString:@"S"])
+//        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( self.frame ) );
+        topLayoutValue = UIApp.statusBarFrame.size.height;
     else if ([topLayoutString isEqualToString:@"x"])
         topLayoutValue = x;
     else if ([topLayoutString isEqualToString:@"y"])
@@ -678,6 +687,9 @@ static NSMutableSet *dismissableResponders;
         bottomLayoutValue = self.superview.layoutMargins.bottom;
     else if ([bottomLayoutString isEqualToString:@"="])
         bottomLayoutValue = CGRectGetBottom( self.superview.bounds ).y - CGRectGetBottom( self.frame ).y;
+    else if ([bottomLayoutString isEqualToString:@"S"])
+//        bottomLayoutValue = MAX( 0, CGRectGetMaxY( self.frame ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
+        bottomLayoutValue = 0;
     else if ([bottomLayoutString isEqualToString:@"x"])
         bottomLayoutValue = x;
     else if ([bottomLayoutString isEqualToString:@"y"])
@@ -724,36 +736,50 @@ static NSMutableSet *dismissableResponders;
     // Apply layout
     [self setFrameFromSize:CGSizeMake( widthLayoutValue, heightLayoutValue )
        andParentPaddingTop:topLayoutValue right:rightLayoutValue bottom:bottomLayoutValue left:leftLayoutValue
-             constrainSize:options & PearlLayoutOptionConstrainSize];
+                   options:options];
 }
 
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left {
 
-    [self setFrameFromSize:size andParentPaddingTop:top right:right bottom:bottom left:left constrainSize:NO];
+    [self setFrameFromSize:size andParentPaddingTop:top right:right bottom:bottom left:left options:PearlLayoutOptionNone];
 }
 
 - (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left constrainSize:(BOOL)constrainSize {
+                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 
+    // Grow the superview if needed to fit the padding.
     CGFloat availableWidth = self.superview.bounds.size.width -
                              (left == CGFLOAT_MAX? 0: left) - (right == CGFLOAT_MAX? 0: right);
     CGFloat availableHeight = self.superview.bounds.size.height -
                               (top == CGFLOAT_MAX? 0: top) - (bottom == CGFLOAT_MAX? 0: bottom);
-    CGSize resolvedSize = size;
+    if (availableWidth < 0)
+        CGRectSetWidth( self.superview.bounds,
+            (availableWidth = 0) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
+    if (availableHeight < 0)
+        CGRectSetHeight( self.superview.bounds,
+            (availableHeight = 0) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom));
 
-    // Resolve our minimal size dimensions with the view's fitting size.
-    if (size.width == CGFLOAT_MIN || size.height == CGFLOAT_MIN) {
-        // For the fitting size, use 0 for unknown minimal bounds and the available space for unknown maximal bounds.
-        resolvedSize = [self sizeThatFits:(CGSize){
-                .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
-                .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
-        }];
-        resolvedSize = CGSizeMake(
-                size.width == CGFLOAT_MIN? resolvedSize.width: size.width,
-                size.height == CGFLOAT_MIN? resolvedSize.height: size.height );
-    }
-    if (constrainSize)
+    // For the fitting size, use 0 for unknown minimal bounds and the available space for unknown maximal bounds.
+    CGSize fittingSize = [self sizeThatFits:(CGSize){
+            .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
+            .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
+    }];
+
+    // Grow the superview if needed to fit the current view and its padding.
+    if (fittingSize.width > availableWidth)
+        CGRectSetWidth( self.superview.bounds,
+            (availableWidth = fittingSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
+    if (fittingSize.height > availableHeight)
+        CGRectSetHeight( self.superview.bounds,
+            (availableHeight = fittingSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom));
+
+    // Resolve our minimal size dimensions with our fitting size.
+    CGSize resolvedSize = CGSizeMake(
+                size.width == CGFLOAT_MIN? fittingSize.width: size.width,
+                size.height == CGFLOAT_MIN? fittingSize.height: size.height );
+
+    if (options & PearlLayoutOptionConstrainSize)
         resolvedSize = CGSizeMake(
                 resolvedSize.width == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.width, availableWidth ),
                 resolvedSize.height == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.height, availableHeight ) );

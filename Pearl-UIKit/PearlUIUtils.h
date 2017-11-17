@@ -241,6 +241,8 @@ __END_DECLS
 + (instancetype)findAsSuperviewOf:(UIView *)view;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
 - (BOOL)enumerateViews:(void ( ^ )(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
+/** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
+- (void)sizeToFitSubviews;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
 /** Return a string that briefly describes this view. */

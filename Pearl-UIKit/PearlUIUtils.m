@@ -831,6 +831,49 @@ static NSMutableSet *dismissableResponders;
     return YES;
 }
 
+- (UIEdgeInsets)frameInsets {
+    return UIEdgeInsetsMake( CGRectGetMinY( self.frame ), CGRectGetMinX( self.frame ),
+        self.superview.bounds.size.height - CGRectGetMaxY( self.frame ),
+        self.superview.bounds.size.width - CGRectGetMaxX( self.frame ) );
+}
+
+- (CGSize)minimumAutoresizingSize {
+    CGSize minSize = CGSizeZero;
+//    if (self.autoresizingMask & UIViewAutoresizingFlexibleWidth || self.autoresizingMask & UIViewAutoresizingFlexibleHeight)
+        for (UIView *subview in self.subviews) {
+          UIEdgeInsets insets = subview.frameInsets;
+          CGSize minSizeSubview = [subview minimumAutoresizingSize];
+          minSize.width = MAX( minSize.width, minSizeSubview.width +
+              (subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? 0: insets.left) +
+              (subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? 0: insets.right) );
+          minSize.height = MAX( minSize.height, minSizeSubview.height +
+              (subview.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? 0: insets.top) +
+              (subview.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? 0: insets.bottom) );
+        }
+
+    return minSize;
+//        return CGSizeMake(
+//                (self.autoresizingMask & UIViewAutoresizingFlexibleWidth? minSize.width: self.bounds.size.width ),
+//                (self.autoresizingMask & UIViewAutoresizingFlexibleHeight? minSize.height: self.bounds.size.height) );
+}
+
+- (void)sizeToFitSubviews {
+    UIEdgeInsets insets = self.frameInsets;
+    CGRectSetSize( self.frame, [self minimumAutoresizingSize] );
+
+    for (UIView *subview in self.subviews)
+        [subview sizeToFitSubviews];
+
+    [self setFrameFromSize:CGSizeMake(
+            self.autoresizingMask & UIViewAutoresizingFlexibleWidth? CGFLOAT_MAX: self.frame.size.width,
+            self.autoresizingMask & UIViewAutoresizingFlexibleHeight? CGFLOAT_MAX: self.frame.size.height )
+       andParentPaddingTop:self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? CGFLOAT_MAX: insets.top
+                     right:self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? CGFLOAT_MAX: insets.right
+                    bottom:self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? CGFLOAT_MAX: insets.bottom
+                      left:self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? CGFLOAT_MAX: insets.left
+                   options:PearlLayoutOptionNone];
+}
+
 - (void)printSuperHierarchy {
 
     NSUInteger indent = 0;

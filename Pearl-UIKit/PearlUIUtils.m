@@ -766,18 +766,21 @@ static NSMutableSet *dismissableResponders;
             .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
     }];
 
-    // Grow the superview if needed to fit the current view and its padding.
-    if (fittingSize.width > availableWidth)
-        CGRectSetWidth( self.superview.bounds,
-            (availableWidth = fittingSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
-    if (fittingSize.height > availableHeight)
-        CGRectSetHeight( self.superview.bounds,
-            (availableHeight = fittingSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom));
-
     // Resolve our minimal size dimensions with our fitting size.
     CGSize resolvedSize = CGSizeMake(
-                size.width == CGFLOAT_MIN? fittingSize.width: size.width,
-                size.height == CGFLOAT_MIN? fittingSize.height: size.height );
+        size.width == CGFLOAT_MIN? fittingSize.width: MAX( fittingSize.width, size.width ),
+        size.height == CGFLOAT_MIN? fittingSize.height: MAX( fittingSize.height, size.height ) );
+
+    // Grow the superview if needed to fit the resolved size and padding.
+    CGSize requestedSize = CGSizeMake(
+        resolvedSize.width == CGFLOAT_MAX? fittingSize.width: resolvedSize.width,
+        resolvedSize.height == CGFLOAT_MAX? fittingSize.height: resolvedSize.height );
+    if (requestedSize.width > availableWidth)
+        CGRectSetWidth( self.superview.bounds,
+            (availableWidth = requestedSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
+    if (requestedSize.height > availableHeight)
+        CGRectSetHeight( self.superview.bounds,
+            (availableHeight = requestedSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom));
 
     if (options & PearlLayoutOptionConstrainSize)
         resolvedSize = CGSizeMake(

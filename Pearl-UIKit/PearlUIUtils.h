@@ -194,13 +194,6 @@ __END_DECLS
 /** @return The first constraint that applies to this view's given attribute and relates to the given other view. */
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
 
-- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                                            bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
-
 /**
  * Set the layout of the view based on the given layout string.
  *
@@ -237,12 +230,20 @@ __END_DECLS
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
              options:(PearlLayoutOption)options;
 
+- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                                            bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
+
+/** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
+- (void)sizeToFitSubviews;
+
 /** Return the view or the first parent of it that is of the receiver's type. */
 + (instancetype)findAsSuperviewOf:(UIView *)view;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
 - (BOOL)enumerateViews:(void ( ^ )(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
-/** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
-- (void)sizeToFitSubviews;
 - (void)printSuperHierarchy;
 - (void)printChildHierarchy;
 /** Return a string that briefly describes this view. */

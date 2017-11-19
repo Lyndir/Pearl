@@ -83,6 +83,22 @@
             void *arg = va_arg( args, void* );
             [self setArgument:&arg atIndex:a];
         }
+        else if (0 == strcmp( argType, @encode( CGRect ) )) {
+            CGRect arg = va_arg( args, CGRect );
+            [self setArgument:&arg atIndex:a];
+        }
+        else if (0 == strcmp( argType, @encode( CGSize ) )) {
+            CGSize arg = va_arg( args, CGSize );
+            [self setArgument:&arg atIndex:a];
+        }
+        else if (0 == strcmp( argType, @encode( CGPoint ) )) {
+            CGPoint arg = va_arg( args, CGPoint );
+            [self setArgument:&arg atIndex:a];
+        }
+        else if (0 == strcmp( argType, @encode( CGAffineTransform ) )) {
+            CGAffineTransform arg = va_arg( args, CGAffineTransform );
+            [self setArgument:&arg atIndex:a];
+        }
         else
             abort();
     }
@@ -134,7 +150,7 @@
 - (id)idValue {
 
     if (0 != strcmp( @encode( id ), self.methodSignature.methodReturnType))
-        return nil;
+        abort();
 
     id value;
     [self getReturnValue:&value];
@@ -144,7 +160,7 @@
 - (SEL)selectorValue {
 
     if (0 != strcmp( @encode( SEL ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     SEL value;
     [self getReturnValue:&value];
@@ -154,7 +170,7 @@
 - (Class)classValue {
 
     if (0 != strcmp( @encode( Class ), self.methodSignature.methodReturnType))
-        return nil;
+        abort();
 
     Class value;
     [self getReturnValue:&value];
@@ -164,7 +180,7 @@
 - (char)charValue {
 
     if (0 != strcmp( @encode( char ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     char value;
     [self getReturnValue:&value];
@@ -174,7 +190,7 @@
 - (unsigned char)unsignedCharValue {
 
     if (0 != strcmp( @encode( unsigned char ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     unsigned char value;
     [self getReturnValue:&value];
@@ -184,7 +200,7 @@
 - (int)intValue {
 
     if (0 != strcmp( @encode( int ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     int value;
     [self getReturnValue:&value];
@@ -194,7 +210,7 @@
 - (BOOL)boolValue {
 
     if (0 != strcmp( @encode( BOOL ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     BOOL value;
     [self getReturnValue:&value];
@@ -204,7 +220,7 @@
 - (short)shortValue {
 
     if (0 != strcmp( @encode( short ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     short value;
     [self getReturnValue:&value];
@@ -214,7 +230,7 @@
 - (unichar)unicharValue {
 
     if (0 != strcmp( @encode( unichar ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     unichar value;
     [self getReturnValue:&value];
@@ -224,7 +240,7 @@
 - (float)floatValue {
 
     if (0 != strcmp( @encode( float ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     float value;
     [self getReturnValue:&value];
@@ -234,7 +250,7 @@
 - (double)doubleValue {
 
     if (0 != strcmp( @encode( double ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     double value;
     [self getReturnValue:&value];
@@ -244,7 +260,7 @@
 - (long)longValue {
 
     if (0 != strcmp( @encode( long ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     long value;
     [self getReturnValue:&value];
@@ -254,7 +270,7 @@
 - (long long)longLongValue {
 
     if (0 != strcmp( @encode( long long ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     long long value;
     [self getReturnValue:&value];
@@ -264,7 +280,7 @@
 - (unsigned int)unsignedIntValue {
 
     if (0 != strcmp( @encode( unsigned int ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     unsigned int value;
     [self getReturnValue:&value];
@@ -274,7 +290,7 @@
 - (unsigned long)unsignedLongValue {
 
     if (0 != strcmp( @encode( unsigned long ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     unsigned long value;
     [self getReturnValue:&value];
@@ -284,7 +300,7 @@
 - (unsigned long long)unsignedLongLongValue {
 
     if (0 != strcmp( @encode( unsigned long long ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     unsigned long long value;
     [self getReturnValue:&value];
@@ -294,7 +310,7 @@
 - (char *)stringValue {
 
     if (0 != strcmp( @encode( char * ), self.methodSignature.methodReturnType))
-        return 0;
+        abort();
 
     char *value;
     [self getReturnValue:&value];
@@ -303,12 +319,18 @@
 
 - (void *)pointerValue {
 
+    if (!self.methodSignature.methodReturnLength)
+        return nil;
+
     void *value;
     [self getReturnValue:&value];
     return value;
 }
 
 - (void *)pointerToValue {
+
+    if (!self.methodSignature.methodReturnLength)
+        return nil;
 
     void *value = malloc( self.methodSignature.methodReturnLength );
     [self getReturnValue:value];

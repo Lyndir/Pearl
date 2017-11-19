@@ -187,7 +187,7 @@ BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
             NSInvocation *invocation = PearlInvocationMakeWithVargs( self, fromSel, self );
             [invocation invokeWithTarget:self subclass:class_getSuperclass( type )];
             // TODO: This is probably not right for values that are larger than sizeof(void*)
-            return *(void **)[invocation pointerToValue];
+            return [invocation pointerValue];
         } ), methodTypes );
 
         // Add the swizzle trampoline which effects the swizzle but only at the highest level in the call stack/class hierarchy.
@@ -203,7 +203,7 @@ BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
                         NSInvocation *invocation = PearlInvocationMakeWithVargs( self, fromSel, self );
                         [invocation invokeWithTarget:self subclass:class_getSuperclass( type )];
                         // TODO: This is probably not right for values that are larger than sizeof(void*)
-                        return *(void **)[invocation pointerToValue];
+                        return [invocation pointerValue];
                     }
 
                     @try {
@@ -211,7 +211,7 @@ BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
                         NSInvocation *invocation = PearlInvocationMakeWithVargs( self, toSel, self );
                         [invocation invokeWithTarget:self subclass:type];
                         // TODO: This is probably not right for values that are larger than sizeof(void*)
-                        return *(void **)[invocation pointerToValue];
+                        return [invocation pointerValue];
                     }
                     @finally {
                         objc_setAssociatedObject( self, toSel, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );

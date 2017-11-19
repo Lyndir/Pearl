@@ -8,6 +8,7 @@
 #import "NSDateFormatter+RFC3339.h"
 #import "NSDictionary+Indexing.h"
 #import "NSError+PearlFullDescription.h"
+#import "NSInvocation+Pearl.h"
 #import "NSManagedObject+Pearl.h"
 #import "NSMutableSet+Pearl.h"
 #import "NSNotificationCenter+PearlEasyCleanup.h"

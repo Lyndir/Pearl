@@ -18,31 +18,19 @@
 
 #import "UIView+Touches.h"
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "InfiniteRecursion"
-
 @implementation UIView(Touches)
 
-static char *PearlIgnoreTouches;
+- (BOOL)ignoreTouches {
+    return [objc_getAssociatedObject( self, @selector( ignoreTouches ) ) boolValue];
+}
 
 - (void)setIgnoreTouches:(BOOL)ignoreTouches {
-
-    objc_setAssociatedObject( self, &PearlIgnoreTouches, @(ignoreTouches), OBJC_ASSOCIATION_RETAIN );
-
-    static dispatch_once_t once = 0;
-    dispatch_once( &once, ^{
-      PearlSwizzle( [UIView class], @selector( hitTest:withEvent: ), @selector( pearl_hitTest:withEvent: ) );
-    } );
+    objc_setAssociatedObject( self, @selector( ignoreTouches ), @(ignoreTouches), OBJC_ASSOCIATION_RETAIN );
+    PearlSwizzle( [self class], @selector( hitTest:withEvent: ), @selector( _pearl_touches_hitTest:withEvent: ) );
 }
 
-- (BOOL)ignoreTouches {
-
-    return [objc_getAssociatedObject( self, &PearlIgnoreTouches ) boolValue];
-}
-
-- (UIView *)pearl_hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-
-    UIView *hitView = [self pearl_hitTest:point withEvent:event];
+- (UIView *)_pearl_touches_hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *hitView = [self hitTest:point withEvent:event];
     if (self.ignoreTouches && hitView == self)
         return nil;
 
@@ -50,5 +38,3 @@ static char *PearlIgnoreTouches;
 }
 
 @end
-
-#pragma clang diagnostic pop

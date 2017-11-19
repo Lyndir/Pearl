@@ -11,34 +11,25 @@
 
 @end
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "InfiniteRecursion"
-
-@interface UIView(FontScale_Private)
-
-@property (nonatomic) CGFloat appliedFontScale;
-
-@end
-
 @implementation UIView(FontScale)
 
 + (void)load {
 
     for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
-        PearlSwizzle( type, @selector( updateConstraints ), @selector( fontMod_updateConstraints ) );
-        PearlSwizzle( type, @selector( setFont: ), @selector( fontMod_setFont: ) );
+        PearlSwizzle( type, @selector( updateConstraints ), @selector( _pearl_fontMod_updateConstraints ) );
+        PearlSwizzle( type, @selector( setFont: ), @selector( _pearl_fontMod_setFont: ) );
     }
-}
-
-- (void)setNoFontScale:(BOOL)noFontScale {
-
-    objc_setAssociatedObject( self, @selector( noFontScale ), @(noFontScale), OBJC_ASSOCIATION_RETAIN );
-    [self fontMod_updateFont];
 }
 
 - (BOOL)noFontScale {
 
     return [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue];
+}
+
+- (void)setNoFontScale:(BOOL)noFontScale {
+
+    objc_setAssociatedObject( self, @selector( noFontScale ), @(noFontScale), OBJC_ASSOCIATION_RETAIN );
+    [self _pearl_fontMod_updateFont];
 }
 
 /**
@@ -54,49 +45,41 @@
     objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 }
 
-- (void)fontMod_updateFont {
+- (void)_pearl_fontMod_updateFont {
 
     PearlAddNotificationObserver( UIContentSizeCategoryDidChangeNotification, nil, [NSOperationQueue mainQueue],
             ^(id self, NSNotification *note) {
-                [self fontMod_updateFont];
+                [self _pearl_fontMod_updateFont];
             } );
 
-    UIFont *originalFont = [(UILabel *)self font];
-    UIFont *scaledFont = [self fontMod_scaledFontFor:originalFont appliedFontScale:self.appliedFontScale];
-    if (scaledFont != originalFont) {
-        [self fontMod_setFont:scaledFont];
+    UIFont *appliedFont = [(UILabel *)self font];
+    [(UILabel *)self setFont:[appliedFont fontWithSize:appliedFont.pointSize / self.appliedFontScale]];
+    if (![appliedFont isEqual:[(UILabel *)self font]]) {
         [self setNeedsUpdateConstraints];
 
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if ([self.superview isKindOfClass:[UIControl class]])
-                [self.superview setNeedsLayout];
+                  [self.superview setNeedsLayout];
         }];
     }
 }
 
-- (UIFont *)fontMod_scaledFontFor:(UIFont *)originalFont appliedFontScale:(CGFloat)appliedFontScale {
+- (void)_pearl_fontMod_updateConstraints {
 
-    if ([originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"])
-        return originalFont;
-    if ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory])
-        return originalFont;
-    CGFloat effectiveFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
-    if (effectiveFontScale == appliedFontScale)
-        return originalFont;
-
-    self.appliedFontScale = effectiveFontScale;
-    return [originalFont fontWithSize:originalFont.pointSize * effectiveFontScale / appliedFontScale];
+    [self _pearl_fontMod_updateFont];
+    [self updateConstraints];
 }
 
-- (void)fontMod_updateConstraints {
+- (void)_pearl_fontMod_setFont:(UIFont *)originalFont {
 
-    [self fontMod_updateFont];
-    [self fontMod_updateConstraints];
-}
+    if (NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) ||
+        ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]))
+        [(UILabel *)self setFont:originalFont];
 
-- (void)fontMod_setFont:(UIFont *)newFont {
-
-    [self fontMod_setFont:[self fontMod_scaledFontFor:newFont appliedFontScale:1]];
+    else {
+        CGFloat appliedFontScale = self.appliedFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
+        [(UILabel *)self setFont:[originalFont fontWithSize:originalFont.pointSize * appliedFontScale]];
+    }
 }
 
 @end
@@ -146,5 +129,3 @@
 }
 
 @end
-
-#pragma clang diagnostic pop

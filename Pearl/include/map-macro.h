@@ -57,12 +57,12 @@
 /**
 * Applies the function macro `f` to each of the remaining parameters.
 */
-#define MAP(f, ...) EVAL (MAP1 (f, __VA_ARGS__, (), 0))
+#define MAP(f, ...) EVAL (MAP1 (f, ##__VA_ARGS__, (), 0))
 
 /**
 * Applies the function macro `f` to each of the remaining parameters and
 * inserts commas between the results.
 */
-#define MAP_LIST(f, ...) EVAL (MAP_LIST1 (f, __VA_ARGS__, (), 0))
+#define MAP_LIST(f, ...) EVAL (MAP_LIST1 (f, ##__VA_ARGS__, (), 0))
 
 #endif

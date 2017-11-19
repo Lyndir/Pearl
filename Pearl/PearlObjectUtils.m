@@ -18,6 +18,8 @@
 
 
 #import <AVFoundation/AVFoundation.h>
+#import <objc/message.h>
+#import <NSInvocation+CreationHelper.h>
 
 BOOL PearlMainQueue(void (^block)()) {
 
@@ -172,16 +174,63 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     return hashCode;
 }
 
-void PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
-    class_addMethod( type, fromSel,
-        class_getMethodImplementation( type, fromSel ),
-        method_getTypeEncoding( class_getInstanceMethod( type, fromSel ) ) );
-    class_addMethod( type, toSel,
-        class_getMethodImplementation( type, toSel ),
-        method_getTypeEncoding( class_getInstanceMethod( type, toSel ) ) );
-    method_exchangeImplementations(
-        class_getInstanceMethod( type, fromSel ),
-        class_getInstanceMethod( type, toSel ) );
+BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
+    // If there is no `fromSel` method in `type`'s class hierarchy, abort.
+    Method method = class_getInstanceMethod( type, fromSel );
+    if (!method)
+        return NO;
+
+    @synchronized (type) {
+        // Make sure `type` defines a local `fromSel` implementation; adding an empty `[super fromSel]` call if needed.
+        const char *methodTypes = method_getTypeEncoding( method );
+        class_addMethod( type, fromSel, imp_implementationWithBlock( ^(__unsafe_unretained id self, ...) {
+            NSInvocation *invocation = PearlInvocationMakeWithVargs( self, fromSel, self );
+            [invocation invokeWithTarget:self subclass:class_getSuperclass( type )];
+            // TODO: This is probably not right for values that are larger than sizeof(void*)
+            return *(void **)[invocation pointerToValue];
+        } ), methodTypes );
+
+        // Add the swizzle trampoline which effects the swizzle but only at the highest level in the call stack/class hierarchy.
+        SEL impSel = NSSelectorFromString( strf(@"%@_PearlSwizzleIMP_%@", NSStringFromClass( type ), NSStringFromSelector( toSel ) ) );
+        if (!class_addMethod( type, impSel, imp_implementationWithBlock( ^(__unsafe_unretained id self, ...) {
+            @synchronized (type) {
+                @try {
+                    method_exchangeImplementations(
+                        class_getInstanceMethod( type, impSel ),
+                        class_getInstanceMethod( type, fromSel ) );
+                    if (objc_getAssociatedObject( self, toSel )) {
+                        // This `toSel` has already been handled in the call stack.  Invoke the original implementation at this level.
+                        NSInvocation *invocation = PearlInvocationMakeWithVargs( self, fromSel, self );
+                        [invocation invokeWithTarget:self subclass:class_getSuperclass( type )];
+                        // TODO: This is probably not right for values that are larger than sizeof(void*)
+                        return *(void **)[invocation pointerToValue];
+                    }
+
+                    @try {
+                        objc_setAssociatedObject( self, toSel, type, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                        NSInvocation *invocation = PearlInvocationMakeWithVargs( self, toSel, self );
+                        [invocation invokeWithTarget:self subclass:type];
+                        // TODO: This is probably not right for values that are larger than sizeof(void*)
+                        return *(void **)[invocation pointerToValue];
+                    }
+                    @finally {
+                        objc_setAssociatedObject( self, toSel, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                    }
+                }
+                @finally {
+                    method_exchangeImplementations(
+                        class_getInstanceMethod( type, fromSel ),
+                        class_getInstanceMethod( type, impSel ) );
+                }
+            }
+        }), methodTypes ))
+            return NO;
+
+        method_exchangeImplementations(
+            class_getInstanceMethod( type, fromSel ),
+            class_getInstanceMethod( type, impSel ) );
+        return YES;
+    }
 }
 
 @implementation PearlWeakReference

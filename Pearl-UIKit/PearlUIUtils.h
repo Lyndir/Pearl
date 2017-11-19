@@ -182,6 +182,8 @@ __END_DECLS
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void ( ^ )(void))uiAnimations caAnimations:(void ( ^ )(void))caAnimations
                  completion:(void ( ^ )(BOOL finished))completion;
+
+
 - (NSArray *)addConstraintsWithVisualFormat:(NSString *)format options:(NSLayoutFormatOptions)opts
                                     metrics:(NSDictionary *)metrics views:(NSDictionary *)views;
 - (NSArray *)addConstraintsWithVisualFormats:(NSArray *)formats options:(NSLayoutFormatOptions)opts
@@ -193,6 +195,7 @@ __END_DECLS
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute;
 /** @return The first constraint that applies to this view's given attribute and relates to the given other view. */
 - (NSLayoutConstraint *)firstConstraintForAttribute:(NSLayoutAttribute)attribute otherView:(UIView *)otherView;
+
 
 /**
  * Set the layout of the view based on the given layout string.
@@ -240,21 +243,23 @@ __END_DECLS
 /** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
 - (void)sizeToFitSubviews;
 
+
 /** Return the view or the first parent of it that is of the receiver's type. */
 + (instancetype)findAsSuperviewOf:(UIView *)view;
 - (BOOL)isOrHasSuperviewOfKind:(Class)kind;
 - (BOOL)enumerateViews:(void ( ^ )(UIView *subview, BOOL *stop, BOOL *recurse))block recurse:(BOOL)recurseDefault;
-- (void)printSuperHierarchy;
-- (void)printChildHierarchy;
-/** Return a string that briefly describes this view. */
-- (NSString *)infoDescription;
-/** Return a string that briefly describes this view's layout. */
-- (NSString *)layoutDescription;
 
 /**
  * Calculate which of this view's subviews have their center closest to the given point.
  */
 - (UIView *)subviewClosestTo:(CGPoint)point;
+
+/**
+ * Find the current first responder in the given view's hierarchy.
+ * @return The given view or a subview of it that is the current first responder or nil if no view has first responder status.
+ */
+- (UIView *)findFirstResponderInHierarchy;
+
 
 /**
  * Calculate the bounds of the content of the given view by recursively iterating and checking the content bounds
@@ -273,6 +278,12 @@ __END_DECLS
 - (CGRect)contentBoundsIgnoringSubviewsArray:(NSArray *)ignoredSubviewsArray;
 
 /**
+ * Create a rectangle that describes the given view's frame in the coordinates of the top-level view that contains it.
+ */
+- (CGRect)frameInWindow;
+
+
+/**
  * Add a red box view to the given view's parent that tracks the given view's bounds.
  */
 - (void)showBoundingBox;
@@ -282,16 +293,6 @@ __END_DECLS
  */
 - (void)showBoundingBoxOfColor:(UIColor *)color;
 
-/**
- * Create a rectangle that describes the given view's frame in the coordinates of the top-level view that contains it.
- */
-- (CGRect)frameInWindow;
-
-/**
- * Find the current first responder in the given view's hierarchy.
- * @return The given view or a subview of it that is the current first responder or nil if no view has first responder status.
- */
-- (UIView *)findFirstResponderInHierarchy;
 
 /**
  * Create a copy of the given view.  Currently supports copying properties of: UIView, UILabel, UIControl, UITextField, UIButton, UIImageView.
@@ -307,6 +308,7 @@ __END_DECLS
  */
 - (id)cloneAddedTo:(UIView *)superView;
 
+
 /**
  * Expands localization keys to values in the given view and all its subviews.
  *
@@ -318,6 +320,14 @@ __END_DECLS
  * See applyLocalization for the rules of localization expansion.
  */
 - (UIView *)localizeProperties;
+
+
+- (void)printSuperHierarchy;
+- (void)printChildHierarchy;
+/** Return a string that briefly describes this view. */
+- (NSString *)infoDescription;
+/** Return a string that briefly describes this view's layout. */
+- (NSString *)layoutDescription;
 
 @end
 

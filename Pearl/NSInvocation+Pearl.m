@@ -161,13 +161,13 @@ IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self,
     SEL sel = method_getName( forMethod );
     NSGetSizeAndAlignment( method_copyReturnType( forMethod ), &size, &alignment );
 
-    if (!size)
+    if (!size) // void
         return imp_implementationWithBlock( ^void(__unsafe_unretained id self, ...) {
           NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
           invoke( self, invocation );
         } );
 
-    else if (size <= sizeof( id ))
+    else if (size <= sizeof( id )) // 8
         return imp_implementationWithBlock( ^id(__unsafe_unretained id self, ...) {
           NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
           invoke( self, invocation );
@@ -176,7 +176,7 @@ IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self,
           return returnValue;
         } );
 
-    else if (size <= sizeof( CGSize ))
+    else if (size <= sizeof( CGSize )) // 16
         return imp_implementationWithBlock( ^CGSize(__unsafe_unretained id self, ...) {
           NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
           invoke( self, invocation );
@@ -185,7 +185,7 @@ IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self,
           return returnValue;
         } );
 
-    else if (size <= sizeof( CGRect ))
+    else if (size <= sizeof( CGRect )) // 32
         return imp_implementationWithBlock( ^CGRect(__unsafe_unretained id self, ...) {
           NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
           invoke( self, invocation );
@@ -194,7 +194,7 @@ IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self,
           return returnValue;
         } );
 
-    else if (size <= sizeof( CGAffineTransform ))
+    else if (size <= sizeof( CGAffineTransform )) // 48
         return imp_implementationWithBlock( ^CGAffineTransform(__unsafe_unretained id self, ...) {
           NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
           invoke( self, invocation );
@@ -203,6 +203,6 @@ IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self,
           return returnValue;
         } );
 
-    else
+    else // return value size not yet supported.
         abort();
 }

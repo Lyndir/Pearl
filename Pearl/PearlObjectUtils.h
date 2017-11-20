@@ -245,7 +245,10 @@ extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
  *
  * Details:
  * Calling fromSel triggers toSel's implementation except if called from toSel (in the call stack).
- * Calling toSel behaves as normal and invokes toSel's implementation, too.  It does NOT trigger fromSel's original implementation. */
+ * Calling toSel behaves as normal and invokes toSel's implementation, too.  It does NOT trigger fromSel's original implementation.
+ *
+ * @return NO if there is no fromSel on the given type or the swizzle was already applied on the type.
+ */
 extern BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel);
 
 /** Invoke the original implementation from a swizzled method.
@@ -268,9 +271,13 @@ extern BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel);
     [_invocation setSelector:fromSel];                                                  \
     NSInteger _a = 2;                                                                   \
     MAP( PearlInvocationSetArg, ##__VA_ARGS__ );                                        \
-    [_invocation invokeWithTarget:self subclass:objc_getAssociatedObject( self, _cmd )];\
+    [_invocation invokeWithTarget:self superclass:objc_getAssociatedObject(self, _cmd)];\
     _invocation;                                                                        \
 })
+
+/** Create an IMP, implemented by the given block, which extracts and returns the return value from the resulting NSInvocation. */
+IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self, NSInvocation *invocation));
+
 __END_DECLS
 
 @interface PearlWeakReference<ObjectType> : NSObject

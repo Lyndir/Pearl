@@ -104,7 +104,7 @@
     }
 }
 
-- (void)invokeWithTarget:(id)target subclass:(Class)type {
+- (void)invokeWithTarget:(id)target superclass:(Class)type {
     if (!type)
         // Error: `type` missing.
         abort();

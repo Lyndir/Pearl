@@ -32,7 +32,7 @@
 /** Initialize the arguments of the invocation using the given varargs.  The method signature should match the varargs. */
 - (void)setArguments:(va_list)args;
 /** Invoke the implementation of the invocation that's in the given subclass as opposed to the overridden implementation in the target's type. */
-- (void)invokeWithTarget:(id)target subclass:(Class)type;
+- (void)invokeWithTarget:(id)target superclass:(Class)type;
 /** Wrap the invocation's return value in an NSValue. */
 - (NSValue *)returnValue;
 

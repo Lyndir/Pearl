@@ -9,97 +9,39 @@
 
 - (void)setArguments:(va_list)args {
     for (NSUInteger a = 2; a < [self.methodSignature numberOfArguments]; ++a) {
+        NSUInteger size, alignment;
         const char *argType = [self.methodSignature getArgumentTypeAtIndex:a];
+        NSGetSizeAndAlignment( argType, &size, &alignment );
 
-        if (0 == strcmp( argType, @encode( id ) )) {
-            id arg = va_arg( args, id );
+        if (sizeof(uint8_t) == size) { // 1
+            uint8_t arg = va_arg( args, uint8_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (0 == strcmp( argType, @encode( SEL ) )) {
-            SEL arg = va_arg( args, SEL );
+        else if (sizeof( uint16_t ) == size) { // 2
+            uint16_t arg = va_arg( args, uint16_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (0 == strcmp( argType, @encode( Class ) )) {
-            Class arg = va_arg( args, Class );
+        else if (sizeof( uint32_t ) == size) { // 4
+            uint32_t arg = va_arg( args, uint32_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (0 == strcmp( argType, @encode( char ) )) {
-            char arg = va_arg( args, char );
+        else if (sizeof( uint64_t ) == size) { // 8
+            uint64_t arg = va_arg( args, uint64_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (0 == strcmp( argType, @encode( unsigned char ) )) {
-            unsigned char arg = va_arg( args, unsigned char );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( int ) )) {
-            int arg = va_arg( args, int );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( BOOL ) )) {
-            BOOL arg = va_arg( args, BOOL );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( short ) )) {
-            short arg = va_arg( args, short );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( unichar ) )) {
-            unichar arg = va_arg( args, unichar );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( float ) )) {
-            float arg = va_arg( args, float );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( double ) )) {
-            double arg = va_arg( args, double );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( long ) )) {
-            long arg = va_arg( args, long );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( long long ) )) {
-            long long arg = va_arg( args, long long );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( unsigned int ) )) {
-            unsigned int arg = va_arg( args, unsigned int );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( unsigned long ) )) {
-            unsigned long arg = va_arg( args, unsigned long );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( unsigned long long ) )) {
-            unsigned long long arg = va_arg( args, unsigned long long );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( char * ) )) {
-            char *arg = va_arg( args, char* );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( void * ) )) {
-            void *arg = va_arg( args, void* );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( CGRect ) )) {
-            CGRect arg = va_arg( args, CGRect );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( CGSize ) )) {
-            CGSize arg = va_arg( args, CGSize );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (0 == strcmp( argType, @encode( CGPoint ) )) {
+        else if (sizeof( CGPoint ) == size) { // 16
             CGPoint arg = va_arg( args, CGPoint );
             [self setArgument:&arg atIndex:a];
         }
-        else if (0 == strcmp( argType, @encode( CGAffineTransform ) )) {
+        else if (sizeof( CGRect ) == size) { // 32
+            CGRect arg = va_arg( args, CGRect );
+            [self setArgument:&arg atIndex:a];
+        }
+        else if (sizeof( CGAffineTransform ) == size) { // 48
             CGAffineTransform arg = va_arg( args, CGAffineTransform );
             [self setArgument:&arg atIndex:a];
         }
-        else
+        else // argument size not yet supported.
             abort();
     }
 }
@@ -157,184 +99,110 @@
     return value;
 }
 
-- (SEL)selectorValue {
-
-    if (0 != strcmp( @encode( SEL ), self.methodSignature.methodReturnType))
-        abort();
-
-    SEL value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (Class)classValue {
-
-    if (0 != strcmp( @encode( Class ), self.methodSignature.methodReturnType))
-        abort();
-
-    Class value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (char)charValue {
-
-    if (0 != strcmp( @encode( char ), self.methodSignature.methodReturnType))
-        abort();
-
-    char value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (unsigned char)unsignedCharValue {
-
-    if (0 != strcmp( @encode( unsigned char ), self.methodSignature.methodReturnType))
-        abort();
-
-    unsigned char value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (int)intValue {
-
-    if (0 != strcmp( @encode( int ), self.methodSignature.methodReturnType))
-        abort();
-
-    int value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (BOOL)boolValue {
-
-    if (0 != strcmp( @encode( BOOL ), self.methodSignature.methodReturnType))
-        abort();
-
-    BOOL value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (short)shortValue {
-
-    if (0 != strcmp( @encode( short ), self.methodSignature.methodReturnType))
-        abort();
-
-    short value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (unichar)unicharValue {
-
-    if (0 != strcmp( @encode( unichar ), self.methodSignature.methodReturnType))
-        abort();
-
-    unichar value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (float)floatValue {
-
-    if (0 != strcmp( @encode( float ), self.methodSignature.methodReturnType))
-        abort();
-
-    float value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (double)doubleValue {
-
-    if (0 != strcmp( @encode( double ), self.methodSignature.methodReturnType))
-        abort();
-
-    double value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (long)longValue {
-
-    if (0 != strcmp( @encode( long ), self.methodSignature.methodReturnType))
-        abort();
-
-    long value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (long long)longLongValue {
-
-    if (0 != strcmp( @encode( long long ), self.methodSignature.methodReturnType))
-        abort();
-
-    long long value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (unsigned int)unsignedIntValue {
-
-    if (0 != strcmp( @encode( unsigned int ), self.methodSignature.methodReturnType))
-        abort();
-
-    unsigned int value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (unsigned long)unsignedLongValue {
-
-    if (0 != strcmp( @encode( unsigned long ), self.methodSignature.methodReturnType))
-        abort();
-
-    unsigned long value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (unsigned long long)unsignedLongLongValue {
-
-    if (0 != strcmp( @encode( unsigned long long ), self.methodSignature.methodReturnType))
-        abort();
-
-    unsigned long long value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (char *)stringValue {
-
-    if (0 != strcmp( @encode( char * ), self.methodSignature.methodReturnType))
-        abort();
-
-    char *value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (void *)pointerValue {
-
-    if (!self.methodSignature.methodReturnLength)
-        return nil;
-
-    void *value;
-    [self getReturnValue:&value];
-    return value;
-}
-
-- (void *)pointerToValue {
-
-    if (!self.methodSignature.methodReturnLength)
-        return nil;
-
-    void *value = malloc( self.methodSignature.methodReturnLength );
-    [self getReturnValue:value];
-    return value;
-}
-
 @end
+
+BOOL PearlSwizzle(Class type, SEL fromSel, SEL toSel) {
+    // If there is no `fromSel` method in `type`'s class hierarchy, abort.
+    Method fromMethod = class_getInstanceMethod( type, fromSel );
+    if (!fromMethod)
+        return NO;
+
+    @synchronized (type) {
+        // Make sure `type` defines a local `fromSel` implementation; adding an empty `[super fromSel]` call if needed.
+        const char *methodTypes = method_getTypeEncoding( fromMethod );
+        class_addMethod( type, fromSel, PearlForwardIMP( fromMethod, ^(__unsafe_unretained id self, NSInvocation *invocation) {
+          [invocation invokeWithTarget:self superclass:class_getSuperclass( type )];
+        } ), methodTypes );
+
+        // Add the swizzle trampoline which effects the swizzle but only at the highest level in the call stack/class hierarchy.
+        SEL proxySel = NSSelectorFromString( strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( toSel ) ) );
+        if (!class_addMethod( type, proxySel, PearlForwardIMP( fromMethod, ^(__unsafe_unretained id self, NSInvocation *invocation) {
+          @synchronized (type) {
+              @try {
+                  // Temporarily restore the unswizzled state.
+                  method_exchangeImplementations(
+                      class_getInstanceMethod( type, proxySel ),
+                      class_getInstanceMethod( type, fromSel ) );
+
+                  if (objc_getAssociatedObject( self, toSel ))
+                      // This `toSel` has already been handled in the call stack.  Invoke the original implementation at this level.
+                      return [invocation invokeWithTarget:self superclass:type];
+
+                  // Invoke `toSel` and record the fact that we've done so to avoid invoking it again as a result of a super-type swizzle.
+                  @try {
+                      objc_setAssociatedObject( self, toSel, type, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                      invocation.selector = toSel;
+                      return [invocation invokeWithTarget:self superclass:type];
+                  }
+                  @finally {
+                      objc_setAssociatedObject( self, toSel, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+                  }
+              }
+                  // Restore the swizzled state.
+              @finally {
+                  method_exchangeImplementations(
+                      class_getInstanceMethod( type, fromSel ),
+                      class_getInstanceMethod( type, proxySel ) );
+              }
+          }
+        } ), methodTypes ))
+            return NO;
+
+        // Do the swizzle!
+        method_exchangeImplementations(
+            class_getInstanceMethod( type, fromSel ),
+            class_getInstanceMethod( type, proxySel ) );
+        return YES;
+    }
+}
+
+IMP PearlForwardIMP(Method forMethod, void(^invoke)(__unsafe_unretained id self, NSInvocation *invocation)) {
+    NSUInteger size, alignment;
+    SEL sel = method_getName( forMethod );
+    NSGetSizeAndAlignment( method_copyReturnType( forMethod ), &size, &alignment );
+
+    if (!size)
+        return imp_implementationWithBlock( ^void(__unsafe_unretained id self, ...) {
+          NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
+          invoke( self, invocation );
+        } );
+
+    else if (size <= sizeof( id ))
+        return imp_implementationWithBlock( ^id(__unsafe_unretained id self, ...) {
+          NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
+          invoke( self, invocation );
+          id returnValue = nil;
+          [invocation getReturnValue:&returnValue];
+          return returnValue;
+        } );
+
+    else if (size <= sizeof( CGSize ))
+        return imp_implementationWithBlock( ^CGSize(__unsafe_unretained id self, ...) {
+          NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
+          invoke( self, invocation );
+          CGSize returnValue = CGSizeZero;
+          [invocation getReturnValue:&returnValue];
+          return returnValue;
+        } );
+
+    else if (size <= sizeof( CGRect ))
+        return imp_implementationWithBlock( ^CGRect(__unsafe_unretained id self, ...) {
+          NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
+          invoke( self, invocation );
+          CGRect returnValue = CGRectZero;
+          [invocation getReturnValue:&returnValue];
+          return returnValue;
+        } );
+
+    else if (size <= sizeof( CGAffineTransform ))
+        return imp_implementationWithBlock( ^CGAffineTransform(__unsafe_unretained id self, ...) {
+          NSInvocation *invocation = PearlInvocationMakeWithVargs( self, sel, self );
+          invoke( self, invocation );
+          CGAffineTransform returnValue = CGAffineTransformIdentity;
+          [invocation getReturnValue:&returnValue];
+          return returnValue;
+        } );
+
+    else
+        abort();
+}

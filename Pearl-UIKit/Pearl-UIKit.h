@@ -38,6 +38,6 @@
 #import "UITextView+PearlAttributes.h"
 #import "UIView+FontScale.h"
 #import "UIView+LayoutGone.h"
-#import "UIView+PearlMinimumSize.h"
+#import "UIView+PearlSize.h"
 #import "UIView+Touches.h"
 #import "UIView+Visible.h"

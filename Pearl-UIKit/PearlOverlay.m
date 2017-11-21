@@ -77,10 +77,10 @@
         }
 
         [self.overlayView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, 16 + self.titleView.frame.size.height + self.activityIndicator.frame.size.height )
-                   andParentPaddingTop:CGFLOAT_MAX right:20 bottom:20 left:20];
+                        andParentMarginTop:CGFLOAT_MAX right:20 bottom:20 left:20];
         [self.titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MIN )
-                 andParentPaddingTop:CGFLOAT_MAX right:20 bottom:8 left:20];
-        [self.activityIndicator setFrameFromCurrentSizeAndParentPaddingTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
+                      andParentMarginTop:CGFLOAT_MAX right:20 bottom:8 left:20];
+        [self.activityIndicator setFrameFromCurrentSizeAndParentMarginTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
     } );
 
     return self;

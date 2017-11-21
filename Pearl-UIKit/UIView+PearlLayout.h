@@ -63,8 +63,11 @@ extern CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft);
 // Creating a CGRect.
 extern CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
 extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
-/** Use CGFLOAT_MAX in size or padding for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
-extern CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
+/** Use CGFLOAT_MAX in size or margin for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
+extern CGRect CGRectInCGRectWithSizeAndMargin(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
+
+// Creating a UIEdgeInsets
+UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);
 
 typedef struct PearlLayout {
     CGFloat left;
@@ -77,8 +80,8 @@ typedef struct PearlLayout {
 
 typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
     PearlLayoutOptionNone = 0,
-    /** Constrain size to superview's available size. */
-        PearlLayoutOptionConstrainSize = 1 << 0,
+    /** Constrain the superview's bounds; ie. do not allow the superview to be resized if needed to fit the view. */
+        PearlLayoutOptionConstrained = 1 << 0,
 };
 __END_DECLS
 
@@ -87,13 +90,18 @@ __END_DECLS
 /**
  * Set the layout of the view based on the given layout string.
  *
+ * Note: these values specify the layout of the view's alignment rectangle.
+ * The alignment rectangle is usually the same as the view's frame,
+ * but a view could offset its alignment rectangle for various reasons.
+ * eg. \c -paddingInsets offsets the alignment rectangle negatively (outward), resulting in additional layout margin.
+ *
  * @"left | top [ s_opt width / height ] bottom | right"
  *
- * A "-" padding = parent's layout margin, a "-" size = 44.
+ * A "-" = parent's layout margin, a "-" size = 44.
  * An "=" dimension retains its current value.
  * An "S" dimension substitutes the offset to bring the view inside the safe area.
- * A ">" left/top or "<" right/bottom padding = expand.
- * Empty padding = 0, empty size = fit or expand if both paddings are fixed.
+ * A ">" left/top or "<" right/bottom margin = expand.
+ * Empty margin = 0, empty size = fit or expand if both margins are fixed.
  * An "x", "y" or "z" will be replaced with the x, y and z parameter value.
  * s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize
  * Spaces around operators are permitted.
@@ -120,14 +128,12 @@ __END_DECLS
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
              options:(PearlLayoutOption)options;
 
-- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right
-                                            bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+- (void)setFrameFromCurrentSizeAndParentMarginTop:(CGFloat)top right:(CGFloat)right
+                                           bottom:(CGFloat)bottom left:(CGFloat)left;
+- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
-
-- (UIEdgeInsets)frameInsets;
 
 /** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
 - (void)sizeToFitSubviews;

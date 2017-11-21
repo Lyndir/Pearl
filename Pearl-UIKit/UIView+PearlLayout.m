@@ -135,7 +135,7 @@ CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size) {
   return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height );
 }
 
-CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
+CGRect CGRectInCGRectWithSizeAndMargin(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
   if (size.width == CGFLOAT_MAX) {
     if (left == CGFLOAT_MAX && right == CGFLOAT_MAX)
@@ -173,11 +173,17 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   return CGRectFromOriginWithSize( CGPointMake( left, top ), size );
 }
 
+UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container) {
+  return UIEdgeInsetsMake(
+      CGRectGetMinY( rect ), CGRectGetMinX( rect ),
+      container.height - CGRectGetMaxY( rect ), container.width - CGRectGetMaxX( rect ) );
+}
+
 @implementation UIView(PearlLayout)
 
-- (void)setFrameFromCurrentSizeAndParentPaddingTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+- (void)setFrameFromCurrentSizeAndParentMarginTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
 
-  [self setFrameFromSize:self.frame.size andParentPaddingTop:top right:right bottom:bottom left:left];
+  [self setFrameFromSize:self.frame.size andParentMarginTop:top right:right bottom:bottom left:left];
 }
 
 - (void)setFrameFrom:(NSString *)layoutString {
@@ -241,6 +247,7 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   CGFloat leftLayoutValue = [leftLayoutString floatValue], rightLayoutValue = [rightLayoutString floatValue];
   CGFloat widthLayoutValue = [widthLayoutString floatValue], heightLayoutValue = [heightLayoutString floatValue];
   CGFloat topLayoutValue = [topLayoutString floatValue], bottomLayoutValue = [bottomLayoutString floatValue];
+  CGRect alignmentRect = [self alignmentRectForFrame:self.frame];
 
   // Overrides
   if (layoutOverrides.left)
@@ -258,7 +265,7 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
 
   // Options
   if ([sizeLayoutString rangeOfString:@"|"].location != NSNotFound)
-    options |= PearlLayoutOptionConstrainSize;
+    options |= PearlLayoutOptionConstrained;
 
   // Left
   if ([leftLayoutString isEqualToString:@">"])
@@ -266,9 +273,9 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   else if ([leftLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     leftLayoutValue = self.superview.layoutMargins.left;
   else if ([leftLayoutString isEqualToString:@"="])
-    leftLayoutValue = self.frame.origin.x;
+    leftLayoutValue = alignmentRect.origin.x;
   else if ([leftLayoutString isEqualToString:@"S"])
-//        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( self.frame ) );
+//        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( alignmentRect ) );
     leftLayoutValue = 0;
   else if ([leftLayoutString isEqualToString:@"x"])
     leftLayoutValue = x;
@@ -283,9 +290,9 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   else if ([rightLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     rightLayoutValue = self.superview.layoutMargins.right;
   else if ([rightLayoutString isEqualToString:@"="])
-    rightLayoutValue = CGRectGetRight( self.superview.bounds ).x - CGRectGetRight( self.frame ).x;
+    rightLayoutValue = CGRectGetRight( self.superview.bounds ).x - CGRectGetRight( alignmentRect ).x;
   else if ([rightLayoutString isEqualToString:@"S"])
-//        rightLayoutValue = MAX( 0, CGRectGetMaxX( self.frame ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
+//        rightLayoutValue = MAX( 0, CGRectGetMaxX( alignmentRect ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
     rightLayoutValue = 0;
   else if ([rightLayoutString isEqualToString:@"x"])
     rightLayoutValue = x;
@@ -300,9 +307,9 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   else if ([topLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     topLayoutValue = self.superview.layoutMargins.top;
   else if ([topLayoutString isEqualToString:@"="])
-    topLayoutValue = self.frame.origin.y;
+    topLayoutValue = alignmentRect.origin.y;
   else if ([topLayoutString isEqualToString:@"S"])
-//        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( self.frame ) );
+//        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( alignmentRect ) );
     topLayoutValue = UIApp.statusBarFrame.size.height;
   else if ([topLayoutString isEqualToString:@"x"])
     topLayoutValue = x;
@@ -317,9 +324,9 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   else if ([bottomLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     bottomLayoutValue = self.superview.layoutMargins.bottom;
   else if ([bottomLayoutString isEqualToString:@"="])
-    bottomLayoutValue = CGRectGetBottom( self.superview.bounds ).y - CGRectGetBottom( self.frame ).y;
+    bottomLayoutValue = CGRectGetBottom( self.superview.bounds ).y - CGRectGetBottom( alignmentRect ).y;
   else if ([bottomLayoutString isEqualToString:@"S"])
-//        bottomLayoutValue = MAX( 0, CGRectGetMaxY( self.frame ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
+//        bottomLayoutValue = MAX( 0, CGRectGetMaxY( alignmentRect ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
     bottomLayoutValue = 0;
   else if ([bottomLayoutString isEqualToString:@"x"])
     bottomLayoutValue = x;
@@ -332,7 +339,7 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   if ([widthLayoutString isEqualToString:@"-"])
     widthLayoutValue = 44;
   else if ([widthLayoutString isEqualToString:@"="])
-    widthLayoutValue = self.frame.size.width;
+    widthLayoutValue = alignmentRect.size.width;
   else if ([widthLayoutString isEqualToString:@"x"])
     widthLayoutValue = x;
   else if ([widthLayoutString isEqualToString:@"y"])
@@ -350,7 +357,7 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   if ([heightLayoutString isEqualToString:@"-"])
     heightLayoutValue = 44;
   else if ([heightLayoutString isEqualToString:@"="])
-    heightLayoutValue = self.frame.size.height;
+    heightLayoutValue = alignmentRect.size.height;
   else if ([heightLayoutString isEqualToString:@"x"])
     heightLayoutValue = x;
   else if ([heightLayoutString isEqualToString:@"y"])
@@ -366,97 +373,87 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
 
   // Apply layout
   [self setFrameFromSize:CGSizeMake( widthLayoutValue, heightLayoutValue )
-     andParentPaddingTop:topLayoutValue right:rightLayoutValue bottom:bottomLayoutValue left:leftLayoutValue
+      andParentMarginTop:topLayoutValue right:rightLayoutValue bottom:bottomLayoutValue left:leftLayoutValue
                  options:options];
 }
 
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left {
 
-  [self setFrameFromSize:size andParentPaddingTop:top right:right bottom:bottom left:left options:PearlLayoutOptionNone];
+  [self setFrameFromSize:size andParentMarginTop:top right:right bottom:bottom left:left options:PearlLayoutOptionNone];
 }
 
-- (void)setFrameFromSize:(CGSize)size andParentPaddingTop:(CGFloat)top right:(CGFloat)right
+- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 
-  // Grow the superview if needed to fit the padding.
-  CGFloat availableWidth = self.superview.bounds.size.width -
-                           (left == CGFLOAT_MAX? 0: left) - (right == CGFLOAT_MAX? 0: right);
-  CGFloat availableHeight = self.superview.bounds.size.height -
-                            (top == CGFLOAT_MAX? 0: top) - (bottom == CGFLOAT_MAX? 0: bottom);
-  if (availableWidth < 0)
-    CGRectSetWidth( self.superview.bounds,
-        (availableWidth = 0) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
-  if (availableHeight < 0)
-    CGRectSetHeight( self.superview.bounds,
-        (availableHeight = 0) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) );
+  // Determine the size available in the superview for our alignment rect.
+  CGRect alignmentRect = [self alignmentRectForFrame:self.frame];
+  UIEdgeInsets alignmentInsets = UIEdgeInsetsMake(
+      alignmentRect.origin.y - self.frame.origin.y, alignmentRect.origin.x - self.frame.origin.x,
+      (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height),
+      (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width) );
+  CGFloat availableWidth = MAX( 0, self.superview.bounds.size.width -
+      ((left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right) );
+  CGFloat availableHeight = MAX( 0, self.superview.bounds.size.height -
+      ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom) );
 
-  // For the fitting size, use 0 for unknown minimal bounds and the available space for unknown maximal bounds.
+  /// fittingSize = The view's measured size based on the available space; adjusted to fit the alignment rect.
   CGSize fittingSize = [self sizeThatFits:(CGSize){
       .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
       .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
   }];
-
-  // Resolve our minimal size dimensions with our fitting size.
-  CGSize resolvedSize = CGSizeMake(
-      size.width == CGFLOAT_MIN? fittingSize.width: MAX( fittingSize.width, size.width ),
-      size.height == CGFLOAT_MIN? fittingSize.height: MAX( fittingSize.height, size.height ) );
-
-  // Grow the superview if needed to fit the resolved size and padding.
+  fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
+  /// requestedSize = The size we want for this view.  The given size, but no less than the fitting size.
   CGSize requestedSize = CGSizeMake(
-      resolvedSize.width == CGFLOAT_MAX? fittingSize.width: resolvedSize.width,
-      resolvedSize.height == CGFLOAT_MAX? fittingSize.height: resolvedSize.height );
-  if (requestedSize.width > availableWidth)
-    CGRectSetWidth( self.superview.bounds,
-        (availableWidth = requestedSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
-  if (requestedSize.height > availableHeight)
-    CGRectSetHeight( self.superview.bounds,
-        (availableHeight = requestedSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) );
+      MAX( fittingSize.width, size.width ),
+      MAX( fittingSize.height, size.height ) );
+  /// requiredSize = The minimum size needed for this view. The requested size, with MAX dimensions minimized to their fitting size. 
+  CGSize requiredSize = CGSizeMake(
+      requestedSize.width == CGFLOAT_MAX? fittingSize.width: requestedSize.width,
+      requestedSize.height == CGFLOAT_MAX? fittingSize.height: requestedSize.height );
 
-  if (options & PearlLayoutOptionConstrainSize)
-    resolvedSize = CGSizeMake(
-        resolvedSize.width == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.width, availableWidth ),
-        resolvedSize.height == CGFLOAT_MAX? CGFLOAT_MAX: MIN( resolvedSize.height, availableHeight ) );
+  // Grow the superview if needed to fit the alignment rect and margin.
+  if (!(options & PearlLayoutOptionConstrained)) {
+    if (requiredSize.width > availableWidth)
+      CGRectSetWidth( self.superview.bounds, (availableWidth = requiredSize.width) +
+          (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right );
+    if (requiredSize.height > availableHeight)
+      CGRectSetHeight( self.superview.bounds, (availableHeight = requiredSize.height) +
+          (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom );
+  }
 
-  // Resolve the frame based on the parent's bounds and our layout parameters.
-  self.frame = CGRectInCGRectWithSizeAndPadding( self.superview.bounds, resolvedSize, top, right, bottom, left );
+  // Resolve the alignment rect from the requested size and margin.
+  alignmentRect = CGRectInCGRectWithSizeAndMargin( self.superview.bounds, requestedSize, top, right, bottom, left );
+
+  // Determine the view's frame around the alignment rect and let autoresizing handle flexible margins.
+  self.frame = [self frameForAlignmentRect:alignmentRect];
   self.autoresizingMask = (UIViewAutoresizing)(
       (top == CGFLOAT_MAX? UIViewAutoresizingFlexibleTopMargin: 0) |
       (right == CGFLOAT_MAX? UIViewAutoresizingFlexibleRightMargin: 0) |
       (bottom == CGFLOAT_MAX? UIViewAutoresizingFlexibleBottomMargin: 0) |
       (left == CGFLOAT_MAX? UIViewAutoresizingFlexibleLeftMargin: 0) |
-      (resolvedSize.width == CGFLOAT_MAX? UIViewAutoresizingFlexibleWidth: 0) |
-      (resolvedSize.height == CGFLOAT_MAX? UIViewAutoresizingFlexibleHeight: 0));
-}
-
-- (UIEdgeInsets)frameInsets {
-  return UIEdgeInsetsMake( CGRectGetMinY( self.frame ), CGRectGetMinX( self.frame ),
-      self.superview.bounds.size.height - CGRectGetMaxY( self.frame ),
-      self.superview.bounds.size.width - CGRectGetMaxX( self.frame ) );
+      (requestedSize.width == CGFLOAT_MAX? UIViewAutoresizingFlexibleWidth: 0) |
+      (requestedSize.height == CGFLOAT_MAX? UIViewAutoresizingFlexibleHeight: 0));
 }
 
 - (CGSize)minimumAutoresizingSize {
   CGSize minSize = CGSizeZero;
-//    if (self.autoresizingMask & UIViewAutoresizingFlexibleWidth || self.autoresizingMask & UIViewAutoresizingFlexibleHeight)
   for (UIView *subview in self.subviews) {
-    UIEdgeInsets insets = subview.frameInsets;
+    UIEdgeInsets margins = UIEdgeInsetsFromCGRectInCGSize( subview.frame, subview.superview.bounds.size );
     CGSize minSizeSubview = [subview minimumAutoresizingSize];
     minSize.width = MAX( minSize.width, minSizeSubview.width +
-                                        (subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? 0: insets.left) +
-                                        (subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? 0: insets.right) );
+                                        (subview.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? 0: margins.left) +
+                                        (subview.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? 0: margins.right) );
     minSize.height = MAX( minSize.height, minSizeSubview.height +
-                                          (subview.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? 0: insets.top) +
-                                          (subview.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? 0: insets.bottom) );
+                                          (subview.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? 0: margins.top) +
+                                          (subview.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? 0: margins.bottom) );
   }
 
   return minSize;
-//        return CGSizeMake(
-//                (self.autoresizingMask & UIViewAutoresizingFlexibleWidth? minSize.width: self.bounds.size.width ),
-//                (self.autoresizingMask & UIViewAutoresizingFlexibleHeight? minSize.height: self.bounds.size.height) );
 }
 
 - (void)sizeToFitSubviews {
-  UIEdgeInsets insets = self.frameInsets;
+  UIEdgeInsets margins = UIEdgeInsetsFromCGRectInCGSize( [self alignmentRectForFrame:self.frame], self.superview.bounds.size );
   CGRectSetSize( self.frame, [self minimumAutoresizingSize] );
 
   for (UIView *subview in self.subviews)
@@ -465,10 +462,10 @@ CGRect CGRectInCGRectWithSizeAndPadding(const CGRect parent, CGSize size, CGFloa
   [self setFrameFromSize:CGSizeMake(
           self.autoresizingMask & UIViewAutoresizingFlexibleWidth? CGFLOAT_MAX: self.frame.size.width,
           self.autoresizingMask & UIViewAutoresizingFlexibleHeight? CGFLOAT_MAX: self.frame.size.height )
-     andParentPaddingTop:self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? CGFLOAT_MAX: insets.top
-                   right:self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? CGFLOAT_MAX: insets.right
-                  bottom:self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? CGFLOAT_MAX: insets.bottom
-                    left:self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? CGFLOAT_MAX: insets.left
+      andParentMarginTop:self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? CGFLOAT_MAX: margins.top
+                   right:self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? CGFLOAT_MAX: margins.right
+                  bottom:self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? CGFLOAT_MAX: margins.bottom
+                    left:self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? CGFLOAT_MAX: margins.left
                  options:PearlLayoutOptionNone];
 }
 

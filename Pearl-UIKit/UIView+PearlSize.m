@@ -31,8 +31,9 @@ static CGSize PearlNoIntrinsicMetric;
 }
 
 - (void)setPaddingInsets:(UIEdgeInsets)paddingInsets {
-    PearlSwizzle( [self class], @selector( intrinsicContentSize ), @selector( _pearl_minimumSize_intrinsicContentSize ) );
-    PearlSwizzle( [self class], @selector( sizeThatFits: ), @selector( _pearl_minimumSize_sizeThatFits: ) );
+//    PearlSwizzle( [self class], @selector( intrinsicContentSize ), @selector( _pearl_minimumSize_intrinsicContentSize ) );
+//    PearlSwizzle( [self class], @selector( sizeThatFits: ), @selector( _pearl_minimumSize_sizeThatFits: ) );
+    PearlSwizzle( [self class], @selector( alignmentRectInsets ), @selector( _pearl_minimumSize_alignmentRectInsets ) );
 
     objc_setAssociatedObject( self, @selector( paddingInsets ),
         [NSValue valueWithUIEdgeInsets:paddingInsets], OBJC_ASSOCIATION_RETAIN );
@@ -41,9 +42,9 @@ static CGSize PearlNoIntrinsicMetric;
 - (CGSize)_pearl_minimumSize_intrinsicContentSize {
     CGSize intrinsicContentSize = [self intrinsicContentSize];
 
-    UIEdgeInsets paddingInsets = self.paddingInsets;
-    intrinsicContentSize.width += paddingInsets.left + paddingInsets.right;
-    intrinsicContentSize.height += paddingInsets.top + paddingInsets.bottom;
+//    UIEdgeInsets paddingInsets = self.paddingInsets;
+//    intrinsicContentSize.width -= (paddingInsets.left + paddingInsets.right);
+//    intrinsicContentSize.height -= (paddingInsets.top + paddingInsets.bottom);
 
     CGSize minimumIntrinsicSize = self.minimumIntrinsicSize;
     if (minimumIntrinsicSize.width != UIViewNoIntrinsicMetric)
@@ -57,9 +58,9 @@ static CGSize PearlNoIntrinsicMetric;
 - (CGSize)_pearl_minimumSize_sizeThatFits:(CGSize)fitSize {
     CGSize fittingSize = [self sizeThatFits:fitSize];
 
-    UIEdgeInsets paddingInsets = self.paddingInsets;
-    fittingSize.width += paddingInsets.left + paddingInsets.right;
-    fittingSize.height += paddingInsets.top + paddingInsets.bottom;
+//    UIEdgeInsets paddingInsets = self.paddingInsets;
+//    fittingSize.width -= (paddingInsets.left + paddingInsets.right);
+//    fittingSize.height -= (paddingInsets.top + paddingInsets.bottom);
 
     CGSize minimumIntrinsicSize = self.minimumIntrinsicSize;
     if (minimumIntrinsicSize.width != UIViewNoIntrinsicMetric)
@@ -68,6 +69,18 @@ static CGSize PearlNoIntrinsicMetric;
         fittingSize.height = MAX( fittingSize.height, minimumIntrinsicSize.height );
 
     return fittingSize;
+}
+
+- (UIEdgeInsets)_pearl_minimumSize_alignmentRectInsets {
+    UIEdgeInsets alignmentRectInsets = self.alignmentRectInsets;
+
+    UIEdgeInsets paddingInsets = self.paddingInsets;
+    alignmentRectInsets.top -= paddingInsets.top;
+    alignmentRectInsets.left -= paddingInsets.left;
+    alignmentRectInsets.bottom -= paddingInsets.bottom;
+    alignmentRectInsets.right -= paddingInsets.right;
+
+    return alignmentRectInsets;
 }
 
 @end

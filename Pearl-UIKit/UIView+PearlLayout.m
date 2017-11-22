@@ -392,15 +392,15 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       alignmentRect.origin.y - self.frame.origin.y, alignmentRect.origin.x - self.frame.origin.x,
       (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height),
       (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width) );
-  CGFloat availableWidth = MAX( 0, self.superview.bounds.size.width -
-      ((left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right) );
-  CGFloat availableHeight = MAX( 0, self.superview.bounds.size.height -
-      ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom) );
+  CGFloat availableWidth = self.superview.bounds.size.width -
+      ((left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right);
+  CGFloat availableHeight = self.superview.bounds.size.height -
+      ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom);
 
   /// fittingSize = The view's measured size based on the available space; adjusted to fit the alignment rect.
   CGSize fittingSize = [self systemLayoutSizeFittingSize:(CGSize){
-      .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
-      .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
+      .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? MAX( 0, availableWidth ): size.width,
+      .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? MAX( 0, availableHeight ): size.height,
   }];
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
   /// requestedSize = The size we want for this view.  The given size, but no less than the fitting size.

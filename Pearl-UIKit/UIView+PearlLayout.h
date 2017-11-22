@@ -137,5 +137,7 @@ __END_DECLS
 
 /** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
 - (void)sizeToFitSubviews;
+/** @return The smallest size this view can take up while still respecting its subviews' margins. */
+- (CGSize)minimumAutoresizingSize;
 
 @end

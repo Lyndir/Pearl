@@ -13,6 +13,18 @@ static CGSize PearlNoIntrinsicMetric;
     PearlNoIntrinsicMetric = CGSizeMake( UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric );
 }
 
++ (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins {
+    UIView *container = [UIView new];
+    [container addSubview:subview];
+    [container setLayoutMargins:margins];
+    [container setFrame:CGRectMake( 0, 0,
+        margins.left + subview.frame.size.width + margins.right, margins.top + subview.frame.size.height + margins.bottom )];
+    CGRectSetOrigin( subview.frame, CGPointMake( margins.left, margins.top ) );
+    subview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+    return container;
+}
+
 - (CGSize)minimumIntrinsicSize {
     NSValue *minimumIntrinsicSize = objc_getAssociatedObject( self, @selector( minimumIntrinsicSize ) );
     return minimumIntrinsicSize? [minimumIntrinsicSize CGSizeValue]: PearlNoIntrinsicMetric;
@@ -24,19 +36,6 @@ static CGSize PearlNoIntrinsicMetric;
 
     objc_setAssociatedObject( self, @selector( minimumIntrinsicSize ),
         [NSValue valueWithCGSize:minimumIntrinsicSize], OBJC_ASSOCIATION_RETAIN );
-}
-
-- (UIEdgeInsets)paddingInsets {
-  return [objc_getAssociatedObject( self, @selector( paddingInsets ) ) UIEdgeInsetsValue];
-}
-
-- (void)setPaddingInsets:(UIEdgeInsets)paddingInsets {
-//    PearlSwizzle( [self class], @selector( intrinsicContentSize ), @selector( _pearl_minimumSize_intrinsicContentSize ) );
-//    PearlSwizzle( [self class], @selector( sizeThatFits: ), @selector( _pearl_minimumSize_sizeThatFits: ) );
-    PearlSwizzle( [self class], @selector( alignmentRectInsets ), @selector( _pearl_minimumSize_alignmentRectInsets ) );
-
-    objc_setAssociatedObject( self, @selector( paddingInsets ),
-        [NSValue valueWithUIEdgeInsets:paddingInsets], OBJC_ASSOCIATION_RETAIN );
 }
 
 - (CGSize)_pearl_minimumSize_intrinsicContentSize {
@@ -72,15 +71,20 @@ static CGSize PearlNoIntrinsicMetric;
 }
 
 - (UIEdgeInsets)_pearl_minimumSize_alignmentRectInsets {
-    UIEdgeInsets alignmentRectInsets = self.alignmentRectInsets;
+    return [objc_getAssociatedObject( self, @selector( setAlignmentRectInsets: ) ) UIEdgeInsetsValue];
+}
 
-    UIEdgeInsets paddingInsets = self.paddingInsets;
-    alignmentRectInsets.top -= paddingInsets.top;
-    alignmentRectInsets.left -= paddingInsets.left;
-    alignmentRectInsets.bottom -= paddingInsets.bottom;
-    alignmentRectInsets.right -= paddingInsets.right;
+- (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets {
+    PearlSwizzle( [self class], @selector( alignmentRectInsets ), @selector( _pearl_minimumSize_alignmentRectInsets ) );
 
-    return alignmentRectInsets;
+    objc_setAssociatedObject( self, @selector( setAlignmentRectInsets: ),
+        [NSValue valueWithUIEdgeInsets:alignmentRectInsets], OBJC_ASSOCIATION_RETAIN );
+}
+
+- (void)setAlignmentRectOutsets:(UIEdgeInsets)alignmentRectOutsets {
+    [self setAlignmentRectInsets:UIEdgeInsetsMake(
+        -alignmentRectOutsets.top, -alignmentRectOutsets.left,
+        -alignmentRectOutsets.bottom, -alignmentRectOutsets.right )];
 }
 
 @end

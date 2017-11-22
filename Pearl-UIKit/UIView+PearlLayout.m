@@ -398,7 +398,7 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom) );
 
   /// fittingSize = The view's measured size based on the available space; adjusted to fit the alignment rect.
-  CGSize fittingSize = [self sizeThatFits:(CGSize){
+  CGSize fittingSize = [self systemLayoutSizeFittingSize:(CGSize){
       .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? availableWidth: size.width,
       .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? availableHeight: size.height,
   }];

@@ -393,22 +393,24 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       alignmentRect.origin.y - self.frame.origin.y, alignmentRect.origin.x - self.frame.origin.x,
       (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height),
       (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width) );
+
+  /// availableWidth/Height = The space available in the parent for our view's alignment rect.
   CGFloat availableWidth = self.superview.bounds.size.width -
       ((left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right);
   CGFloat availableHeight = self.superview.bounds.size.height -
       ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom);
 
-  /// fittingSize = The view's measured size based on the available space; adjusted to fit the alignment rect.
+  /// fittingSize = The measured size of the alignment rect based on the available space.
   CGSize fittingSize = [self systemLayoutSizeFittingSize:(CGSize){
       .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? MAX( 0, availableWidth ): size.width,
       .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? MAX( 0, availableHeight ): size.height,
   }];
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
-  /// requestedSize = The size we want for this view.  The given size, but no less than the fitting size.
+  /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
   CGSize requestedSize = CGSizeMake(
-      MAX( fittingSize.width, size.width ),
-      MAX( fittingSize.height, size.height ) );
-  /// requiredSize = The minimum size needed for this view. The requested size, with MAX dimensions minimized to their fitting size. 
+      MAX( fittingSize.width, size.width == CGFLOAT_MIN? 0: size.width ),
+      MAX( fittingSize.height, size.height == CGFLOAT_MIN? 0: size.height ) );
+  /// requiredSize = The minimum space needed for this view's alignment rect. ie. The requested size, w/MAX minimized to fitting size.
   CGSize requiredSize = CGSizeMake(
       requestedSize.width == CGFLOAT_MAX? fittingSize.width: requestedSize.width,
       requestedSize.height == CGFLOAT_MAX? fittingSize.height: requestedSize.height );
@@ -417,10 +419,10 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
   if (!(options & PearlLayoutOptionConstrained)) {
     if (requiredSize.width > availableWidth)
       CGRectSetWidth( self.superview.bounds, (availableWidth = requiredSize.width) +
-          (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right );
+          (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
     if (requiredSize.height > availableHeight)
       CGRectSetHeight( self.superview.bounds, (availableHeight = requiredSize.height) +
-          (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom );
+          (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) );
   }
 
   // Resolve the alignment rect from the requested size and margin.

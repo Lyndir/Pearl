@@ -10,6 +10,19 @@
 /** A minimum bound for the view's intrinsic size and fitting size. */
 @property(nonatomic) IBInspectable CGSize minimumIntrinsicSize;
 
+/** The alignment rectangle in the superview's bounds. */
+@property(nonatomic, readonly) CGRect alignmentRect;
+
+/** The distance between the view's alignment rectangle and its superview's bounds.
+ * eg. right = distance between the right side of the frame and the right bound. */
+@property(nonatomic, readonly) UIEdgeInsets alignmentMargins;
+
+/** The distance between the view's alignment rectangle and its superview's opposite bounds.
+ * eg. right = distance between the right side of the frame and the left bound.
+ *
+ * Ideal for determining the bound margins to use for other views that relate to this view's frame. */
+@property(nonatomic, readonly) UIEdgeInsets alignmentPolarMargins;
+
 /** Create a view that wraps another view inside its margins. */
 + (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins;
 

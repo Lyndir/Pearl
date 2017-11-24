@@ -87,4 +87,21 @@ static CGSize PearlNoIntrinsicMetric;
         -alignmentRectOutsets.bottom, -alignmentRectOutsets.right )];
 }
 
+- (CGRect)alignmentRect {
+    return [self alignmentRectForFrame:self.frame];
+}
+
+- (UIEdgeInsets)alignmentMargins {
+    return UIEdgeInsetsFromCGRectInCGSize( self.alignmentRect, self.superview.bounds.size );
+}
+
+- (UIEdgeInsets)alignmentPolarMargins {
+    CGRect alignmentRect = self.alignmentRect;
+    return UIEdgeInsetsMake(
+        self.superview.bounds.size.height - (alignmentRect.origin.y + alignmentRect.size.height),
+        self.superview.bounds.size.width - (alignmentRect.origin.x + alignmentRect.size.width),
+        alignmentRect.origin.y + alignmentRect.size.height,
+        alignmentRect.origin.x + alignmentRect.size.width );
+}
+
 @end

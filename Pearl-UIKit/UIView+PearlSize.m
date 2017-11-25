@@ -30,7 +30,10 @@ static CGSize PearlNoIntrinsicMetric;
     return minimumIntrinsicSize? [minimumIntrinsicSize CGSizeValue]: PearlNoIntrinsicMetric;
 }
 
-- (void)setMinimumIntrinsicSize:(CGSize)minimumIntrinsicSize {
+- (void)setMinimumIntrinsicSize:(CGSize)aMinimumIntrinsicSize {
+    objc_setAssociatedObject( self, @selector( minimumIntrinsicSize ),
+        [NSValue valueWithCGSize:aMinimumIntrinsicSize], OBJC_ASSOCIATION_RETAIN );
+
     PearlSwizzleTR( [self class], @selector( intrinsicContentSize ), ^CGSize(UIView *self), {
         CGSize intrinsicContentSize = [self intrinsicContentSize];
 
@@ -53,9 +56,6 @@ static CGSize PearlNoIntrinsicMetric;
 
         return fittingSize;
     }, CGSizeValue );
-
-    objc_setAssociatedObject( self, @selector( minimumIntrinsicSize ),
-        [NSValue valueWithCGSize:minimumIntrinsicSize], OBJC_ASSOCIATION_RETAIN );
 }
 
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets {

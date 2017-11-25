@@ -16,8 +16,20 @@
 + (void)load {
 
     for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
-        PearlSwizzle( type, @selector( updateConstraints ), @selector( _pearl_fontMod_updateConstraints ) );
-        PearlSwizzle( type, @selector( setFont: ), @selector( _pearl_fontMod_setFont: ) );
+        PearlSwizzle( type, @selector( updateConstraints ), ^(id self), {
+            [self _pearl_fontMod_updateFont];
+            [self updateConstraints];
+        } );
+        PearlSwizzle( type, @selector( setFont: ), ^(UIView *self, UIFont *originalFont), {
+            if (NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) ||
+                ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]))
+                [(UILabel *)self setFont:originalFont];
+
+            else {
+                CGFloat appliedFontScale = self.appliedFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
+                [(UILabel *)self setFont:[originalFont fontWithSize:originalFont.pointSize * appliedFontScale]];
+            }
+        } );
     }
 }
 
@@ -61,24 +73,6 @@
             if ([self.superview isKindOfClass:[UIControl class]])
                   [self.superview setNeedsLayout];
         }];
-    }
-}
-
-- (void)_pearl_fontMod_updateConstraints {
-
-    [self _pearl_fontMod_updateFont];
-    [self updateConstraints];
-}
-
-- (void)_pearl_fontMod_setFont:(UIFont *)originalFont {
-
-    if (NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) ||
-        ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]))
-        [(UILabel *)self setFont:originalFont];
-
-    else {
-        CGFloat appliedFontScale = self.appliedFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
-        [(UILabel *)self setFont:[originalFont fontWithSize:originalFont.pointSize * appliedFontScale]];
     }
 }
 

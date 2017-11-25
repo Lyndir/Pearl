@@ -95,6 +95,10 @@ __END_DECLS
  * but a view could offset its alignment rectangle for various reasons.
  * eg. \c -paddingInsets offsets the alignment rectangle negatively (outward), resulting in additional layout margin.
  *
+ * Tip: always use -setFrameFrom after all subviews have been added to the view.
+ * If changes are made that require superviews to be readjusted after -setFrameFrom was called,
+ * such as adding new subviews or changes to fitting size, use -sizeToFitSubviews to update the hierarchy.
+ *
  * @"left | top [ s_opt width / height ] bottom | right"
  *
  * A "-" = parent's layout margin, a "-" size = 44.

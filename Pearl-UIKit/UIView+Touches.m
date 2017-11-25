@@ -26,15 +26,13 @@
 
 - (void)setIgnoreTouches:(BOOL)ignoreTouches {
     objc_setAssociatedObject( self, @selector( ignoreTouches ), @(ignoreTouches), OBJC_ASSOCIATION_RETAIN );
-    PearlSwizzle( [self class], @selector( hitTest:withEvent: ), @selector( _pearl_touches_hitTest:withEvent: ) );
-}
+    PearlSwizzle( [self class], @selector( hitTest:withEvent: ), ^UIView *(UIView *self, CGPoint point, UIEvent *event), {
+        UIView *hitView = [self hitTest:point withEvent:event];
+        if (self.ignoreTouches && hitView == self)
+            return (UIView *)nil;
 
-- (UIView *)_pearl_touches_hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *hitView = [self hitTest:point withEvent:event];
-    if (self.ignoreTouches && hitView == self)
-        return nil;
-
-    return hitView;
+        return hitView;
+    } );
 }
 
 @end

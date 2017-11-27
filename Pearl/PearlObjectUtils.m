@@ -204,10 +204,12 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     objc_property_t *properties = class_copyPropertyList( [self class], &count );
     for (unsigned int p = 0; p < count; ++p) {
         NSString *currentPropertyName = strf(@"%s", property_getName( properties[p] ));
-        if ([self valueForKey:currentPropertyName] == value) {
-            propertyName = currentPropertyName;
-            break;
-        }
+        @try {
+            if ([self valueForKey:currentPropertyName] == value) {
+                propertyName = currentPropertyName;
+                break;
+            }
+        } @catch(NSException *ignored) {}
     }
     free( properties );
 

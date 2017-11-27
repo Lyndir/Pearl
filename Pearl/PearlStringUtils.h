@@ -41,6 +41,8 @@ extern NSString *PearlStringNSB(NSNumber *value);
 
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the right side. */
 extern NSString *RPad(const NSString *string, const NSUInteger l);
+/** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on both sides. */
+extern NSString *CPad(const NSString *string, const NSUInteger l);
 /** Generate a string that contains the given string but pads it to the given length if it is less by adding spaces on the left side. */
 extern NSString *LPad(const NSString *string, const NSUInteger l);
 /** Generate a string where the ordinal suffix of the given number is appended to the given prefix. */

@@ -186,6 +186,17 @@ NSString *RPad(const NSString *string, const NSUInteger l) {
     return newString;
 }
 
+NSString *CPad(const NSString *string, const NSUInteger l) {
+
+    NSMutableString *newString = [string mutableCopy];
+    for (NSInteger left = (NSInteger)(l - newString.length) / 2; left > 0; --left)
+        [newString insertString:@" " atIndex:0];
+    while (newString.length < l)
+        [newString appendString:@" "];
+
+    return newString;
+}
+
 NSString *LPad(const NSString *string, const NSUInteger l) {
 
     NSMutableString *newString = [string mutableCopy];

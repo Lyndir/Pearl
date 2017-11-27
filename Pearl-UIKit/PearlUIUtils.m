@@ -425,13 +425,17 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printChildHierarchyWithIndent:(NSUInteger)indent {
 
-    dbg( strf( @"%%%lds %%@", (long)indent ), "", [self infoDescription] );
+    dbg( @"%@%@", RPad( @"", indent ), [self infoDescriptionWithPadding:50 - indent] );
 
     for (UIView *child in self.subviews)
-        [child printChildHierarchyWithIndent:indent + 4];
+        [child printChildHierarchyWithIndent:indent + 2];
 }
 
 - (NSString *)infoDescription {
+    return [self infoDescriptionWithPadding:0];
+}
+
+- (NSString *)infoDescriptionWithPadding:(NSUInteger)padding {
 
     // Get background color
     CGFloat red, green, blue, alpha;
@@ -440,19 +444,33 @@ static NSMutableSet *dismissableResponders;
             (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
 
     // Find the view controller
-    UIResponder *nextResponder = [self nextResponder];
-    while ([nextResponder isKindOfClass:[UIView class]])
-        nextResponder = [nextResponder nextResponder];
-    UIViewController *viewController = nil;
-    if ([nextResponder isKindOfClass:[UIViewController class]])
-        if ((viewController = (UIViewController *)nextResponder).view != self)
-            viewController = nil;
-    NSString *property = [viewController propertyWithValue:self];
+    NSString *property = nil;
+    UIResponder *nextResponder = nil;
+    for (nextResponder = [self nextResponder]; nextResponder; nextResponder = [nextResponder nextResponder])
+        if ((property = [nextResponder propertyWithValue:self]))
+            break;
 
-    return strf( strf( @"%@ t:%%d, a:%%0.1f, h:%%@, b:%%@, f:%%@, %%@", viewController? @"+ %@ (%@)%@": @"- %@%@%@" ),
-            NSStringFromClass( [viewController class] )?: @"", [self class], property?: @"",
+    // Determine the autoresizing configuration
+    CGRect rect = self.alignmentRect;
+    UIEdgeInsets margins = self.alignmentMargins;
+    NSString *autoresizing1 = strf( @"%@%@|%@%@",
+        strf( @"%.3g", margins.left ), self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? @">": @"",
+        strf( @"%.3g", margins.top ), self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? @">": @"" );
+    NSString *autoresizing2 = strf( @"%@%@%@/%@%@%@",
+        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @"<": @"", strf( @"%.3g", rect.size.width ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @">": @"",
+        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @"<": @"", strf( @"%.3g", rect.size.height ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @">": @"" );
+    NSString *autoresizing3 = strf( @"%@%@|%@%@",
+        self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? @"<": @"", strf( @"%.3g", margins.bottom ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.3g", margins.right ) );
+
+    return strf( @"%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
+            RPad( strf(nextResponder? @"+%@(%@)%@": @"-%@%@%@",
+                NSStringFromClass( [nextResponder class] )?: @"", [self class], property?: @"" ), padding ),
             self.tag, self.alpha, @(self.hidden), backgroundString,
-            NSStringFromCGRect( self.frame ), [self debugDescription] );
+            RPad( LPad( autoresizing1, 8 ), 9 ), CPad( autoresizing2, 11 ), LPad( RPad( autoresizing3, 8 ), 9 ),
+            [self debugDescription] );
 }
 
 - (NSString *)layoutDescription {

@@ -139,8 +139,9 @@ __END_DECLS
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
 
-/** Shrink the view's bounds to be the smallest that fit its current subview autoresizing configuration. */
-- (void)sizeToFitSubviews;
+/** Honouring the current layout margins and autoresizing configuration, recalculate the view hierarchy's fitting sizes.
+ * The superview will grow if needed to fit the view's new size. */
+- (void)shrinkToFit;
 /** @return The smallest size this view can take up while still respecting its subviews' margins. */
 - (CGSize)minimumAutoresizingSize;
 

@@ -64,7 +64,7 @@ extern CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft);
 extern CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
 extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
 /** Use CGFLOAT_MAX in size or margin for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
-extern CGRect CGRectInCGRectWithSizeAndMargin(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
+extern CGRect CGRectInCGSizeWithSizeAndMargin(const CGSize container, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
 
 // Creating a UIEdgeInsets
 UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);

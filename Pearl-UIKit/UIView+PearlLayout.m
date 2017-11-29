@@ -135,39 +135,39 @@ CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size) {
   return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height );
 }
 
-CGRect CGRectInCGRectWithSizeAndMargin(const CGRect parent, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
+CGRect CGRectInCGSizeWithSizeAndMargin(const CGSize container, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
 
   if (size.width == CGFLOAT_MAX) {
     if (left == CGFLOAT_MAX && right == CGFLOAT_MAX)
-      left = right = size.width = parent.size.width / 3;
+      left = right = size.width = container.width / 3;
     else if (left == CGFLOAT_MAX)
-      left = size.width = (parent.size.width - right) / 2;
+      left = size.width = (container.width - right) / 2;
     else if (right == CGFLOAT_MAX)
-      right = size.width = (parent.size.width - left) / 2;
+      right = size.width = (container.width - left) / 2;
     else
-      size.width = parent.size.width - left - right;
+      size.width = container.width - left - right;
   }
   if (size.height == CGFLOAT_MAX) {
     if (top == CGFLOAT_MAX && bottom == CGFLOAT_MAX)
-      top = bottom = size.height = parent.size.height / 3;
+      top = bottom = size.height = container.height / 3;
     else if (top == CGFLOAT_MAX)
-      top = size.height = (parent.size.height - bottom) / 2;
+      top = size.height = (container.height - bottom) / 2;
     else if (bottom == CGFLOAT_MAX)
-      bottom = size.height = (parent.size.height - top) / 2;
+      bottom = size.height = (container.height - top) / 2;
     else
-      size.height = parent.size.height - top - bottom;
+      size.height = container.height - top - bottom;
   }
   if (top == CGFLOAT_MAX) {
     if (bottom == CGFLOAT_MAX)
-      top = (parent.size.height - size.height) / 2;
+      top = (container.height - size.height) / 2;
     else
-      top = parent.size.height - size.height - bottom;
+      top = container.height - size.height - bottom;
   }
   if (left == CGFLOAT_MAX) {
     if (right == CGFLOAT_MAX)
-      left = (parent.size.width - size.width) / 2;
+      left = (container.width - size.width) / 2;
     else
-      left = parent.size.width - size.width - right;
+      left = container.width - size.width - right;
   }
 
   return CGRectFromOriginWithSize( CGPointMake( left, top ), size );
@@ -419,6 +419,8 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
   fittingSize.height = MAX( fittingSize.height, minSize.height );
   //CGRectSetSize( self.frame, fittingSize ); // FIXME: Constraints-based views such as UIStackView rely on our actual size as a hint.
   fittingSize = [self systemLayoutSizeFittingSize:fittingSize];
+  fittingSize.width = MAX( fittingSize.width, minSize.width );
+  fittingSize.height = MAX( fittingSize.height, minSize.height );
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
@@ -432,17 +434,17 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       requestedSize.height == CGFLOAT_MAX? fittingSize.height: requestedSize.height );
 
   // Grow the superview if needed to fit the alignment rect and margin.
+  CGRect container = self.superview.frame;
   if (!(options & PearlLayoutOptionConstrained)) {
     if (requiredSize.width > availableWidth)
-      CGRectSetWidth( self.superview.frame, (availableWidth = requiredSize.width) +
-          (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) );
+      container.size.width = (availableWidth = requiredSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right);
     if (requiredSize.height > availableHeight)
-      CGRectSetHeight( self.superview.frame, (availableHeight = requiredSize.height) +
-          (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) );
+      container.size.height = (availableHeight = requiredSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom);
   }
+  CGRectSetSize( self.superview.frame, container.size );
 
   // Resolve the alignment rect from the requested size and margin.
-  alignmentRect = CGRectInCGRectWithSizeAndMargin( self.superview.bounds, requestedSize, top, right, bottom, left );
+  alignmentRect = CGRectInCGSizeWithSizeAndMargin( container.size, requestedSize, top, right, bottom, left );
 
   // Determine the view's frame around the alignment rect and let autoresizing handle flexible margins.
   self.frame = [self frameForAlignmentRect:alignmentRect];
@@ -456,6 +458,10 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
 }
 
 - (CGSize)minimumAutoresizingSize {
+  if (!self.autoresizingMask)
+    // We don't autoresize.
+    return [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+
   // TODO: Forgot what we needed this for.  Maybe nothing?
   //CGSize minSize = [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
   // TODO: It should be CGSizeZero in order to shrink regular UIViews, whose fitting size is always equal to their current size.
@@ -467,7 +473,7 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
 
   if (self.autoresizesSubviews)
       for (UIView *subview in self.subviews)
-          if ([subview translatesAutoresizingMaskIntoConstraints]) {
+          if (subview.translatesAutoresizingMaskIntoConstraints && subview.autoresizingMask) {
               UIEdgeInsets margins = UIEdgeInsetsFromCGRectInCGSize( subview.frame, subview.superview.bounds.size );
               CGSize minSizeSubview = [subview minimumAutoresizingSize];
               minSize.width = MAX( minSize.width, minSizeSubview.width +
@@ -493,7 +499,7 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
   // Let the subviews resize themselves to fit, growing their superview if needed to allocate fitting space.
   if (self.autoresizesSubviews)
       for (UIView *subview in self.subviews)
-          if ([subview translatesAutoresizingMaskIntoConstraints] && [subview autoresizingMask])
+          if (subview.translatesAutoresizingMaskIntoConstraints && subview.autoresizingMask)
               [subview shrinkToFit];
 
   // Re-apply the view's existing autoresizing configuration by evaluating its layout margins and newly fitted size against the superview.

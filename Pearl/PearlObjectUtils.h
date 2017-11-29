@@ -249,6 +249,7 @@ __END_DECLS
 @interface NSObject(PearlObjectUtils)
 
 - (NSString *)propertyWithValue:(id)value;
+- (NSString *)ivarWithValue:(id)value;
 - (void)setStrongAssociatedObject:(id)object forSelector:(SEL)sel;
 - (void)setWeakAssociatedObject:(id)object forSelector:(SEL)sel;
 - (id)getAssociatedObjectForSelector:(SEL)sel;

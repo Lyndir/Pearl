@@ -203,7 +203,7 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     unsigned int count = 0;
     objc_property_t *properties = class_copyPropertyList( [self class], &count );
     for (unsigned int p = 0; p < count; ++p) {
-        NSString *currentPropertyName = strf(@"%s", property_getName( properties[p] ));
+        NSString *currentPropertyName = @( property_getName( properties[p] ) );
         @try {
             if ([self valueForKey:currentPropertyName] == value) {
                 propertyName = currentPropertyName;
@@ -214,6 +214,21 @@ NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
     free( properties );
 
     return propertyName;
+}
+
+- (NSString *)ivarWithValue:(id)value {
+
+    NSString *name = nil;
+    unsigned int count = 0;
+    Ivar *ivars = class_copyIvarList( [self class], &count );
+    for (unsigned int i = 0; i < count; ++i)
+        if ((__bridge void *)object_getIvar( self, ivars[i] ) == (__bridge void *)value) {
+            name = @( ivar_getName( ivars[i] ) );
+            break;
+        }
+    free( ivars );
+
+    return name;
 }
 
 - (void)setStrongAssociatedObject:(id)object forSelector:(SEL)sel {

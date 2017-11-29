@@ -447,7 +447,7 @@ static NSMutableSet *dismissableResponders;
     NSString *property = nil;
     UIResponder *nextResponder = nil;
     for (nextResponder = [self nextResponder]; nextResponder; nextResponder = [nextResponder nextResponder])
-        if ((property = [nextResponder propertyWithValue:self]))
+        if ((property = [nextResponder ivarWithValue:self]))
             break;
 
     // Determine the autoresizing configuration
@@ -466,8 +466,8 @@ static NSMutableSet *dismissableResponders;
         self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.3g", margins.right ) );
 
     return strf( @"%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
-            RPad( strf(nextResponder? @"+%@(%@)%@": @"-%@%@%@",
-                NSStringFromClass( [nextResponder class] )?: @"", [self class], property?: @"" ), padding ),
+            RPad( strf(nextResponder? @"+%@%@ %@": @"-%@%@%@",
+                NSStringFromClass( [nextResponder class] )?: @"", property? @"": (id)[self class], property?: @"" ), padding ),
             self.tag, self.alpha, @(self.hidden), backgroundString,
             RPad( LPad( autoresizing1, 8 ), 9 ), CPad( autoresizing2, 11 ), LPad( RPad( autoresizing3, 8 ), 9 ),
             [self debugDescription] );

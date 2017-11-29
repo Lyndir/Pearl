@@ -387,6 +387,9 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 
+  // Ensure the layout is up-to-date.
+  [self layoutIfNeeded];
+
   // Determine the size available in the superview for our alignment rect.
   CGRect alignmentRect = self.alignmentRect;
   UIEdgeInsets alignmentInsets = UIEdgeInsetsMake(
@@ -411,10 +414,11 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
   };
   if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )])
     fittingSize.width = MAX( fittingSize.width, ABS( [(UILabel *)self preferredMaxLayoutWidth] ) );
-  fittingSize = [self systemLayoutSizeFittingSize:fittingSize];
   CGSize minSize = [self minimumAutoresizingSize]; // TODO: how to merge this with the TODO in minimumAutoresizingSize?
   fittingSize.width = MAX( fittingSize.width, minSize.width );
   fittingSize.height = MAX( fittingSize.height, minSize.height );
+  //CGRectSetSize( self.frame, fittingSize ); // FIXME: Constraints-based views such as UIStackView rely on our actual size as a hint.
+  fittingSize = [self systemLayoutSizeFittingSize:fittingSize];
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
@@ -491,11 +495,6 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       for (UIView *subview in self.subviews)
           if ([subview translatesAutoresizingMaskIntoConstraints] && [subview autoresizingMask])
               [subview shrinkToFit];
-          else
-              [subview setNeedsLayout];
-
-  // For views that lay out their subviews using constraints, perform any needed layout pass to settle the layout.
-  [self layoutSubviews];
 
   // Re-apply the view's existing autoresizing configuration by evaluating its layout margins and newly fitted size against the superview.
   [self setFrameFromSize:CGSizeMake(

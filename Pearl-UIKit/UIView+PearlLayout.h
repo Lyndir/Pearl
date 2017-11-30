@@ -6,21 +6,21 @@
 #import <Foundation/Foundation.h>
 
 // Modify the variable (of type CGRect) such that it contains a new CGRect derived from the original.
-#define CGRectSetX(rect, value)                     rect = CGRectWithX(rect, value)
-#define CGRectSetY(rect, value)                     rect = CGRectWithY(rect, value)
-#define CGRectSetWidth(rect, value)                 rect = CGRectWithWidth(rect, value)
-#define CGRectSetHeight(rect, value)                rect = CGRectWithHeight(rect, value)
-#define CGRectSetOrigin(rect, value)                rect = CGRectWithOrigin(rect, value)
-#define CGRectSetSize(rect, value)                  rect = CGRectWithSize(rect, value)
-#define CGRectSetCenter(rect, value)                rect = CGRectWithCenter(rect, value)
-#define CGRectSetTop(rect, value)                   rect = CGRectWithTop(rect, value)
-#define CGRectSetRight(rect, value)                 rect = CGRectWithRight(rect, value)
-#define CGRectSetBottom(rect, value)                rect = CGRectWithBottom(rect, value)
-#define CGRectSetLeft(rect, value)                  rect = CGRectWithLeft(rect, value)
-#define CGRectSetTopLeft(rect, value)               rect = CGRectWithTopLeft(rect, value)
-#define CGRectSetTopRight(rect, value)              rect = CGRectWithTopRight(rect, value)
-#define CGRectSetBottomRight(rect, value)           rect = CGRectWithBottomRight(rect, value)
-#define CGRectSetBottomLeft(rect, value)            rect = CGRectWithBottomLeft(rect, value)
+#define CGRectSetX(rect, value)                     ({ CGRect __new = CGRectWithX(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetY(rect, value)                     ({ CGRect __new = CGRectWithY(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetWidth(rect, value)                 ({ CGRect __new = CGRectWithWidth(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetHeight(rect, value)                ({ CGRect __new = CGRectWithHeight(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetOrigin(rect, value)                ({ CGRect __new = CGRectWithOrigin(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetSize(rect, value)                  ({ CGRect __new = CGRectWithSize(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetCenter(rect, value)                ({ CGRect __new = CGRectWithCenter(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetTop(rect, value)                   ({ CGRect __new = CGRectWithTop(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetRight(rect, value)                 ({ CGRect __new = CGRectWithRight(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetBottom(rect, value)                ({ CGRect __new = CGRectWithBottom(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetLeft(rect, value)                  ({ CGRect __new = CGRectWithLeft(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetTopLeft(rect, value)               ({ CGRect __new = CGRectWithTopLeft(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetTopRight(rect, value)              ({ CGRect __new = CGRectWithTopRight(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetBottomRight(rect, value)           ({ CGRect __new = CGRectWithBottomRight(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSetBottomLeft(rect, value)            ({ CGRect __new = CGRectWithBottomLeft(rect, value); if (!CGRectEqualToRect( rect, __new )) rect = __new; })
 
 #define CGRectSetXDidChange(rect, value)            ({ CGRect __old = rect; CGRectSetX(rect, value); !CGRectEqualToRect(__old, rect); })
 #define CGRectSetYDidChange(rect, value)            ({ CGRect __old = rect; CGRectSetY(rect, value); !CGRectEqualToRect(__old, rect); })
@@ -67,7 +67,9 @@ extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
 extern CGRect CGRectInCGSizeWithSizeAndMargin(const CGSize container, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
 
 // Creating a UIEdgeInsets
-UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);
+extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);
+
+extern CGSize CGSizeUnion(const CGSize size1, const CGSize size2);
 
 typedef struct PearlLayout {
     CGFloat left;
@@ -83,6 +85,14 @@ typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
     /** Constrain the superview's bounds; ie. do not allow the superview to be resized if needed to fit the view. */
         PearlLayoutOptionConstrained = 1 << 0,
 };
+
+#define PearlAutoresizingMinimalLeftMargin   (UIViewAutoresizing)(1 << 6)
+#define PearlAutoresizingMinimalWidth        (UIViewAutoresizing)(1 << 7)
+#define PearlAutoresizingMinimalRightMargin  (UIViewAutoresizing)(1 << 8)
+#define PearlAutoresizingMinimalTopMargin    (UIViewAutoresizing)(1 << 9)
+#define PearlAutoresizingMinimalHeight       (UIViewAutoresizing)(1 << 10)
+#define PearlAutoresizingMinimalBottomMargin (UIViewAutoresizing)(1 << 11)
+
 __END_DECLS
 
 @interface UIView(PearlLayout)
@@ -139,10 +149,17 @@ __END_DECLS
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
 
-/** Honouring the current layout margins and autoresizing configuration, recalculate the view hierarchy's fitting sizes.
+/** Shrink the subviews to their minimal frames that respect their autoresizing configuration.
+ * The view will grow if needed to fit the subviews' new size. */
+- (void)shrinkSubviews;
+/** Shrink the view and its subviews to fit the minimal frames that respect their autoresizing configuration.
  * The superview will grow if needed to fit the view's new size. */
-- (void)shrinkToFit;
-/** @return The smallest size this view can take up while still respecting its subviews' margins. */
+- (void)shrink;
+
+/** @return The smallest size this view's frame can take up while still respecting its subviews' autoresizing configuration. */
 - (CGSize)minimumAutoresizingSize;
+
+/** @return true if the given mask is present on the view, also supports custom masks PearlAutoresizingMinimal. */
+- (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask;
 
 @end

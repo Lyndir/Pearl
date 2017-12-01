@@ -353,10 +353,8 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     widthLayoutValue = z;
   else if (!widthLayoutString.length)
     widthLayoutValue = CGFLOAT_MIN;
-  if (leftLayoutValue < CGFLOAT_MAX && rightLayoutValue < CGFLOAT_MAX) {
-    NSAssert( widthLayoutValue == CGFLOAT_MIN, @"Cannot have fixed left, right and width values." );
+  if (leftLayoutValue < CGFLOAT_MAX && rightLayoutValue < CGFLOAT_MAX && widthLayoutValue == CGFLOAT_MIN)
     widthLayoutValue = CGFLOAT_MAX;
-  }
 
   // Height
   if ([heightLayoutString isEqualToString:@"-"])
@@ -371,10 +369,8 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     heightLayoutValue = z;
   else if (!heightLayoutString.length)
     heightLayoutValue = CGFLOAT_MIN;
-  if (topLayoutValue < CGFLOAT_MAX && bottomLayoutValue < CGFLOAT_MAX) {
-    NSAssert( heightLayoutValue == CGFLOAT_MIN, @"Cannot have fixed top, bottom and height values." );
+  if (topLayoutValue < CGFLOAT_MAX && bottomLayoutValue < CGFLOAT_MAX && heightLayoutValue == CGFLOAT_MIN)
     heightLayoutValue = CGFLOAT_MAX;
-  }
 
   // Apply layout
   [self setFrameFromSize:CGSizeMake( widthLayoutValue, heightLayoutValue )
@@ -402,10 +398,12 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width) );
 
   /// availableWidth/Height = The space available in the parent for our view's alignment rect.
-  CGFloat availableWidth = self.superview.bounds.size.width -
-      ((left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right) - alignmentInsets.left - alignmentInsets.right);
-  CGFloat availableHeight = self.superview.bounds.size.height -
-      ((top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom) - alignmentInsets.top - alignmentInsets.bottom);
+  CGFloat availableWidth = self.superview.bounds.size.width - (
+      (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right)
+      - alignmentInsets.left - alignmentInsets.right);
+  CGFloat availableHeight = self.superview.bounds.size.height - (
+      (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom)
+      - alignmentInsets .top - alignmentInsets.bottom);
 
   /// fittingSize = The measured size of the alignment rect based on the available space.
   // The measurement is the view's fitting size in the minimal or available space.

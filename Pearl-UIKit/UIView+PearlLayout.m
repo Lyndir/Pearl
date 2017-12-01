@@ -453,17 +453,17 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)minimumAutoresizingSize {
+  CGSize minSize = self.bounds.size;
   if (!self.autoresizingMask)
     // We don't autoresize.
-    return [self systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return minSize;
 
-  CGSize minSize = self.bounds.size;
   if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth | PearlAutoresizingMinimalWidth])
       minSize.width = 0;
   if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight | PearlAutoresizingMinimalHeight])
       minSize.height = 0;
-
   if (!self.autoresizesSubviews)
+      // Our subviews are unaffected by our size.
       return minSize;
 
   for (UIView *subview in self.subviews)
@@ -506,22 +506,24 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   [self shrinkSubviews];
 
   // Re-apply the view's existing autoresizing configuration by evaluating its layout margins and newly fitted size against the superview.
-  CGRect alignmentRect = [self alignmentRect];
-  [self setFrameFromSize:CGSizeMake(
-          [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? CGFLOAT_MAX:
-          [self hasAutoresizingMask:PearlAutoresizingMinimalWidth]? CGFLOAT_MIN: alignmentRect.size.width,
-          [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? CGFLOAT_MAX:
-          [self hasAutoresizingMask:PearlAutoresizingMinimalHeight]? CGFLOAT_MIN: alignmentRect.size.height )
-      andParentMarginTop:[self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: margins.top
-                   right:[self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: margins.right
-                  bottom:[self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: margins.bottom
-                    left:[self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: margins.left
-                 options:PearlLayoutOptionNone];
-
+  if (self.autoresizingMask) {
+    CGRect alignmentRect = [self alignmentRect];
+    [self setFrameFromSize:CGSizeMake(
+            [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? CGFLOAT_MAX:
+            [self hasAutoresizingMask:PearlAutoresizingMinimalWidth]? CGFLOAT_MIN: alignmentRect.size.width,
+            [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? CGFLOAT_MAX:
+            [self hasAutoresizingMask:PearlAutoresizingMinimalHeight]? CGFLOAT_MIN: alignmentRect.size.height )
+        andParentMarginTop:[self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
+                           [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: margins.top
+                     right:[self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
+                           [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: margins.right
+                    bottom:[self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
+                           [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: margins.bottom
+                      left:[self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
+                           [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: margins.left
+                   options:PearlLayoutOptionNone];
+  }
+  
   // Clear any automatically set UILabel measurement hints so future passes don't mistake them for manual/hardcoded values.
   [self resetPreferredMaxLayoutWidth];
 }

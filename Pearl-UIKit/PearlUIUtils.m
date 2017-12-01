@@ -411,11 +411,14 @@ static NSMutableSet *dismissableResponders;
 
 - (void)printSuperHierarchy {
 
-    NSUInteger indent = 0;
-    for (UIView *view = self; view; view = view.superview) {
-        dbg( strf( @"%%%lds %%@", (long)indent ), "", [view infoDescription] );
-        indent += 4;
-    }
+    [self printSuperHierarchyWithIndent:0];
+}
+
+- (void)printSuperHierarchyWithIndent:(NSUInteger)indent {
+
+    dbg( @"%@%@", RPad( @"", indent ), [self infoDescriptionWithPadding:50 - indent] );
+
+    [self.superview printSuperHierarchyWithIndent:indent + 2];
 }
 
 - (void)printChildHierarchy {
@@ -454,16 +457,16 @@ static NSMutableSet *dismissableResponders;
     CGRect rect = self.alignmentRect;
     UIEdgeInsets margins = self.alignmentMargins;
     NSString *autoresizing1 = strf( @"%@%@|%@%@",
-        strf( @"%.3g", margins.left ), self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? @">": @"",
-        strf( @"%.3g", margins.top ), self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? @">": @"" );
+        strf( @"%.4g", margins.left ), self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? @">": @"",
+        strf( @"%.4g", margins.top ), self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? @">": @"" );
     NSString *autoresizing2 = strf( @"%@%@%@/%@%@%@",
-        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @"<": @"", strf( @"%.3g", rect.size.width ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @"<": @"", strf( @"%.4g", rect.size.width ),
         self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @">": @"",
-        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @"<": @"", strf( @"%.3g", rect.size.height ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @"<": @"", strf( @"%.4g", rect.size.height ),
         self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @">": @"" );
     NSString *autoresizing3 = strf( @"%@%@|%@%@",
-        self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? @"<": @"", strf( @"%.3g", margins.bottom ),
-        self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.3g", margins.right ) );
+        self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? @"<": @"", strf( @"%.4g", margins.bottom ),
+        self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.4g", margins.right ) );
 
     return strf( @"%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
             RPad( strf(nextResponder? @"+%@%@ %@": @"-%@%@%@",

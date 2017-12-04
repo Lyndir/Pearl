@@ -387,9 +387,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 
-  // Ensure the layout is up-to-date.
-  [self layoutIfNeeded];
-
   // Determine the size available in the superview for our alignment rect.
   CGRect alignmentRect = self.alignmentRect;
   UIEdgeInsets alignmentInsets = UIEdgeInsetsMake(
@@ -415,10 +412,8 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? MAX( 0, availableWidth ): size.width,
       .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? MAX( 0, availableHeight ): size.height,
   } );
-  if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )])
-    fittingSize.width = MAX( fittingSize.width, ABS( [(UILabel *)self preferredMaxLayoutWidth] ) );
-  //CGRectSetSize( self.frame, fittingSize ); // FIXME: Constraints-based views such as UIStackView rely on our actual size as a hint.
-  fittingSize = [self systemLayoutSizeFittingSize:fittingSize];
+  fittingSize = CGSizeUnion( fittingSize, [self frameForAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize }].size );
+  fittingSize = [self systemLayoutSizeFittingSize:fittingSize]; // TODO: Pass in appropriate horizontal/vertical fitting priorities.
   fittingSize = CGSizeUnion( fittingSize, minimumSize );
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
 
@@ -487,12 +482,12 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)shrinkSubviews {
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
-      if (subview.translatesAutoresizingMaskIntoConstraints && subview.autoresizingMask)
-        [subview shrink];
+      [subview shrink];
 }
 
 - (void)shrink {
   UIEdgeInsets margins = self.alignmentMargins;
+  [self layoutIfNeeded];
 
   // Preserve the current measured width for UILabels as a hint/guide for line wrapping.
   [self assignPreferredMaxLayoutWidth];
@@ -527,18 +522,24 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (void)assignPreferredMaxLayoutWidth {
-  if ([self respondsToSelector:@selector(preferredMaxLayoutWidth)] && [self respondsToSelector:@selector(setPreferredMaxLayoutWidth:)])
-    if (![(UILabel *)self preferredMaxLayoutWidth])
-      [(UILabel *)self setPreferredMaxLayoutWidth:-self.bounds.size.width];
+  if ([self respondsToSelector:@selector(preferredMaxLayoutWidth)] && [self respondsToSelector:@selector(setPreferredMaxLayoutWidth:)]) {
+    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
+    if (!assignDepth)
+      [(UILabel *)self setPreferredMaxLayoutWidth:self.bounds.size.width];
+    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
+  }
 
   for (UIView *subview in [self subviews])
     [subview assignPreferredMaxLayoutWidth];
 }
 
 - (void)resetPreferredMaxLayoutWidth {
-  if ([self respondsToSelector:@selector(preferredMaxLayoutWidth)] && [self respondsToSelector:@selector(setPreferredMaxLayoutWidth:)])
-    if ([(UILabel *)self preferredMaxLayoutWidth] < 0)
+  if ([self respondsToSelector:@selector(preferredMaxLayoutWidth)] && [self respondsToSelector:@selector(setPreferredMaxLayoutWidth:)]) {
+    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
+    if (assignDepth == 1)
       [(UILabel *)self setPreferredMaxLayoutWidth:0];
+    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
+  }
 
   for (UIView *subview in [self subviews])
     [subview resetPreferredMaxLayoutWidth];

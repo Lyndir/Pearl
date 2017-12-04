@@ -81,7 +81,7 @@ static CGSize PearlNoIntrinsicMetric;
     return UIEdgeInsetsFromCGRectInCGSize( self.alignmentRect, self.superview.bounds.size );
 }
 
-- (UIEdgeInsets)alignmentPolarMargins {
+- (UIEdgeInsets)alignmentAnchors {
     CGRect alignmentRect = self.alignmentRect;
     return UIEdgeInsetsMake(
         self.superview.bounds.size.height - alignmentRect.origin.y,

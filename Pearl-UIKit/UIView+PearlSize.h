@@ -21,7 +21,7 @@
  * eg. right = distance between the right side of the frame and the left bound.
  *
  * Ideal for determining the bound margins to use for other views that relate to this view's frame. */
-@property(nonatomic, readonly) UIEdgeInsets alignmentPolarMargins;
+@property(nonatomic, readonly) UIEdgeInsets alignmentAnchors;
 
 /** Create a view that wraps another view inside its margins. */
 + (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins;

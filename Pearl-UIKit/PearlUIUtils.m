@@ -468,9 +468,9 @@ static NSMutableSet *dismissableResponders;
         self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? @"<": @"", strf( @"%.4g", margins.bottom ),
         self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.4g", margins.right ) );
 
-    return strf( @"%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
-            RPad( strf(nextResponder? @"+%@%@ %@": @"-%@%@%@",
-                NSStringFromClass( [nextResponder class] )?: @"", property? @"": (id)[self class], property?: @"" ), padding ),
+    return strf( @"-%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
+            RPad( strf(nextResponder? @"%@ %@ (%@)": @"%@ %@%@",
+                [self class], property?: @"", NSStringFromClass( [nextResponder class] )?: @""), padding ),
             self.tag, self.alpha, @(self.hidden), backgroundString,
             RPad( LPad( autoresizing1, 8 ), 9 ), CPad( autoresizing2, 11 ), LPad( RPad( autoresizing3, 8 ), 9 ),
             [self debugDescription] );

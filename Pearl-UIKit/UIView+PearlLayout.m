@@ -407,7 +407,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   // preferredMaxLayoutWidth can grow the space within which to measure (automatically set by -shrink).
   // The measurement must be no smaller than the minimum size that respects the subviews' autoresizing layout margins.
   // The measurement is then adjusted for the alignment rect, if that's different from the frame for this view.
-  CGSize minimumSize = [self minimumAutoresizingSize];
+  CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
   CGSize fittingSize = CGSizeUnion( minimumSize, (CGSize){
       .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? MAX( 0, availableWidth ): size.width,
       .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? MAX( 0, availableHeight ): size.height,
@@ -447,7 +447,10 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 - (CGSize)minimumAutoresizingSize {
   CGSize minSize = self.bounds.size;
-  if (!self.autoresizingMask)
+  if ([self.superview isKindOfClass:[UITableViewCell class]])
+    // Special case UITableViewCellContentView.
+    minSize = CGSizeZero;
+  else if (!self.autoresizingMask)
     // We don't autoresize.
     return minSize;
 

@@ -169,8 +169,8 @@ typedef void(^VoidBlock)(void);
                    strf(@"[Unknown %@: %ld]",                       \
                        PearlStringify(_enumname), (long)value);     \
     }
-#define PearlInit(_variable, ...) ({ \
-    typeof(_variable) PearlToken = _variable; \
+#define PearlInit(object, ...) ({ \
+    typeof(object) PearlToken = object; \
     MAP_LIST( PearlPrefix, __VA_ARGS__ ); \
     PearlToken; \
 })

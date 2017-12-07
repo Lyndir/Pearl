@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 
 // Modify the variable (of type CGRect) such that it contains a new CGRect derived from the original.
-#define CGRectSet(rect, value)                      ({ CGRect __new = value; if (!CGRectEqualToRect( rect, __new )) rect = __new; })
+#define CGRectSet(rect, value)                      ({ CGRect __new = value; CGRectEqualToRect( rect, __new )? 0: ({ rect = __new; 1; }); })
 #define CGRectSetX(rect, value)                     ({ CGRectSet( rect, CGRectWithX( rect, value ) ); })
 #define CGRectSetY(rect, value)                     ({ CGRectSet( rect, CGRectWithY( rect, value ) ); })
 #define CGRectSetWidth(rect, value)                 ({ CGRectSet( rect, CGRectWithWidth( rect, value ) ); })
@@ -156,11 +156,30 @@ __END_DECLS
 /** Shrink the view and its subviews to fit the minimal frames that respect their autoresizing configuration.
  * The superview will grow if needed to fit the view's new size. */
 - (void)shrink;
+- (void)shrinkToSize:(CGSize)desiredSize withOptions:(PearlLayoutOption)options;
 
 /** @return The smallest size this view's frame can take up while still respecting its subviews' autoresizing configuration. */
 - (CGSize)minimumAutoresizingSize;
 
 /** @return true if the given mask is present on the view, also supports custom masks PearlAutoresizingMinimal. */
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask;
+
+@end
+
+/**
+ * A view for putting autoresizing view hierarchies inside a constraints-based view hierarchy such as a UIStackView.
+ */
+@interface AutoresizingContainerView : UIView
+
+- (instancetype)initWithContent:(UIView *)contentView;
+
+@end
+
+/**
+ * An image view that implements -preferredMaxLayoutWidth and uses its frame width to provide a fitting height.
+ */
+@interface AutoresizingImageView : UIImageView
+
+@property(nonatomic) CGFloat preferredMaxLayoutWidth;
 
 @end

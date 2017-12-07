@@ -15,6 +15,10 @@
 
 /** The distance between the view's alignment rectangle and its superview's bounds.
  * eg. right = distance between the right side of the frame and the right bound. */
+@property(nonatomic, readonly) UIEdgeInsets autoresizingMargins;
+
+/** The distance between the view's alignment rectangle and its superview's bounds.
+ * eg. right = distance between the right side of the frame and the right bound. */
 @property(nonatomic, readonly) UIEdgeInsets alignmentMargins;
 
 /** The distance between the view's alignment rectangle and its superview's opposite bounds.

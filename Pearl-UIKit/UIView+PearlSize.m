@@ -77,6 +77,10 @@ static CGSize PearlNoIntrinsicMetric;
     return [self alignmentRectForFrame:self.frame];
 }
 
+- (UIEdgeInsets)autoresizingMargins {
+    return UIEdgeInsetsFromCGRectInCGSize( self.frame, self.superview.bounds.size );
+}
+
 - (UIEdgeInsets)alignmentMargins {
     return UIEdgeInsetsFromCGRectInCGSize( self.alignmentRect, self.superview.bounds.size );
 }

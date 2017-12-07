@@ -446,6 +446,38 @@ static NSMutableSet *dismissableResponders;
     NSString *backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
             (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
 
+    // Determine the autoresizing configuration
+    CGRect frame = self.frame, rect = self.alignmentRect;
+    UIEdgeInsets autoresizingMargins = self.autoresizingMargins, alignmentMargins = self.alignmentMargins;
+    NSString *autoresizing1 = strf( @"%@%@%@|%@%@%@",
+        strf( @"%.4g", autoresizingMargins.left ),
+        alignmentMargins.left == autoresizingMargins.left? @"": strf( @"%+.3g", alignmentMargins.left - autoresizingMargins.left ),
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? @">": @"",
+        strf( @"%.4g", autoresizingMargins.top ),
+        alignmentMargins.top == autoresizingMargins.top? @"": strf( @"%+.3g", alignmentMargins.top - autoresizingMargins.top ),
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? @">": @"" );
+    NSString *autoresizing2 = strf( @"%@%@%@%@/%@%@%@%@",
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? @"<": @"", strf( @"%.4g", frame.size.width ),
+        rect.size.width == frame.size.width? @"": strf( @"%+.3g", rect.size.width - frame.size.width),
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? @">": @"",
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? @"<": @"", strf( @"%.4g", frame.size.height ),
+        rect.size.height == frame.size.height? @"": strf( @"%+.3g", rect.size.height - frame.size.height ),
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? @">": @"" );
+    NSString *autoresizing3 = strf( @"%@%@%@|%@%@%@",
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? @"<": @"", strf( @"%.4g", autoresizingMargins.bottom ),
+        alignmentMargins.bottom == autoresizingMargins.bottom? @"": strf( @"%+.3g", alignmentMargins.bottom - autoresizingMargins.bottom ),
+        [self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? @"<": @"", strf( @"%.4g", autoresizingMargins.right ),
+        alignmentMargins.right == autoresizingMargins.right? @"": strf( @"%+.3g", alignmentMargins.right - autoresizingMargins.right ) );
+
+    return strf( @"%@%@|%@[%@]%@| t:%d, a:%0.1f, b:%@, c:%@%@",
+            self.focused? @"*": self.isFirstResponder? @">": @"-",
+            RPad( [self infoName], padding ),
+            LPad( RPad( LPad( autoresizing1, 12 ), 13 ), 14 ), CPad( autoresizing2, 17 ), RPad( LPad( RPad( autoresizing3, 12 ), 13 ), 14 ),
+            self.tag, self.alpha, backgroundString, NSStringFromCGSize( self.intrinsicContentSize ),
+            self.hidden? @", hidden": @"" );
+}
+
+- (NSString *)infoName {
     // Find the view controller
     NSString *property = nil;
     UIResponder *nextResponder = nil;
@@ -453,27 +485,8 @@ static NSMutableSet *dismissableResponders;
         if ((property = [nextResponder ivarWithValue:self]))
             break;
 
-    // Determine the autoresizing configuration
-    CGRect rect = self.alignmentRect;
-    UIEdgeInsets margins = self.alignmentMargins;
-    NSString *autoresizing1 = strf( @"%@%@|%@%@",
-        strf( @"%.4g", margins.left ), self.autoresizingMask & UIViewAutoresizingFlexibleLeftMargin? @">": @"",
-        strf( @"%.4g", margins.top ), self.autoresizingMask & UIViewAutoresizingFlexibleTopMargin? @">": @"" );
-    NSString *autoresizing2 = strf( @"%@%@%@/%@%@%@",
-        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @"<": @"", strf( @"%.4g", rect.size.width ),
-        self.autoresizingMask & UIViewAutoresizingFlexibleWidth? @">": @"",
-        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @"<": @"", strf( @"%.4g", rect.size.height ),
-        self.autoresizingMask & UIViewAutoresizingFlexibleHeight? @">": @"" );
-    NSString *autoresizing3 = strf( @"%@%@|%@%@",
-        self.autoresizingMask & UIViewAutoresizingFlexibleBottomMargin? @"<": @"", strf( @"%.4g", margins.bottom ),
-        self.autoresizingMask & UIViewAutoresizingFlexibleRightMargin? @"<": @"", strf( @"%.4g", margins.right ) );
-
-    return strf( @"-%@|  t:%d, a:%0.1f, h:%@, b:%@ %@[%@]%@ | %@",
-            RPad( strf(nextResponder? @"%@ %@ (%@)": @"%@ %@%@",
-                [self class], property?: @"", NSStringFromClass( [nextResponder class] )?: @""), padding ),
-            self.tag, self.alpha, @(self.hidden), backgroundString,
-            RPad( LPad( autoresizing1, 8 ), 9 ), CPad( autoresizing2, 11 ), LPad( RPad( autoresizing3, 8 ), 9 ),
-            [self debugDescription] );
+    return strf( nextResponder? @"%@ %@ (%@)": @"%@ %@%@",
+        [self class], property?: @"", NSStringFromClass( [nextResponder class] )?: @"" );
 }
 
 - (NSString *)layoutDescription {

@@ -203,6 +203,7 @@ __END_DECLS
 - (void)printChildHierarchy;
 /** Return a string that briefly describes this view. */
 - (NSString *)infoDescription;
+- (NSString *)infoName;
 /** Return a string that briefly describes this view's layout. */
 - (NSString *)layoutDescription;
 

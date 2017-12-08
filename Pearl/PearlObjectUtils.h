@@ -236,6 +236,8 @@ extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 
+extern Method PearlFindMethod(Class type, SEL name, Class *declaringType);
+
 __END_DECLS
 
 @interface PearlWeakReference<ObjectType> : NSObject

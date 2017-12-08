@@ -150,19 +150,17 @@ __END_DECLS
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
 
-/** Shrink the subviews to their minimal frames that respect their autoresizing configuration.
- * The view will grow if needed to fit the subviews' new size. */
-- (void)shrinkSubviews;
-/** Shrink the view and its subviews to fit the minimal frames that respect their autoresizing configuration.
- * The superview will grow if needed to fit the view's new size. */
-- (void)shrink;
-- (void)shrinkToSize:(CGSize)desiredSize withOptions:(PearlLayoutOption)options;
-
 /** @return The smallest size this view's frame can take up while still respecting its subviews' autoresizing configuration. */
 - (CGSize)minimumAutoresizingSize;
 
 /** @return true if the given mask is present on the view, also supports custom masks PearlAutoresizingMinimal. */
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask;
+
+/** Calculate how the view should size itself in the given bounds, fitting its full view hierarchy. */
+- (CGSize)fittingSizeIn:(CGSize)bounds;
+
+/** Invalidate and resize this view's hierarchy to fit the superview's bounds. */
+- (BOOL)fitSubviews;
 
 @end
 
@@ -180,6 +178,7 @@ __END_DECLS
  */
 @interface AutoresizingImageView : UIImageView
 
+/** Set to CGFLOAT_MIN to disable image ratio preservation. */
 @property(nonatomic) CGFloat preferredMaxLayoutWidth;
 
 @end

@@ -166,23 +166,3 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id _Nonnull block) {
               class_getInstanceMethod( type, proxySel ) );
       }
 }
-
-Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
-  for (*declaringType = type; *declaringType; *declaringType = class_getSuperclass( *declaringType )) {
-    unsigned int methodCount = 0;
-    Method *methods = class_copyMethodList( *declaringType, &methodCount );
-
-    @try {
-      for (unsigned int m = 0; m < methodCount; ++m) {
-        Method method = methods[m];
-        if (method && sel_isEqual( method_getName( method ), name ))
-          return method;
-      }
-    }
-    @finally {
-      free( methods );
-    }
-  }
-
-  return NULL;
-}

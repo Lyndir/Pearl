@@ -392,20 +392,15 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       NSStringFromCGSize( size ), NSStringFromUIEdgeInsets( UIEdgeInsetsMake( top, left, bottom, right ) ),
       NSStringFromCGSize( self.superview.bounds.size ) );
 
-  // Determine the size available in the superview for our alignment rect.
-  CGRect alignmentRect = self.alignmentRect;
-  UIEdgeInsets alignmentInsets = UIEdgeInsetsMake(
-      alignmentRect.origin.y - self.frame.origin.y, alignmentRect.origin.x - self.frame.origin.x,
-      (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height),
-      (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width) );
+  // Save the layout configuration in the autoresizing mask.
+  [self setAutoresizingMaskFromSize:size andParentMarginTop:top right:right bottom:bottom left:left options:options];
 
+  // Determine the size available in the superview for our alignment rect.
   /// availableWidth/Height = The space available in the parent for our view's alignment rect.
   CGFloat availableWidth = self.superview.bounds.size.width - (
-      (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right)
-      - alignmentInsets.left - alignmentInsets.right);
+      (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right));
   CGFloat availableHeight = self.superview.bounds.size.height - (
-      (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom)
-      - alignmentInsets.top - alignmentInsets.bottom);
+      (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom));
 
   /// fittingSize = The measured size of the alignment rect based on the available space.
   // The measurement is the view's fitting size in the minimal or available space.
@@ -413,13 +408,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   // The measurement must be no smaller than the minimum size that respects the subviews' autoresizing layout margins.
   // The measurement is then adjusted for the alignment rect, if that's different from the frame for this view.
   CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
-  CGSize fittingSize = CGSizeUnion( minimumSize, (CGSize){
-      .width = size.width == CGFLOAT_MIN? 0: size.width == CGFLOAT_MAX? MAX( 0, availableWidth ): size.width,
-      .height = size.height == CGFLOAT_MIN? 0: size.height == CGFLOAT_MAX? MAX( 0, availableHeight ): size.height,
-  } );
-  fittingSize = CGSizeUnion( fittingSize, [self frameForAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize }].size );
-  fittingSize = [self systemLayoutSizeFittingSize:fittingSize]; // TODO: Pass in appropriate horizontal/vertical fitting priorities.
-  fittingSize = CGSizeUnion( fittingSize, minimumSize );
+  CGRect alignmentRect = self.alignmentRect;
+  UIEdgeInsets margins = UIEdgeInsetsMake(
+      top - (alignmentRect.origin.y - self.frame.origin.y),
+      left - (alignmentRect.origin.x - self.frame.origin.x),
+      bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
+      right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
+  CGSize fittingSize = [self fittingSizeIn:self.superview.bounds.size margins:margins];
   fittingSize = [self alignmentRectForFrame:(CGRect){ self.frame.origin, fittingSize }].size;
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
@@ -438,19 +433,22 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     container.width = (availableWidth = requiredSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right);
   if (requiredSize.height > availableHeight)
     container.height = (availableHeight = requiredSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom);
-  if (!(options & PearlLayoutOptionConstrained) && !CGSizeEqualToSize( self.superview.frame.size, container )) {
-    trc( @"%@Will stretch container: %@ => %@", RPad( @"", shrinkDepth ), [self.superview infoName], NSStringFromCGSize( container ) );
-    CGRectSetSize( self.superview.frame, container );
-  }
+  if (!CGSizeEqualToSize( self.superview.frame.size, container ))
+    if (options & PearlLayoutOptionConstrained)
+      wrn( @"%@Refusing to stretch container: %@ => %@", RPad( @"", shrinkDepth ), [self.superview infoName],
+          NSStringFromCGSize( container ) );
+    else {
+      trc( @"%@Will stretch container: %@ => %@", RPad( @"", shrinkDepth ), [self.superview infoName], NSStringFromCGSize( container ) );
+      CGRectSetSize( self.superview.frame, container );
+      // TODO: recurse down the superview hierarchy
+      // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
+    }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
   CGRect frame = [self frameForAlignmentRect:CGRectInCGSizeWithSizeAndMargin( container, requestedSize, top, right, bottom, left )];
   CGRectSetWidth( frame, MAX( frame.size.width, minimumSize.width ) );
   CGRectSetHeight( frame, MAX( frame.size.height, minimumSize.height ) );
   [self setFrame:frame];
-
-  // Save the layout configuration in the autoresizing mask.
-  [self setAutoresizingMaskFromSize:size andParentMarginTop:top right:right bottom:bottom left:left options:options];
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -474,7 +472,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     if (subview.translatesAutoresizingMaskIntoConstraints && subview.autoresizingMask) {
       CGSize minSizeFromSubview = [subview minimumAutoresizingSize];
 
-      UIEdgeInsets margins = UIEdgeInsetsFromCGRectInCGSize( subview.frame, subview.superview.bounds.size );
+      UIEdgeInsets margins = subview.autoresizingMargins;
       if (![subview hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
         minSizeFromSubview.width += margins.left;
       if (![subview hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
@@ -490,63 +488,136 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return minSize;
 }
 
-- (void)shrinkSubviews {
+- (UIEdgeInsets)fittingMargins {
+
+  UIEdgeInsets margins = self.autoresizingMargins;
+  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
+    margins.left = 0;
+  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
+    margins.right = 0;
+  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | PearlAutoresizingMinimalTopMargin])
+    margins.top = 0;
+  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | PearlAutoresizingMinimalBottomMargin])
+    margins.bottom = 0;
+
+  return margins;
+}
+
+/** The fitting bounds for this view in its superview, collapsing margins if permitted. */
+- (CGSize)fittingSizeIn:(CGSize)bounds {
+  return [self fittingSizeIn:bounds margins:[self fittingMargins]];
+}
+
+- (CGSize)fittingSizeIn:(CGSize)bounds margins:(UIEdgeInsets)margins {
+  CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
+  CGSize availableSize = bounds;
+  availableSize.width -= margins.left + margins.right;
+  availableSize.height -= margins.top + margins.bottom;
+  availableSize = CGSizeUnion( availableSize, minimumSize );
+//  [self assignPreferredMaxLayoutWidth];
+//  availableSize = CGSizeUnion( availableSize, [self frameForAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize }].size );
+  CGSize fittingSize = minimumSize;
+
+  // Do not trust fitting size of UITableViewContentCell.
+  if (![self shouldCollapseFittingSize])
+    // TODO: Pass in appropriate horizontal/vertical fitting priorities.
+    fittingSize = [self systemLayoutSizeFittingSize:availableSize];
+//  [self resetPreferredMaxLayoutWidth];
+
+  // Preserve fixed layout sizes.
+  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth | PearlAutoresizingMinimalWidth])
+    fittingSize.width = MAX( fittingSize.width, self.bounds.size.width );
+  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight | PearlAutoresizingMinimalHeight])
+    fittingSize.height = MAX( fittingSize.height, self.bounds.size.height );
+
+  // Grow our fitting size to fit our subviews (only subviews that are positioned by autoresizing,
+  // subviews handled by view layout logic are assumed to be handled by systemLayoutSizeFittingSize).
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
-      [subview shrink];
+      if (subview.autoresizingMask) {
+        CGSize subviewSize = [subview fittingSizeIn:availableSize];
+        UIEdgeInsets subviewMargins = [subview fittingMargins];
+        subviewSize.width += subviewMargins.left + subviewMargins.right;
+        subviewSize.height += subviewMargins.top + subviewMargins.bottom;
+        fittingSize = CGSizeUnion( fittingSize, subviewSize );
+      }
+
+  return fittingSize;
 }
 
-- (void)shrink {
-  [self shrinkToSize:CGSizeZero margins:self.alignmentMargins withOptions:PearlLayoutOptionNone];
+- (BOOL)shouldCollapseFittingSize {
+  // If size of view is determined by constraints, don't collapse it.
+  if (self.constraints.count)
+    return NO;
+
+  // UIViews' -sizeThatFits: just returns -bounds.size, collapse it.
+  // Shortcut logic where possible.
+  if ([self.superview isKindOfClass:[UITableViewCell class]])
+    return YES;
+  if ([self class] == [UIView class])
+    return YES;
+  Class type = [self class];
+  PearlFindMethod( type, @selector( sizeThatFits: ), &type );
+  return type == [UIView class];
 }
 
-- (void)shrinkToSize:(CGSize)desiredSize margins:(UIEdgeInsets)margins withOptions:(PearlLayoutOption)options {
-  BOOL trustCurrentSize = CGSizeEqualToSize( desiredSize, CGSizeZero );
-  desiredSize = CGSizeUnion( [self minimumAutoresizingSize], desiredSize );
-  trc( @"%@Will shrink: %@, margins: %@ -> %@", RPad( @"", shrinkDepth++ ), [self infoName],
-      NSStringFromUIEdgeInsets( margins ), NSStringFromCGSize( desiredSize ) );
-  if (!trustCurrentSize)
-    CGRectSetSize( self.frame, desiredSize );
+- (BOOL)fitSubviews {
+  return [self fitInAlignmentRect:self.alignmentRect margins:self.alignmentMargins];
+}
+
+- (BOOL)fitInAlignmentRect:(CGRect)rect margins:(UIEdgeInsets)margins {
+  CGRect oldBounds = self.bounds;
+  trc( @"%@Will fit: %@, into %@, margins %@", RPad( @"", shrinkDepth++ ), [self infoName],
+      NSStringFromCGRect( rect ), NSStringFromUIEdgeInsets( margins ) );
 
   // Prepare the view hierarchy.
-  [self layoutIfNeeded];
-  [self assignPreferredMaxLayoutWidth];
+  [self layoutIfNeeded]; // TODO: Needed to ensure UIStackView's systemLayoutSize respects its current bounds.
+  [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) { // TODO: Don't invalidate for each recursive fit.
+    [subview invalidateIntrinsicContentSize];
+  }            recurse:YES];
 
-  // Shrink the view down to its absolute minimum size that still respects subviews' autoresizing layout margins.
-  CGRectSetSize( self.frame, desiredSize );
+  [self setFrameFromSize:CGSizeMake(
+          [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? CGFLOAT_MAX:
+          [self hasAutoresizingMask:PearlAutoresizingMinimalWidth] || !self.autoresizingMask? CGFLOAT_MIN: rect.size.width,
+          [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? CGFLOAT_MAX:
+          [self hasAutoresizingMask:PearlAutoresizingMinimalHeight] || !self.autoresizingMask? CGFLOAT_MIN: rect.size.height )
+      andParentMarginTop:[self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
+                         [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: margins.top
+                   right:[self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
+                         [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: margins.right
+                  bottom:[self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
+                         [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: margins.bottom
+                    left:[self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
+                         [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: margins.left
+                 options:PearlLayoutOptionConstrained];
 
-  // Let the subviews resize themselves to fit, growing their superview if needed to allocate fitting space.
-  [self shrinkSubviews];
+  // Update fitting size for our subviews (only subviews that are positioned by autoresizing;
+  // subviews handled by view layout logic are assumed to be handled by systemLayoutSizeFittingSize/layoutSubviews).
+  if (self.autoresizesSubviews)
+    for (UIView *subview in self.subviews)
+      if (subview.autoresizingMask)
+        [subview fitSubviews];
 
-  // Re-apply the view's existing autoresizing configuration by evaluating its layout margins and newly fitted size against the superview.
-  if (self.autoresizingMask) {
-    CGRect alignmentRect = [self alignmentRect];
-    [self setFrameFromSize:CGSizeMake(
-            [self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? CGFLOAT_MAX:
-            [self hasAutoresizingMask:PearlAutoresizingMinimalWidth]? CGFLOAT_MIN: alignmentRect.size.width,
-            [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? CGFLOAT_MAX:
-            [self hasAutoresizingMask:PearlAutoresizingMinimalHeight]? CGFLOAT_MIN: alignmentRect.size.height )
-        andParentMarginTop:[self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
-                           [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: margins.top
-                     right:[self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
-                           [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: margins.right
-                    bottom:[self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
-                           [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: margins.bottom
-                      left:[self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
-                           [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: margins.left
-                   options:options];
-  }
-
-  // Clear any automatically set UILabel measurement hints so future passes don't mistake them for manual/hardcoded values.
-  [self resetPreferredMaxLayoutWidth];
   --shrinkDepth;
+  BOOL changed = CGRectEqualToRect( self.bounds, oldBounds );
+//  if (changed) {
+//    [[UITableView findAsSuperviewOf:self] beginUpdates];
+//    [[UITableView findAsSuperviewOf:self] endUpdates];
+//  }
+  return changed;
 }
 
 - (void)assignPreferredMaxLayoutWidth {
   if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] && [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
     int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
-    if (!assignDepth)
-      [(UILabel *)self setPreferredMaxLayoutWidth:self.bounds.size.width];
+    if (!assignDepth) {
+      CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
+      if (!resetValue) {
+        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
+        [(UILabel *)self setPreferredMaxLayoutWidth:self.bounds.size.width];
+      }
+    }
+
     objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
   }
 
@@ -557,8 +628,14 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)resetPreferredMaxLayoutWidth {
   if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] && [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
     int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
-    if (assignDepth == 1)
-      [(UILabel *)self setPreferredMaxLayoutWidth:0];
+    if (assignDepth == 1) {
+      NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
+      if (resetValue) {
+        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
+        [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
+      }
+    }
+
     objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
   }
 
@@ -660,14 +737,31 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)intrinsicContentSize {
-  return self.contentView.alignmentRect.size;
+  UIEdgeInsets margins = self.contentMargins;
+  CGRect alignmentRect = self.alignmentRect;
+  margins.top -= alignmentRect.origin.y - self.frame.origin.y;
+  margins.left -= alignmentRect.origin.x - self.frame.origin.x;
+  margins.bottom -= (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height);
+  margins.right -= (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width);
+  CGSize size = [self.contentView fittingSizeIn:self.bounds.size margins:margins];
+  return [self alignmentRectForFrame:(CGRect){ self.contentView.frame.origin, size }].size;
 }
 
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  [self.contentView shrinkToSize:[self.contentView frameForAlignmentRect:bounds].size
-                         margins:self.contentMargins withOptions:PearlLayoutOptionConstrained];
+  [self.contentView fitInAlignmentRect:[self alignmentRectForFrame:bounds] margins:self.contentMargins];
+
+//  [self.contentView shrinkToSize:[self.contentView frameForAlignmentRect:bounds].size
+//                         margins:self.contentMargins withOptions:PearlLayoutOptionConstrained];
+}
+
+- (void)setNeedsLayout {
+  [super setNeedsLayout];
+}
+
+- (void)layoutSubviews {
+  [super layoutSubviews];
 }
 
 - (UIView *)contentView {
@@ -683,20 +777,27 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-  size = [super sizeThatFits:size];
+  CGSize imageSize = [super sizeThatFits:size];
 
   CGFloat maxWidth = self.preferredMaxLayoutWidth;
+  if (maxWidth == CGFLOAT_MIN)
+    return CGSizeZero;
+
   if (size.width)
-    maxWidth = MIN( maxWidth, size.width );
+    if (maxWidth)
+      maxWidth = MIN( maxWidth, size.width );
+    else
+      maxWidth = size.width;
   if (!maxWidth)
     maxWidth = self.bounds.size.width;
+
   if (maxWidth) {
-    CGFloat newWidth = MIN( size.width, maxWidth );
-    size.height = size.height * newWidth / size.width;
-    size.width = newWidth;
+    CGFloat newWidth = MIN( imageSize.width, maxWidth );
+    imageSize.height = imageSize.height * newWidth / imageSize.width;
+    imageSize.width = newWidth;
   }
 
-  return size;
+  return imageSize;
 }
 
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {

@@ -166,6 +166,9 @@ __END_DECLS
 
 /**
  * A view for putting autoresizing view hierarchies inside a constraints-based view hierarchy such as a UIStackView.
+ *
+ * Call -setNeedsUpdateConstraints to invalidate the constraints in this view that cache the hierarchy's fitting size after
+ * making a change that requires the hierarchy be re-fitted.
  */
 @interface AutoresizingContainerView : UIView
 

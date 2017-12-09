@@ -19,11 +19,15 @@
 #import <Foundation/Foundation.h>
 
 #if DEBUG
+/** Define a new profiler in this scope. */
 #define prof_new(format, ...)       PearlProfiler * prof_new_var((format), ##__VA_ARGS__)
+/** Recycle an already defined profiler in this scope. */
 #define prof_new_var(format, ...)   __profiler = [PearlProfiler profilerInFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                                      forTask:(format), ##__VA_ARGS__]
+/** Rewind a profiler's time and log the duration, starting anew. */
 #define prof_rewind(format, ...)    [__profiler rewindInFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                          job:(format), ##__VA_ARGS__]
+/** Finish a profiler's time and log the duration and the total profiler time. */
 #define prof_finish(format, ...)    [__profiler finishInFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                          job:(format), ##__VA_ARGS__]
 #define prof_disable_if(condition)  if (condition) { [__profiler cancel]; }
@@ -59,12 +63,12 @@
 - (void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 
 /**
- * Stop the timer, logging a debug message which includes the completed job's elapsed time and the message.
+ * Stop the timer, logging a debug message which includes the completed job's elapsed time, the total profiler time and the message.
  */
 - (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 
 /**
- * Stop the profiler's job.
+ * Stop the profiler's job, logging the total profiler time.
  */
 - (void)finish;
 

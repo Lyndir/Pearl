@@ -42,3 +42,4 @@
 #import "UIView+PearlSize.h"
 #import "UIView+Touches.h"
 #import "UIView+Visible.h"
+#import "WTFViews.h"

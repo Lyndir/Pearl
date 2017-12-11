@@ -147,7 +147,7 @@ __END_DECLS
                                            bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
+- (void)setFrameFromSize:(CGSize)size andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
 
 /** @return The smallest size this view's frame can take up while still respecting its subviews' autoresizing configuration. */
@@ -156,10 +156,11 @@ __END_DECLS
 /** @return true if the given mask is present on the view, also supports custom masks PearlAutoresizingMinimal. */
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask;
 
-/** Calculate how the view should size itself in the given bounds, fitting its full view hierarchy. */
-- (CGSize)fittingSizeIn:(CGSize)bounds;
+/** The frame size for fitting this view in the available space, collapsing margins if permitted by its autoresizing configuration. */
+- (CGSize)fittingSizeIn:(CGSize)availableSize;
 
-/** Invalidate and resize this view's hierarchy to fit the superview's bounds. */
+/** Invalidate and resize this view's hierarchy to fit the superview's bounds.
+ * @return YES if the operation caused our bounds to change. */
 - (BOOL)fitSubviews;
 
 @end

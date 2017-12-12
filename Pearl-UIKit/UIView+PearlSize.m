@@ -78,10 +78,16 @@ static CGSize PearlNoIntrinsicMetric;
 }
 
 - (UIEdgeInsets)autoresizingMargins {
+    if (!self.superview)
+        return UIEdgeInsetsZero;
+
     return UIEdgeInsetsFromCGRectInCGSize( self.frame, self.superview.bounds.size );
 }
 
 - (UIEdgeInsets)alignmentMargins {
+    if (!self.superview)
+        return UIEdgeInsetsZero;
+
     return UIEdgeInsetsFromCGRectInCGSize( self.alignmentRect, self.superview.bounds.size );
 }
 

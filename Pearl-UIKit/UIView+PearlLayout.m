@@ -391,12 +391,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   [self setAutoresizingMaskFromSize:size andParentMarginTop:top right:right bottom:bottom left:left options:options];
 
   // Determine the size available in the superview for our alignment rect.
-  /// availableWidth/Height = The space available in the parent for our view's alignment rect.
-  CGFloat availableWidth = self.superview.bounds.size.width - (
-      (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right));
-  CGFloat availableHeight = self.superview.bounds.size.height - (
-      (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom));
-
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
   CGRect alignmentRect = self.alignmentRect;
   UIEdgeInsets autoresizingMargins = UIEdgeInsetsMake(
@@ -418,22 +412,21 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       requestedSize.height == CGFLOAT_MAX? fittingSize.height: requestedSize.height );
 
   // Grow the superview if needed to fit the alignment rect and margin.
-  CGSize container = self.superview.frame.size;
-  if (requiredSize.width > availableWidth)
-    container.width = (availableWidth = requiredSize.width) + (left == CGFLOAT_MAX? 0: left) + (right == CGFLOAT_MAX? 0: right);
-  if (requiredSize.height > availableHeight)
-    container.height = (availableHeight = requiredSize.height) + (top == CGFLOAT_MAX? 0: top) + (bottom == CGFLOAT_MAX? 0: bottom);
-  if (!CGSizeEqualToSize( self.superview.frame.size, container ))
-    if (!(options & PearlLayoutOptionConstrained)) {
-//      wrn( @"%@Refusing to stretch container: %@ => %@", RPad( @"", shrinkDepth ), [self.superview infoName],
-//          NSStringFromCGSize( container ) );
-      CGRectSetSize( self.superview.frame, container );
-      // TODO: recurse down the superview hierarchy
-      // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
-    }
+  CGSize container = CGSizeUnion( self.superview.frame.size, (CGSize){
+      requiredSize.width + (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right),
+      requiredSize.height + (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom)
+  } );
+  if (!(options & PearlLayoutOptionConstrained)) {
+    CGRectSetSize( self.superview.frame, container );
+    // TODO: recurse down the superview hierarchy
+    // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
+  }
+//  else if (!CGSizeEqualToSize( self.superview.frame.size, container ))
+//    wrn( @"Constrained, will not stretch container: %@ => %@", [self.superview infoName], NSStringFromCGSize( container ) );
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
-  [self setFrame:[self frameForAlignmentRect:CGRectInCGSizeWithSizeAndMargin( container, requestedSize, top, right, bottom, left )]];
+  CGRectSet( self.frame, [self frameForAlignmentRect:
+      CGRectInCGSizeWithSizeAndMargin( container, requestedSize, top, right, bottom, left )] );
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -509,12 +502,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   availableSize = CGSizeUnion( minimumSize, availableSize );
   CGSize fittingSize = CGSizeUnion( minimumSize, [self collapsedFittingSizeIn:availableSize] );
 
-  // Preserve fixed layout sizes.
-  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth | PearlAutoresizingMinimalWidth])
-    fittingSize.width = MAX( fittingSize.width, self.bounds.size.width );
-  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight | PearlAutoresizingMinimalHeight])
-    fittingSize.height = MAX( fittingSize.height, self.bounds.size.height );
-
   // Grow to fit our autoresizing subviews.  Other subviews were handled by -systemLayoutSizeFittingSize.
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
@@ -531,15 +518,25 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)collapsedFittingSizeIn:(CGSize)availableSize {
-  // TODO: Pass in appropriate horizontal/vertical fitting priorities.
+  // TODO: this should probably consider availableSize, hierarchically.
   [self assignPreferredMaxLayoutWidth];
-//  availableSize = CGSizeUnion( availableSize, [self frameForAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize }].size );
-  CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize];
+  // We bias/favour width fitting to height fitting to size multiline UILabels right.
+  CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
+                           withHorizontalFittingPriority:[self hasAutoresizingMask:PearlAutoresizingMinimalWidth]?
+                                                         UILayoutPriorityFittingSizeLevel: UILayoutPriorityDefaultHigh
+                                 verticalFittingPriority:[self hasAutoresizingMask:PearlAutoresizingMinimalHeight]?
+                                                         UILayoutPriorityFittingSizeLevel: UILayoutPriorityDefaultLow];
   [self resetPreferredMaxLayoutWidth];
 
   // If size of view is determined by constraints, don't collapse it.
   if (self.constraints.count)
     return fittingSize;
+
+  // Preserve non-flexible layout sizes.
+  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth | PearlAutoresizingMinimalWidth])
+    fittingSize.width = MAX( fittingSize.width, self.bounds.size.width );
+  if (![self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight | PearlAutoresizingMinimalHeight])
+    fittingSize.height = MAX( fittingSize.height, self.bounds.size.height );
 
   // UIViews' -sizeThatFits: just returns -bounds.size, collapse it.
   // Shortcut logic where possible.

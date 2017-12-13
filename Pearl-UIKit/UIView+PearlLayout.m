@@ -388,7 +388,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
                   bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 
   // Save the layout configuration in the autoresizing mask.
-  [self setAutoresizingMaskFromSize:size andParentMarginTop:top right:right bottom:bottom left:left options:options];
+  [self setAutoresizingMaskFromSize:size andAlignmentMarginTop:top right:right bottom:bottom left:left options:options];
 
   // Determine the size available in the superview for our alignment rect.
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
@@ -416,13 +416,15 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       requiredSize.width + (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right),
       requiredSize.height + (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom)
   } );
-  if (!(options & PearlLayoutOptionConstrained)) {
-    CGRectSetSize( self.superview.frame, container );
-    // TODO: recurse down the superview hierarchy
-    // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
-  }
-//  else if (!CGSizeEqualToSize( self.superview.frame.size, container ))
-//    wrn( @"Constrained, will not stretch container: %@ => %@", [self.superview infoName], NSStringFromCGSize( container ) );
+  if (self.superview && self.autoresizingMask)
+    if (!(options & PearlLayoutOptionConstrained)) {
+      CGRectSetSize( self.superview.frame, container );
+      // TODO: recurse down the superview hierarchy
+      // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
+    }
+    else if (!CGSizeEqualToSize( self.superview.frame.size, container ))
+      wrn( @"Container: %@, is not be large enough for constrained fit of: %@ (need %@, has %@)",
+          [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
   CGRectSet( self.frame, [self frameForAlignmentRect:
@@ -486,6 +488,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)fittingSizeIn:(CGSize)availableSize margins:(UIEdgeInsets)autoresizingMargins {
+  // TODO: This method repeats Tn times for a hierarchy n deep.  Can we avoid this or cache results?
   static NSMutableArray *stack;
   if (!stack)
     stack = [NSMutableArray new];
@@ -518,9 +521,9 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (CGSize)collapsedFittingSizeIn:(CGSize)availableSize {
-  // TODO: this should probably consider availableSize, hierarchically.
-  [self assignPreferredMaxLayoutWidth];
-  // We bias/favour width fitting to height fitting to size multiline UILabels right.
+  // We bias/favour width fitting to height fitting to size multi-line UILabels right.
+  // Not entirely sure why; some long UILabels do not limit on fittingSize properly without assigning its width to preferredMaxLayoutWidth.
+  [self assignPreferredMaxLayoutWidth:availableSize];
   CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
                            withHorizontalFittingPriority:[self hasAutoresizingMask:PearlAutoresizingMinimalWidth]?
                                                          UILayoutPriorityFittingSizeLevel: UILayoutPriorityDefaultHigh
@@ -593,43 +596,42 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return changed;
 }
 
-- (void)assignPreferredMaxLayoutWidth {
-  if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] && [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
-    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
-    if (!assignDepth) {
-      CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
-      if (!resetValue) {
-        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
-        [(UILabel *)self setPreferredMaxLayoutWidth:self.bounds.size.width];
-      }
-    }
+- (void)assignPreferredMaxLayoutWidth:(CGSize)availableSize {
+  if (![self respondsToSelector:@selector( preferredMaxLayoutWidth )] ||
+      ![self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )])
+    return;
 
-    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
+  int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
+
+  if (!assignDepth) {
+    CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
+    if (!resetValue) {
+      objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
+      [(UILabel *)self setPreferredMaxLayoutWidth:availableSize.width];
+    }
   }
 
-  for (UIView *subview in [self subviews])
-    [subview assignPreferredMaxLayoutWidth];
+  objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
 }
 
 - (void)resetPreferredMaxLayoutWidth {
-  if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] && [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
-    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ) ) intValue];
-    if (assignDepth == 1) {
-      NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
-      if (resetValue) {
-        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
-        [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
-      }
+  if (![self respondsToSelector:@selector( preferredMaxLayoutWidth )] ||
+      ![self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )])
+    return;
+
+  int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
+  objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
+
+  if (!assignDepth) {
+    NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
+    if (resetValue) {
+      objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
+      [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
     }
-
-    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
   }
-
-  for (UIView *subview in [self subviews])
-    [subview resetPreferredMaxLayoutWidth];
 }
 
-- (void)setAutoresizingMaskFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
+- (void)setAutoresizingMaskFromSize:(CGSize)size andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
                              bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
   UIViewAutoresizing mask = (UIViewAutoresizing)(
       (top == CGFLOAT_MAX? UIViewAutoresizingFlexibleTopMargin:
@@ -645,22 +647,22 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       (size.height == CGFLOAT_MAX? UIViewAutoresizingFlexibleHeight:
        size.height == CGFLOAT_MIN? PearlAutoresizingMinimalHeight: 0));
 
-  objc_setAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andParentMarginTop:right:bottom:left:options: ),
+  objc_setAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMarginTop:right:bottom:left:options: ),
       @(mask), OBJC_ASSOCIATION_RETAIN );
   self.autoresizingMask = mask;
 
-  [self.superview didSetSubview:self autoresizingMaskFromSize:size andParentMarginTop:top right:right bottom:bottom left:left
+  [self.superview didSetSubview:self autoresizingMaskFromSize:size andAlignmentMarginTop:top right:right bottom:bottom left:left
                         options:options];
 }
 
 - (void)didSetSubview:(UIView *)subview autoresizingMaskFromSize:(CGSize)size
-   andParentMarginTop:(CGFloat)top right:(CGFloat)right
+andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
                bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
 }
 
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask {
   return mask & [objc_getAssociatedObject( self,
-      @selector( setAutoresizingMaskFromSize:andParentMarginTop:right:bottom:left:options: ) )
+      @selector( setAutoresizingMaskFromSize:andAlignmentMarginTop:right:bottom:left:options: ) )
                  ?: @(self.autoresizingMask) unsignedLongValue];
 }
 
@@ -668,7 +670,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 @interface AutoresizingContainerView()
 
-@property(nonatomic) UIEdgeInsets contentMargins;
+@property(nonatomic) UIEdgeInsets contentAlignmentMargins;
 
 @end
 
@@ -717,26 +719,29 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (void)didSetSubview:(UIView *)subview autoresizingMaskFromSize:(CGSize)size
-   andParentMarginTop:(CGFloat)top right:(CGFloat)right
+andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
                bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
-  self.contentMargins = UIEdgeInsetsMake( top, left, bottom, right );
+  self.contentAlignmentMargins = UIEdgeInsetsMake( top, left, bottom, right );
 }
 
 - (CGSize)intrinsicContentSize {
-  UIEdgeInsets margins = self.contentMargins;
-  CGRect alignmentRect = self.alignmentRect;
-  margins.top -= alignmentRect.origin.y - self.frame.origin.y;
-  margins.left -= alignmentRect.origin.x - self.frame.origin.x;
-  margins.bottom -= (self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height);
-  margins.right -= (self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width);
-  CGSize size = [self.contentView fittingSizeIn:self.bounds.size margins:margins];
+  CGRect alignmentRect = self.contentView.alignmentRect;
+  UIEdgeInsets autoresizingMargins = self.contentAlignmentMargins;
+  autoresizingMargins.top -= alignmentRect.origin.y - self.contentView.frame.origin.y;
+  autoresizingMargins.left -= alignmentRect.origin.x - self.contentView.frame.origin.x;
+  autoresizingMargins.bottom -= (self.contentView.frame.origin.y + self.contentView.frame.size.height)
+                                - (alignmentRect.origin.y + alignmentRect.size.height);
+  autoresizingMargins.right -= (self.contentView.frame.origin.x + self.contentView.frame.size.width)
+                               - (alignmentRect.origin.x + alignmentRect.size.width);
+  CGSize size = [self.contentView fittingSizeIn:self.superview.bounds.size margins:autoresizingMargins];
   return [self.contentView alignmentRectForFrame:(CGRect){ self.contentView.frame.origin, size }].size;
 }
 
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  [self.contentView fitInAlignmentRect:[self.contentView alignmentRectForFrame:bounds] margins:self.contentMargins];
+  if (![self isHidden])
+    [self.contentView fitInAlignmentRect:[self.contentView alignmentRectForFrame:bounds] margins:self.contentAlignmentMargins];
 }
 
 - (void)updateConstraints {

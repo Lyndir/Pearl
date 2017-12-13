@@ -18,7 +18,6 @@
 #import "NSPersistentStore+PearlMigration.h"
 #import "NSString+PearlNSArrayFormat.h"
 #import "NSString+PearlSEL.h"
-#import "NSTimer+PearlBlock.h"
 #import "PearlAbstractStrings.h"
 #import "PearlCodeUtils.h"
 #import "PearlConfig.h"

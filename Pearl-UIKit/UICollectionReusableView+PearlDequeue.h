@@ -19,20 +19,31 @@
 
 @interface UICollectionReusableView(PearlDequeue)
 
-+ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView;
 + (instancetype)templateSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
 
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
 + (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
                                              indexPath:(NSIndexPath *)indexPath;
-
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView;
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib;
++ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                             indexPath:(NSIndexPath *)indexPath
+                                                  init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock;
 
 + (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
 + (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib;
 
 + (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
 + (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib;
+
+@end
+
+@interface UICollectionViewCell(PearlDequeue)
+
++ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView;
+
++ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
++ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
+                                         init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock;
+
++ (void)registerCellWithCollectionView:(UICollectionView *)collectionView;
++ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib;
 
 @end

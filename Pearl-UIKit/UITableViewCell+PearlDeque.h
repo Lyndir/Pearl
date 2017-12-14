@@ -22,6 +22,8 @@
 + (instancetype)templateCellFromTableView:(UITableView *)tableView;
 
 + (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
++ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+                                    init:(void ( ^ )(__kindof UITableViewCell *cell))initBlock;
 
 + (void)registerNibCellWithTableView:(UITableView *)tableView;
 + (void)registerCellWithTableView:(UITableView *)tableView;
@@ -32,6 +34,9 @@
 @interface UITableViewHeaderFooterView(PearlDeque)
 
 + (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView;
++ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView
+                                            init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock;
+
 + (void)registerHeaderFooterWithTableView:(UITableView *)tableView;
 + (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib;
 

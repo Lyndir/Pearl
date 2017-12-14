@@ -32,6 +32,15 @@
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass( self )];
 }
 
++ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView init:(void ( ^ )(UITableViewHeaderFooterView *view))initBlock {
+
+    __kindof UITableViewHeaderFooterView *view = [self dequeueHeaderFooterFromTableView:tableView];
+    [UIView setAnimationsEnabled:NO];
+    initBlock( view );
+    [UIView setAnimationsEnabled:YES];
+
+    return view;
+}
 
 + (void)registerHeaderFooterWithTableView:(UITableView *)tableView {
     
@@ -65,6 +74,17 @@
 + (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
 
     return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
+}
+
++ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+                                    init:(void(^)(__kindof UITableViewCell *cell))initBlock {
+
+    __kindof UITableViewCell *cell = [self dequeueCellFromTableView:tableView indexPath:indexPath];
+    [UIView setAnimationsEnabled:NO];
+    initBlock( cell );
+    [UIView setAnimationsEnabled:YES];
+
+    return cell;
 }
 
 + (void)registerCellWithTableView:(UITableView *)tableView {

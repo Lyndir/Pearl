@@ -27,24 +27,6 @@
 
 @implementation UICollectionReusableView(PearlDequeue)
 
-+ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView {
-
-    UICollectionViewLayout *originalLayout = collectionView.collectionViewLayout;
-    id<UICollectionViewDelegate> originalDelegate = collectionView.delegate;
-    id<UICollectionViewDataSource> originalDataSource = collectionView.dataSource;
-    collectionView.collectionViewLayout = [UICollectionViewFlowLayout new];
-    collectionView.delegate = nil;
-    collectionView.dataSource = [PearlTemplateCollectionViewDataSource templateSourceForIdentifier:NSStringFromClass( self )];
-    id template = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass( self )
-                                                            forIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    collectionView.collectionViewLayout = originalLayout;
-    collectionView.delegate = originalDelegate;
-    collectionView.dataSource = originalDataSource;
-    [collectionView reloadData];
-
-    return template;
-}
-
 + (instancetype)templateSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
 
     id<UICollectionViewDataSource> originalDataSource = collectionView.dataSource;
@@ -57,11 +39,6 @@
     return template;
 }
 
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath {
-
-    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
-}
-
 + (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
                                              indexPath:(NSIndexPath *)indexPath {
 
@@ -69,14 +46,16 @@
                                                      forIndexPath:indexPath];
 }
 
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView {
++ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                             indexPath:(NSIndexPath *)indexPath
+                                                  init:(void ( ^ )(UICollectionReusableView *cell))initBlock {
 
-    [collectionView registerClass:self forCellWithReuseIdentifier:NSStringFromClass( self )];
-}
+    __kindof UICollectionReusableView *view = [self dequeueSupplementaryFromCollectionView:collectionView kind:kind indexPath:indexPath];
+    [UIView setAnimationsEnabled:NO];
+    initBlock( view );
+    [UIView setAnimationsEnabled:YES];
 
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib {
-
-    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass( self )];
+    return view;
 }
 
 + (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
@@ -97,6 +76,54 @@
 + (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib {
 
     [collectionView.collectionViewLayout registerNib:nib forDecorationViewOfKind:kind];
+}
+
+@end
+
+@implementation UICollectionViewCell(PearlDequeue)
+
++ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView {
+
+    UICollectionViewLayout *originalLayout = collectionView.collectionViewLayout;
+    id<UICollectionViewDelegate> originalDelegate = collectionView.delegate;
+    id<UICollectionViewDataSource> originalDataSource = collectionView.dataSource;
+    collectionView.collectionViewLayout = [UICollectionViewFlowLayout new];
+    collectionView.delegate = nil;
+    collectionView.dataSource = [PearlTemplateCollectionViewDataSource templateSourceForIdentifier:NSStringFromClass( self )];
+    id template = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass( self )
+                                                            forIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    collectionView.collectionViewLayout = originalLayout;
+    collectionView.delegate = originalDelegate;
+    collectionView.dataSource = originalDataSource;
+    [collectionView reloadData];
+
+    return template;
+}
+
++ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath {
+
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
+}
+
++ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
+                                         init:(void ( ^ )(UICollectionViewCell *cell))initBlock {
+
+    __kindof UICollectionViewCell *view = [self dequeueCellFromCollectionView:collectionView indexPath:indexPath];
+    [UIView setAnimationsEnabled:NO];
+    initBlock( view );
+    [UIView setAnimationsEnabled:YES];
+
+    return view;
+}
+
++ (void)registerCellWithCollectionView:(UICollectionView *)collectionView {
+
+    [collectionView registerClass:self forCellWithReuseIdentifier:NSStringFromClass( self )];
+}
+
++ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib {
+
+    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass( self )];
 }
 
 @end

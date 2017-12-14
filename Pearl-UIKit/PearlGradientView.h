@@ -21,11 +21,7 @@
 /**
  * A gradient view is a plain view that renders a gradient shading from top to bottom in its content area.
  */
-@interface PearlGradientView : UIView {
-
-@private
-    CGFloat *components;
-}
+@interface PearlGradientView : UIView
 
 /** Create a gradient view that renders a gradient which begins at the top with the given topColor
  *  and ends at the bottom with the given bottomColor. */

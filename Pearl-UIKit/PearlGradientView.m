@@ -18,14 +18,15 @@
 
 #import "PearlGradientView.h"
 
-@implementation PearlGradientView
+@implementation PearlGradientView {
+
+    CGFloat *components;
+}
 
 - (id)initWithTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor {
 
     if (!(self = [super init]))
         return nil;
-
-    NSAssert([NSThread currentThread].isMainThread, @"Should be on the main thread; was on thread: %@", [NSThread currentThread].name);
 
     CGFloat tR, tG, tB, tA, bR, bG, bB, bA;
     [topColor getRed:&tR green:&tG blue:&tB alpha:&tA];
@@ -37,6 +38,8 @@
 
     components = calloc( 2 * 4, sizeof(CGFloat) );
     memcpy(components, newComponents, sizeof(newComponents));
+
+    self.opaque = tA == 1 && bA == 1;
 
     return self;
 }

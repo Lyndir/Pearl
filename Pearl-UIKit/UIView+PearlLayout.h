@@ -93,7 +93,6 @@ typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
 #define PearlAutoresizingMinimalTopMargin    (UIViewAutoresizing)(1 << 9)
 #define PearlAutoresizingMinimalHeight       (UIViewAutoresizing)(1 << 10)
 #define PearlAutoresizingMinimalBottomMargin (UIViewAutoresizing)(1 << 11)
-
 __END_DECLS
 
 @interface UIView(PearlLayout)
@@ -172,6 +171,8 @@ __END_DECLS
  * making a change that requires the hierarchy be re-fitted.
  */
 @interface AutoresizingContainerView : UIView
+
++ (NSArray<AutoresizingContainerView *> *)wrap:(id<NSFastEnumeration>)views;
 
 - (instancetype)initWithContent:(UIView *)contentView;
 

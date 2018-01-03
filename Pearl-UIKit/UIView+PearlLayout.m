@@ -676,6 +676,14 @@ andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
 
 @implementation AutoresizingContainerView
 
++ (NSArray<AutoresizingContainerView *> *)wrap:(id<NSFastEnumeration>)views {
+  NSMutableArray<AutoresizingContainerView *> *wrapped = [NSMutableArray array];
+  for (UIView *view in views)
+    [wrapped addObject:[[self alloc] initWithContent:view]];
+
+  return wrapped;
+}
+
 - (instancetype)initWithContent:(UIView *)contentView {
   if (!(self = [self initWithFrame:(CGRect){ CGPointZero, contentView.alignmentRect.size }]))
     return nil;

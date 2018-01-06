@@ -77,10 +77,10 @@
         }
 
         [self.overlayView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, 16 + self.titleView.frame.size.height + self.activityIndicator.frame.size.height )
-                        andParentMarginTop:CGFLOAT_MAX right:20 bottom:20 left:20];
+                        andAlignmentMargins:UIEdgeInsetsMake( CGFLOAT_MAX, 20, 20, 20 )];
         [self.titleView setFrameFromSize:CGSizeMake( CGFLOAT_MAX, CGFLOAT_MIN )
-                      andParentMarginTop:CGFLOAT_MAX right:20 bottom:8 left:20];
-        [self.activityIndicator setFrameFromCurrentSizeAndParentMarginTop:8 right:CGFLOAT_MAX bottom:CGFLOAT_MAX left:CGFLOAT_MAX];
+                      andAlignmentMargins:UIEdgeInsetsMake( CGFLOAT_MAX, 20, 8, 20 )];
+        [self.activityIndicator setFrameFromCurrentSizeAndAlignmentMargins:UIEdgeInsetsMake( 8, CGFLOAT_MAX, CGFLOAT_MAX, CGFLOAT_MAX )];
     } );
 
     return self;

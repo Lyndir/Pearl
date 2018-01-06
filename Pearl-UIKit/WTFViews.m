@@ -7,6 +7,14 @@
 
 @implementation WTFView
 
+- (void)setFrame:(CGRect)frame {
+  [super setFrame:frame];
+}
+
+- (void)setBounds:(CGRect)bounds {
+  [super setBounds:bounds];
+}
+
 - (BOOL)needsUpdateConstraints {
   return [super needsUpdateConstraints];
 }

@@ -135,42 +135,42 @@ CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size) {
   return CGRectMake( center.x - size.width / 2, center.y - size.height / 2, size.width, size.height );
 }
 
-CGRect CGRectInCGSizeWithSizeAndMargin(const CGSize container, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left) {
+CGRect CGRectInCGSizeWithSizeAndMargins(const CGSize container, CGSize size, UIEdgeInsets margins) {
 
   if (size.width == CGFLOAT_MAX) {
-    if (left == CGFLOAT_MAX && right == CGFLOAT_MAX)
-      left = right = size.width = container.width / 3;
-    else if (left == CGFLOAT_MAX)
-      left = size.width = (container.width - right) / 2;
-    else if (right == CGFLOAT_MAX)
-      right = size.width = (container.width - left) / 2;
+    if (margins.left == CGFLOAT_MAX && margins.right == CGFLOAT_MAX)
+      margins.left = margins.right = size.width = container.width / 3;
+    else if (margins.left == CGFLOAT_MAX)
+      margins.left = size.width = (container.width - margins.right) / 2;
+    else if (margins.right == CGFLOAT_MAX)
+      margins.right = size.width = (container.width - margins.left) / 2;
     else
-      size.width = container.width - left - right;
+      size.width = container.width - margins.left - margins.right;
   }
   if (size.height == CGFLOAT_MAX) {
-    if (top == CGFLOAT_MAX && bottom == CGFLOAT_MAX)
-      top = bottom = size.height = container.height / 3;
-    else if (top == CGFLOAT_MAX)
-      top = size.height = (container.height - bottom) / 2;
-    else if (bottom == CGFLOAT_MAX)
-      bottom = size.height = (container.height - top) / 2;
+    if (margins.top == CGFLOAT_MAX && margins.bottom == CGFLOAT_MAX)
+      margins.top = margins.bottom = size.height = container.height / 3;
+    else if (margins.top == CGFLOAT_MAX)
+      margins.top = size.height = (container.height - margins.bottom) / 2;
+    else if (margins.bottom == CGFLOAT_MAX)
+      margins.bottom = size.height = (container.height - margins.top) / 2;
     else
-      size.height = container.height - top - bottom;
+      size.height = container.height - margins.top - margins.bottom;
   }
-  if (top == CGFLOAT_MAX) {
-    if (bottom == CGFLOAT_MAX)
-      top = (container.height - size.height) / 2;
+  if (margins.top == CGFLOAT_MAX) {
+    if (margins.bottom == CGFLOAT_MAX)
+      margins.top = (container.height - size.height) / 2;
     else
-      top = container.height - size.height - bottom;
+      margins.top = container.height - size.height - margins.bottom;
   }
-  if (left == CGFLOAT_MAX) {
-    if (right == CGFLOAT_MAX)
-      left = (container.width - size.width) / 2;
+  if (margins.left == CGFLOAT_MAX) {
+    if (margins.right == CGFLOAT_MAX)
+      margins.left = (container.width - size.width) / 2;
     else
-      left = container.width - size.width - right;
+      margins.left = container.width - size.width - margins.right;
   }
 
-  return CGRectFromOriginWithSize( CGPointMake( left, top ), size );
+  return CGRectFromOriginWithSize( CGPointMake( margins.left, margins.top ), size );
 }
 
 UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container) {
@@ -185,9 +185,9 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 @implementation UIView(PearlLayout)
 
-- (void)setFrameFromCurrentSizeAndParentMarginTop:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+- (void)setFrameFromCurrentSizeAndAlignmentMargins:(UIEdgeInsets)alignmentMargins {
 
-  [self setFrameFromSize:self.frame.size andParentMarginTop:top right:right bottom:bottom left:left];
+  [self setFrameFromSize:self.frame.size andAlignmentMargins:alignmentMargins];
 }
 
 - (void)setFrameFrom:(NSString *)layoutString {
@@ -374,32 +374,23 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
   // Apply layout
   [self setFrameFromSize:CGSizeMake( widthLayoutValue, heightLayoutValue )
-   andAlignmentMarginTop:topLayoutValue right:rightLayoutValue bottom:bottomLayoutValue left:leftLayoutValue
-                 options:options];
+     andAlignmentMargins:UIEdgeInsetsMake( topLayoutValue, leftLayoutValue, bottomLayoutValue, rightLayoutValue ) options:options];
 }
 
-- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left {
+- (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins {
 
-  [self setFrameFromSize:size andAlignmentMarginTop:top right:right bottom:bottom left:left options:PearlLayoutOptionNone];
+  [self setFrameFromSize:size andAlignmentMargins:alignmentMargins options:PearlLayoutOptionNone];
 }
 
-- (void)setFrameFromSize:(CGSize)size andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
+- (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
 
   // Save the layout configuration in the autoresizing mask.
-  [self setAutoresizingMaskFromSize:size andAlignmentMarginTop:top right:right bottom:bottom left:left options:options];
+  [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
 
   // Determine the size available in the superview for our alignment rect.
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
-  CGRect alignmentRect = self.alignmentRect;
-  UIEdgeInsets autoresizingMargins = UIEdgeInsetsMake(
-      top - (alignmentRect.origin.y - self.frame.origin.y),
-      left - (alignmentRect.origin.x - self.frame.origin.x),
-      bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
-      right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
-  CGSize fittingSize = [self fittingSizeIn:self.superview.bounds.size margins:autoresizingMargins];
-  fittingSize = [self alignmentRectForFrame:(CGRect){ autoresizingMargins.left, autoresizingMargins.top, fittingSize }].size;
+  UIEdgeInsets marginSpace = UIEdgeInsetsZero;
+  CGSize fittingSize = [self fittingAlignmentSizeIn:self.superview.bounds.size margins:alignmentMargins marginSpace:&marginSpace];
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
   CGSize requestedSize = CGSizeMake(
@@ -413,22 +404,23 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
   // Grow the superview if needed to fit the alignment rect and margin.
   CGSize container = CGSizeUnion( self.superview.frame.size, (CGSize){
-      requiredSize.width + (left == CGFLOAT_MAX || left == CGFLOAT_MIN? 0: left) + (right == CGFLOAT_MAX || right == CGFLOAT_MIN? 0: right),
-      requiredSize.height + (top == CGFLOAT_MAX || top == CGFLOAT_MIN? 0: top) + (bottom == CGFLOAT_MAX || bottom == CGFLOAT_MIN? 0: bottom)
+      requiredSize.width + marginSpace.left + marginSpace.right,
+      requiredSize.height + marginSpace.top + marginSpace.bottom
   } );
-  if (self.superview && self.autoresizingMask)
+  if (self.superview && self.autoresizingMask) {
     if (!(options & PearlLayoutOptionConstrained)) {
       CGRectSetSize( self.superview.frame, container );
       // TODO: recurse down the superview hierarchy
       // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
     }
     else if (!CGSizeEqualToSize( self.superview.frame.size, container ))
-      wrn( @"Container: %@, is not be large enough for constrained fit of: %@ (need %@, has %@)",
+      wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@)",
           [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
+  }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
   CGRectSet( self.frame, [self frameForAlignmentRect:
-      CGRectInCGSizeWithSizeAndMargin( container, requestedSize, top, right, bottom, left )] );
+      CGRectInCGSizeWithSizeAndMargins( container, requestedSize, alignmentMargins )] );
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -468,26 +460,30 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return minSize;
 }
 
-- (UIEdgeInsets)fittingMargins {
+- (CGSize)fittingAlignmentSizeIn:(CGSize)availableSize margins:(UIEdgeInsets)alignmentMargins marginSpace:(out UIEdgeInsets *)marginSpace {
+  // Collapse alignment margins into their fitting space.
+  *marginSpace = UIEdgeInsetsMake(
+      alignmentMargins.top == CGFLOAT_MAX || alignmentMargins.top == CGFLOAT_MIN? 0: alignmentMargins.top,
+      alignmentMargins.left == CGFLOAT_MAX || alignmentMargins.left == CGFLOAT_MIN? 0: alignmentMargins.left,
+      alignmentMargins.bottom == CGFLOAT_MAX || alignmentMargins.bottom == CGFLOAT_MIN? 0: alignmentMargins.bottom,
+      alignmentMargins.right == CGFLOAT_MAX || alignmentMargins.right == CGFLOAT_MIN? 0: alignmentMargins.right );
 
-  UIEdgeInsets margins = self.autoresizingMargins;
-  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
-    margins.left = 0;
-  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
-    margins.right = 0;
-  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | PearlAutoresizingMinimalTopMargin])
-    margins.top = 0;
-  if ([self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | PearlAutoresizingMinimalBottomMargin])
-    margins.bottom = 0;
+  // Convert alignment margins to frame margins.
+  CGRect alignmentRect = self.alignmentRect;
+  UIEdgeInsets frameMargins = UIEdgeInsetsMake(
+      marginSpace->top - (alignmentRect.origin.y - self.frame.origin.y),
+      marginSpace->left - (alignmentRect.origin.x - self.frame.origin.x),
+      marginSpace->bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
+      marginSpace->right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
 
-  return margins;
+  // Find alignment rect fitting the available space and margins.
+  availableSize.width -= frameMargins.left + frameMargins.right;
+  availableSize.height -= frameMargins.top + frameMargins.bottom;
+  CGSize fittingSize = [self fittingSizeIn:availableSize];
+  return [self alignmentRectForFrame:(CGRect){ frameMargins.left, frameMargins.top, fittingSize }].size;
 }
 
 - (CGSize)fittingSizeIn:(CGSize)availableSize {
-  return [self fittingSizeIn:availableSize margins:self.fittingMargins];
-}
-
-- (CGSize)fittingSizeIn:(CGSize)availableSize margins:(UIEdgeInsets)autoresizingMargins {
   // TODO: This method repeats Tn times for a hierarchy n deep.  Can we avoid this or cache results?
   static NSMutableArray *stack;
   if (!stack)
@@ -500,8 +496,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
   // Determine how the view wants to fit in the available space.
   CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
-  availableSize.width -= autoresizingMargins.left + autoresizingMargins.right;
-  availableSize.height -= autoresizingMargins.top + autoresizingMargins.bottom;
   availableSize = CGSizeUnion( minimumSize, availableSize );
   CGSize fittingSize = CGSizeUnion( minimumSize, [self collapsedFittingSizeIn:availableSize] );
 
@@ -509,10 +503,24 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
       if (subview.autoresizingMask) {
-        CGSize subviewSize = [subview fittingSizeIn:availableSize];
-        UIEdgeInsets subviewMargins = [subview fittingMargins];
-        subviewSize.width += subviewMargins.left + subviewMargins.right;
-        subviewSize.height += subviewMargins.top + subviewMargins.bottom;
+        UIEdgeInsets marginSpace = subview.autoresizingMargins;
+        if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
+          marginSpace.left = 0;
+        if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
+          marginSpace.right = 0;
+        if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | PearlAutoresizingMinimalTopMargin])
+          marginSpace.top = 0;
+        if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | PearlAutoresizingMinimalBottomMargin])
+          marginSpace.bottom = 0;
+
+        CGSize availableSubviewSize = availableSize;
+        availableSubviewSize.width -= marginSpace.left + marginSpace.right;
+        availableSubviewSize.height -= marginSpace.top + marginSpace.bottom;
+
+        CGSize subviewSize = [subview fittingSizeIn:availableSubviewSize];
+        subviewSize.width += marginSpace.left + marginSpace.right;
+        subviewSize.height += marginSpace.top + marginSpace.bottom;
+
         fittingSize = CGSizeUnion( fittingSize, subviewSize );
       }
 
@@ -525,10 +533,10 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   // Not entirely sure why; some long UILabels do not limit on fittingSize properly without assigning its width to preferredMaxLayoutWidth.
   [self assignPreferredMaxLayoutWidth:availableSize];
   CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
-                           withHorizontalFittingPriority:[self hasAutoresizingMask:PearlAutoresizingMinimalWidth]?
-                                                         UILayoutPriorityFittingSizeLevel: UILayoutPriorityDefaultHigh
-                                 verticalFittingPriority:[self hasAutoresizingMask:PearlAutoresizingMinimalHeight]?
-                                                         UILayoutPriorityFittingSizeLevel: UILayoutPriorityDefaultLow];
+                           withHorizontalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]?
+                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel
+                                 verticalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]?
+                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel];
   [self resetPreferredMaxLayoutWidth];
 
   // If size of view is determined by constraints, don't collapse it.
@@ -570,21 +578,23 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
           [self hasAutoresizingMask:PearlAutoresizingMinimalWidth] || !self.autoresizingMask? CGFLOAT_MIN: alignmentRect.size.width,
           [self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? CGFLOAT_MAX:
           [self hasAutoresizingMask:PearlAutoresizingMinimalHeight] || !self.autoresizingMask? CGFLOAT_MIN: alignmentRect.size.height )
-   andAlignmentMarginTop:[self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: alignmentMargins.top
-                   right:[self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: alignmentMargins.right
-                  bottom:[self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: alignmentMargins.bottom
-                    left:[self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
-                         [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: alignmentMargins.left
+     andAlignmentMargins:UIEdgeInsetsMake(
+         [self hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin]? CGFLOAT_MAX:
+         [self hasAutoresizingMask:PearlAutoresizingMinimalTopMargin]? CGFLOAT_MIN: alignmentMargins.top,
+         [self hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin]? CGFLOAT_MAX:
+         [self hasAutoresizingMask:PearlAutoresizingMinimalLeftMargin]? CGFLOAT_MIN: alignmentMargins.left,
+         [self hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin]? CGFLOAT_MAX:
+         [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: alignmentMargins.bottom,
+         [self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
+         [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: alignmentMargins.right )
                  options:PearlLayoutOptionConstrained];
 
   // Update fitting size for the subviews that are positioned by autoresizing.  Other subviews are handled by -layoutSubviews.
-  if (self.autoresizesSubviews)
-    for (UIView *subview in self.subviews)
-      if (subview.autoresizingMask)
-        [subview fitSubviews];
+  for (UIView *subview in self.subviews)
+    if (self.autoresizesSubviews && subview.autoresizingMask)
+      [subview fitSubviews];
+    else
+      [subview setNeedsLayout];
 
   BOOL changed = !CGRectEqualToRect( self.bounds, oldBounds );
 //  if (changed) {
@@ -597,72 +607,77 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (void)assignPreferredMaxLayoutWidth:(CGSize)availableSize {
-  if (![self respondsToSelector:@selector( preferredMaxLayoutWidth )] ||
-      ![self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )])
-    return;
+  if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] &&
+      [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
+    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
 
-  int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
-
-  if (!assignDepth) {
-    CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
-    if (!resetValue) {
-      objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
-      [(UILabel *)self setPreferredMaxLayoutWidth:availableSize.width];
+    if (!assignDepth) {
+      CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
+      if (!resetValue) {
+        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
+        [(UILabel *)self setPreferredMaxLayoutWidth:availableSize.width];
+      }
     }
+
+    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
   }
 
-  objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
+  for (UIView *subview in self.subviews)
+    [subview assignPreferredMaxLayoutWidth:availableSize];
 }
 
 - (void)resetPreferredMaxLayoutWidth {
-  if (![self respondsToSelector:@selector( preferredMaxLayoutWidth )] ||
-      ![self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )])
-    return;
+  if ([self respondsToSelector:@selector( preferredMaxLayoutWidth )] &&
+      [self respondsToSelector:@selector( setPreferredMaxLayoutWidth: )]) {
+    int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
+    objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
 
-  int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
-  objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(--assignDepth), OBJC_ASSOCIATION_RETAIN );
-
-  if (!assignDepth) {
-    NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
-    if (resetValue) {
-      objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
-      [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
+    if (!assignDepth) {
+      NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
+      if (resetValue) {
+        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
+        [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
+      }
     }
   }
+
+  for (UIView *subview in self.subviews)
+    [subview resetPreferredMaxLayoutWidth];
 }
 
-- (void)setAutoresizingMaskFromSize:(CGSize)size andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
-                             bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
+- (void)setAutoresizingMaskFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
   UIViewAutoresizing mask = (UIViewAutoresizing)(
-      (top == CGFLOAT_MAX? UIViewAutoresizingFlexibleTopMargin:
-       top == CGFLOAT_MIN? PearlAutoresizingMinimalTopMargin: 0) |
-      (right == CGFLOAT_MAX? UIViewAutoresizingFlexibleRightMargin:
-       right == CGFLOAT_MIN? PearlAutoresizingMinimalRightMargin: 0) |
-      (bottom == CGFLOAT_MAX? UIViewAutoresizingFlexibleBottomMargin:
-       bottom == CGFLOAT_MIN? PearlAutoresizingMinimalBottomMargin: 0) |
-      (left == CGFLOAT_MAX? UIViewAutoresizingFlexibleLeftMargin:
-       left == CGFLOAT_MIN? PearlAutoresizingMinimalLeftMargin: 0) |
+      (alignmentMargins.top == CGFLOAT_MAX? UIViewAutoresizingFlexibleTopMargin:
+       alignmentMargins.top == CGFLOAT_MIN? PearlAutoresizingMinimalTopMargin: 0) |
+      (alignmentMargins.right == CGFLOAT_MAX? UIViewAutoresizingFlexibleRightMargin:
+       alignmentMargins.right == CGFLOAT_MIN? PearlAutoresizingMinimalRightMargin: 0) |
+      (alignmentMargins.bottom == CGFLOAT_MAX? UIViewAutoresizingFlexibleBottomMargin:
+       alignmentMargins.bottom == CGFLOAT_MIN? PearlAutoresizingMinimalBottomMargin: 0) |
+      (alignmentMargins.left == CGFLOAT_MAX? UIViewAutoresizingFlexibleLeftMargin:
+       alignmentMargins.left == CGFLOAT_MIN? PearlAutoresizingMinimalLeftMargin: 0) |
       (size.width == CGFLOAT_MAX? UIViewAutoresizingFlexibleWidth:
        size.width == CGFLOAT_MIN? PearlAutoresizingMinimalWidth: 0) |
       (size.height == CGFLOAT_MAX? UIViewAutoresizingFlexibleHeight:
        size.height == CGFLOAT_MIN? PearlAutoresizingMinimalHeight: 0));
 
-  objc_setAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMarginTop:right:bottom:left:options: ),
+  [self setContentHuggingPriority:size.width == CGFLOAT_MAX? UILayoutPriorityDefaultLow: UILayoutPriorityDefaultHigh
+                          forAxis:UILayoutConstraintAxisHorizontal];
+  [self setContentHuggingPriority:size.height == CGFLOAT_MAX? UILayoutPriorityDefaultLow: UILayoutPriorityDefaultHigh
+                          forAxis:UILayoutConstraintAxisVertical];
+
+  objc_setAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ),
       @(mask), OBJC_ASSOCIATION_RETAIN );
   self.autoresizingMask = mask;
 
-  [self.superview didSetSubview:self autoresizingMaskFromSize:size andAlignmentMarginTop:top right:right bottom:bottom left:left
-                        options:options];
+  [self.superview didSetSubview:self autoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
 }
 
 - (void)didSetSubview:(UIView *)subview autoresizingMaskFromSize:(CGSize)size
-andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
-               bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
+  andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
 }
 
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask {
-  return mask & [objc_getAssociatedObject( self,
-      @selector( setAutoresizingMaskFromSize:andAlignmentMarginTop:right:bottom:left:options: ) )
+  return mask & [objc_getAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ) )
                  ?: @(self.autoresizingMask) unsignedLongValue];
 }
 
@@ -685,7 +700,10 @@ andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
 }
 
 - (instancetype)initWithContent:(UIView *)contentView {
-  if (!(self = [self initWithFrame:(CGRect){ CGPointZero, contentView.alignmentRect.size }]))
+  if (!(self = [self initWithFrame:(CGRect){
+      CGPointZero, [contentView alignmentRectForFrame:
+          CGRectWithSize( contentView.frame, [contentView fittingSizeIn:CGSizeZero] )].size
+  }]))
     return nil;
 
   if (!contentView.autoresizingMask)
@@ -706,50 +724,38 @@ andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
   }];
   [self.contentView observeKeyPath:@"autoresizingMask" withBlock:^(id from, id to, NSKeyValueChange cause, id _self) {
     [self setContentHuggingPriority:
-            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalWidth]? UILayoutPriorityDefaultLow:
-            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? UILayoutPriorityDefaultHigh: UILayoutPriorityRequired
+            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalWidth]? UILayoutPriorityDefaultHigh:
+            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? UILayoutPriorityDefaultLow: UILayoutPriorityRequired
                             forAxis:UILayoutConstraintAxisHorizontal];
     [self setContentHuggingPriority:
-            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalHeight]? UILayoutPriorityDefaultLow:
-            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? UILayoutPriorityDefaultHigh: UILayoutPriorityRequired
+            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalHeight]? UILayoutPriorityDefaultHigh:
+            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? UILayoutPriorityDefaultLow: UILayoutPriorityRequired
                             forAxis:UILayoutConstraintAxisVertical];
-    [self setContentCompressionResistancePriority:
-            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalWidth]? UILayoutPriorityDefaultLow:
-            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]? UILayoutPriorityDefaultHigh: UILayoutPriorityRequired
-                                          forAxis:UILayoutConstraintAxisHorizontal];
-    [self setContentCompressionResistancePriority:
-            [self.contentView hasAutoresizingMask:PearlAutoresizingMinimalHeight]? UILayoutPriorityDefaultLow:
-            [self.contentView hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]? UILayoutPriorityDefaultHigh: UILayoutPriorityRequired
-                                          forAxis:UILayoutConstraintAxisVertical];
   }];
 
   return self;
 }
 
 - (void)didSetSubview:(UIView *)subview autoresizingMaskFromSize:(CGSize)size
-andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
-               bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options {
-  self.contentAlignmentMargins = UIEdgeInsetsMake( top, left, bottom, right );
+  andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
+  if (subview == self.contentView)
+    self.contentAlignmentMargins = alignmentMargins;
 }
 
 - (CGSize)intrinsicContentSize {
-  CGRect alignmentRect = self.contentView.alignmentRect;
-  UIEdgeInsets autoresizingMargins = self.contentAlignmentMargins;
-  autoresizingMargins.top -= alignmentRect.origin.y - self.contentView.frame.origin.y;
-  autoresizingMargins.left -= alignmentRect.origin.x - self.contentView.frame.origin.x;
-  autoresizingMargins.bottom -= (self.contentView.frame.origin.y + self.contentView.frame.size.height)
-                                - (alignmentRect.origin.y + alignmentRect.size.height);
-  autoresizingMargins.right -= (self.contentView.frame.origin.x + self.contentView.frame.size.width)
-                               - (alignmentRect.origin.x + alignmentRect.size.width);
-  CGSize size = [self.contentView fittingSizeIn:self.superview.bounds.size margins:autoresizingMargins];
-  return [self.contentView alignmentRectForFrame:(CGRect){ self.contentView.frame.origin, size }].size;
+
+  UIEdgeInsets marginSpace = UIEdgeInsetsZero;
+  CGSize size = [self.contentView fittingAlignmentSizeIn:self.superview.bounds.size margins:self.contentAlignmentMargins
+                                             marginSpace:&marginSpace];
+
+  return CGSizeMake( size.width + marginSpace.left + marginSpace.right, size.height + marginSpace.top + marginSpace.bottom );
 }
 
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
   if (![self isHidden])
-    [self.contentView fitInAlignmentRect:[self.contentView alignmentRectForFrame:bounds] margins:self.contentAlignmentMargins];
+    [self.contentView fitInAlignmentRect:bounds margins:self.contentAlignmentMargins];
 }
 
 - (void)updateConstraints {
@@ -759,6 +765,10 @@ andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
 
 - (UIView *)contentView {
   return self.subviews.firstObject;
+}
+
+- (NSString *)infoName {
+  return strf( @"%@ for %@", NSStringFromClass( [self class] ), [self.contentView infoShortName] );
 }
 
 @end
@@ -776,11 +786,12 @@ andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
   if (maxWidth == CGFLOAT_MIN)
     return CGSizeZero;
 
-  if (size.width)
+  if (size.width) {
     if (maxWidth)
       maxWidth = MIN( maxWidth, size.width );
     else
       maxWidth = size.width;
+  }
   if (!maxWidth)
     maxWidth = self.bounds.size.width;
 

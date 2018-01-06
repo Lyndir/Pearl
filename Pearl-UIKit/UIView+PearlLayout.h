@@ -65,7 +65,7 @@ extern CGRect CGRectWithBottomLeft(CGRect rect, CGPoint newBottomLeft);
 extern CGRect CGRectFromOriginWithSize(const CGPoint origin, const CGSize size);
 extern CGRect CGRectFromCenterWithSize(const CGPoint center, const CGSize size);
 /** Use CGFLOAT_MAX in size or margin for auto values.  Currently, in every dimension, only one property may be CGFLOAT_MAX. */
-extern CGRect CGRectInCGSizeWithSizeAndMargin(const CGSize container, CGSize size, CGFloat top, CGFloat right, CGFloat bottom, CGFloat left);
+extern CGRect CGRectInCGSizeWithSizeAndMargins(const CGSize container, CGSize size, UIEdgeInsets margins);
 
 // Creating a UIEdgeInsets
 extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);
@@ -142,12 +142,9 @@ __END_DECLS
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
              options:(PearlLayoutOption)options;
 
-- (void)setFrameFromCurrentSizeAndParentMarginTop:(CGFloat)top right:(CGFloat)right
-                                           bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andParentMarginTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left;
-- (void)setFrameFromSize:(CGSize)size andAlignmentMarginTop:(CGFloat)top right:(CGFloat)right
-                  bottom:(CGFloat)bottom left:(CGFloat)left options:(PearlLayoutOption)options;
+- (void)setFrameFromCurrentSizeAndAlignmentMargins:(UIEdgeInsets)alignmentMargins;
+- (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins;
+- (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options;
 
 /** @return The smallest size this view's frame can take up while still respecting its subviews' autoresizing configuration. */
 - (CGSize)minimumAutoresizingSize;

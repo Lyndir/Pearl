@@ -271,6 +271,13 @@ static NSMutableSet *dismissableResponders;
 
 @implementation UIView(PearlUIUtils)
 
++ (void)load {
+    PearlSwizzle( [UIView class], @selector( accessibilityIdentifier ), ^NSString *(UIView *self), {
+        NSString *accessibilityIdentifier = [self accessibilityIdentifier];
+        return accessibilityIdentifier?: [self infoShortName];
+    });
+}
+
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch {
 
     UILongPressGestureRecognizer *dismissRecognizer = [[UILongPressGestureRecognizer alloc]
@@ -469,11 +476,11 @@ static NSMutableSet *dismissableResponders;
         [self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? @"<": @"", strf( @"%.4g", autoresizingMargins.right ),
         alignmentMargins.right == autoresizingMargins.right? @"": strf( @"%+.3g", alignmentMargins.right - autoresizingMargins.right ) );
 
-    return strf( @"%@%@|%@[%@]%@| t:%d, a:%0.1f, b:%@, c:%@%@",
+    return strf( @"%@%@|%@[%@]%@| t:%ld, a:%0.1f, b:%@, c:%@%@",
             self.focused? @"*": self.isFirstResponder? @">": @"-",
             RPad( [self infoName], padding ),
             LPad( RPad( LPad( autoresizing1, 12 ), 13 ), 14 ), CPad( autoresizing2, 17 ), RPad( LPad( RPad( autoresizing3, 12 ), 13 ), 14 ),
-            self.tag, self.alpha, backgroundString, NSStringFromCGSize( self.intrinsicContentSize ),
+            (long)self.tag, self.alpha, backgroundString, NSStringFromCGSize( self.intrinsicContentSize ),
             self.hidden? @", hidden": @"" );
 }
 
@@ -485,8 +492,23 @@ static NSMutableSet *dismissableResponders;
         if ((property = [nextResponder ivarWithValue:self]))
             break;
 
-    return strf( nextResponder? @"%@ %@ (%@)": @"%@ %@%@",
-        [self class], property?: @"", NSStringFromClass( [nextResponder class] )?: @"" );
+    NSMutableString *name = [NSStringFromClass( [self class] ) mutableCopy];
+    if (property)
+        [name appendFormat:@" %@", property];
+    if (nextResponder)
+        [name appendFormat:@" @%@", NSStringFromClass( [nextResponder class] )];
+    return name;
+}
+
+- (NSString *)infoShortName {
+
+    NSString *property = nil;
+    UIResponder *nextResponder = nil;
+    for (nextResponder = [self nextResponder]; nextResponder; nextResponder = [nextResponder nextResponder])
+        if ((property = [nextResponder ivarWithValue:self]))
+            break;
+
+    return property?: NSStringFromClass( [self class] );
 }
 
 - (NSString *)layoutDescription {

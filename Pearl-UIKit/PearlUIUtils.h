@@ -204,6 +204,7 @@ __END_DECLS
 /** Return a string that briefly describes this view. */
 - (NSString *)infoDescription;
 - (NSString *)infoName;
+- (NSString *)infoShortName;
 /** Return a string that briefly describes this view's layout. */
 - (NSString *)layoutDescription;
 

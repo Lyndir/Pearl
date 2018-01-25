@@ -32,7 +32,7 @@
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass( self )];
 }
 
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView init:(void ( ^ )(UITableViewHeaderFooterView *view))initBlock {
++ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock {
 
     __kindof UITableViewHeaderFooterView *view = [self dequeueHeaderFooterFromTableView:tableView];
     [UIView setAnimationsEnabled:NO];

@@ -105,7 +105,7 @@
     if (![UIApp canOpenURL:url])
         return NO;
 
-    if ([UIApp respondsToSelector:@selector( openURL:options:completionHandler: )]) {
+    if (@available(iOS 10.0, *)) {
         [UIApp openURL:url options:@{} completionHandler:nil];
         return YES;
     }

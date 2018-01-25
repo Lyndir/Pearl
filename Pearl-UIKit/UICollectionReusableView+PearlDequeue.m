@@ -48,7 +48,7 @@
 
 + (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
                                              indexPath:(NSIndexPath *)indexPath
-                                                  init:(void ( ^ )(UICollectionReusableView *cell))initBlock {
+                                                  init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock {
 
     __kindof UICollectionReusableView *view = [self dequeueSupplementaryFromCollectionView:collectionView kind:kind indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];
@@ -106,7 +106,7 @@
 }
 
 + (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
-                                         init:(void ( ^ )(UICollectionViewCell *cell))initBlock {
+                                         init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock {
 
     __kindof UICollectionViewCell *view = [self dequeueCellFromCollectionView:collectionView indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];

@@ -49,12 +49,12 @@
 */
 - (CGFloat)appliedFontScale {
 
-    return [objc_getAssociatedObject( self, @selector( appliedFontScale ) ) floatValue]?: 1;
+    return [objc_getAssociatedObject( self, @selector( appliedFontScale ) )?: @(1.0f) floatValue];
 }
 
 - (void)setAppliedFontScale:(CGFloat)appliedFontScale {
 
-    objc_setAssociatedObject( self, @selector( appliedFontScale ), @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
+    objc_setAssociatedObject( self, @selector( appliedFontScale ), appliedFontScale == 0? nil: @(appliedFontScale), OBJC_ASSOCIATION_RETAIN );
 }
 
 - (void)_pearl_fontMod_updateFont {

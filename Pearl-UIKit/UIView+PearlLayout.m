@@ -255,17 +255,17 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   UIEdgeInsets alignmentMargins = UIEdgeInsetsFromCGRectInCGSize( alignmentRect, self.superview.bounds.size );
 
   // Overrides
-  if (layoutOverrides.left)
+  if (layoutOverrides.left != 0)
     leftLayoutValue = layoutOverrides.left;
-  if (layoutOverrides.top)
+  if (layoutOverrides.top != 0)
     topLayoutValue = layoutOverrides.top;
-  if (layoutOverrides.width)
+  if (layoutOverrides.width != 0)
     widthLayoutValue = layoutOverrides.width;
-  if (layoutOverrides.height)
+  if (layoutOverrides.height != 0)
     heightLayoutValue = layoutOverrides.height;
-  if (layoutOverrides.bottom)
+  if (layoutOverrides.bottom != 0)
     bottomLayoutValue = layoutOverrides.bottom;
-  if (layoutOverrides.right)
+  if (layoutOverrides.right != 0)
     rightLayoutValue = layoutOverrides.right;
 
   // Options
@@ -480,7 +480,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   availableSize.width -= frameMargins.left + frameMargins.right;
   availableSize.height -= frameMargins.top + frameMargins.bottom;
   CGSize fittingSize = [self fittingSizeIn:availableSize];
-  return [self alignmentRectForFrame:(CGRect){ frameMargins.left, frameMargins.top, fittingSize }].size;
+  return [self alignmentRectForFrame:(CGRect){ { frameMargins.left, frameMargins.top }, fittingSize }].size;
 }
 
 - (CGSize)fittingSizeIn:(CGSize)availableSize {
@@ -614,10 +614,10 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     int assignDepth = [objc_getAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ) ) intValue];
 
     if (!assignDepth) {
-      CGFloat resetValue = [(UILabel *)self preferredMaxLayoutWidth];
-      if (!resetValue) {
-        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(resetValue), OBJC_ASSOCIATION_RETAIN );
+      CGFloat currentValue = [(UILabel *)self preferredMaxLayoutWidth];
+      if (currentValue == 0) {
         [(UILabel *)self setPreferredMaxLayoutWidth:availableSize.width];
+        objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), @(currentValue), OBJC_ASSOCIATION_RETAIN );
       }
     }
 
@@ -679,8 +679,8 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask {
-  return mask & [objc_getAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ) )
-                 ?: @(self.autoresizingMask) unsignedLongValue];
+  return mask == (mask & [objc_getAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ) )
+                          ?: @(self.autoresizingMask) unsignedLongValue]);
 }
 
 @end
@@ -788,16 +788,16 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   if (maxWidth == CGFLOAT_MIN)
     return CGSizeZero;
 
-  if (size.width) {
-    if (maxWidth)
+  if (size.width != 0) {
+    if (maxWidth != 0)
       maxWidth = MIN( maxWidth, size.width );
     else
       maxWidth = size.width;
   }
-  if (!maxWidth)
+  if (maxWidth == 0)
     maxWidth = self.bounds.size.width;
 
-  if (maxWidth) {
+  if (maxWidth != 0) {
     CGFloat newWidth = MIN( imageSize.width, maxWidth );
     imageSize.height = imageSize.height * newWidth / imageSize.width;
     imageSize.width = newWidth;

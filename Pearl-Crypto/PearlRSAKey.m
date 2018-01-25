@@ -386,7 +386,7 @@ static const EVP_MD *EVP_md(PearlHash hash) {
         return NO;
     if (self.isPublicKey || !rsaKey->p)
      // Cannot use check_key on public keys or private keys without known p & q.
-        return [[self modulus] length] && [[self privateExponent] length];
+        return [[self modulus] length] > 0 && [[self privateExponent] length] > 0;
 
     int check = RSA_check_key(rsaKey);
 

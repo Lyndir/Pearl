@@ -495,9 +495,11 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   trc( @"fittingSizeIn: %@", string );
 
   // Determine how the view wants to fit in the available space.
-  CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
-  availableSize = CGSizeUnion( minimumSize, availableSize );
-  CGSize fittingSize = CGSizeUnion( minimumSize, [self collapsedFittingSizeIn:availableSize] );
+  // TODO: minimumAutoresizingSize gives the wrong size for UIStackView, also, is it even necessary still?
+//  CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
+//  availableSize = CGSizeUnion( minimumSize, availableSize );
+//  CGSize fittingSize = CGSizeUnion( minimumSize, [self collapsedFittingSizeIn:availableSize] );
+  CGSize fittingSize = [self collapsedFittingSizeIn:availableSize];
 
   // Grow to fit our autoresizing subviews.  Other subviews were handled by -systemLayoutSizeFittingSize.
   if (self.autoresizesSubviews)

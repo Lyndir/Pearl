@@ -13,31 +13,23 @@
         const char *argType = [self.methodSignature getArgumentTypeAtIndex:a];
         NSGetSizeAndAlignment( argType, &size, &alignment );
 
-        if (sizeof(uint8_t) == size) { // 1
-            uint8_t arg = va_arg( args, uint8_t );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (sizeof( uint16_t ) == size) { // 2
-            uint16_t arg = va_arg( args, uint16_t );
-            [self setArgument:&arg atIndex:a];
-        }
-        else if (sizeof( uint32_t ) == size) { // 4
+        if (size <= sizeof( uint32_t )) { // 1 - 4
             uint32_t arg = va_arg( args, uint32_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (sizeof( uint64_t ) == size) { // 8
+        else if (size <= sizeof( uint64_t )) { // 5 - 8
             uint64_t arg = va_arg( args, uint64_t );
             [self setArgument:&arg atIndex:a];
         }
-        else if (sizeof( CGPoint ) == size) { // 16
+        else if (size <= sizeof( CGPoint )) { // 9 - 16
             CGPoint arg = va_arg( args, CGPoint );
             [self setArgument:&arg atIndex:a];
         }
-        else if (sizeof( CGRect ) == size) { // 32
+        else if (size <= sizeof( CGRect )) { // 17 - 32
             CGRect arg = va_arg( args, CGRect );
             [self setArgument:&arg atIndex:a];
         }
-        else if (sizeof( CGAffineTransform ) == size) { // 48
+        else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
             CGAffineTransform arg = va_arg( args, CGAffineTransform );
             [self setArgument:&arg atIndex:a];
         }

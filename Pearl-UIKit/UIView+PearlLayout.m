@@ -409,13 +409,29 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   } );
   if (self.superview && self.autoresizingMask) {
     if (!(options & PearlLayoutOptionConstrained)) {
-      CGRectSetSize( self.superview.frame, container );
       // TODO: recurse down the superview hierarchy
       // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
+      CGRectSetSize( self.superview.frame, container );
     }
-    else if (!CGSizeEqualToSize( self.superview.frame.size, container ))
-      wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@)",
+    else if (!CGSizeEqualToSize( self.superview.frame.size, container )) {
+      // FIXME: There is an issue when updating a UIStackView inside a UITableViewCellContentView using something like:
+      // FIXME: [[UITableView findAsSuperviewOf:self] beginUpdates];
+      // FIXME: [self.stackViewChild setNeedsUpdateConstraints];
+      // FIXME: [[UITableView findAsSuperviewOf:self] endUpdates];
+      // FIXME:
+      // FIXME: In this case, iOS correctly requests the new cell size to fit the updated UIStackView from the cell,
+      // FIXME: however, it does not resize the cell, and thus the UIStackView, BEFORE running UIStackView's autolayout.
+      // FIXME: This causes UIStackView to size its updated children (which depend on the new size) based on its old size.
+      // FIXME:
+      // FIXME: This can trigger this wrn() when the stackViewChild is squeezed.  After the faulty pass, UITableView
+      // FIXME: updates its cell according to the new size and the UIStackView is correctly resized and the error corrected.
+      // FIXME:
+      // FIXME: To avoid this hiccup, resize the UITableViewCell frame to match as soon as its new content size is determined in
+      // FIXME: @selector(systemLayoutSizeFittingSize:withHorizontalFittingPriority:verticalFittingPriority:)
+      // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
+      wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
           [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
+    }
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
@@ -485,20 +501,16 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 - (CGSize)fittingSizeIn:(CGSize)availableSize {
   // TODO: This method repeats Tn times for a hierarchy n deep.  Can we avoid this or cache results?
-  static NSMutableArray *stack;
-  if (!stack)
-    stack = [NSMutableArray new];
-  [stack addObject:[self infoName]];
-  NSMutableString *string = [NSMutableString new];
-  for (id item in stack)
-    [string appendFormat:@"%@ | ", item];
-  trc( @"fittingSizeIn: %@", string );
+//  static NSMutableArray *stack;
+//  if (!stack)
+//    stack = [NSMutableArray new];
+//  [stack addObject:[self infoName]];
+//  NSMutableString *string = [NSMutableString new];
+//  for (id item in stack)
+//    [string appendFormat:@"%@ | ", item];
+//  trc( @"fittingSizeIn: %@", string );
 
   // Determine how the view wants to fit in the available space.
-  // TODO: minimumAutoresizingSize gives the wrong size for UIStackView, also, is it even necessary still?
-//  CGSize minimumSize = self.autoresizingMask? [self minimumAutoresizingSize]: CGSizeZero;
-//  availableSize = CGSizeUnion( minimumSize, availableSize );
-//  CGSize fittingSize = CGSizeUnion( minimumSize, [self collapsedFittingSizeIn:availableSize] );
   CGSize fittingSize = [self collapsedFittingSizeIn:availableSize];
 
   // Grow to fit our autoresizing subviews.  Other subviews were handled by -systemLayoutSizeFittingSize.
@@ -526,7 +538,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
         fittingSize = CGSizeUnion( fittingSize, subviewSize );
       }
 
-  [stack removeLastObject];
+//  [stack removeLastObject];
   return fittingSize;
 }
 
@@ -753,23 +765,9 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  if (![self isHidden]) {
-    // FIXME: There is an issue when updating a UIStackView inside a UITableViewCellContentView using something like:
-    // FIXME: [[UITableView findAsSuperviewOf:self] beginUpdates];
-    // FIXME: [self.mediaContainer setNeedsUpdateConstraints];
-    // FIXME: [[UITableView findAsSuperviewOf:self] endUpdates];
-    // FIXME:
-    // FIXME: In this case, iOS correctly requests the new cell size to fit the updated UIStackView from the cell,
-    // FIXME: however, it does not resize the cell, and thus the UIStackView, BEFORE running the autolayout engine.
-    // FIXME: This causes UIStackView to size its updated children (which depend on the new size) based on its old size.
-    // FIXME:
-    // FIXME: Force-resizing the content view when the cell is measured does not work since
-    // FIXME: UITableViewCell restores its (not updated) size onto the content view.
-    // FIXME:
-    // FIXME: The current workaround ensures our contentView is not destroyed by the squeeze.  After this faulty pass, UITableView
-    // FIXME: updates its cell according to the new size and the UIStackView is correctly resized.  It can trigger a wrn() in setFrameFrom:
+  if (![self isHidden])
+    // Don't blindly trust `bounds` in case autolayout tries to squash our view; use fittingAlignmentSize instead (via intrinsicContentSize)
     [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins];
-  }
 }
 
 - (void)updateConstraints {

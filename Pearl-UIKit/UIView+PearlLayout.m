@@ -599,6 +599,9 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       [subview setNeedsLayout];
 
   BOOL changed = !CGRectEqualToRect( self.bounds, oldBounds );
+//  if (changed)
+//    // FIXME: Breaks UITableView scrolling, unsure of why yet.
+//    [self setNeedsUpdateConstraints];
 //  if (changed) {
 //    // FIXME: Does not coalesce multiple changes to a cell properly, only do -endUpdates after all updates have been performed.
 //    [[UITableView findAsSuperviewOf:self] beginUpdates];
@@ -623,9 +626,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
     objc_setAssociatedObject( self, @selector( assignPreferredMaxLayoutWidth: ), @(++assignDepth), OBJC_ASSOCIATION_RETAIN );
   }
-
-  for (UIView *subview in self.subviews)
-    [subview assignPreferredMaxLayoutWidth:availableSize];
 }
 
 - (void)resetPreferredMaxLayoutWidth {
@@ -642,9 +642,6 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       }
     }
   }
-
-  for (UIView *subview in self.subviews)
-    [subview resetPreferredMaxLayoutWidth];
 }
 
 - (void)setAutoresizingMaskFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
@@ -679,8 +676,8 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (BOOL)hasAutoresizingMask:(UIViewAutoresizing)mask {
-  return mask == (mask & [objc_getAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ) )
-                          ?: @(self.autoresizingMask) unsignedLongValue]);
+  return 0 != (mask & [objc_getAssociatedObject( self, @selector( setAutoresizingMaskFromSize:andAlignmentMargins:options: ) )
+                       ?: @(self.autoresizingMask) unsignedLongValue]);
 }
 
 @end
@@ -756,8 +753,23 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  if (![self isHidden])
-    [self.contentView fitInAlignmentRect:bounds margins:self.contentAlignmentMargins];
+  if (![self isHidden]) {
+    // FIXME: There is an issue when updating a UIStackView inside a UITableViewCellContentView using something like:
+    // FIXME: [[UITableView findAsSuperviewOf:self] beginUpdates];
+    // FIXME: [self.mediaContainer setNeedsUpdateConstraints];
+    // FIXME: [[UITableView findAsSuperviewOf:self] endUpdates];
+    // FIXME:
+    // FIXME: In this case, iOS correctly requests the new cell size to fit the updated UIStackView from the cell,
+    // FIXME: however, it does not resize the cell, and thus the UIStackView, BEFORE running the autolayout engine.
+    // FIXME: This causes UIStackView to size its updated children (which depend on the new size) based on its old size.
+    // FIXME:
+    // FIXME: Force-resizing the content view when the cell is measured does not work since
+    // FIXME: UITableViewCell restores its (not updated) size onto the content view.
+    // FIXME:
+    // FIXME: The current workaround ensures our contentView is not destroyed by the squeeze.  After this faulty pass, UITableView
+    // FIXME: updates its cell according to the new size and the UIStackView is correctly resized.  It can trigger a wrn() in setFrameFrom:
+    [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins];
+  }
 }
 
 - (void)updateConstraints {
@@ -809,6 +821,14 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {
   _preferredMaxLayoutWidth = preferredMaxLayoutWidth;
   [self invalidateIntrinsicContentSize];
+}
+
+- (void)setFrame:(CGRect)frame {
+  [super setFrame:frame];
+}
+
+- (void)setBounds:(CGRect)bounds {
+  [super setBounds:bounds];
 }
 
 @end

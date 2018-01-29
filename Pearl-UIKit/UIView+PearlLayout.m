@@ -753,6 +753,11 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     self.contentAlignmentMargins = alignmentMargins;
 }
 
+- (BOOL)fitSubviews {
+  // Don't blindly trust `bounds` in case autolayout tries to squash our view; use fittingAlignmentSize instead (via intrinsicContentSize)
+  return [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins];;
+}
+
 - (CGSize)intrinsicContentSize {
 
   UIEdgeInsets marginSpace = UIEdgeInsetsZero;
@@ -766,8 +771,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   [super setBounds:bounds];
 
   if (![self isHidden])
-    // Don't blindly trust `bounds` in case autolayout tries to squash our view; use fittingAlignmentSize instead (via intrinsicContentSize)
-    [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins];
+    [self fitSubviews];
 }
 
 - (void)updateConstraints {

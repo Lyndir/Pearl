@@ -280,8 +280,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   else if ([leftLayoutString isEqualToString:@"="])
     leftLayoutValue = alignmentMargins.left;
   else if ([leftLayoutString isEqualToString:@"S"])
-//        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( alignmentRect ) );
-    leftLayoutValue = 0;
+    if (@available( iOS 11.0, * ))
+      if (self.window)
+        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( alignmentRect ) );
+      else
+        leftLayoutValue = UIApp.delegate.window.safeAreaInsets.left;
+    else
+      leftLayoutValue = 0;
   else if ([leftLayoutString isEqualToString:@"x"])
     leftLayoutValue = x;
   else if ([leftLayoutString isEqualToString:@"y"])
@@ -297,8 +302,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   else if ([rightLayoutString isEqualToString:@"="])
     rightLayoutValue = alignmentMargins.right;
   else if ([rightLayoutString isEqualToString:@"S"])
-//        rightLayoutValue = MAX( 0, CGRectGetMaxX( alignmentRect ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
-    rightLayoutValue = 0;
+    if (@available( iOS 11.0, * ))
+      if (self.window)
+        rightLayoutValue = MAX( 0, CGRectGetMaxX( alignmentRect ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
+      else
+        rightLayoutValue = UIApp.delegate.window.safeAreaInsets.right;
+    else
+      rightLayoutValue = 0;
   else if ([rightLayoutString isEqualToString:@"x"])
     rightLayoutValue = x;
   else if ([rightLayoutString isEqualToString:@"y"])
@@ -314,8 +324,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   else if ([topLayoutString isEqualToString:@"="])
     topLayoutValue = alignmentMargins.top;
   else if ([topLayoutString isEqualToString:@"S"])
-//        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( alignmentRect ) );
-    topLayoutValue = UIApp.statusBarFrame.size.height;
+    if (@available( iOS 11.0, * ))
+      if (self.window)
+        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( alignmentRect ) );
+      else
+        topLayoutValue = UIApp.delegate.window.safeAreaInsets.top;
+    else
+      topLayoutValue = UIApp.statusBarFrame.size.height;
   else if ([topLayoutString isEqualToString:@"x"])
     topLayoutValue = x;
   else if ([topLayoutString isEqualToString:@"y"])
@@ -331,8 +346,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   else if ([bottomLayoutString isEqualToString:@"="])
     bottomLayoutValue = alignmentMargins.bottom;
   else if ([bottomLayoutString isEqualToString:@"S"])
-//        bottomLayoutValue = MAX( 0, CGRectGetMaxY( alignmentRect ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
-    bottomLayoutValue = 0;
+    if (@available( iOS 11.0, * ))
+      if (self.window)
+        bottomLayoutValue = MAX( 0, CGRectGetMaxY( alignmentRect ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
+      else
+        bottomLayoutValue = UIApp.delegate.window.safeAreaInsets.bottom;
+    else
+      bottomLayoutValue = 0;
   else if ([bottomLayoutString isEqualToString:@"x"])
     bottomLayoutValue = x;
   else if ([bottomLayoutString isEqualToString:@"y"])

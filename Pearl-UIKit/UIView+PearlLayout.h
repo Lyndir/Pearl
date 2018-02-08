@@ -113,7 +113,7 @@ __END_DECLS
  *
  * A "-" = parent's layout margin, a "-" size = 44.
  * An "=" dimension retains its current value.
- * An "S" dimension substitutes the offset to bring the view inside the safe area.
+ * An "S" dimension offsets the view into the safe area (of the view hierarchy or application window if not yet attached).
  * A ">" left/top or "<" right/bottom margin = expand.
  * Empty margin = 0, empty size = fit or expand if both margins are fixed.
  * An "x", "y" or "z" will be replaced with the x, y and z parameter value.

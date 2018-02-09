@@ -532,6 +532,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
   // Determine how the view wants to fit in the available space.
   CGSize fittingSize = [self collapsedFittingSizeIn:availableSize];
+  trc( @"%@:   own fitting size: %@", [self infoPathName], NSStringFromCGSize( fittingSize ) );
 
   // Grow to fit our autoresizing subviews.  Other subviews were handled by -systemLayoutSizeFittingSize.
   if (self.autoresizesSubviews)
@@ -554,10 +555,13 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
         CGSize subviewSize = [subview fittingSizeIn:availableSubviewSize];
         subviewSize.width += marginSpace.left + marginSpace.right;
         subviewSize.height += marginSpace.top + marginSpace.bottom;
+        trc( @"%@:   subview fitting size: %@ (w/margins: %@)", [self infoPathName],
+            NSStringFromCGSize( subviewSize ), NSStringFromUIEdgeInsets( marginSpace ) );
 
         fittingSize = CGSizeUnion( fittingSize, subviewSize );
       }
 
+  trc( @"%@:   final fitting size: %@", [self infoPathName], NSStringFromCGSize( fittingSize ) );
 //  [stack removeLastObject];
   return fittingSize;
 }

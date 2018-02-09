@@ -511,6 +511,11 @@ static NSMutableSet *dismissableResponders;
     return property?: NSStringFromClass( [self class] );
 }
 
+- (NSString *)infoPathName {
+
+    return strf(@"%@/%@", [self.superview infoPathName]?: @"", [self infoShortName]);
+}
+
 - (NSString *)layoutDescription {
 
     NSMutableString *layout = [NSMutableString new], *ancestry = [NSMutableString new];

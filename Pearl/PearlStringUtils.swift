@@ -6,21 +6,21 @@
 import Foundation
 
 func strf(format: String, _ args: Any?...) -> String {
-    return withAnyVaList( args ) {
+    return withAnyVaList( args: args ) {
         return NSString( format: format, arguments: $0 ) as String
     }
 }
 
-func strl(format: String, _ args: CVarArgType...) -> String {
+func strl(format: String, _ args: CVarArg...) -> String {
     return withVaList( args ) {
-        return NSString( format: NSBundle.mainBundle().localizedStringForKey( format, value: nil, table: nil ),
+        return NSString( format: Bundle.main.localizedString( forKey: format, value: nil, table: nil ),
                          arguments: $0 ) as String
     }
 }
 
-func strtl(tableName: String, format: String, _ args: CVarArgType...) -> String {
+func strtl(tableName: String, format: String, _ args: CVarArg...) -> String {
     return withVaList( args ) {
-        return NSString( format: NSBundle.mainBundle().localizedStringForKey( format, value: nil, table: tableName ),
+        return NSString( format: Bundle.main.localizedString( forKey: format, value: nil, table: tableName ),
                          arguments: $0 ) as String
     }
 }

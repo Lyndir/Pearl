@@ -6,53 +6,53 @@
 import Foundation
 
 public func trc(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Trace, format: format, args: $0 )
+                                  with: PearlLogLevel.trace, format: format, args: $0 )
     }
 }
 
 public func dbg(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Debug, format: format, args: $0 )
+                                  with: PearlLogLevel.debug, format: format, args: $0 )
     }
 }
 
 public func inf(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Info, format: format, args: $0 )
+                                  with: PearlLogLevel.info, format: format, args: $0 )
     }
 }
 
 public func wrn(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Warn, format: format, args: $0 )
+                                  with: PearlLogLevel.warn, format: format, args: $0 )
     }
 }
 
 public func err(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Error, format: format, args: $0 )
+                                  with: PearlLogLevel.error, format: format, args: $0 )
     }
 }
 
 public func ftl(format: String, _ args: Any?...,
-                inFile file: String = __FILE__, atLine line: Int = __LINE__, fromFunction f: String = __FUNCTION__) -> PearlLogger {
-    return withAnyVaList( args ) {
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
+    return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  withLevel: PearlLogLevel.Fatal, format: format, args: $0 )
+                                  with: PearlLogLevel.fatal, format: format, args: $0 )
     }
 }
 
 public func withAnyVaList<R>(args: [Any?], _ f: (CVaListPointer) -> R) -> R {
-    return withVaList( args.map( { return ($0 ?? "<nil>" as NSString) as? CVarArgType ?? "<not an object>" } ), f )
+    return withVaList( args.map( { return ($0 ?? "<nil>" as NSString) as? CVarArg ?? "<not an object>" } ), f )
 }

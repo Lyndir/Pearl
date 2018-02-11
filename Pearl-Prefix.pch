@@ -27,7 +27,7 @@
 #ifdef PEARL
 #import "Pearl.h"
 #endif
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 #ifdef PEARL_COCOS2D
 #import "Pearl-Cocos2D.h"
 #endif
@@ -38,10 +38,16 @@
 #ifdef PEARL_MEDIA
 #import "Pearl-Media.h"
 #endif
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 #ifdef PEARL_UIKIT
 #import <UIKit/UIKit.h>
 #import "Pearl-UIKit.h"
+#endif
+#endif
+#if TARGET_OS_OSX
+#ifdef PEARL_COCOA
+#import <AppKit/AppKit.h>
+#import "Pearl-Cocoa.h"
 #endif
 #endif
 #ifdef PEARL_WS

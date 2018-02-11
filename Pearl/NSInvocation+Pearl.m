@@ -15,23 +15,23 @@
 
         if (size <= sizeof( uint32_t )) { // 1 - 4
             uint32_t arg = va_arg( args, uint32_t );
-            [self setArgument:&arg atIndex:a];
+            [self setArgument:&arg atIndex:(NSInteger)a];
         }
         else if (size <= sizeof( uint64_t )) { // 5 - 8
             uint64_t arg = va_arg( args, uint64_t );
-            [self setArgument:&arg atIndex:a];
+            [self setArgument:&arg atIndex:(NSInteger)a];
         }
         else if (size <= sizeof( CGPoint )) { // 9 - 16
             CGPoint arg = va_arg( args, CGPoint );
-            [self setArgument:&arg atIndex:a];
+            [self setArgument:&arg atIndex:(NSInteger)a];
         }
         else if (size <= sizeof( CGRect )) { // 17 - 32
             CGRect arg = va_arg( args, CGRect );
-            [self setArgument:&arg atIndex:a];
+            [self setArgument:&arg atIndex:(NSInteger)a];
         }
         else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
             CGAffineTransform arg = va_arg( args, CGAffineTransform );
-            [self setArgument:&arg atIndex:a];
+            [self setArgument:&arg atIndex:(NSInteger)a];
         }
         else
             abort(/* argument size not yet supported. */);

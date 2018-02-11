@@ -10,6 +10,7 @@
 @interface WTFView : UIView
 @end
 
+NS_CLASS_AVAILABLE_IOS(9_0)
 @interface WTFStackView : UIStackView
 @end
 

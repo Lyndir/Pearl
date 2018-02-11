@@ -3,7 +3,7 @@
 // Copyright (c) 2017 Tristan Interactive. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface UIView(PearlSize)
 

@@ -477,8 +477,7 @@ static NSMutableSet *dismissableResponders;
         alignmentMargins.right == autoresizingMargins.right? @"": strf( @"%+.3g", alignmentMargins.right - autoresizingMargins.right ) );
 
     return strf( @"%@%@|%@[%@]%@| t:%ld, a:%0.1f, b:%@, c:%@%@",
-            self.focused? @"*": self.isFirstResponder? @">": @"-",
-            RPad( [self infoName], padding ),
+            self.isFirstResponder? @">": @"-", RPad( [self infoName], padding ),
             LPad( RPad( LPad( autoresizing1, 12 ), 13 ), 14 ), CPad( autoresizing2, 17 ), RPad( LPad( RPad( autoresizing3, 12 ), 13 ), 14 ),
             (long)self.tag, self.alpha, backgroundString, NSStringFromCGSize( self.intrinsicContentSize ),
             self.hidden? @", hidden": @"" );

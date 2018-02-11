@@ -19,7 +19,6 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <objc/message.h>
-#import <NSInvocation+CreationHelper.h>
 
 BOOL PearlMainQueue(void (^block)()) {
 

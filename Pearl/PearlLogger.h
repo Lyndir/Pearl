@@ -34,7 +34,7 @@
 #define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
 #define dbg_return_tr(__ret, __to_id, ...) \
                             do { \
-                                typeof(__ret) __R = __ret; \
+                                __typeof(__ret) __R = __ret; \
                                 NSArray *__args = @[ __VA_ARGS__ ]; \
                                 if ([__args count]) \
                                     dbg(@"%s %@ => %@", sel_getName(_cmd), __args, __to_id(__R)); \

@@ -32,7 +32,7 @@ static char NotificationObserversKey;
     ( { \
         id observer = nil; \
         if (&_name) { \
-            __weak typeof(_host) wHost = _host; \
+            __weak __typeof(_host) wHost = _host; \
             void (^__noteblock)(id _self, NSNotification *note) = (_block); \
             NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
             if (!notificationObservers) \

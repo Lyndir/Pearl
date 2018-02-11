@@ -179,29 +179,29 @@ typedef void(^VoidBlock)(void);
 __BEGIN_DECLS
 /* Run a block on the main queue.  If already on the main queue, run it synchronously.
  * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled on the main queue. */
-extern BOOL PearlMainQueue(void (^block)());
+extern BOOL PearlMainQueue(void (^block)(void));
 /* Run a block on a background queue.  If already on a background queue, run it synchronously.
  * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled on a background queue. */
-extern BOOL PearlNotMainQueue(void (^block)());
+extern BOOL PearlNotMainQueue(void (^block)(void));
 
 /* Schedule a block to run on the main queue. */
-extern NSBlockOperation *PearlMainQueueOperation(void (^block)());
+extern NSBlockOperation *PearlMainQueueOperation(void (^block)(void));
 /* Schedule a block to run on a background queue.  Use the current queue if currently on one, otherwise schedule it on a new queue. */
-extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)());
+extern NSBlockOperation *PearlNotMainQueueOperation(void (^block)(void));
 
 /* Run a block and suspend the current thread until its setResult() is called.
  * @return the object passed to setResult. */
 extern id PearlAwait(void (^block)(void (^setResult)(id result)));
 /* Run a block on the main queue and suspend the current thread until it returns. If already on the main queue, run it synchronously.
  * @return the object returned from the block. */
-extern id PearlMainQueueAwait(id (^block)());
+extern id PearlMainQueueAwait(id (^block)(void));
 
 /* Run a block on the main queue and block until the operation has finished.  If already on the main queue, run it synchronously.
  * @return YES if on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on the main queue. */
-extern BOOL PearlMainQueueWait(void (^block)());
+extern BOOL PearlMainQueueWait(void (^block)(void));
 /* Run a block on a background queue and block until the operation has finished.  If already on a background queue, run it synchronously.
  * @return YES if not on main queue and the block was executed synchronously.  NO if the block was scheduled and executed on a background queue. */
-extern BOOL PearlNotMainQueueWait(void (^block)());
+extern BOOL PearlNotMainQueueWait(void (^block)(void));
 
 /* Schedule a block to run on the main queue after x seconds from now. */
 extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
@@ -232,7 +232,7 @@ extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void
 *
 * @return YES if not recursing and the block was executed.
 */
-extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)());
+extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void));
 /** Calculates a hash code from a variable amount of hash codes.  The last argument should be -1. */
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 

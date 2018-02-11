@@ -20,7 +20,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <objc/message.h>
 
-BOOL PearlMainQueue(void (^block)()) {
+BOOL PearlMainQueue(void (^block)(void)) {
 
     if ([NSThread isMainThread]) {
         block();
@@ -31,7 +31,7 @@ BOOL PearlMainQueue(void (^block)()) {
     return NO;
 }
 
-BOOL PearlNotMainQueue(void (^block)()) {
+BOOL PearlNotMainQueue(void (^block)(void)) {
 
     if (![NSThread isMainThread]) {
         block();
@@ -42,14 +42,14 @@ BOOL PearlNotMainQueue(void (^block)()) {
     return NO;
 }
 
-NSBlockOperation *PearlMainQueueOperation(void (^block)()) {
+NSBlockOperation *PearlMainQueueOperation(void (^block)(void)) {
 
   NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
   [[NSOperationQueue mainQueue] addOperation:blockOperation];
   return blockOperation;
 }
 
-NSBlockOperation *PearlNotMainQueueOperation(void (^block)()) {
+NSBlockOperation *PearlNotMainQueueOperation(void (^block)(void)) {
 
   NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
   NSOperationQueue *queue = [NSOperationQueue currentQueue];
@@ -76,7 +76,7 @@ id PearlAwait(void (^block)(void (^setResult)(id result))) {
     return result;
 }
 
-id PearlMainQueueAwait(id (^block)()) {
+id PearlMainQueueAwait(id (^block)(void)) {
 
     if ([NSThread isMainThread])
         return block();
@@ -96,7 +96,7 @@ id PearlMainQueueAwait(id (^block)()) {
     return result;
 }
 
-BOOL PearlMainQueueWait(void (^block)()) {
+BOOL PearlMainQueueWait(void (^block)(void)) {
 
     if ([NSThread isMainThread]) {
         block();
@@ -117,7 +117,7 @@ BOOL PearlMainQueueWait(void (^block)()) {
     return NO;
 }
 
-BOOL PearlNotMainQueueWait(void (^block)()) {
+BOOL PearlNotMainQueueWait(void (^block)(void)) {
 
     if (![NSThread isMainThread]) {
         block();
@@ -138,22 +138,22 @@ BOOL PearlNotMainQueueWait(void (^block)()) {
     return NO;
 }
 
-void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)()) {
+void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
 
     return PearlQueueAfter( seconds, dispatch_get_main_queue(), block );
 }
 
-void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)()) {
+void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
 
     PearlQueueAfter( seconds, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), block );
 }
 
-void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)()) {
+void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void)) {
 
     dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
 }
 
-BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)()) {
+BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void)) {
     if (*recursing)
         return NO;
 

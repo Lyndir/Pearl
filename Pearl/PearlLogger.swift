@@ -5,6 +5,7 @@
 
 import Foundation
 
+@discardableResult
 public func trc(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {
@@ -13,6 +14,7 @@ public func trc(format: String, _ args: Any?...,
     }
 }
 
+@discardableResult
 public func dbg(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {
@@ -21,6 +23,7 @@ public func dbg(format: String, _ args: Any?...,
     }
 }
 
+@discardableResult
 public func inf(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {
@@ -29,6 +32,7 @@ public func inf(format: String, _ args: Any?...,
     }
 }
 
+@discardableResult
 public func wrn(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {
@@ -37,6 +41,7 @@ public func wrn(format: String, _ args: Any?...,
     }
 }
 
+@discardableResult
 public func err(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {
@@ -45,6 +50,7 @@ public func err(format: String, _ args: Any?...,
     }
 }
 
+@discardableResult
 public func ftl(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger {
     return withAnyVaList( args: args ) {

@@ -19,18 +19,24 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define trc(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  trc:(format), ##__VA_ARGS__])
-#define dbg(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  dbg:(format), ##__VA_ARGS__])
-#define inf(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  inf:(format), ##__VA_ARGS__])
-#define wrn(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  wrn:(format), ##__VA_ARGS__])
-#define err(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  err:(format), ##__VA_ARGS__])
-#define ftl(format, ...)    ([[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                  ftl:(format), ##__VA_ARGS__])
+#define trc(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelTrace) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        trc:(format), ##__VA_ARGS__]; })
+#define dbg(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelDebug) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        dbg:(format), ##__VA_ARGS__]; })
+#define inf(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelInfo) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        inf:(format), ##__VA_ARGS__]; })
+#define wrn(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelWarn) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        wrn:(format), ##__VA_ARGS__]; })
+#define err(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelError) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        err:(format), ##__VA_ARGS__]; })
+#define ftl(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelFatal) \
+                                  [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
+                                                        ftl:(format), ##__VA_ARGS__]; })
 #define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
 #define dbg_return_tr(__ret, __to_id, ...) \
                             do { \
@@ -96,6 +102,9 @@ __END_DECLS
 
 /** Starting from which level messages are recorded in memory when they are logged. */
 @property(nonatomic, assign) PearlLogLevel historyLevel;
+
+/** All messages below this level are discarded for performance reasons. */
+@property(nonatomic, assign) PearlLogLevel minimumLevel;
 
 /** Obtain the shared Logger instance. */
 + (instancetype)get;

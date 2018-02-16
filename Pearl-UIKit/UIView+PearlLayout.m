@@ -183,6 +183,32 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return CGSizeMake( MAX( size1.width, size2.width ), MAX( size1.height, size2.height ) );
 }
 
+inline NSString *PearlDescribeF(const CGFloat fl) {
+  return fl == CGFLOAT_MIN? @"MIN": fl == CGFLOAT_MAX? @"MAX": isnan( fl )? @"NAN": isinf( fl )? @"INF": strf( @"%.2f", fl );
+}
+
+inline NSString *PearlDescribeP(const CGPoint pt) {
+  return strf( @"(%@, %@)", PearlDescribeF( pt.x ), PearlDescribeF( pt.y ) );
+}
+
+inline NSString *PearlDescribeS(const CGSize sz) {
+  return strf( @"(%@x%@)", PearlDescribeF( sz.width ), PearlDescribeF( sz.height ) );
+}
+
+inline NSString *PearlDescribeR(const CGRect rct) {
+  return strf( @"(%@|%@)", PearlDescribeP( rct.origin ), PearlDescribeS( rct.size ) );
+}
+
+inline NSString *PearlDescribeI(const UIEdgeInsets ins) {
+  return strf( @"%@|%@[]%@|%@)", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ),
+      PearlDescribeF( ins.bottom ), PearlDescribeF( ins.right ) );
+}
+
+inline NSString *PearlDescribeO(const UIOffset ofs) {
+  return strf( @"(%@|%@)", PearlDescribeF( ofs.horizontal ), PearlDescribeF( ofs.vertical ) );
+}
+
+
 @implementation UIView(PearlLayout)
 
 - (void)setFrameFromCurrentSizeAndAlignmentMargins:(UIEdgeInsets)alignmentMargins {
@@ -222,6 +248,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
              options:(PearlLayoutOption)options {
+  trc( @"%@:   setFrameFrom:%@", [self infoPathName], layoutString );
 
   static NSRegularExpression *layoutRE = nil;
   static dispatch_once_t once = 0;
@@ -281,10 +308,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     leftLayoutValue = alignmentMargins.left;
   else if ([leftLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( alignmentRect ) );
-      else
-        leftLayoutValue = UIApp.delegate.window.safeAreaInsets.left;
+      leftLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.left;
     else
       leftLayoutValue = 0;
   else if ([leftLayoutString isEqualToString:@"x"])
@@ -303,10 +327,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     rightLayoutValue = alignmentMargins.right;
   else if ([rightLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        rightLayoutValue = MAX( 0, CGRectGetMaxX( alignmentRect ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
-      else
-        rightLayoutValue = UIApp.delegate.window.safeAreaInsets.right;
+      rightLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.right;
     else
       rightLayoutValue = 0;
   else if ([rightLayoutString isEqualToString:@"x"])
@@ -325,10 +346,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     topLayoutValue = alignmentMargins.top;
   else if ([topLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( alignmentRect ) );
-      else
-        topLayoutValue = UIApp.delegate.window.safeAreaInsets.top;
+      topLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.top;
     else
       topLayoutValue = UIApp.statusBarFrame.size.height;
   else if ([topLayoutString isEqualToString:@"x"])
@@ -347,10 +365,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     bottomLayoutValue = alignmentMargins.bottom;
   else if ([bottomLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        bottomLayoutValue = MAX( 0, CGRectGetMaxY( alignmentRect ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
-      else
-        bottomLayoutValue = UIApp.delegate.window.safeAreaInsets.bottom;
+      bottomLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.bottom;
     else
       bottomLayoutValue = 0;
   else if ([bottomLayoutString isEqualToString:@"x"])
@@ -403,6 +418,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
+  trc( @"%@:   setFrameFromSize:%@ margins:%@", [self infoPathName], PearlDescribeS( size ), PearlDescribeI( alignmentMargins ) );
 
   // Save the layout configuration in the autoresizing mask.
   [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];

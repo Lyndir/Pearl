@@ -512,7 +512,10 @@ static NSMutableSet *dismissableResponders;
 
 - (NSString *)infoPathName {
 
-    return strf(@"%@/%@", [self.superview infoPathName]?: @"", [self infoShortName]);
+    UIResponder *parent = [self nextResponder];
+    if ([parent isKindOfClass:[UIView class]])
+        return strf( @"%@/%@", [(UIView *)parent infoPathName]?: @"", [self infoShortName]);
+    return strf( @"%@/%@", NSStringFromClass( [parent class] )?: @"", [self infoShortName] );
 }
 
 - (NSString *)layoutDescription {

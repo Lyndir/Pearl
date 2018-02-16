@@ -72,6 +72,13 @@ extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSi
 
 extern CGSize CGSizeUnion(const CGSize size1, const CGSize size2);
 
+extern NSString *PearlDescribeF(const CGFloat fl);
+extern NSString *PearlDescribeP(const CGPoint pt);
+extern NSString *PearlDescribeS(const CGSize sz);
+extern NSString *PearlDescribeR(const CGRect rct);
+extern NSString *PearlDescribeI(const UIEdgeInsets ins);
+extern NSString *PearlDescribeO(const UIOffset ofs);
+
 typedef struct PearlLayout {
     CGFloat left;
     CGFloat top;

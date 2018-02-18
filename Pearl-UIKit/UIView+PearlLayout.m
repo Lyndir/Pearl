@@ -200,12 +200,12 @@ inline NSString *PearlDescribeR(const CGRect rct) {
 }
 
 inline NSString *PearlDescribeI(const UIEdgeInsets ins) {
-  return strf( @"%@|%@[]%@|%@)", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ),
+  return strf( @"%@|%@[]%@|%@", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ),
       PearlDescribeF( ins.bottom ), PearlDescribeF( ins.right ) );
 }
 
 inline NSString *PearlDescribeIS(const UIEdgeInsets ins, const CGSize sz) {
-  return strf( @"%@|%@[%@]%@|%@)", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ), PearlDescribeS( sz ),
+  return strf( @"%@|%@[%@]%@|%@", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ), PearlDescribeS( sz ),
       PearlDescribeF( ins.bottom ), PearlDescribeF( ins.right ) );
 }
 
@@ -458,12 +458,14 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
           [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
       CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.frame, container )];
-      if ([self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow])
-        container = self.superview.frame.size;
+      [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
       objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
           nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
     }
     else {
+      // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
+      // FIXME: Known causes:
+      // FIXME: 1.
       // FIXME: There is an issue when updating a UIStackView inside a UITableViewCellContentView using something like:
       // FIXME: [[UITableView findAsSuperviewOf:self] beginUpdates];
       // FIXME: [self.stackViewChild setNeedsUpdateConstraints];
@@ -478,10 +480,17 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       // FIXME:
       // FIXME: To avoid this hiccup, resize the UITableViewCell frame to match as soon as its new content size is determined in
       // FIXME: @selector(systemLayoutSizeFittingSize:withHorizontalFittingPriority:verticalFittingPriority:)
-      // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
+      // FIXME:
+      // FIXME: 2.
+      // FIXME: When a non-wrapping (1 line) UILabel inside a UIStackView's AutoresizingContainerView becomes too long to fit the
+      // FIXME: container, the intrinsicSize (fittingSize) is cut short by UIStackView.
+      // FIXME: This then causes a hard cut-off for the contentView (this view).  This is actually a good thing, but
+      // FIXME: ideally we should be able to detect this situation in -fittingSizeIn: and avoid the bad intrinsicSize.
       wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
           [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
     }
+
+    container = self.superview.frame.size;
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
@@ -573,15 +582,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
       if (subview.autoresizingMask) {
-        UIEdgeInsets marginSpace = subview.autoresizingMargins;
+        UIEdgeInsets marginSpace = subview.autoresizingMargins, alignmentSpace = subview.alignmentMargins;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
-          marginSpace.left = 0;
+          marginSpace.left -= alignmentSpace.left;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
-          marginSpace.right = 0;
+          marginSpace.right -= alignmentSpace.right;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | PearlAutoresizingMinimalTopMargin])
-          marginSpace.top = 0;
+          marginSpace.top -= alignmentSpace.top;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | PearlAutoresizingMinimalBottomMargin])
-          marginSpace.bottom = 0;
+          marginSpace.bottom -= alignmentSpace.bottom;
 
         CGSize availableSubviewSize = availableSize;
         availableSubviewSize.width -= marginSpace.left + marginSpace.right;
@@ -603,7 +612,6 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (CGSize)ownFittingSizeIn:(CGSize)availableSize {
-  // We bias/favour width fitting to height fitting to size multi-line UILabels right.
   // Not entirely sure why; some long UILabels do not limit on fittingSize properly without assigning its width to preferredMaxLayoutWidth.
   [self assignPreferredMaxLayoutWidth:availableSize];
 
@@ -615,11 +623,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       [NSValue valueWithCGSize:availableSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
   // Measure our fitting size within availableSize.
+  // We bias/favour width fitting to height fitting to size multi-line UILabels right.
   CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
-                           withHorizontalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]?
-                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel
-                                 verticalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]?
-                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel];
+                           withHorizontalFittingPriority:UILayoutPriorityDefaultHigh + 1
+                                 verticalFittingPriority:UILayoutPriorityDefaultLow];
 
   // Clear availableSize records.
   objc_setAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ),

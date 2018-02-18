@@ -625,8 +625,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   // Measure our fitting size within availableSize.
   // We bias/favour width fitting to height fitting to size multi-line UILabels right.
   CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
-                           withHorizontalFittingPriority:UILayoutPriorityDefaultHigh + 1
-                                 verticalFittingPriority:UILayoutPriorityDefaultLow];
+                           withHorizontalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]?
+                                                         UILayoutPriorityDefaultHigh + 1: UILayoutPriorityFittingSizeLevel
+                                 verticalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]?
+                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel];
 
   // Clear availableSize records.
   objc_setAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ),

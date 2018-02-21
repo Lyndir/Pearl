@@ -112,9 +112,6 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
-    if (newImage == nil)
-        Throw( @"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize( targetSize ) );
-
     return newImage;
 }
 
@@ -146,9 +143,6 @@
     [self drawInRect:thumbnailRect];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-
-    if (newImage == nil)
-        Throw( @"Couldn't scale image: %@ to size: %@", self, NSStringFromCGSize( targetSize ) );
 
     return newImage;
 }

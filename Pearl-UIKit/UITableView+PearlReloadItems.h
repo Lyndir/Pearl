@@ -27,7 +27,8 @@
 /**
  * Updates the dataSource collection to become the same as the newSections collection while animating the changes.
  *
- * @param dataSource This should be the collection that is backing your UITableViewDataSource delegate methods.
+ * @param dataSource The collection that is backing your UITableViewDataSource delegate methods,
+ *                   must be a mutable array (sections) of arrays (section rows).
  * @param newSections A new collection of the same structure as the dataSource.  nil to perform no dataSource changes.
  * @param reloadItems A collection of dataSource items, index paths or sections to reload.  Pass the dataSource itself to reload all items.
  */

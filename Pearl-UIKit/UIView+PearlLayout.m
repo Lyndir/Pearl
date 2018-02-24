@@ -183,6 +183,37 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return CGSizeMake( MAX( size1.width, size2.width ), MAX( size1.height, size2.height ) );
 }
 
+inline NSString *PearlDescribeF(const CGFloat fl) {
+  return fl == CGFLOAT_MIN? @"MIN": fl == CGFLOAT_MAX? @"MAX": isnan( fl )? @"NAN": isinf( fl )? @"INF": strf( @"%.4g", fl );
+}
+
+inline NSString *PearlDescribeP(const CGPoint pt) {
+  return strf( @"(%@, %@)", PearlDescribeF( pt.x ), PearlDescribeF( pt.y ) );
+}
+
+inline NSString *PearlDescribeS(const CGSize sz) {
+  return strf( @"(%@x%@)", PearlDescribeF( sz.width ), PearlDescribeF( sz.height ) );
+}
+
+inline NSString *PearlDescribeR(const CGRect rct) {
+  return strf( @"(%@|%@)", PearlDescribeP( rct.origin ), PearlDescribeS( rct.size ) );
+}
+
+inline NSString *PearlDescribeI(const UIEdgeInsets ins) {
+  return strf( @"%@|%@[]%@|%@", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ),
+      PearlDescribeF( ins.bottom ), PearlDescribeF( ins.right ) );
+}
+
+inline NSString *PearlDescribeIS(const UIEdgeInsets ins, const CGSize sz) {
+  return strf( @"%@|%@[%@]%@|%@", PearlDescribeF( ins.left ), PearlDescribeF( ins.top ), PearlDescribeS( sz ),
+      PearlDescribeF( ins.bottom ), PearlDescribeF( ins.right ) );
+}
+
+inline NSString *PearlDescribeO(const UIOffset ofs) {
+  return strf( @"(%@|%@)", PearlDescribeF( ofs.horizontal ), PearlDescribeF( ofs.vertical ) );
+}
+
+
 @implementation UIView(PearlLayout)
 
 - (void)setFrameFromCurrentSizeAndAlignmentMargins:(UIEdgeInsets)alignmentMargins {
@@ -222,6 +253,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z using:(PearlLayout)layoutOverrides
              options:(PearlLayoutOption)options {
+  trc( @"%@:   setFrameFrom:%@", [self infoPathName], layoutString );
 
   static NSRegularExpression *layoutRE = nil;
   static dispatch_once_t once = 0;
@@ -281,10 +313,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     leftLayoutValue = alignmentMargins.left;
   else if ([leftLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        leftLayoutValue = MAX( 0, CGRectGetMinX( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinX( alignmentRect ) );
-      else
-        leftLayoutValue = UIApp.delegate.window.safeAreaInsets.left;
+      leftLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.left;
     else
       leftLayoutValue = 0;
   else if ([leftLayoutString isEqualToString:@"x"])
@@ -303,10 +332,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     rightLayoutValue = alignmentMargins.right;
   else if ([rightLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        rightLayoutValue = MAX( 0, CGRectGetMaxX( alignmentRect ) - CGRectGetMaxX( self.safeAreaLayoutGuide.layoutFrame ) );
-      else
-        rightLayoutValue = UIApp.delegate.window.safeAreaInsets.right;
+      rightLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.right;
     else
       rightLayoutValue = 0;
   else if ([rightLayoutString isEqualToString:@"x"])
@@ -325,10 +351,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     topLayoutValue = alignmentMargins.top;
   else if ([topLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        topLayoutValue = MAX( 0, CGRectGetMinY( self.safeAreaLayoutGuide.layoutFrame ) - CGRectGetMinY( alignmentRect ) );
-      else
-        topLayoutValue = UIApp.delegate.window.safeAreaInsets.top;
+      topLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.top;
     else
       topLayoutValue = UIApp.statusBarFrame.size.height;
   else if ([topLayoutString isEqualToString:@"x"])
@@ -347,10 +370,7 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
     bottomLayoutValue = alignmentMargins.bottom;
   else if ([bottomLayoutString isEqualToString:@"S"])
     if (@available( iOS 11.0, * ))
-      if (self.window)
-        bottomLayoutValue = MAX( 0, CGRectGetMaxY( alignmentRect ) - CGRectGetMaxY( self.safeAreaLayoutGuide.layoutFrame ) );
-      else
-        bottomLayoutValue = UIApp.delegate.window.safeAreaInsets.bottom;
+      bottomLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.bottom;
     else
       bottomLayoutValue = 0;
   else if ([bottomLayoutString isEqualToString:@"x"])
@@ -403,14 +423,18 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
+  trc( @"%@:   setFrameFrom:alignment %@", [self infoPathName], PearlDescribeIS( alignmentMargins, size ) );
 
   // Save the layout configuration in the autoresizing mask.
-  [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
+  if (0 == (options & PearlLayoutOptionUpdate))
+    [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
 
   // Determine the size available in the superview for our alignment rect.
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
-  UIEdgeInsets marginSpace = UIEdgeInsetsZero;
-  CGSize fittingSize = [self fittingAlignmentSizeIn:self.superview.bounds.size margins:alignmentMargins marginSpace:&marginSpace];
+  UIEdgeInsets marginSpace = [self spaceForMargins:alignmentMargins];
+  NSValue *savedFittingSize = objc_getAssociatedObject( self, @selector(fittingAlignmentSizeIn:marginSpace:) );
+  CGSize fittingSize = savedFittingSize? [savedFittingSize CGSizeValue]:
+                       [self fittingAlignmentSizeIn:self.superview.bounds.size marginSpace:marginSpace];
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
   CGSize requestedSize = CGSizeMake(
@@ -423,17 +447,25 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       requestedSize.height == CGFLOAT_MAX? fittingSize.height: requestedSize.height );
 
   // Grow the superview if needed to fit the alignment rect and margin.
-  CGSize container = CGSizeUnion( self.superview.frame.size, (CGSize){
+  CGSize requiredSpace = (CGSize){
       requiredSize.width + marginSpace.left + marginSpace.right,
       requiredSize.height + marginSpace.top + marginSpace.bottom
-  } );
-  if (self.superview && self.autoresizingMask) {
-    if (!(options & PearlLayoutOptionConstrained)) {
-      // TODO: recurse down the superview hierarchy
-      // TODO: currently the assumption is the user will never do a setFrameFrom: on a subview without also calling it on the superviews.
-      CGRectSetSize( self.superview.frame, container );
+  };
+  CGSize container = CGSizeUnion( self.superview.frame.size, requiredSpace );
+  if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( self.superview.frame.size, container )) {
+    if (0 == (options & PearlLayoutOptionConstrained)) {
+//      CGRectSetSize( self.superview.frame, container );
+      objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
+          [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+      CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.frame, container )];
+      [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
+      objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
+          nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
     }
-    else if (!CGSizeEqualToSize( self.superview.frame.size, container )) {
+    else {
+      // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
+      // FIXME: Known causes:
+      // FIXME: 1.
       // FIXME: There is an issue when updating a UIStackView inside a UITableViewCellContentView using something like:
       // FIXME: [[UITableView findAsSuperviewOf:self] beginUpdates];
       // FIXME: [self.stackViewChild setNeedsUpdateConstraints];
@@ -448,15 +480,25 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
       // FIXME:
       // FIXME: To avoid this hiccup, resize the UITableViewCell frame to match as soon as its new content size is determined in
       // FIXME: @selector(systemLayoutSizeFittingSize:withHorizontalFittingPriority:verticalFittingPriority:)
-      // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
+      // FIXME:
+      // FIXME: 2.
+      // FIXME: When a non-wrapping (1 line) UILabel inside a UIStackView's AutoresizingContainerView becomes too long to fit the
+      // FIXME: container, the intrinsicSize (fittingSize) is cut short by UIStackView.
+      // FIXME: This then causes a hard cut-off for the contentView (this view).  This is actually a good thing, but
+      // FIXME: ideally we should be able to detect this situation in -fittingSizeIn: and avoid the bad intrinsicSize.
       wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
           [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
     }
+
+    container = self.superview.frame.size;
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
-  CGRectSet( self.frame, [self frameForAlignmentRect:
-      CGRectInCGSizeWithSizeAndMargins( container, requestedSize, alignmentMargins )] );
+  CGRect frame = [self frameForAlignmentRect:
+      CGRectInCGSizeWithSizeAndMargins( container, requestedSize, alignmentMargins )];
+  trc( @"%@:  alignment %@ in container %@ => frame %@", [self infoPathName],
+      PearlDescribeIS( alignmentMargins, requestedSize ), PearlDescribeS( container ), PearlDescribeR( frame ) );
+  CGRectSet( self.frame, frame );
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -496,21 +538,23 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return minSize;
 }
 
-- (CGSize)fittingAlignmentSizeIn:(CGSize)availableSize margins:(UIEdgeInsets)alignmentMargins marginSpace:(out UIEdgeInsets *)marginSpace {
+- (UIEdgeInsets)spaceForMargins:(UIEdgeInsets)alignmentMargins {
   // Collapse alignment margins into their fitting space.
-  *marginSpace = UIEdgeInsetsMake(
+  return UIEdgeInsetsMake(
       alignmentMargins.top == CGFLOAT_MAX || alignmentMargins.top == CGFLOAT_MIN? 0: alignmentMargins.top,
       alignmentMargins.left == CGFLOAT_MAX || alignmentMargins.left == CGFLOAT_MIN? 0: alignmentMargins.left,
       alignmentMargins.bottom == CGFLOAT_MAX || alignmentMargins.bottom == CGFLOAT_MIN? 0: alignmentMargins.bottom,
       alignmentMargins.right == CGFLOAT_MAX || alignmentMargins.right == CGFLOAT_MIN? 0: alignmentMargins.right );
+}
 
+- (CGSize)fittingAlignmentSizeIn:(CGSize)availableSize marginSpace:(UIEdgeInsets)marginSpace {
   // Convert alignment margins to frame margins.
   CGRect alignmentRect = self.alignmentRect;
   UIEdgeInsets frameMargins = UIEdgeInsetsMake(
-      marginSpace->top - (alignmentRect.origin.y - self.frame.origin.y),
-      marginSpace->left - (alignmentRect.origin.x - self.frame.origin.x),
-      marginSpace->bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
-      marginSpace->right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
+      marginSpace.top - (alignmentRect.origin.y - self.frame.origin.y),
+      marginSpace.left - (alignmentRect.origin.x - self.frame.origin.x),
+      marginSpace.bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
+      marginSpace.right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
 
   // Find alignment rect fitting the available space and margins.
   availableSize.width -= frameMargins.left + frameMargins.right;
@@ -531,50 +575,64 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 //  trc( @"fittingSizeIn: %@", string );
 
   // Determine how the view wants to fit in the available space.
-  CGSize fittingSize = [self collapsedFittingSizeIn:availableSize];
-  trc( @"%@:   own fitting size: %@", [self infoPathName], NSStringFromCGSize( fittingSize ) );
+  CGSize fittingSize = [self ownFittingSizeIn:availableSize];
+  trc( @"%@:   own fitting size: %@", [self infoPathName], PearlDescribeS( fittingSize ) );
 
   // Grow to fit our autoresizing subviews.  Other subviews were handled by -systemLayoutSizeFittingSize.
   if (self.autoresizesSubviews)
     for (UIView *subview in self.subviews)
       if (subview.autoresizingMask) {
-        UIEdgeInsets marginSpace = subview.autoresizingMargins;
+        UIEdgeInsets marginSpace = subview.autoresizingMargins, alignmentSpace = subview.alignmentMargins;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | PearlAutoresizingMinimalLeftMargin])
-          marginSpace.left = 0;
+          marginSpace.left -= alignmentSpace.left;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin | PearlAutoresizingMinimalRightMargin])
-          marginSpace.right = 0;
+          marginSpace.right -= alignmentSpace.right;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleTopMargin | PearlAutoresizingMinimalTopMargin])
-          marginSpace.top = 0;
+          marginSpace.top -= alignmentSpace.top;
         if ([subview hasAutoresizingMask:UIViewAutoresizingFlexibleBottomMargin | PearlAutoresizingMinimalBottomMargin])
-          marginSpace.bottom = 0;
+          marginSpace.bottom -= alignmentSpace.bottom;
 
         CGSize availableSubviewSize = availableSize;
         availableSubviewSize.width -= marginSpace.left + marginSpace.right;
         availableSubviewSize.height -= marginSpace.top + marginSpace.bottom;
 
         CGSize subviewSize = [subview fittingSizeIn:availableSubviewSize];
-        subviewSize.width += marginSpace.left + marginSpace.right;
-        subviewSize.height += marginSpace.top + marginSpace.bottom;
-        trc( @"%@:   subview fitting size: %@ (w/margins: %@)", [self infoPathName],
-            NSStringFromCGSize( subviewSize ), NSStringFromUIEdgeInsets( marginSpace ) );
+        CGSize subviewSpace = CGSizeMake(
+            subviewSize.width + marginSpace.left + marginSpace.right,
+            subviewSize.height + marginSpace.top + marginSpace.bottom );
+        trc( @"%@:     %@ space: %@ => %@", [self infoPathName], [subview infoShortName],
+            PearlDescribeIS( marginSpace, subviewSize ), PearlDescribeS( subviewSpace ) );
 
-        fittingSize = CGSizeUnion( fittingSize, subviewSize );
+        fittingSize = CGSizeUnion( fittingSize, subviewSpace );
       }
 
-  trc( @"%@:   final fitting size: %@", [self infoPathName], NSStringFromCGSize( fittingSize ) );
+  trc( @"%@:   final fitting size: %@", [self infoPathName], PearlDescribeS( fittingSize ) );
 //  [stack removeLastObject];
   return fittingSize;
 }
 
-- (CGSize)collapsedFittingSizeIn:(CGSize)availableSize {
-  // We bias/favour width fitting to height fitting to size multi-line UILabels right.
+- (CGSize)ownFittingSizeIn:(CGSize)availableSize {
   // Not entirely sure why; some long UILabels do not limit on fittingSize properly without assigning its width to preferredMaxLayoutWidth.
   [self assignPreferredMaxLayoutWidth:availableSize];
+
+  // Some objects need to know the availableSize when determining intrinsicContentSize in response to this call.
+  // I would prefer it if they could determine this size by looking at the available constraints, but unfortunately
+  // systemLayoutSizeFittingSize: doesn't expose its fitting size this or any other way that I could find.
+  NSValue *superAvailableSize = objc_getAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ) );
+  objc_setAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ),
+      [NSValue valueWithCGSize:availableSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+
+  // Measure our fitting size within availableSize.
+  // We bias/favour width fitting to height fitting to size multi-line UILabels right.
   CGSize fittingSize = [self systemLayoutSizeFittingSize:availableSize
                            withHorizontalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleWidth]?
-                                                         UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel
+                                                         UILayoutPriorityDefaultHigh + 1: UILayoutPriorityFittingSizeLevel
                                  verticalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]?
                                                          UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel];
+
+  // Clear availableSize records.
+  objc_setAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ),
+      superAvailableSize, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
   [self resetPreferredMaxLayoutWidth];
 
   // If size of view is determined by constraints, don't collapse it.
@@ -604,10 +662,10 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 }
 
 - (BOOL)fitSubviews {
-  return [self fitInAlignmentRect:self.alignmentRect margins:self.alignmentMargins];
+  return [self fitInAlignmentRect:self.alignmentRect margins:self.alignmentMargins options:PearlLayoutOptionConstrained];
 }
 
-- (BOOL)fitInAlignmentRect:(CGRect)alignmentRect margins:(UIEdgeInsets)alignmentMargins {
+- (BOOL)fitInAlignmentRect:(CGRect)alignmentRect margins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
   CGRect oldBounds = self.bounds;
 
   // Recalculate the view's fitting size based on its autoresizing configuration.
@@ -625,14 +683,16 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
          [self hasAutoresizingMask:PearlAutoresizingMinimalBottomMargin]? CGFLOAT_MIN: alignmentMargins.bottom,
          [self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? CGFLOAT_MAX:
          [self hasAutoresizingMask:PearlAutoresizingMinimalRightMargin]? CGFLOAT_MIN: alignmentMargins.right )
-                 options:PearlLayoutOptionConstrained];
+                 options:options | PearlLayoutOptionUpdate];
 
   // Update fitting size for the subviews that are positioned by autoresizing.  Other subviews are handled by -layoutSubviews.
-  for (UIView *subview in self.subviews)
-    if (self.autoresizesSubviews && subview.autoresizingMask)
-      [subview fitSubviews];
-    else
-      [subview setNeedsLayout];
+  if (0 == (options & PearlLayoutOptionShallow))
+    for (UIView *subview in self.subviews) {
+      if (self.autoresizesSubviews && subview.autoresizingMask)
+        [subview fitSubviews];
+      else
+        [subview setNeedsLayout];
+    }
 
   BOOL changed = !CGRectEqualToRect( self.bounds, oldBounds );
 //  if (changed)
@@ -779,16 +839,18 @@ CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
 
 - (BOOL)fitSubviews {
   // Don't blindly trust `bounds` in case autolayout tries to squash our view; use fittingAlignmentSize instead (via intrinsicContentSize)
-  return [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins];;
+  return [self.contentView fitInAlignmentRect:(CGRect){ CGPointZero, self.intrinsicContentSize } margins:self.contentAlignmentMargins
+                                      options:PearlLayoutOptionConstrained];
 }
 
 - (CGSize)intrinsicContentSize {
 
-  UIEdgeInsets marginSpace = UIEdgeInsetsZero;
-  CGSize size = [self.contentView fittingAlignmentSizeIn:self.superview.bounds.size margins:self.contentAlignmentMargins
-                                             marginSpace:&marginSpace];
+  UIEdgeInsets marginSpace = [self spaceForMargins:self.contentAlignmentMargins];
+  NSValue *availableSizeValue = objc_getAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ) );
+  CGSize availableSize = availableSizeValue? [availableSizeValue CGSizeValue]: self.superview.bounds.size;
+  CGSize contentSize = [self.contentView fittingAlignmentSizeIn:availableSize marginSpace:marginSpace];
 
-  return CGSizeMake( size.width + marginSpace.left + marginSpace.right, size.height + marginSpace.top + marginSpace.bottom );
+  return CGSizeMake( contentSize.width + marginSpace.left + marginSpace.right, contentSize.height + marginSpace.top + marginSpace.bottom );
 }
 
 - (void)setBounds:(CGRect)bounds {

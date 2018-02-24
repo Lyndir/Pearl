@@ -114,6 +114,7 @@ id returnArg(id arg) {
 
     self.messages = [NSMutableArray arrayWithCapacity:20];
     self.listeners = [NSMutableArray array];
+    self.minimumLevel = PearlLogLevelInfo;
 #if DEBUG
     self.printLevel = PearlLogLevelDebug;
     self.historyLevel = PearlLogLevelDebug;
@@ -132,6 +133,10 @@ id returnArg(id arg) {
         instance = [self new];
 
     return instance;
+}
+
+- (PearlLogLevel)minimumLevel {
+    return MIN( MIN( _minimumLevel, _printLevel ), _historyLevel );
 }
 
 - (NSArray *)messagesWithLevel:(PearlLogLevel)level {

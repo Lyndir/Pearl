@@ -72,6 +72,14 @@ extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSi
 
 extern CGSize CGSizeUnion(const CGSize size1, const CGSize size2);
 
+extern NSString *PearlDescribeF(const CGFloat fl);
+extern NSString *PearlDescribeP(const CGPoint pt);
+extern NSString *PearlDescribeS(const CGSize sz);
+extern NSString *PearlDescribeR(const CGRect rct);
+extern NSString *PearlDescribeI(const UIEdgeInsets ins);
+extern NSString *PearlDescribeIS(const UIEdgeInsets ins, const CGSize sz);
+extern NSString *PearlDescribeO(const UIOffset ofs);
+
 typedef struct PearlLayout {
     CGFloat left;
     CGFloat top;
@@ -85,6 +93,10 @@ typedef NS_OPTIONS( NSUInteger, PearlLayoutOption ) {
     PearlLayoutOptionNone = 0,
     /** Constrain the superview's bounds; ie. do not allow the superview to be resized if needed to fit the view. */
         PearlLayoutOptionConstrained = 1 << 0,
+    /** Refit the view without re-fitting its subviews. */
+        PearlLayoutOptionShallow = 1 << 1,
+    /** This layout operation should only update the frame, not change the autoresizing configuration. */
+        PearlLayoutOptionUpdate = 1 << 2,
 };
 
 #define PearlAutoresizingMinimalLeftMargin   (UIViewAutoresizing)(1 << 6)

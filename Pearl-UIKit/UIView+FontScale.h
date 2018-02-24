@@ -14,4 +14,20 @@
  */
 @property(nonatomic) IBInspectable BOOL noFontScale;
 
+/**
+ * If YES, this view and its subviews do not partake in automatic font bolding.
+ */
+@property(nonatomic) IBInspectable BOOL noFontBolding;
+
+@end
+
+@interface UIApplication(FontScale)
+
+/**
+ * Returns the font scale that reflects the current content size category.
+ *
+ * Set to non-zero in order to override the current content size category with a custom font scale.
+ */
+@property(nonatomic) CGFloat preferredContentSizeCategoryFontScale;
+
 @end

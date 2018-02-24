@@ -108,8 +108,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
         // Make the order of the cells in in _activeSectionCells match the original order in _allCellsBySection.
         [activeSectionCells sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            NSUInteger i1 = [_allCellsBySection[section] indexOfObject:obj1];
-            NSUInteger i2 = [_allCellsBySection[section] indexOfObject:obj2];
+            NSUInteger i1 = [self->_allCellsBySection[section] indexOfObject:obj1];
+            NSUInteger i2 = [self->_allCellsBySection[section] indexOfObject:obj2];
             return i1 == i2? NSOrderedSame: i1 < i2? NSOrderedAscending: NSOrderedDescending;
         }];
     }

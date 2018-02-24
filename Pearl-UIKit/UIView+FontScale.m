@@ -5,12 +5,6 @@
 
 #import "UIView+FontScale.h"
 
-@interface UIApplication(FontScale)
-
-- (CGFloat)preferredContentSizeCategoryFontScale;
-
-@end
-
 @implementation UIView(FontScale)
 
 + (void)load {
@@ -21,27 +15,66 @@
             [self updateConstraints];
         } );
         PearlSwizzle( type, @selector( setFont: ), ^(UIView *self, UIFont *originalFont), {
-            if (NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) ||
-                ([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [(id)self adjustsFontForContentSizeCategory]))
-                [(UILabel *)self setFont:originalFont];
+            UIFont *newFont = originalFont;
 
-            else {
+            if (!NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) &&
+                !([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] &&
+                    [(id)self adjustsFontForContentSizeCategory])) {
                 CGFloat appliedFontScale = self.appliedFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
-                [(UILabel *)self setFont:[originalFont fontWithSize:originalFont.pointSize * appliedFontScale]];
+                newFont = [originalFont fontWithSize:originalFont.pointSize * appliedFontScale];
             }
+
+            if (UIAccessibilityIsBoldTextEnabled() && !self.noFontBolding && !self.originalFont) {
+                UIFont *originalFont = self.originalFont = newFont;
+                UIFontDescriptor *boldFontDescriptor = [originalFont.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+                newFont = [UIFont fontWithDescriptor:boldFontDescriptor size:0]?: newFont;
+            }
+            if ((!UIAccessibilityIsBoldTextEnabled() || self.noFontBolding) && self.originalFont) {
+                newFont = newFont? [self.originalFont fontWithSize:newFont.pointSize]: self.originalFont;
+                self.originalFont = nil;
+            }
+
+          [(UILabel *)self setFont:newFont];
         } );
     }
 }
 
 - (BOOL)noFontScale {
 
-    return [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue];
+    return [objc_getAssociatedObject( self, @selector( noFontScale ) ) boolValue] || self.superview.noFontScale;
 }
 
 - (void)setNoFontScale:(BOOL)noFontScale {
 
     objc_setAssociatedObject( self, @selector( noFontScale ), @(noFontScale), OBJC_ASSOCIATION_RETAIN );
-    [self _pearl_fontMod_updateFont];
+
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        [self setNeedsUpdateConstraints];
+    }            recurse:YES];
+}
+
+- (BOOL)noFontBolding {
+
+    return [objc_getAssociatedObject( self, @selector( noFontBolding ) ) boolValue] || self.superview.noFontBolding;
+}
+
+- (void)setNoFontBolding:(BOOL)noFontBolding {
+
+    objc_setAssociatedObject( self, @selector( noFontBolding ), @(noFontBolding), OBJC_ASSOCIATION_RETAIN );
+
+    [self enumerateViews:^(UIView *subview, BOOL *stop, BOOL *recurse) {
+        [self setNeedsUpdateConstraints];
+    }            recurse:YES];
+}
+
+- (UIFont *)originalFont {
+
+  return objc_getAssociatedObject( self, @selector( originalFont ) );
+}
+
+- (void)setOriginalFont:(UIFont *)originalFont {
+
+  objc_setAssociatedObject( self, @selector( originalFont ), originalFont, OBJC_ASSOCIATION_RETAIN );
 }
 
 /**
@@ -61,11 +94,17 @@
 
     PearlAddNotificationObserver( UIContentSizeCategoryDidChangeNotification, nil, [NSOperationQueue mainQueue],
             ^(id self, NSNotification *note) {
-                [self _pearl_fontMod_updateFont];
+                [self setNeedsUpdateConstraints];
+            } );
+    PearlAddNotificationObserver( UIAccessibilityBoldTextStatusDidChangeNotification, nil, [NSOperationQueue mainQueue],
+            ^(id self, NSNotification *note) {
+                [self setNeedsUpdateConstraints];
             } );
 
     UIFont *appliedFont = [(UILabel *)self font];
+
     [(UILabel *)self setFont:[appliedFont fontWithSize:appliedFont.pointSize / self.appliedFontScale]];
+
     if (![appliedFont isEqual:[(UILabel *)self font]]) {
         [self setNeedsUpdateConstraints];
 
@@ -80,9 +119,19 @@
 
 @implementation UIApplication (FontScale)
 
-- (CGFloat)preferredContentSizeCategoryFontScale {
-    // Based on UIFontTextStyleBody
+- (void)setPreferredContentSizeCategoryFontScale:(CGFloat)fontScale {
 
+    objc_setAssociatedObject( self, @selector( preferredContentSizeCategoryFontScale ),
+        fontScale == 0? nil: @(fontScale), OBJC_ASSOCIATION_RETAIN );
+}
+
+- (CGFloat)preferredContentSizeCategoryFontScale {
+
+    CGFloat fontScale = [objc_getAssociatedObject( self, @selector( preferredContentSizeCategoryFontScale ) ) floatValue];
+    if (fontScale != 0)
+        return fontScale;
+
+    // Based on UIFontTextStyleBody
     if ([self.preferredContentSizeCategory isEqual:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge])
         return 21 / 15.f;
 

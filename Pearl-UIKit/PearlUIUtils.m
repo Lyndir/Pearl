@@ -502,17 +502,23 @@ static NSMutableSet *dismissableResponders;
 - (NSString *)infoShortName {
 
     NSString *property = nil;
-    UIResponder *nextResponder = nil;
-    for (nextResponder = [self nextResponder]; nextResponder; nextResponder = [nextResponder nextResponder])
+    for (UIResponder *nextResponder = [self nextResponder]; nextResponder; nextResponder = [nextResponder nextResponder])
         if ((property = [nextResponder ivarWithValue:self]))
-            break;
+            return property;
 
-    return property?: NSStringFromClass( [self class] );
+    if ([[self nextResponder] respondsToSelector:@selector( view )] && self == [(UIViewController *)[self nextResponder] view])
+        return @"view";
+
+    return NSStringFromClass( [self class] );
 }
 
 - (NSString *)infoPathName {
 
-    return strf(@"%@/%@", [self.superview infoPathName]?: @"", [self infoShortName]);
+    UIResponder *parent = [self nextResponder];
+    if ([parent isKindOfClass:[UIView class]])
+        return strf( @"%@/%@", [(UIView *)parent infoPathName]?: @"", [self infoShortName]);
+
+    return strf( @"%@/%@", NSStringFromClass( [parent class] )?: @"", [self infoShortName] );
 }
 
 - (NSString *)layoutDescription {

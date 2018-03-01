@@ -182,6 +182,7 @@ __END_DECLS
 @interface AutoresizingContainerView : UIView
 
 + (NSArray<AutoresizingContainerView *> *)wrap:(id<NSFastEnumeration>)views;
++ (instancetype)viewWithContent:(UIView *)view;
 
 - (instancetype)initWithContent:(UIView *)contentView;
 

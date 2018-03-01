@@ -794,6 +794,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   return wrapped;
 }
 
++ (instancetype)viewWithContent:(UIView *)view {
+  return [[self alloc] initWithContent:view];
+}
+
 - (instancetype)initWithContent:(UIView *)contentView {
   if (!(self = [self initWithFrame:(CGRect){
       CGPointZero, [contentView alignmentRectForFrame:

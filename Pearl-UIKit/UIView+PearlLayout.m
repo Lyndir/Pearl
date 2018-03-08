@@ -457,6 +457,8 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   CGSize container = CGSizeUnion( self.superview.frame.size, requiredSpace );
   if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( self.superview.frame.size, container )) {
     if (0 == (options & PearlLayoutOptionConstrained)) {
+      trc( @"%@:  refitting container %@ => %@", [self infoPathName],
+              PearlDescribeS( self.superview.frame.size ), PearlDescribeS( container ) );
 //      CGRectSetSize( self.superview.frame, container );
       objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
           [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
@@ -632,6 +634,12 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
                                                          UILayoutPriorityDefaultHigh + 1: UILayoutPriorityFittingSizeLevel
                                  verticalFittingPriority:[self hasAutoresizingMask:UIViewAutoresizingFlexibleHeight]?
                                                          UILayoutPriorityDefaultLow: UILayoutPriorityFittingSizeLevel];
+
+  // Fix float errors that cause a mismatch with availableSize bounds, because UIKit's sizers are terrible.
+  if (ABS(fittingSize.width - availableSize.width) <= FLT_EPSILON)
+    fittingSize.width = availableSize.width;
+  if (ABS(fittingSize.height - availableSize.height) <= FLT_EPSILON)
+    fittingSize.height = availableSize.height;
 
   // Clear availableSize records.
   objc_setAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ),

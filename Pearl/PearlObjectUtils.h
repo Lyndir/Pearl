@@ -225,6 +225,12 @@ extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void
         operation = PearlNotMainQueueOperation(block); \
     })
 
+/* Schedule a block to run on a background queue.  If this block was previously scheduled but not yet completed, cancel it first. */
+#define PearlOnce(block) ({ \
+        static dispatch_once_t __once; \
+        dispatch_once( &__once, block ); \
+    })
+
 /**
 * Recursion detection.  Usage:
 * static BOOL recursing = NO;
@@ -239,6 +245,7 @@ extern BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void))
 extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 
 extern Method PearlFindMethod(Class type, SEL name, Class *declaringType);
+extern NSString *PearlDescribeC(const Class c);
 
 __END_DECLS
 

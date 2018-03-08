@@ -34,10 +34,10 @@
             }
             @catch (NSException *exception) {
                 infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@",
-                                                               NSStringFromClass( [info class] ), [exception fullDescription]];
+                                                               PearlDescribeC( [info class] ), [exception fullDescription]];
             }
 
-            NSString *keyString = strf(@"\n - Info %@: [%@] ", key, [info class]);
+            NSString *keyString = strf(@"\n - Info %@: [%@] ", key, PearlDescribeC( [info class] ));
             NSString *indentedNewline = [@"\n" stringByPaddingToLength:[keyString length]
                                                             withString:@" " startingAtIndex:0];
             [infoString replaceOccurrencesOfString:@"\n" withString:indentedNewline options:0
@@ -75,7 +75,7 @@
             }
             @catch (NSException *exception) {
                 infoString = [NSMutableString stringWithFormat:@"%@: inaccessible: %@",
-                                                               NSStringFromClass( [info class] ), [exception fullDescription]];
+                                PearlDescribeC( [info class] ), [exception fullDescription]];
             }
 
             NSString *keyString = strf(@" - Info %@: [%@] ", key, [info class]);

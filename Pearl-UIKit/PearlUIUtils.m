@@ -491,11 +491,11 @@ static NSMutableSet *dismissableResponders;
         if ((property = [nextResponder ivarWithValue:self]))
             break;
 
-    NSMutableString *name = [NSStringFromClass( [self class] ) mutableCopy];
+    NSMutableString *name = [PearlDescribeC( [self class] ) mutableCopy];
     if (property)
         [name appendFormat:@" %@", property];
     if (nextResponder)
-        [name appendFormat:@" @%@", NSStringFromClass( [nextResponder class] )];
+        [name appendFormat:@" @%@", PearlDescribeC( [nextResponder class] )];
     return name;
 }
 
@@ -509,7 +509,11 @@ static NSMutableSet *dismissableResponders;
     if ([[self nextResponder] respondsToSelector:@selector( view )] && self == [(UIViewController *)[self nextResponder] view])
         return @"view";
 
-    return NSStringFromClass( [self class] );
+    NSUInteger index = self.superview? [self.superview.subviews indexOfObject:self]: NSNotFound;
+    if (index != NSNotFound)
+        return strf( @"[%lu]%@", (unsigned long)index, PearlDescribeC( [self class] ) );
+
+    return PearlDescribeC( [self class] );
 }
 
 - (NSString *)infoPathName {
@@ -518,7 +522,7 @@ static NSMutableSet *dismissableResponders;
     if ([parent isKindOfClass:[UIView class]])
         return strf( @"%@/%@", [(UIView *)parent infoPathName]?: @"", [self infoShortName]);
 
-    return strf( @"%@/%@", NSStringFromClass( [parent class] )?: @"", [self infoShortName] );
+    return strf( @"%@/%@", PearlDescribeC( [parent class] )?: @"", [self infoShortName] );
 }
 
 - (NSString *)layoutDescription {

@@ -874,7 +874,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (NSString *)infoName {
-  return strf( @"%@ for %@", NSStringFromClass( [self class] ), [self.contentView infoShortName] );
+  return strf( @"%@ for %@", PearlDescribeC( [self class] ), [self.contentView infoShortName] );
 }
 
 @end

@@ -19,6 +19,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <objc/message.h>
+#import <Foundation/Foundation.h>
 
 BOOL PearlMainQueue(void (^block)(void)) {
 
@@ -27,7 +28,7 @@ BOOL PearlMainQueue(void (^block)(void)) {
         return YES;
     }
 
-    dispatch_async(dispatch_get_main_queue(), block);
+    dispatch_async( dispatch_get_main_queue(), block );
     return NO;
 }
 
@@ -44,19 +45,19 @@ BOOL PearlNotMainQueue(void (^block)(void)) {
 
 NSBlockOperation *PearlMainQueueOperation(void (^block)(void)) {
 
-  NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
-  [[NSOperationQueue mainQueue] addOperation:blockOperation];
-  return blockOperation;
+    NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
+    [[NSOperationQueue mainQueue] addOperation:blockOperation];
+    return blockOperation;
 }
 
 NSBlockOperation *PearlNotMainQueueOperation(void (^block)(void)) {
 
-  NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
-  NSOperationQueue *queue = [NSOperationQueue currentQueue];
-  if (!queue || queue == [NSOperationQueue mainQueue])
-    queue = [NSOperationQueue new];
-  [queue addOperation:blockOperation];
-  return blockOperation;
+    NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:block];
+    NSOperationQueue *queue = [NSOperationQueue currentQueue];
+    if (!queue || queue == [NSOperationQueue mainQueue])
+        queue = [NSOperationQueue new];
+    [queue addOperation:blockOperation];
+    return blockOperation;
 }
 
 id PearlAwait(void (^block)(void (^setResult)(id result))) {
@@ -67,7 +68,8 @@ id PearlAwait(void (^block)(void (^setResult)(id result))) {
     block( ^(id result_) {
         @try {
             result = result_;
-        } @finally {
+        }
+        @finally {
             dispatch_group_leave( group );
         }
     } );
@@ -87,7 +89,8 @@ id PearlMainQueueAwait(id (^block)(void)) {
     dispatch_async( dispatch_get_main_queue(), ^{
         @try {
             result = block();
-        } @finally {
+        }
+        @finally {
             dispatch_group_leave( group );
         }
     } );
@@ -154,6 +157,7 @@ void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^bloc
 }
 
 BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void)) {
+
     if (*recursing)
         return NO;
 
@@ -166,14 +170,15 @@ BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void)) {
 NSUInteger PearlHashCode(NSUInteger firstHashCode, ...) {
 
     va_list objs;
-    va_start(objs, firstHashCode);
+    va_start( objs, firstHashCode );
     NSUInteger hashCode = 0;
-    for (NSUInteger nextHashCode = firstHashCode; nextHashCode != (NSUInteger)-1; nextHashCode = va_arg(objs, NSUInteger))
+    for (NSUInteger nextHashCode = firstHashCode; nextHashCode != (NSUInteger)-1; nextHashCode = va_arg( objs, NSUInteger ))
         hashCode = hashCode * 31 + nextHashCode;
     return hashCode;
 }
 
 Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
+
     for (*declaringType = type; *declaringType; *declaringType = class_getSuperclass( *declaringType )) {
         unsigned int methodCount = 0;
         Method *methods = class_copyMethodList( *declaringType, &methodCount );
@@ -193,6 +198,37 @@ Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
     return NULL;
 }
 
+NSString *PearlDescribeC(const Class c) {
+
+    static NSRegularExpression *swiftTypePattern;
+    PearlOnce( ^{
+        swiftTypePattern = [NSRegularExpression regularExpressionWithPattern:@"^_T[^0-9]*" options:0 error:nil];
+    } );
+
+    NSString *className = NSStringFromClass( c );
+    if (!className)
+        return nil;
+
+    NSRange trailingDot = [className rangeOfString:@"." options:NSBackwardsSearch];
+    if (trailingDot.location != NSNotFound)
+        className = [className substringFromIndex:trailingDot.location + trailingDot.length];
+
+    NSRange swiftType = [swiftTypePattern firstMatchInString:className options:0 range:NSMakeRange( 0, className.length )].range;
+    if (swiftType.location != NSNotFound && swiftType.length > 0) {
+        NSMutableString *decoding = [[className substringFromIndex:swiftType.location + swiftType.length] mutableCopy];
+        NSMutableArray *decoded = [NSMutableArray new];
+        for (NSUInteger index = 0; index < decoding.length;) {
+            NSUInteger length = (NSUInteger)[[decoding substringFromIndex:index] integerValue];
+            NSUInteger lengthLength = length / 10 + 1;
+            [decoded addObject:[decoding substringWithRange:NSMakeRange( index + lengthLength, length )]];
+            index += lengthLength + length;
+        }
+        className = [decoded lastObject]?: decoding;
+    }
+
+    return className;
+}
+
 @implementation PearlWeakReference
 
 + (instancetype)referenceWithObject:(id)object {
@@ -204,12 +240,12 @@ Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
 
 - (BOOL)isEqual:(id)other {
 
-  return [self.object isEqual:other];
+    return [self.object isEqual:other];
 }
 
 - (NSUInteger)hash {
 
-  return [self.object hash];
+    return [self.object hash];
 }
 
 @end
@@ -228,7 +264,9 @@ Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
                 propertyName = currentPropertyName;
                 break;
             }
-        } @catch(NSException *ignored) {}
+        }
+        @catch (NSException *ignored) {
+        }
     }
     free( properties );
 
@@ -262,8 +300,8 @@ Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
 
 - (id)getAssociatedObjectForSelector:(SEL)sel {
 
-  id object = objc_getAssociatedObject( self, sel );
-  return [object isKindOfClass:[PearlWeakReference class]]? ((PearlWeakReference *)object).object: object;
+    id object = objc_getAssociatedObject( self, sel );
+    return [object isKindOfClass:[PearlWeakReference class]]? ((PearlWeakReference *)object).object: object;
 }
 
 @end
@@ -281,22 +319,22 @@ Method PearlFindMethod(Class type, SEL name, Class *declaringType) {
 
 static char facadeBlockKey, facadedObjectKey;
 
-+ (id)objectWithBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock {
++ (id)objectWithBlock:(void ( ^ )(SEL, id *, id, NSInvocation *))facadeBlock {
 
     return [self objectWithBlock:facadeBlock superClass:[self superclass]];
 }
 
-+ (id)objectWithBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock superClass:(Class)superClass {
++ (id)objectWithBlock:(void ( ^ )(SEL, id *, id, NSInvocation *))facadeBlock superClass:(Class)superClass {
 
     return [[self alloc] initWithBlock:facadeBlock facadeObject:nil superClass:superClass];
 }
 
-+ (id)facadeFor:(id)facadedObject usingBlock:(void (^)(SEL, id *, id, NSInvocation *))facadeBlock {
++ (id)facadeFor:(id)facadedObject usingBlock:(void ( ^ )(SEL, id *, id, NSInvocation *))facadeBlock {
 
     return [[self alloc] initWithBlock:facadeBlock facadeObject:facadedObject superClass:[self superclass]];
 }
 
-- (id)initWithBlock:(void (^)(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
+- (id)initWithBlock:(void ( ^ )(SEL message, id *result, id argument, NSInvocation *invocation))facadeBlock
        facadeObject:(id)facadedObject superClass:(Class)superClass {
 
     // Create a clone of this class that uses the given superClass.
@@ -309,7 +347,7 @@ static char facadeBlockKey, facadedObjectKey;
     for (NSUInteger m = 0; m < outCount; ++m) {
         SEL methodName = method_getName( methods[m] );
         if (!class_addMethod( classClone, methodName, method_getImplementation( methods[m] ), method_getTypeEncoding( methods[m] ) )) {
-            err(@"Failed to add method to proxy class.");
+            err( @"Failed to add method to proxy class." );
             return nil;
         }
     }
@@ -356,13 +394,14 @@ static char facadeBlockKey, facadedObjectKey;
     if ([[anInvocation methodSignature] methodReturnLength])
         [anInvocation setReturnValue:&result];
 
-    if (!result) if ([facadedObject methodSignatureForSelector:anInvocation.selector])
-        [anInvocation invokeWithTarget:facadedObject];
+    if (!result)
+        if ([facadedObject methodSignatureForSelector:anInvocation.selector])
+            [anInvocation invokeWithTarget:facadedObject];
 }
 
 - (id)valueForKey:(NSString *)key {
 
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:PearlNotNull([NSMethodSignature signatureWithObjCTypes:"@@:@"])];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
     [invocation setSelector:_cmd];
     [invocation setArgument:&key atIndex:2];
 
@@ -375,7 +414,7 @@ static char facadeBlockKey, facadedObjectKey;
 
 - (id)valueForKeyPath:(NSString *)key {
 
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:PearlNotNull([NSMethodSignature signatureWithObjCTypes:"@@:@"])];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[NSMethodSignature signatureWithObjCTypes:"@@:@"]];
     [invocation setSelector:_cmd];
     [invocation setArgument:&key atIndex:2];
 

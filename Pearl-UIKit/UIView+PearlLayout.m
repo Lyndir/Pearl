@@ -454,15 +454,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       requiredSize.width + marginSpace.left + marginSpace.right,
       requiredSize.height + marginSpace.top + marginSpace.bottom
   };
-  CGSize container = CGSizeUnion( self.superview.frame.size, requiredSpace );
-  if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( self.superview.frame.size, container )) {
+  CGSize container = CGSizeUnion( self.superview.bounds.size, requiredSpace );
+  if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( self.superview.bounds.size, container )) {
     if (0 == (options & PearlLayoutOptionConstrained)) {
       trc( @"%@:  refitting container %@ => %@", [self infoPathName],
-              PearlDescribeS( self.superview.frame.size ), PearlDescribeS( container ) );
-//      CGRectSetSize( self.superview.frame, container );
+              PearlDescribeS( self.superview.bounds.size ), PearlDescribeS( container ) );
+//      CGRectSetSize( self.superview.bounds, container );
       objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
           [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-      CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.frame, container )];
+      CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.bounds, container )];
       [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
       objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
           nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
@@ -492,10 +492,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       // FIXME: This then causes a hard cut-off for the contentView (this view).  This is actually a good thing, but
       // FIXME: ideally we should be able to detect this situation in -fittingSizeIn: and avoid the bad intrinsicSize.
       wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
-          [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.frame.size ) );
+          [self.superview infoName], [self infoName], NSStringFromCGSize( container ), NSStringFromCGSize( self.superview.bounds.size ) );
     }
 
-    container = self.superview.frame.size;
+    container = self.superview.bounds.size;
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
@@ -503,7 +503,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       CGRectInCGSizeWithSizeAndMargins( container, requestedSize, alignmentMargins )];
   trc( @"%@:  alignment %@ in container %@ => frame %@", [self infoPathName],
       PearlDescribeIS( alignmentMargins, requestedSize ), PearlDescribeS( container ), PearlDescribeR( frame ) );
-  CGRectSet( self.frame, frame );
+  CGRectSet( self.bounds, [self convertRect:frame fromView:self.superview] );
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -555,11 +555,12 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (CGSize)fittingAlignmentSizeIn:(CGSize)availableSize marginSpace:(UIEdgeInsets)marginSpace {
   // Convert alignment margins to frame margins.
   CGRect alignmentRect = self.alignmentRect;
+  CGRect frame = self.superview? [self convertRect:self.bounds toView:self.superview]: self.bounds;
   UIEdgeInsets frameMargins = UIEdgeInsetsMake(
-      marginSpace.top - (alignmentRect.origin.y - self.frame.origin.y),
-      marginSpace.left - (alignmentRect.origin.x - self.frame.origin.x),
-      marginSpace.bottom - ((self.frame.origin.y + self.frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
-      marginSpace.right - ((self.frame.origin.x + self.frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
+      marginSpace.top - (alignmentRect.origin.y - frame.origin.y),
+      marginSpace.left - (alignmentRect.origin.x - frame.origin.x),
+      marginSpace.bottom - ((frame.origin.y + frame.size.height) - (alignmentRect.origin.y + alignmentRect.size.height)),
+      marginSpace.right - ((frame.origin.x + frame.size.width) - (alignmentRect.origin.x + alignmentRect.size.width)) );
 
   // Find alignment rect fitting the available space and margins.
   availableSize.width -= frameMargins.left + frameMargins.right;

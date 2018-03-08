@@ -457,15 +457,21 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   CGSize container = CGSizeUnion( self.superview.bounds.size, requiredSpace );
   if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( self.superview.bounds.size, container )) {
     if (0 == (options & PearlLayoutOptionConstrained)) {
-      trc( @"%@:  refitting container %@ => %@", [self infoPathName],
-              PearlDescribeS( self.superview.bounds.size ), PearlDescribeS( container ) );
-//      CGRectSetSize( self.superview.bounds, container );
-      objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
-          [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-      CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.bounds, container )];
-      [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
-      objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
-          nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+      if (!self.superview.autoresizingMask) {
+        trc( @"%@:  resizing container %@ => %@", [self infoPathName],
+                PearlDescribeS( self.superview.bounds.size ), PearlDescribeS( container ) );
+        CGRectSetSize( self.superview.bounds, container );
+      }
+      else {
+        trc( @"%@:  refitting container %@ => %@", [self infoPathName],
+                PearlDescribeS( self.superview.bounds.size ), PearlDescribeS( container ) );
+        objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
+                [NSValue valueWithCGSize:container], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+        CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.bounds, container )];
+        [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
+        objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
+                nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+      }
     }
     else {
       // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!

@@ -255,17 +255,16 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
              options:(PearlLayoutOption)options {
   trc( @"%@:   setFrameFrom:%@", [self infoPathName], layoutString );
 
-  static NSRegularExpression *layoutRE = nil;
-  static dispatch_once_t once = 0;
-  dispatch_once( &once, ^{
+  static NSRegularExpression *layoutRE;
+  PearlOnce( ^{
     layoutRE = [[NSRegularExpression alloc] initWithPattern:
             @" *([^\\[| ]*)(?: *\\| *([^\\] ]*))? *\\[ *([\\|]*) *([^\\]\\|/ ]*)(?: */ *([^\\]\\|/ ]*))? *(?:[\\|]*) *\\] *(?:([^|]*) *\\| *)?([^,]*) *"
                                                     options:0 error:nil];
   } );
 
   // Parse
-  NSTextCheckingResult
-      *layoutComponents = [layoutRE firstMatchInString:layoutString options:0 range:NSMakeRange( 0, layoutString.length )];
+  NSTextCheckingResult *layoutComponents =
+          [layoutRE firstMatchInString:layoutString options:0 range:NSMakeRange( 0, layoutString.length )];
   NSString *leftLayoutString = [layoutComponents rangeAtIndex:1].location == NSNotFound? nil:
                                [layoutString substringWithRange:[layoutComponents rangeAtIndex:1]];
   NSString *topLayoutString = [layoutComponents rangeAtIndex:2].location == NSNotFound? nil:
@@ -305,109 +304,113 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     options |= PearlLayoutOptionConstrained;
 
   // Left
+  if ([leftLayoutString containsString:@"x"])
+    leftLayoutValue += x;
+  if ([leftLayoutString containsString:@"y"])
+    leftLayoutValue += y;
+  if ([leftLayoutString containsString:@"z"])
+    leftLayoutValue += z;
+  if ([leftLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+    leftLayoutValue += self.superview.layoutMargins.left;
+  if ([leftLayoutString containsString:@"S"]) {
+    if (@available( iOS 11.0, * ))
+      leftLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.left;
+    else
+      leftLayoutValue += 0;
+  }
   if ([leftLayoutString isEqualToString:@">"])
     leftLayoutValue = CGFLOAT_MAX;
-  else if ([leftLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
-    leftLayoutValue = self.superview.layoutMargins.left;
-  else if ([leftLayoutString isEqualToString:@"="])
+  if ([leftLayoutString isEqualToString:@"="])
     leftLayoutValue = alignmentMargins.left;
-  else if ([leftLayoutString isEqualToString:@"S"])
-    if (@available( iOS 11.0, * ))
-      leftLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.left;
-    else
-      leftLayoutValue = 0;
-  else if ([leftLayoutString isEqualToString:@"x"])
-    leftLayoutValue = x;
-  else if ([leftLayoutString isEqualToString:@"y"])
-    leftLayoutValue = y;
-  else if ([leftLayoutString isEqualToString:@"z"])
-    leftLayoutValue = z;
 
-  // Right
+    // Right
+  if ([rightLayoutString containsString:@"x"])
+    rightLayoutValue += x;
+  if ([rightLayoutString containsString:@"y"])
+    rightLayoutValue += y;
+  if ([rightLayoutString containsString:@"z"])
+    rightLayoutValue += z;
+  if ([rightLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+    rightLayoutValue += self.superview.layoutMargins.right;
+  if ([rightLayoutString containsString:@"S"]) {
+    if (@available( iOS 11.0, * ))
+      rightLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.right;
+    else
+      rightLayoutValue += 0;
+  }
   if ([rightLayoutString isEqualToString:@"<"])
     rightLayoutValue = CGFLOAT_MAX;
-  else if ([rightLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
-    rightLayoutValue = self.superview.layoutMargins.right;
-  else if ([rightLayoutString isEqualToString:@"="])
+  if ([rightLayoutString isEqualToString:@"="])
     rightLayoutValue = alignmentMargins.right;
-  else if ([rightLayoutString isEqualToString:@"S"])
-    if (@available( iOS 11.0, * ))
-      rightLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.right;
-    else
-      rightLayoutValue = 0;
-  else if ([rightLayoutString isEqualToString:@"x"])
-    rightLayoutValue = x;
-  else if ([rightLayoutString isEqualToString:@"y"])
-    rightLayoutValue = y;
-  else if ([rightLayoutString isEqualToString:@"z"])
-    rightLayoutValue = z;
 
   // Top
+  if ([topLayoutString containsString:@"x"])
+    topLayoutValue += x;
+  if ([topLayoutString containsString:@"y"])
+    topLayoutValue += y;
+  if ([topLayoutString containsString:@"z"])
+    topLayoutValue += z;
+  if ([topLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+    topLayoutValue += self.superview.layoutMargins.top;
+  if ([topLayoutString containsString:@"S"]) {
+    if (@available( iOS 11.0, * ))
+      topLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.top;
+    else
+      topLayoutValue += UIApp.statusBarFrame.size.height;
+  }
   if ([topLayoutString isEqualToString:@">"])
     topLayoutValue = CGFLOAT_MAX;
-  else if ([topLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
-    topLayoutValue = self.superview.layoutMargins.top;
-  else if ([topLayoutString isEqualToString:@"="])
+  if ([topLayoutString isEqualToString:@"="])
     topLayoutValue = alignmentMargins.top;
-  else if ([topLayoutString isEqualToString:@"S"])
-    if (@available( iOS 11.0, * ))
-      topLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.top;
-    else
-      topLayoutValue = UIApp.statusBarFrame.size.height;
-  else if ([topLayoutString isEqualToString:@"x"])
-    topLayoutValue = x;
-  else if ([topLayoutString isEqualToString:@"y"])
-    topLayoutValue = y;
-  else if ([topLayoutString isEqualToString:@"z"])
-    topLayoutValue = z;
 
   // Bottom
+  if ([bottomLayoutString containsString:@"x"])
+    bottomLayoutValue += x;
+  if ([bottomLayoutString containsString:@"y"])
+    bottomLayoutValue += y;
+  if ([bottomLayoutString containsString:@"z"])
+    bottomLayoutValue += z;
+  if ([bottomLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+    bottomLayoutValue += self.superview.layoutMargins.bottom;
+  if ([bottomLayoutString containsString:@"S"]) {
+    if (@available( iOS 11.0, * ))
+      bottomLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.bottom;
+    else
+      bottomLayoutValue += 0;
+  }
   if ([bottomLayoutString isEqualToString:@"<"])
     bottomLayoutValue = CGFLOAT_MAX;
-  else if ([bottomLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
-    bottomLayoutValue = self.superview.layoutMargins.bottom;
-  else if ([bottomLayoutString isEqualToString:@"="])
+  if ([bottomLayoutString isEqualToString:@"="])
     bottomLayoutValue = alignmentMargins.bottom;
-  else if ([bottomLayoutString isEqualToString:@"S"])
-    if (@available( iOS 11.0, * ))
-      bottomLayoutValue = UIApp.delegate.window.rootViewController.view.safeAreaInsets.bottom;
-    else
-      bottomLayoutValue = 0;
-  else if ([bottomLayoutString isEqualToString:@"x"])
-    bottomLayoutValue = x;
-  else if ([bottomLayoutString isEqualToString:@"y"])
-    bottomLayoutValue = y;
-  else if ([bottomLayoutString isEqualToString:@"z"])
-    bottomLayoutValue = z;
 
   // Width
-  if ([widthLayoutString isEqualToString:@"-"])
-    widthLayoutValue = 44;
-  else if ([widthLayoutString isEqualToString:@"="])
+  if ([widthLayoutString containsString:@"x"])
+    widthLayoutValue += x;
+  if ([widthLayoutString containsString:@"y"])
+    widthLayoutValue += y;
+  if ([widthLayoutString containsString:@"z"])
+    widthLayoutValue += z;
+  if ([widthLayoutString containsString:@"-"])
+    widthLayoutValue += 44;
+  if ([widthLayoutString isEqualToString:@"="])
     widthLayoutValue = alignmentRect.size.width;
-  else if ([widthLayoutString isEqualToString:@"x"])
-    widthLayoutValue = x;
-  else if ([widthLayoutString isEqualToString:@"y"])
-    widthLayoutValue = y;
-  else if ([widthLayoutString isEqualToString:@"z"])
-    widthLayoutValue = z;
-  else if (!widthLayoutString.length)
+  if (!widthLayoutString.length)
     widthLayoutValue = CGFLOAT_MIN;
   if (leftLayoutValue < CGFLOAT_MAX && rightLayoutValue < CGFLOAT_MAX && widthLayoutValue == CGFLOAT_MIN)
     widthLayoutValue = CGFLOAT_MAX;
 
   // Height
-  if ([heightLayoutString isEqualToString:@"-"])
-    heightLayoutValue = 44;
-  else if ([heightLayoutString isEqualToString:@"="])
+  if ([heightLayoutString containsString:@"x"])
+    heightLayoutValue += x;
+  if ([heightLayoutString containsString:@"y"])
+    heightLayoutValue += y;
+  if ([heightLayoutString containsString:@"z"])
+    heightLayoutValue += z;
+  if ([heightLayoutString containsString:@"-"])
+    heightLayoutValue += 44;
+  if ([heightLayoutString isEqualToString:@"="])
     heightLayoutValue = alignmentRect.size.height;
-  else if ([heightLayoutString isEqualToString:@"x"])
-    heightLayoutValue = x;
-  else if ([heightLayoutString isEqualToString:@"y"])
-    heightLayoutValue = y;
-  else if ([heightLayoutString isEqualToString:@"z"])
-    heightLayoutValue = z;
-  else if (!heightLayoutString.length)
+  if (!heightLayoutString.length)
     heightLayoutValue = CGFLOAT_MIN;
   if (topLayoutValue < CGFLOAT_MAX && bottomLayoutValue < CGFLOAT_MAX && heightLayoutValue == CGFLOAT_MIN)
     heightLayoutValue = CGFLOAT_MAX;

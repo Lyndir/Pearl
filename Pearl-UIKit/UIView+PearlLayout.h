@@ -110,28 +110,28 @@ __END_DECLS
 @interface UIView(PearlLayout)
 
 /**
- * Set the layout of the view based on the given layout string.
+ * Set the layout of the view based on the given layout string.  The layout calculates the view's position and size in its parent.
+ * The layout is subsequently maintained by iOS' autoresizing rules.
  *
- * Note: these values specify the layout of the view's alignment rectangle.
- * The alignment rectangle is usually the same as the view's frame,
- * but a view could offset its alignment rectangle for various reasons.
+ * Note: these values specify the layout of the view's alignment rectangle, not its frame.
  * eg. \c -paddingInsets offsets the alignment rectangle negatively (outward), resulting in additional layout margin.
  *
- * Tip: always use -setFrameFrom after all subviews have been added to the view.
+ * Tip: always use \c -setFrameFrom after all subviews have been added to the view.
  * If changes are made that require superviews to be readjusted after -setFrameFrom was called,
- * such as adding new subviews or changes to fitting size, use -sizeToFitSubviews to update the hierarchy.
+ * such as changes to views' fitting sizes, use \c -fitSubviews to re-evaluate a view's hierarchical layout configuration.
  *
- * @"left | top [ s_opt width / height ] bottom | right"
+ * \code @"left | top [ s_opt width / height ] bottom | right" \endcode
  *
- * A "-" = parent's layout margin, a "-" size = 44.
- * An "=" dimension retains its current value.
- * An "S" dimension offsets the view into the safe area (of the view hierarchy or application window if not yet attached).
- * A ">" left/top or "<" right/bottom margin = expand.
- * Empty margin = 0, empty size = fit or expand if both margins are fixed.
- * An "x", "y" or "z" will be replaced with the x, y and z parameter value.
- * s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize
- * Spaces around operators are permitted.
+ * \def A "-" = parent's layout margin, a "-" size = 44.
+ * \def An "=" dimension retains its current value.
+ * \def An "S" dimension offsets the view into the safe area (of the view hierarchy or application window if not yet attached).
+ * \def A ">" left/top or "<" right/bottom margin = expand.
+ * \def Empty margin = 0, empty size = fit or expand if both margins are fixed.
+ * \def An "x", "y" or "z" will be replaced with the x, y and z parameter value.
+ * \def s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize
+ * \note Spaces around operators are permitted. Most operators can be combined, eg. "x-".
  *
+ * \code
  * @"-[  ]-"       // Use the superview's left and right layout margin, top and bottom default to 0.
  *                 // Since width and height are unspecified but edges are fixed, they will fill available space.
  *
@@ -144,6 +144,7 @@ __END_DECLS
  *
  * @">|-[  ]-|-"   // expand left, 8pt from right, 5pt width.  8pt from top and bottom, expand height.
  * @">[ -/30 ]-|"  // expand left, fixed to right.  Fixed to top, 8pt from bottom,  44pt height.
+ * \endcode
  */
 - (void)setFrameFrom:(NSString *)layoutString;
 - (void)setFrameFrom:(NSString *)layoutString x:(CGFloat)x;

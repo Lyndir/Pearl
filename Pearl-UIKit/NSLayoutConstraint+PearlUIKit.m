@@ -22,6 +22,18 @@
 
 @implementation NSLayoutConstraint (PearlUIKit)
 
+- (instancetype)activate {
+
+    self.active = YES;
+    return self;
+}
+
+- (instancetype)deactivate {
+
+    self.active = NO;
+    return self;
+}
+
 - (void)layoutIfNeeded {
 
   // Lay out the constraint holder, and while its frame changes, also lay out the superview to allow dependant views to lay out correctly.
@@ -54,7 +66,7 @@
 
 - (NSLayoutConstraint *)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority {
 
-  if ((self.priority != priority && (self.priority == UILayoutPriorityRequired || priority == UILayoutPriorityRequired)) ||
+  if ((self.isActive && self.priority != priority && (self.priority == UILayoutPriorityRequired || priority == UILayoutPriorityRequired)) ||
       self.multiplier != multiplier) {
     NSLayoutConstraint *rebuiltConstraint =
       [NSLayoutConstraint constraintWithItem:self.firstItem attribute:self.firstAttribute relatedBy:self.relation

@@ -46,6 +46,11 @@
     return self;
 }
 
+- (id)anyObject {
+
+    return [self firstObject];
+}
+
 @end
 
 @implementation NSOrderedSet (NSOrderedSetOrArray)
@@ -53,6 +58,11 @@
 - (NSOrderedSet *)orderedSet {
 
     return self;
+}
+
+- (id)anyObject {
+
+    return [self firstObject];
 }
 
 - (void)makeObjectsPerformSelector:(SEL)aSelector {

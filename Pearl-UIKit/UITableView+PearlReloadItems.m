@@ -25,7 +25,7 @@
     if (!newSections || [dataSource isEqual:newSections]) {
         if ([reloadItems count]) {
             [self beginUpdates];
-            if ([reloadItems[0] isKindOfClass:[NSIndexPath class]])
+            if ([[reloadItems anyObject] isKindOfClass:[NSIndexPath class]])
                 [self reloadRowsAtIndexPaths:[reloadItems array] withRowAnimation:animation];
             else
                 for (NSUInteger section = 0; section < [dataSource count]; ++section) {

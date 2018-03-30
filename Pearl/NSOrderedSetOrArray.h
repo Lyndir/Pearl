@@ -5,17 +5,17 @@
 
 #import <Foundation/Foundation.h>
 
-#define NSSetOrArrayType id<NSObject, NSSetOrArray>
+#define NSSetOrArrayType id<NSSetOrArray>
 #define NSSetOrArrayFrom( o ) ({ \
     NSAssert([o isKindOfClass:[NSArray class]] || [o isKindOfClass:[NSSet class]], @"Object must be an array or set."); \
     (NSSetOrArrayType) o; \
 })
-#define NSOrderedSetOrArrayType id<NSObject, NSOrderedSetOrArray>
+#define NSOrderedSetOrArrayType id<NSOrderedSetOrArray>
 #define NSOrderedSetOrArrayFrom( o ) ({ \
     NSAssert([o isKindOfClass:[NSArray class]] || [o isKindOfClass:[NSOrderedSet class]], @"Object must be an array or ordered set."); \
     (NSOrderedSetOrArrayType) o; \
 })
-#define NSMutableOrderedSetOrArrayType id<NSObject, NSMutableOrderedSetOrArray>
+#define NSMutableOrderedSetOrArrayType id<NSMutableOrderedSetOrArray>
 #define NSMutableOrderedSetOrArrayFrom( o ) ({ \
     NSAssert([o isKindOfClass:[NSMutableArray class]] || [o isKindOfClass:[NSMutableOrderedSet class]], @"Object must be a mutable array or ordered set."); \
     (NSMutableOrderedSetOrArrayType) o; \
@@ -24,7 +24,7 @@
 /**
  * This describes all the API that NSArray, NSSet and NSOrderedSet have in common.
  */
-@protocol NSSetOrArray<NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration>
+@protocol NSSetOrArray<NSObject, NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration>
 
 @property(readonly, strong) NSArray *array;
 @property(readonly, strong) NSOrderedSet *orderedSet;
@@ -34,6 +34,7 @@
 - (id)copy;
 - (id)mutableCopy;
 - (BOOL)containsObject:(id)anObject;
+- (id)anyObject;
 - (NSEnumerator *)objectEnumerator;
 - (void)makeObjectsPerformSelector:(SEL)aSelector NS_SWIFT_UNAVAILABLE( "Use a for loop instead" );
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument NS_SWIFT_UNAVAILABLE("Use a for loop instead" );
@@ -43,7 +44,7 @@
 /**
  * This describes all the API that NSArray and NSOrderedSet have in common.
  */
-@protocol NSOrderedSetOrArray<NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration, NSSetOrArray>
+@protocol NSOrderedSetOrArray<NSObject, NSCopying, NSMutableCopying, NSSecureCoding, NSFastEnumeration, NSSetOrArray>
 
 @property(readonly, strong) NSArray *array;
 @property(readonly, strong) NSOrderedSet *orderedSet;

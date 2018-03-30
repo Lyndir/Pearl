@@ -30,6 +30,7 @@
 #import "UIControl+PearlBlocks.h"
 #import "UIControl+PearlSelect.h"
 #import "UIImage+PearlScaling.h"
+#import "UILayoutGuide+Pearl.h"
 #import "UIResponder+PearlFirstResponder.h"
 #import "UIScrollView+PearlAdjustInsets.h"
 #import "UIScrollView+PearlFlashingIndicators.h"

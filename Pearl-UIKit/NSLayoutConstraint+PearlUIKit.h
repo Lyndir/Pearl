@@ -20,28 +20,38 @@
 @interface NSLayoutConstraint (PearlUIKit)
 
 /**
+ * Make a layout constraint active if it isn't yet.
+ */
+- (instancetype)activate;
+
+/**
+ * Make a layout constraint no longer active if it is.
+ */
+- (instancetype)deactivate;
+
+/**
  * Update this constraint's constant with the given value, rebuilding it if necessary.
  * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
-- (NSLayoutConstraint *)updateConstant:(CGFloat)constant;
+- (instancetype)updateConstant:(CGFloat)constant;
 
 /**
 * Update this constraint's multiplier with the given value, rebuilding it if necessary.
 * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
-- (NSLayoutConstraint *)updateMultiplier:(CGFloat)constant;
+- (instancetype)updateMultiplier:(CGFloat)constant;
 
 /**
 * Update this constraint's priority with the given value, rebuilding it if necessary.
 * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
-- (NSLayoutConstraint *)updatePriority:(UILayoutPriority)priority;
+- (instancetype)updatePriority:(UILayoutPriority)priority;
 
 /**
 * Update this constraint's constant, multiplier and priority with the given values, rebuilding it if necessary.
 * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
-- (NSLayoutConstraint *)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority;
+- (instancetype)updateConstant:(CGFloat)constant mulitplier:(CGFloat)multiplier priority:(UILayoutPriority)priority;
 
 /**
 * Apply any layout changes incurred by this constraint's items.

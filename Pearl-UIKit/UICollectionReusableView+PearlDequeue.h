@@ -17,6 +17,8 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma clang assume_nonnull begin
+
 @interface UICollectionReusableView(PearlDequeue)
 
 + (instancetype)templateSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
@@ -26,12 +28,6 @@
 + (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
                                              indexPath:(NSIndexPath *)indexPath
                                                   init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock;
-
-+ (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
-+ (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib;
-
-+ (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
-+ (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib;
 
 @end
 
@@ -43,7 +39,19 @@
 + (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
                                          init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock;
 
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView;
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib;
+@end
+
+@interface UICollectionView(PearlDequeue)
+
+- (void)registerSupplementaryView:(Class/* UICollectionReusableView */)supplementaryView kind:(NSString *)kind;
+- (void)registerSupplementaryView:(Class/* UICollectionReusableView */)supplementaryView kind:(NSString *)kind usingNib:(UINib *)nib;
+
+- (void)registerDecorationView:(Class/* UICollectionReusableView */)decorationView kind:(NSString *)kind;
+- (void)registerDecorationView:(Class/* UICollectionReusableView */)decorationView kind:(NSString *)kind usingNib:(UINib *)nib;
+
+- (void)registerCell:(Class/* UICollectionViewCell */)cell;
+- (void)registerCell:(Class/* UICollectionViewCell */)cell usingNib:(UINib *)nib;
 
 @end
+
+#pragma clang assume_nonnull end

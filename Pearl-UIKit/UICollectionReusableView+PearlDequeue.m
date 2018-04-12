@@ -60,22 +60,22 @@
 
 + (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
 
-    [collectionView registerClass:self forSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass( self )];
+
 }
 
 + (void)registerSupplementaryWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib {
 
-    [collectionView registerNib:nib forSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass( self )];
+
 }
 
 + (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
 
-    [collectionView.collectionViewLayout registerClass:self forDecorationViewOfKind:kind];
+
 }
 
 + (void)registerDecorationWithCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind usingNib:(UINib *)nib {
 
-    [collectionView.collectionViewLayout registerNib:nib forDecorationViewOfKind:kind];
+
 }
 
 @end
@@ -116,14 +116,45 @@
     return view;
 }
 
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView {
+@end
 
-    [collectionView registerClass:self forCellWithReuseIdentifier:NSStringFromClass( self )];
+@implementation UICollectionView(PearlDequeue)
+
+- (void)registerSupplementaryView:(Class)supplementaryView kind:(NSString *)kind {
+
+    assert( [supplementaryView isSubclassOfClass:[UICollectionReusableView class]] );
+    [self registerClass:supplementaryView forSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass( supplementaryView )];
 }
 
-+ (void)registerCellWithCollectionView:(UICollectionView *)collectionView usingNib:(UINib *)nib {
+- (void)registerSupplementaryView:(Class)supplementaryView kind:(NSString *)kind usingNib:(UINib *)nib {
 
-    [collectionView registerNib:nib forCellWithReuseIdentifier:NSStringFromClass( self )];
+    assert( [supplementaryView isSubclassOfClass:[UICollectionReusableView class]] );
+    [self registerNib:nib forSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass( supplementaryView )];
+}
+
+
+- (void)registerDecorationView:(Class)decorationView kind:(NSString *)kind {
+
+    assert( [decorationView isSubclassOfClass:[UICollectionReusableView class]] );
+    [self.collectionViewLayout registerClass:decorationView forDecorationViewOfKind:kind];
+}
+
+- (void)registerDecorationView:(Class)decorationView kind:(NSString *)kind usingNib:(UINib *)nib {
+
+    assert( [decorationView isSubclassOfClass:[UICollectionReusableView class]] );
+    [self.collectionViewLayout registerNib:nib forDecorationViewOfKind:kind];
+}
+
+- (void)registerCell:(Class)cell {
+
+    assert( [cell isSubclassOfClass:[UICollectionViewCell class]] );
+    [self registerClass:cell forCellWithReuseIdentifier:NSStringFromClass( cell )];
+}
+
+- (void)registerCell:(Class)cell usingNib:(UINib *)nib {
+
+    assert( [cell isSubclassOfClass:[UICollectionViewCell class]] );
+    [self registerNib:nib forCellWithReuseIdentifier:NSStringFromClass( cell )];
 }
 
 @end

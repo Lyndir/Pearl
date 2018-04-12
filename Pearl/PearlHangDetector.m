@@ -70,7 +70,7 @@
     self.latestPing = [NSDate date];
 
     Weakify( self );
-    dispatch_async( self.pingQueue, self.pingBlock = dispatch_block_create( 0, ^{
+    dispatch_async( self.pingQueue, self.pingBlock = dispatch_block_create( DISPATCH_BLOCK_NO_QOS_CLASS, ^{
         Strongify( self );
         if (!self.running)
             return;
@@ -80,7 +80,7 @@
         if (self.running)
             PearlQueueAfter( self.pingInterval, self.pingQueue, self.pingBlock );
     } ) );
-    dispatch_async( self.pongQueue, self.pongBlock = dispatch_block_create( 0, ^{
+    dispatch_async( self.pongQueue, self.pongBlock = dispatch_block_create( DISPATCH_BLOCK_NO_QOS_CLASS, ^{
         Strongify( self );
         if (!self.running)
             return;

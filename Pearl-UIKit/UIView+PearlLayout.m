@@ -886,7 +886,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  if (![self isHidden])
+  if (![self isHidden] && !objc_getAssociatedObject( self.contentView, @selector( fittingAlignmentSizeIn:marginSpace: ) ))
     [self fitSubviews];
 }
 

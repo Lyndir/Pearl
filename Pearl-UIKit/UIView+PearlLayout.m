@@ -845,6 +845,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     [self invalidateIntrinsicContentSize];
   }];
   [self.contentView observeKeyPath:@"hidden" withBlock:^(id from, id to, NSKeyValueChange cause, id _self) {
+    [self invalidateIntrinsicContentSize];
     self.hidden = self.contentView.hidden;
   }];
   [self.contentView observeKeyPath:@"autoresizingMask" withBlock:^(id from, id to, NSKeyValueChange cause, id _self) {
@@ -879,8 +880,13 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   NSValue *availableSizeValue = objc_getAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ) );
   CGSize availableSize = availableSizeValue? [availableSizeValue CGSizeValue]: self.superview.bounds.size;
   CGSize contentSize = [self.contentView fittingAlignmentSizeIn:availableSize marginSpace:marginSpace];
+  CGSize marginSize = CGSizeMake(
+      contentSize.width + marginSpace.left + marginSpace.right,
+      contentSize.height + marginSpace.top + marginSpace.bottom );
 
-  return CGSizeMake( contentSize.width + marginSpace.left + marginSpace.right, contentSize.height + marginSpace.top + marginSpace.bottom );
+  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@", [self infoPathName],
+      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ), PearlDescribeS( marginSize ) );
+  return marginSize;
 }
 
 - (void)setBounds:(CGRect)bounds {
@@ -891,6 +897,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (void)updateConstraints {
+  trc( @"%@:  updateConstraints", [self infoPathName] );
   [self invalidateIntrinsicContentSize];
   [super updateConstraints];
 }

@@ -45,13 +45,13 @@ id returnArg(id arg) {
 
 @synthesize message, occurrence, level;
 
-+ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
++ (instancetype)messageInFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
                     withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage {
 
     return [[self alloc] initInFile:fileName atLine:lineNumber fromFunction:function withLevel:aLevel text:aMessage];
 }
 
-- (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+- (id)initInFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
        withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage {
 
     if (!(self = [super init]))
@@ -91,7 +91,7 @@ id returnArg(id arg) {
 - (NSString *)messageDescription {
 
     return [NSString stringWithFormat:@"%30s:%-3ld %-3s | %@", //
-                                      self.fileName.UTF8String, (long)self.lineNumber, PearlLogLevelStr( self.level ), self.message];
+                                      self.fileName.UTF8String, self.lineNumber, PearlLogLevelStr( self.level ), self.message];
 }
 
 @end
@@ -179,7 +179,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level text:(NSString *)text {
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level text:(NSString *)text {
 
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
     if (!threadLocals || [[threadLocals allKeys] containsObject:@"PearlDisableLog"])
@@ -212,7 +212,7 @@ id returnArg(id arg) {
     return self;
 }
 
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList {
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList {
 
     NSString *message;
     @try {
@@ -235,7 +235,7 @@ id returnArg(id arg) {
     return [self inFile:fileName atLine:lineNumber fromFunction:function withLevel:level text:message];
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     trc:(NSString *)format, ... {
 
     va_list argList;
@@ -250,7 +250,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     dbg:(NSString *)format, ... {
 
     va_list argList;
@@ -265,7 +265,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     inf:(NSString *)format, ... {
 
     va_list argList;
@@ -280,7 +280,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     wrn:(NSString *)format, ... {
 
     va_list argList;
@@ -295,7 +295,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     err:(NSString *)format, ... {
 
     va_list argList;
@@ -310,7 +310,7 @@ id returnArg(id arg) {
     }
 }
 
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     ftl:(NSString *)format, ... {
 
     va_list argList;

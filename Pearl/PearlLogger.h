@@ -73,16 +73,16 @@ __END_DECLS
 @interface PearlLogMessage : NSObject
 
 @property(nonatomic, readwrite, strong) NSString *fileName;
-@property(nonatomic, readwrite) NSInteger lineNumber;
+@property(nonatomic, readwrite) long lineNumber;
 @property(nonatomic, readwrite, strong) NSString *function;
 @property(nonatomic, readwrite, copy) NSString *message;
 @property(nonatomic, readwrite, strong) NSDate *occurrence;
 @property(nonatomic, readwrite) PearlLogLevel level;
 
-+ (instancetype)messageInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
++ (instancetype)messageInFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
                     withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage;
 
-- (id)initInFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+- (id)initInFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
        withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage;
 
 - (NSString *)occurrenceDescription;
@@ -124,28 +124,28 @@ __END_DECLS
 - (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener;
 
 /** Log a new event on a specified level. */
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
               withLevel:(PearlLogLevel)level text:(NSString *)text;
-- (PearlLogger *)inFile:(NSString *)fileName atLine:(NSInteger)lineNumber fromFunction:(NSString *)function
+- (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
               withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList;
 
 /** Log a new TRACE-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     trc:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new DEBUG-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new INFO-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     inf:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new WARNING-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new ERROR-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     err:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 /** Log a new FATAL-level event. */
-- (PearlLogger *)inFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function
+- (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
                     ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
 
 @end

@@ -248,15 +248,15 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 - (void)alertView:(UIAlertView *)anAlertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+}
+
+- (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     if (self.tappedButtonBlock) {
         self.handlingClick = YES;
         self.tappedButtonBlock( self.alertView, buttonIndex );
         self.handlingClick = NO;
     }
-}
-
-- (void)alertView:(UIAlertView *)anAlertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
     [((NSMutableArray *)[PearlAlert activeAlerts]) removeObject:self];
 }

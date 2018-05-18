@@ -86,7 +86,7 @@ typedef void(^VoidBlock)(void);
             ThrowInfo(nil, __reason , ##__VA_ARGS__)
 
 /** Substitute the weak variable name for this target. */
-#define Weak(__target) (_weak_ ## __target)
+#define Weak(__target) _weak_ ## __target
 /** Internally, declare a weak version of __target for later use by Strongify() and Weak(). */
 #define Weakify(__target) __weak __typeof(__target) Weak(__target) = __target
 /** Re-declare __target as strong from an earlier declared weak version of it.

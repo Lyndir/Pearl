@@ -27,14 +27,14 @@
 
 @implementation UITableViewHeaderFooterView(PearlDeque)
 
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView {
++ (instancetype)dequeueFromTableView:(UITableView *)tableView {
     
     return [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass( self )];
 }
 
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock {
++ (instancetype)dequeueFromTableView:(UITableView *)tableView init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock {
 
-    __kindof UITableViewHeaderFooterView *view = [self dequeueHeaderFooterFromTableView:tableView];
+    __kindof UITableViewHeaderFooterView *view = [self dequeueFromTableView:tableView];
     [UIView setAnimationsEnabled:NO];
     initBlock( view );
     [UIView setAnimationsEnabled:YES];
@@ -42,21 +42,11 @@
     return view;
 }
 
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView {
-    
-    [tableView registerClass:self forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
-}
-
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib {
-    
-    [tableView registerNib:nib forHeaderFooterViewReuseIdentifier:NSStringFromClass( self )];
-}
-
 @end
 
 @implementation UITableViewCell(PearlDeque)
 
-+ (instancetype)templateCellFromTableView:(UITableView *)tableView {
++ (instancetype)templateFromTableView:(UITableView *)tableView {
 
     id<UITableViewDelegate> originalDelegate = tableView.delegate;
     id<UITableViewDataSource> originalDataSource = tableView.dataSource;
@@ -71,35 +61,20 @@
     return template;
 }
 
-+ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
++ (instancetype)dequeueFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
 
     return [tableView dequeueReusableCellWithIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
 }
 
-+ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
-                                    init:(void(^)(__kindof UITableViewCell *cell))initBlock {
++ (instancetype)dequeueFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+                                init:(void(^)(__kindof UITableViewCell *cell))initBlock {
 
-    __kindof UITableViewCell *cell = [self dequeueCellFromTableView:tableView indexPath:indexPath];
+    __kindof UITableViewCell *cell = [self dequeueFromTableView:tableView indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];
     initBlock( cell );
     [UIView setAnimationsEnabled:YES];
 
     return cell;
-}
-
-+ (void)registerCellWithTableView:(UITableView *)tableView {
-
-    [tableView registerClass:self forCellReuseIdentifier:NSStringFromClass( self )];
-}
-
-+ (void)registerNibCellWithTableView:(UITableView *)tableView {
-
-    [self registerCellWithTableView:tableView usingNib:[UINib nibWithNibName:NSStringFromClass( self ) bundle:[NSBundle mainBundle]]];
-}
-
-+ (void)registerCellWithTableView:(UITableView *)tableView usingNib:(UINib *)nib {
-
-    [tableView registerNib:nib forCellReuseIdentifier:NSStringFromClass( self )];
 }
 
 @end
@@ -127,6 +102,40 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     return [tableView dequeueReusableCellWithIdentifier:self.identifier forIndexPath:indexPath];
+}
+
+@end
+
+@implementation UITableView(PearlDeque)
+
+- (void)registerCell:(Class)cell {
+
+    assert( [cell isSubclassOfClass:[UITableViewCell class]] );
+    [self registerClass:cell forCellReuseIdentifier:NSStringFromClass( cell )];
+}
+
+- (void)registerNibCell:(Class)cell {
+
+    assert( [cell isSubclassOfClass:[UITableViewCell class]] );
+    [self registerCell:cell usingNib:[UINib nibWithNibName:NSStringFromClass( cell ) bundle:[NSBundle mainBundle]]];
+}
+
+- (void)registerCell:(Class)cell usingNib:(UINib *)nib {
+
+    assert( [cell isSubclassOfClass:[UITableViewCell class]] );
+    [self registerNib:nib forCellReuseIdentifier:NSStringFromClass( cell )];
+}
+
+- (void)registerHeaderFooter:(Class)headerFooterView {
+
+    assert( [headerFooterView isSubclassOfClass:[UITableViewHeaderFooterView class]] );
+    [self registerClass:headerFooterView forHeaderFooterViewReuseIdentifier:NSStringFromClass( headerFooterView )];
+}
+
+- (void)registerHeaderFooter:(Class)headerFooterView usingNib:(UINib *)nib {
+
+    assert( [headerFooterView isSubclassOfClass:[UITableViewHeaderFooterView class]] );
+    [self registerNib:nib forHeaderFooterViewReuseIdentifier:NSStringFromClass( headerFooterView )];
 }
 
 @end

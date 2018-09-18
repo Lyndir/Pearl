@@ -17,27 +17,35 @@
 
 #import <UIKit/UIKit.h>
 
+#pragma clang assume_nonnull begin
+
 @interface UITableViewCell(PearlDeque)
 
-+ (instancetype)templateCellFromTableView:(UITableView *)tableView;
++ (instancetype)templateFromTableView:(UITableView *)tableView;
 
-+ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
-+ (instancetype)dequeueCellFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
-                                    init:(void ( ^ )(__kindof UITableViewCell *cell))initBlock;
-
-+ (void)registerNibCellWithTableView:(UITableView *)tableView;
-+ (void)registerCellWithTableView:(UITableView *)tableView;
-+ (void)registerCellWithTableView:(UITableView *)tableView usingNib:(UINib *)nib;
++ (instancetype)dequeueFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath;
++ (instancetype)dequeueFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+                                init:(void ( ^ )(__kindof UITableViewCell *cell))initBlock;
 
 @end
 
 @interface UITableViewHeaderFooterView(PearlDeque)
 
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView;
-+ (instancetype)dequeueHeaderFooterFromTableView:(UITableView *)tableView
-                                            init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock;
-
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView;
-+ (void)registerHeaderFooterWithTableView:(UITableView *)tableView usingNib:(UINib *)nib;
++ (instancetype)dequeueFromTableView:(UITableView *)tableView;
++ (instancetype)dequeueFromTableView:(UITableView *)tableView
+                                init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock;
 
 @end
+
+@interface UITableView(PearlDeque)
+
+- (void)registerNibCell:(Class/* UITableViewCell */)cell;
+- (void)registerCell:(Class/* UITableViewCell */)cell;
+- (void)registerCell:(Class/* UITableViewCell */)cell usingNib:(UINib *)nib;
+
+- (void)registerHeaderFooter:(Class/* UITableViewHeaderFooterView */)headerFooterView;
+- (void)registerHeaderFooter:(Class/* UITableViewHeaderFooterView */)headerFooterView usingNib:(UINib *)nib;
+
+@end
+
+#pragma clang assume_nonnull end

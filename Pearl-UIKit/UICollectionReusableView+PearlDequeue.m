@@ -27,7 +27,7 @@
 
 @implementation UICollectionReusableView(PearlDequeue)
 
-+ (instancetype)templateSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
++ (instancetype)templateFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind {
 
     id<UICollectionViewDataSource> originalDataSource = collectionView.dataSource;
     collectionView.dataSource = [PearlTemplateCollectionViewDataSource templateSourceForIdentifier:NSStringFromClass( self )];
@@ -39,18 +39,18 @@
     return template;
 }
 
-+ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
-                                             indexPath:(NSIndexPath *)indexPath {
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                indexPath:(NSIndexPath *)indexPath {
 
     return [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:NSStringFromClass( self )
                                                      forIndexPath:indexPath];
 }
 
-+ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
-                                             indexPath:(NSIndexPath *)indexPath
-                                                  init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock {
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                indexPath:(NSIndexPath *)indexPath
+                                     init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock {
 
-    __kindof UICollectionReusableView *view = [self dequeueSupplementaryFromCollectionView:collectionView kind:kind indexPath:indexPath];
+    __kindof UICollectionReusableView *view = [self dequeueFromCollectionView:collectionView kind:kind indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];
     initBlock( view );
     [UIView setAnimationsEnabled:YES];
@@ -82,7 +82,7 @@
 
 @implementation UICollectionViewCell(PearlDequeue)
 
-+ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView {
++ (instancetype)templateFromCollectionView:(UICollectionView *)collectionView {
 
     UICollectionViewLayout *originalLayout = collectionView.collectionViewLayout;
     id<UICollectionViewDelegate> originalDelegate = collectionView.delegate;
@@ -100,15 +100,15 @@
     return template;
 }
 
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath {
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath {
 
     return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass( self ) forIndexPath:indexPath];
 }
 
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
-                                         init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock {
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
+                                     init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock {
 
-    __kindof UICollectionViewCell *view = [self dequeueCellFromCollectionView:collectionView indexPath:indexPath];
+    __kindof UICollectionViewCell *view = [self dequeueFromCollectionView:collectionView indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];
     initBlock( view );
     [UIView setAnimationsEnabled:YES];

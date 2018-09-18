@@ -28,6 +28,9 @@
 @property(nonatomic, readonly) UIEdgeInsets alignmentAnchors;
 
 /** Create a view that wraps another view inside its margins. */
++ (UIView *)viewContaining:(UIView *)subview;
+
+/** Create a view that wraps another view inside its margins. */
 + (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins;
 
 /** Set default alignment rectangle insets.  Can be overridden by subviews that implement -alignmentRectInsets or -alignmentRectForFrame: */

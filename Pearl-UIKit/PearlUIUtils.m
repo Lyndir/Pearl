@@ -298,7 +298,7 @@ static NSMutableSet *dismissableResponders;
     [responder resignFirstResponder];
 }
 
-- (void)unanimate:(void ( ^ )(void))actions {
+- (void)unanimated:(void ( ^ )(void))actions {
 
     BOOL animationsEnabled = [UIView areAnimationsEnabled];
     if (animationsEnabled) {

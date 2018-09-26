@@ -918,12 +918,19 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   return [self sizeThatFits:CGSizeZero];
 }
 
+- (void)setBounds:(CGRect)bounds {
+  if (!CGRectEqualToRect( bounds, self.bounds ))
+    [self invalidateIntrinsicContentSize];
+
+  return [super setBounds:bounds];
+}
+
 - (CGSize)sizeThatFits:(CGSize)size {
   CGSize imageSize = [super sizeThatFits:size];
 
   CGFloat maxWidth = self.preferredMaxLayoutWidth;
   if (maxWidth == CGFLOAT_MIN)
-    return CGSizeZero;
+    return [super intrinsicContentSize];
 
   if (size.width != 0) {
     if (maxWidth != 0)
@@ -946,14 +953,6 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (void)setPreferredMaxLayoutWidth:(CGFloat)preferredMaxLayoutWidth {
   _preferredMaxLayoutWidth = preferredMaxLayoutWidth;
   [self invalidateIntrinsicContentSize];
-}
-
-- (void)setFrame:(CGRect)frame {
-  [super setFrame:frame];
-}
-
-- (void)setBounds:(CGRect)bounds {
-  [super setBounds:bounds];
 }
 
 @end

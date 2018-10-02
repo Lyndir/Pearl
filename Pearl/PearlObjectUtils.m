@@ -229,6 +229,12 @@ NSString *PearlDescribeC(const Class c) {
     return className;
 }
 
+NSString *PearlDescribeCShort(const Class c) {
+
+    return [[[PearlDescribeC( c ) mutableCopy] componentsSeparatedByCharactersInSet:
+            [[NSCharacterSet uppercaseLetterCharacterSet] invertedSet]] componentsJoinedByString:@""];
+}
+
 @implementation PearlWeakReference
 
 + (instancetype)referenceWithObject:(id)object {

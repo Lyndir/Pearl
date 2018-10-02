@@ -426,9 +426,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
-  trc( @"%@:   setFrameFrom:alignment %@", [self infoPathName], PearlDescribeIS( alignmentMargins, size ) );
+  trc( @"%@: setFrameFrom:alignment %@", [self infoPathName], PearlDescribeIS( alignmentMargins, size ) );
 
-  // Save the layout configuration in the autoresizing mask.
+  // Ensure the superview's layout is up-to-date before relying on it.
+//  if (self.window) {
+//      [self.superview updateConstraintsIfNeeded];
+//      [self.superview layoutIfNeeded];
+//  }
+
+    // Save the layout configuration in the autoresizing mask.
   if (0 == (options & PearlLayoutOptionUpdate))
     [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
 
@@ -892,8 +898,11 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
 
-  if (![self isHidden] && !objc_getAssociatedObject( self.contentView, @selector( fittingAlignmentSizeIn:marginSpace: ) ))
+  if (![self isHidden] && !objc_getAssociatedObject( self.contentView, @selector( fittingAlignmentSizeIn:marginSpace: ) )) {
+    trc( @"%@:  setBounds: %@ -> fitSubviews", [self infoPathName], PearlDescribeR( bounds ) );
     [self fitSubviews];
+  } else
+    trc( @"%@:  setBounds: %@ -> ! fitSubviews", [self infoPathName], PearlDescribeR( bounds ) );
 }
 
 - (void)updateConstraints {
@@ -907,7 +916,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (NSString *)infoName {
-  return strf( @"%@ for %@", PearlDescribeC( [self class] ), [self.contentView infoShortName] );
+  return strf( @"%@ for %@", PearlDescribeCShort( [self class] ), [self.contentView infoShortName] );
 }
 
 @end

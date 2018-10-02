@@ -425,7 +425,7 @@ static NSMutableSet *dismissableResponders;
 
     dbg( @"%@%@", RPad( @"", indent ), [self infoDescriptionWithPadding:50 - indent] );
 
-    [self.superview printSuperHierarchyWithIndent:indent + 2];
+    [self.superview printSuperHierarchyWithIndent:indent + 1];
 }
 
 - (void)printChildHierarchy {
@@ -438,7 +438,7 @@ static NSMutableSet *dismissableResponders;
     dbg( @"%@%@", RPad( @"", indent ), [self infoDescriptionWithPadding:50 - indent] );
 
     for (UIView *child in self.subviews)
-        [child printChildHierarchyWithIndent:indent + 2];
+        [child printChildHierarchyWithIndent:indent + 1];
 }
 
 - (NSString *)infoDescription {
@@ -446,12 +446,6 @@ static NSMutableSet *dismissableResponders;
 }
 
 - (NSString *)infoDescriptionWithPadding:(NSUInteger)padding {
-
-    // Get background color
-    CGFloat red, green, blue, alpha;
-    [self.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
-    NSString *backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
-            (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
 
     // Determine the autoresizing configuration
     CGRect frame = self.frame, rect = self.alignmentRect;
@@ -476,11 +470,57 @@ static NSMutableSet *dismissableResponders;
         [self hasAutoresizingMask:UIViewAutoresizingFlexibleRightMargin]? @"<": @"", strf( @"%.4g", autoresizingMargins.right ),
         alignmentMargins.right == autoresizingMargins.right? @"": strf( @"%+.3g", alignmentMargins.right - autoresizingMargins.right ) );
 
-    return strf( @"%@%@|%@[%@]%@| t:%ld, a:%0.1f, b:%@, c:%@%@",
-            self.isFirstResponder? @">": @"-", RPad( [self infoName], padding ),
-            LPad( RPad( LPad( autoresizing1, 12 ), 13 ), 14 ), CPad( autoresizing2, 17 ), RPad( LPad( RPad( autoresizing3, 12 ), 13 ), 14 ),
-            (long)self.tag, self.alpha, backgroundString, NSStringFromCGSize( self.intrinsicContentSize ),
-            self.hidden? @", hidden": @"" );
+    NSMutableString *description = [NSMutableString string];
+    [description appendString:self.isFirstResponder? @">": @"-"];
+    [description appendString:RPad( [self infoName], padding )];
+    [description appendString:@"|"];
+    [description appendString:LPad( RPad( LPad( autoresizing1, 12 ), 13 ), 14 )];
+    [description appendFormat:@"[%@]", CPad( autoresizing2, 17 )];
+    [description appendString:RPad( LPad( RPad( autoresizing3, 12 ), 13 ), 14 )];
+    [description appendString:@"| "];
+
+    if (self.tag)
+        [description appendFormat:@"t:%ld, ", (long)self.tag];
+    if (self.alpha != 1)
+        [description appendFormat:@"a:%0.1f, ", self.alpha];
+
+    // Get background color
+    if (self.backgroundColor) {
+        NSString *backgroundString;
+        if ([self.backgroundColor isEqual:UIColor.whiteColor])
+            backgroundString = @"white";
+        else if ([self.backgroundColor isEqual:UIColor.blackColor])
+            backgroundString = @"black";
+        else if ([self.backgroundColor isEqual:UIColor.clearColor])
+            backgroundString = @"clear";
+        else if ([self.backgroundColor isEqual:UIColor.redColor])
+            backgroundString = @"red";
+        else if ([self.backgroundColor isEqual:UIColor.greenColor])
+            backgroundString = @"green";
+        else if ([self.backgroundColor isEqual:UIColor.blueColor])
+            backgroundString = @"blue";
+        else {
+            CGFloat red, green, blue, alpha;
+            [self.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+            backgroundString = strf( @"%02hhx/%02hhx%02hhx%02hhx",
+                    (char)(alpha * 256), (char)(red * 256), (char)(green * 256), (char)(blue * 256) );
+        }
+        [description appendFormat:@"b:%@, ", backgroundString];
+    }
+
+    if (!CGSizeEqualToSize( self.intrinsicContentSize, (CGSize){ UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric } )) {
+        if (CGSizeEqualToSize( self.intrinsicContentSize, CGSizeZero))
+            [description appendFormat:@"c:ZERO, "];
+        else
+            [description appendFormat:@"c:%@, ", NSStringFromCGSize( self.intrinsicContentSize )];
+    }
+    if (self.isHidden)
+        [description appendString:@"hidden, "];
+
+    if ([[description substringFromIndex:description.length - 2] isEqualToString:@", "])
+        [description deleteCharactersInRange:NSMakeRange( description.length - 2, 2 )];
+
+    return description;
 }
 
 - (NSString *)infoName {
@@ -491,11 +531,13 @@ static NSMutableSet *dismissableResponders;
         if ((property = [nextResponder ivarWithValue:self]))
             break;
 
-    NSMutableString *name = [PearlDescribeC( [self class] ) mutableCopy];
-    if (property)
-        [name appendFormat:@" %@", property];
+    NSString *name;
+    if (!property)
+        name = PearlDescribeC( [self class] );
+    else
+        name = strf(@"%@ %@", PearlDescribeCShort( [self class] ), property);
     if (nextResponder)
-        [name appendFormat:@" @%@", PearlDescribeC( [nextResponder class] )];
+        name = strf(@"%@ @%@", name, PearlDescribeCShort( [nextResponder class] ));
     return name;
 }
 
@@ -523,6 +565,15 @@ static NSMutableSet *dismissableResponders;
         return strf( @"%@/%@", [(UIView *)parent infoPathName]?: @"", [self infoShortName]);
 
     return strf( @"%@/%@", PearlDescribeC( [parent class] )?: @"", [self infoShortName] );
+}
+
+- (NSString *)pointerPathName {
+
+    UIResponder *parent = [self nextResponder];
+    if ([parent isKindOfClass:[UIView class]])
+        return strf( @"%@/%p", [(UIView *)parent pointerPathName]?: @"", (__bridge void *)self );
+
+    return strf( @"%p/%p", (__bridge void *)parent, (__bridge void *)self );
 }
 
 - (NSString *)layoutDescription {

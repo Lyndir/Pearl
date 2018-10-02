@@ -246,6 +246,7 @@ extern NSUInteger PearlHashCode(NSUInteger firstHashCode, ...);
 
 extern Method PearlFindMethod(Class type, SEL name, Class *declaringType);
 extern NSString *PearlDescribeC(const Class c);
+extern NSString *PearlDescribeCShort(const Class c);
 
 __END_DECLS
 

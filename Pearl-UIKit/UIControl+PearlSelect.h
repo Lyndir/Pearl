@@ -23,8 +23,11 @@
 - (BOOL)selectionInSuperviewClearable;
 - (void)setSelectionInSuperviewCandidate:(BOOL)providesSelection isClearable:(BOOL)clearable;
 
-- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options;
+- (void)onHighlight:(void (^)(BOOL highlighted))aBlock;
 - (void)onHighlight:(void (^)(BOOL highlighted))aBlock options:(NSKeyValueObservingOptions)options;
+- (void)onSelect:(void (^)(BOOL selected))aBlock;
 - (void)onSelect:(void (^)(BOOL selected))aBlock options:(NSKeyValueObservingOptions)options;
+- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock;
+- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options;
 
 @end

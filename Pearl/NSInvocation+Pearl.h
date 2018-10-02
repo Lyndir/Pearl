@@ -17,6 +17,11 @@
  */
 #define PearlSwizzle(type, sel, definition, imp) \
     PearlSwizzleTR(type, sel, definition, imp, nonretainedObjectValue)
+
+/** PearlSwizzle variant for non-id return value types.
+ *
+ * @param rv The method used for getting the return type's primitive value out of the object value.
+ */
 #define PearlSwizzleTR(type, sel, definition, imp, rv) ({                   \
     __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \
     PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( definition {  \

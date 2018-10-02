@@ -86,19 +86,9 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
             OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 }
 
-- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {
+- (void)onHighlight:(void (^)(BOOL highlighted))aBlock {
 
-    void (^block)(BOOL, BOOL) = [aBlock copy];
-    [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *)object;
-
-        block( senderControl.highlighted, senderControl.selected );
-    }           forKeyPath:@"highlighted" options:options context:nil];
-    [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
-        UIControl *const senderControl = (UIControl *)object;
-
-        block( senderControl.highlighted, senderControl.selected );
-    }           forKeyPath:@"selected" options:options context:nil];
+    [self onHighlight:aBlock options:NSKeyValueObservingOptionInitial];
 }
 
 - (void)onHighlight:(void (^)(BOOL highlighted))aBlock options:(NSKeyValueObservingOptions)options {
@@ -111,6 +101,11 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
     }           forKeyPath:@"highlighted" options:options context:nil];
 }
 
+- (void)onSelect:(void (^)(BOOL selected))aBlock {
+
+    [self onSelect:aBlock options:NSKeyValueObservingOptionInitial];
+}
+
 - (void)onSelect:(void (^)(BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {
 
     void (^block)(BOOL) = [aBlock copy];
@@ -118,6 +113,26 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
         UIControl *const senderControl = (UIControl *)object;
 
         block( senderControl.selected );
+    }           forKeyPath:@"selected" options:options context:nil];
+}
+
+- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock {
+
+    [self onHighlightOrSelect:aBlock options:NSKeyValueObservingOptionInitial];
+}
+
+- (void)onHighlightOrSelect:(void (^)(BOOL highlighted, BOOL selected))aBlock options:(NSKeyValueObservingOptions)options {
+
+    void (^block)(BOOL, BOOL) = [aBlock copy];
+    [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
+        UIControl *const senderControl = (UIControl *)object;
+
+        block( senderControl.highlighted, senderControl.selected );
+    }           forKeyPath:@"highlighted" options:options context:nil];
+    [self addObserverBlock:^(NSString *keyPath, id object, NSDictionary *change, void *context) {
+        UIControl *const senderControl = (UIControl *)object;
+
+        block( senderControl.highlighted, senderControl.selected );
     }           forKeyPath:@"selected" options:options context:nil];
 }
 

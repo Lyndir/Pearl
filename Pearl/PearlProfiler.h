@@ -47,6 +47,7 @@
  * Create a profiler for a certain task.  The task name will be included in every job completion message logged.  Implicitly start a job.
  */
 + (instancetype)profilerInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function forTask:(NSString *)taskName, ... NS_FORMAT_FUNCTION( 4, 5 );
+- (instancetype)initInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function forTask:(NSString *)taskName;
 
 @property(nonatomic) CFTimeInterval threshold;
 @property(nonatomic, copy) NSString *fileName;
@@ -61,11 +62,13 @@
  * Restart the timer, logging a debug message which includes the completed job's elapsed time and the message.
  */
 - (void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
+- (void)rewindInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function jobName:(NSString *)jobName;
 
 /**
  * Stop the timer, logging a debug message which includes the completed job's elapsed time, the total profiler time and the message.
  */
 - (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function job:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
+- (void)finishInFile:(const char *)fileName atLine:(NSInteger)lineNumber fromFunction:(const char *)function jobName:(NSString *)jobName;
 
 /**
  * Stop the profiler's job, logging the total profiler time.

@@ -13,6 +13,11 @@ static CGSize PearlNoIntrinsicMetric;
     PearlNoIntrinsicMetric = CGSizeMake( UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric );
 }
 
++ (UIView *)viewContaining:(UIView *)subview {
+
+    return [self viewContaining:subview withLayoutMargins:UIEdgeInsetsMake( 8, 8, 8, 8 )];
+}
+
 + (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins {
     UIView *container = [UIView new];
     [container addSubview:subview];

@@ -21,23 +21,23 @@
 
 @interface UICollectionReusableView(PearlDequeue)
 
-+ (instancetype)templateSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
++ (instancetype)templateFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind;
 
-+ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
-                                             indexPath:(NSIndexPath *)indexPath;
-+ (instancetype)dequeueSupplementaryFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
-                                             indexPath:(NSIndexPath *)indexPath
-                                                  init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock;
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                indexPath:(NSIndexPath *)indexPath;
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView kind:(NSString *)kind
+                                indexPath:(NSIndexPath *)indexPath
+                                     init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock;
 
 @end
 
 @interface UICollectionViewCell(PearlDequeue)
 
-+ (instancetype)templateCellFromCollectionView:(UICollectionView *)collectionView;
++ (instancetype)templateFromCollectionView:(UICollectionView *)collectionView;
 
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
-+ (instancetype)dequeueCellFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
-                                         init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock;
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath;
++ (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
+                                     init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock;
 
 @end
 

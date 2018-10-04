@@ -125,7 +125,7 @@ __END_DECLS
  * \def A "-" = parent's layout margin, a "-" size = 44.
  * \def An "=" dimension retains its current value.
  * \def An "S" dimension offsets the view into the safe area (of the view hierarchy or application window if not yet attached).
- * \def A ">" left/top or "<" right/bottom margin = expand.
+ * \def A "&gt;" left/top or "&lt;" right/bottom margin = expand.
  * \def Empty margin = 0, empty size = fit or expand if both margins are fixed.
  * \def An "x", "y" or "z" will be replaced with the x, y and z parameter value.
  * \def s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize

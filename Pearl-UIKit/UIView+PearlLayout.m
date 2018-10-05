@@ -905,6 +905,27 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     trc( @"%@:  setBounds: %@ -> ! fitSubviews", [self infoPathName], PearlDescribeR( bounds ) );
 }
 
+- (void)didMoveToSuperview {
+  // TODO: Should we also track & react to subview bound changes?
+  [super didMoveToSuperview];
+  [self setNeedsUpdateConstraints];
+}
+
+- (void)didMoveToWindow {
+  [super didMoveToWindow];
+  [self setNeedsUpdateConstraints];
+}
+
+- (void)traitCollectionDidChange:(nullable UITraitCollection *)previousTraitCollection {
+  [super traitCollectionDidChange:previousTraitCollection];
+  [self setNeedsUpdateConstraints];
+}
+
+- (void)setNeedsLayout {
+  [super setNeedsLayout];
+  [self setNeedsUpdateConstraints];
+}
+
 - (void)updateConstraints {
   trc( @"%@:  updateConstraints", [self infoPathName] );
   [self invalidateIntrinsicContentSize];
@@ -939,7 +960,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 
   CGFloat maxWidth = self.preferredMaxLayoutWidth;
   if (maxWidth == CGFLOAT_MIN)
-    return [super intrinsicContentSize];
+    return CGSizeZero;
 
   if (size.width != 0) {
     if (maxWidth != 0)

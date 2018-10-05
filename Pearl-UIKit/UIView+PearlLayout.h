@@ -194,7 +194,7 @@ __END_DECLS
  */
 @interface AutoresizingImageView : UIImageView
 
-/** Set to CGFLOAT_MIN to disable image ratio preservation. */
+/** Set to CGFLOAT_MIN to disable image based sizing (ie. adopt external constraints, scaling the image inside). */
 @property(nonatomic) CGFloat preferredMaxLayoutWidth;
 
 @end

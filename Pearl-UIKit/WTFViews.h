@@ -10,6 +10,12 @@
 @interface WTFView : UIView
 @end
 
+@interface WTFLabel : UILabel
+@end
+
+@interface WTFAutoresizingContainerView : AutoresizingContainerView
+@end
+
 NS_CLASS_AVAILABLE_IOS(9_0)
 @interface WTFStackView : UIStackView
 @end

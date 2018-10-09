@@ -892,10 +892,12 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   CGSize marginSize = CGSizeMake(
       contentSize.width + marginSpace.left + marginSpace.right,
       contentSize.height + marginSpace.top + marginSpace.bottom );
+  CGSize alignmentSize = [self alignmentRectForFrame:CGRectWithSize( self.frame, marginSize )].size;
 
-  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@", [self infoPathName],
-      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ), PearlDescribeS( marginSize ) );
-  return marginSize;
+  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@ => %@", [self infoPathName],
+      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ),
+      PearlDescribeS( marginSize ), PearlDescribeS( alignmentSize ) );
+  return alignmentSize;
 }
 
 - (void)setBounds:(CGRect)bounds {

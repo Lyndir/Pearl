@@ -125,7 +125,17 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id _Nonnull block) {
           if (!size) // 0, void
               ((void (^)(void))block)();
 
-          else if (size <= sizeof( id )) { // 1 - 8
+          else if (size <= sizeof( char )) { // 1
+              char value = ((char (^)(void))block)();
+              returnValue = [NSValue value:&value withObjCType:returnType];
+          }
+
+          else if (size <= sizeof( int )) { // 2 - 4
+              int value = ((int (^)(void))block)();
+              returnValue = [NSValue value:&value withObjCType:returnType];
+          }
+
+          else if (size <= sizeof( id )) { // 5 - 8
               id value = ((id (^)(void))block)();
               returnValue = [NSValue value:&value withObjCType:returnType];
           }

@@ -14,6 +14,8 @@
  * @param sel The selector of the method whose implementation should be interjected.
  * @param definition A block-style function definition of the method, ie. \code ^returnType(id self, methodArguments) \endcode
  * @param imp A block-style method implementation, eg. \code { return arg + 5; } \endcode
+ *
+ * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
  */
 #define PearlSwizzle(type, sel, definition, imp) \
     PearlSwizzleTR(type, sel, definition, imp, nonretainedObjectValue)
@@ -21,6 +23,8 @@
 /** PearlSwizzle variant for non-id return value types.
  *
  * @param rv The method used for getting the return type's primitive value out of the object value.
+ *
+ * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
  */
 #define PearlSwizzleTR(type, sel, definition, imp, rv) ({                   \
     __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \

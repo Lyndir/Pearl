@@ -32,7 +32,7 @@
  * @param newSections A new collection of the same structure as the dataSource.  nil to perform no dataSource changes.
  * @param reloadItems A collection of dataSource items, index paths or sections to reload.  Pass the dataSource itself to reload all items.
  */
-- (void)updateDataSource:(NSMutableOrderedSetOrArrayType)dataSource toSections:(NSOrderedSetOrArrayType)newSections
-             reloadItems:(NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation;
+- (void)updateDataSource:(__nonnull NSMutableOrderedSetOrArrayType)dataSource toSections:(__nullable NSOrderedSetOrArrayType)newSections
+             reloadItems:(__nullable NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation;
 
 @end

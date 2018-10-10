@@ -69,6 +69,7 @@ extern CGRect CGRectInCGSizeWithSizeAndMargins(const CGSize container, CGSize si
 
 // Creating a UIEdgeInsets
 extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize container);
+extern UIEdgeInsets UIEdgeInsetsFromCGRectInCGRect(const CGRect rect, const CGRect container);
 
 extern CGSize CGSizeUnion(const CGSize size1, const CGSize size2);
 
@@ -129,7 +130,7 @@ __END_DECLS
  * \def Empty margin = 0, empty size = fit or expand if both margins are fixed.
  * \def An "x", "y" or "z" will be replaced with the x, y and z parameter value.
  * \def s_opt specifies size layout options, | = PearlLayoutOptionConstrainSize
- * \note Spaces around operators are permitted. Most operators can be combined, eg. "x-".
+ * \note Spaces around operators are permitted.
  *
  * \code
  * @"-[  ]-"       // Use the superview's left and right layout margin, top and bottom default to 0.

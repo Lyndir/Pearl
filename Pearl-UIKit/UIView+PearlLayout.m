@@ -179,6 +179,12 @@ UIEdgeInsets UIEdgeInsetsFromCGRectInCGSize(const CGRect rect, const CGSize cont
       container.height - CGRectGetMaxY( rect ), container.width - CGRectGetMaxX( rect ) );
 }
 
+UIEdgeInsets UIEdgeInsetsFromCGRectInCGRect(CGRect rect, const CGRect container) {
+  rect.origin.x -= container.origin.x;
+  rect.origin.y -= container.origin.y;
+  return UIEdgeInsetsFromCGRectInCGSize( rect, container.size );
+}
+
 CGSize CGSizeUnion(const CGSize size1, const CGSize size2) {
   return CGSizeMake( MAX( size1.width, size2.width ), MAX( size1.height, size2.height ) );
 }
@@ -304,15 +310,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     options |= PearlLayoutOptionConstrained;
 
   // Left
-  if ([leftLayoutString containsString:@"x"])
+  if ([leftLayoutString isEqualToString:@"x"])
     leftLayoutValue += x;
-  if ([leftLayoutString containsString:@"y"])
+  if ([leftLayoutString isEqualToString:@"y"])
     leftLayoutValue += y;
-  if ([leftLayoutString containsString:@"z"])
+  if ([leftLayoutString isEqualToString:@"z"])
     leftLayoutValue += z;
-  if ([leftLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+  if ([leftLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     leftLayoutValue += self.superview.layoutMargins.left;
-  if ([leftLayoutString containsString:@"S"]) {
+  if ([leftLayoutString isEqualToString:@"S"]) {
     if (@available( iOS 11.0, * ))
       leftLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.left;
     else
@@ -324,15 +330,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     leftLayoutValue = alignmentMargins.left;
 
     // Right
-  if ([rightLayoutString containsString:@"x"])
+  if ([rightLayoutString isEqualToString:@"x"])
     rightLayoutValue += x;
-  if ([rightLayoutString containsString:@"y"])
+  if ([rightLayoutString isEqualToString:@"y"])
     rightLayoutValue += y;
-  if ([rightLayoutString containsString:@"z"])
+  if ([rightLayoutString isEqualToString:@"z"])
     rightLayoutValue += z;
-  if ([rightLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+  if ([rightLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     rightLayoutValue += self.superview.layoutMargins.right;
-  if ([rightLayoutString containsString:@"S"]) {
+  if ([rightLayoutString isEqualToString:@"S"]) {
     if (@available( iOS 11.0, * ))
       rightLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.right;
     else
@@ -344,15 +350,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     rightLayoutValue = alignmentMargins.right;
 
   // Top
-  if ([topLayoutString containsString:@"x"])
+  if ([topLayoutString isEqualToString:@"x"])
     topLayoutValue += x;
-  if ([topLayoutString containsString:@"y"])
+  if ([topLayoutString isEqualToString:@"y"])
     topLayoutValue += y;
-  if ([topLayoutString containsString:@"z"])
+  if ([topLayoutString isEqualToString:@"z"])
     topLayoutValue += z;
-  if ([topLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+  if ([topLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     topLayoutValue += self.superview.layoutMargins.top;
-  if ([topLayoutString containsString:@"S"]) {
+  if ([topLayoutString isEqualToString:@"S"]) {
     if (@available( iOS 11.0, * ))
       topLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.top;
     else
@@ -364,15 +370,15 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     topLayoutValue = alignmentMargins.top;
 
   // Bottom
-  if ([bottomLayoutString containsString:@"x"])
+  if ([bottomLayoutString isEqualToString:@"x"])
     bottomLayoutValue += x;
-  if ([bottomLayoutString containsString:@"y"])
+  if ([bottomLayoutString isEqualToString:@"y"])
     bottomLayoutValue += y;
-  if ([bottomLayoutString containsString:@"z"])
+  if ([bottomLayoutString isEqualToString:@"z"])
     bottomLayoutValue += z;
-  if ([bottomLayoutString containsString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
+  if ([bottomLayoutString isEqualToString:@"-"] && [self.superview respondsToSelector:@selector( layoutMargins )])
     bottomLayoutValue += self.superview.layoutMargins.bottom;
-  if ([bottomLayoutString containsString:@"S"]) {
+  if ([bottomLayoutString isEqualToString:@"S"]) {
     if (@available( iOS 11.0, * ))
       bottomLayoutValue += UIApp.delegate.window.rootViewController.view.safeAreaInsets.bottom;
     else
@@ -384,13 +390,13 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     bottomLayoutValue = alignmentMargins.bottom;
 
   // Width
-  if ([widthLayoutString containsString:@"x"])
+  if ([widthLayoutString isEqualToString:@"x"])
     widthLayoutValue += x;
-  if ([widthLayoutString containsString:@"y"])
+  if ([widthLayoutString isEqualToString:@"y"])
     widthLayoutValue += y;
-  if ([widthLayoutString containsString:@"z"])
+  if ([widthLayoutString isEqualToString:@"z"])
     widthLayoutValue += z;
-  if ([widthLayoutString containsString:@"-"])
+  if ([widthLayoutString isEqualToString:@"-"])
     widthLayoutValue += 44;
   if ([widthLayoutString isEqualToString:@"="])
     widthLayoutValue = alignmentRect.size.width;
@@ -400,13 +406,13 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     widthLayoutValue = CGFLOAT_MAX;
 
   // Height
-  if ([heightLayoutString containsString:@"x"])
+  if ([heightLayoutString isEqualToString:@"x"])
     heightLayoutValue += x;
-  if ([heightLayoutString containsString:@"y"])
+  if ([heightLayoutString isEqualToString:@"y"])
     heightLayoutValue += y;
-  if ([heightLayoutString containsString:@"z"])
+  if ([heightLayoutString isEqualToString:@"z"])
     heightLayoutValue += z;
-  if ([heightLayoutString containsString:@"-"])
+  if ([heightLayoutString isEqualToString:@"-"])
     heightLayoutValue += 44;
   if ([heightLayoutString isEqualToString:@"="])
     heightLayoutValue = alignmentRect.size.height;
@@ -428,13 +434,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (void)setFrameFromSize:(CGSize)size andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
   trc( @"%@: setFrameFrom:alignment %@", [self infoPathName], PearlDescribeIS( alignmentMargins, size ) );
 
-  // Ensure the superview's layout is up-to-date before relying on it.
-//  if (self.window) {
-//      [self.superview updateConstraintsIfNeeded];
-//      [self.superview layoutIfNeeded];
-//  }
-
-    // Save the layout configuration in the autoresizing mask.
+  // Save the layout configuration in the autoresizing mask.
   if (0 == (options & PearlLayoutOptionUpdate))
     [self setAutoresizingMaskFromSize:size andAlignmentMargins:alignmentMargins options:options];
 
@@ -442,9 +442,9 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
   UIEdgeInsets marginSpace = [self spaceForMargins:alignmentMargins];
   NSValue *savedFittingSize = objc_getAssociatedObject( self, @selector(fittingAlignmentSizeIn:marginSpace:) );
-  CGSize availableSize = self.superview.alignmentRect.size;
+  CGRect containerRect = [self.superview alignmentRectForFrame:self.superview.bounds];
   CGSize fittingSize = savedFittingSize? [savedFittingSize CGSizeValue]:
-                       [self fittingAlignmentSizeIn:availableSize marginSpace:marginSpace];
+                       [self fittingAlignmentSizeIn:containerRect.size marginSpace:marginSpace];
 
   /// requestedSize = The size we want for this view's alignment rect.  ie. The given size, but no less than the fitting size.
   CGSize requestedSize = CGSizeMake(
@@ -461,21 +461,21 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       requiredSize.width + marginSpace.left + marginSpace.right,
       requiredSize.height + marginSpace.top + marginSpace.bottom
   };
-  CGSize containerSize = CGSizeUnion( availableSize, requiredSpace );
-  if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( availableSize, containerSize )) {
+  CGSize desiredSpace = CGSizeUnion( containerRect.size, requiredSpace );
+  if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( containerRect.size, desiredSpace )) {
     if (0 == (options & PearlLayoutOptionConstrained)) {
       if (!self.superview.autoresizingMask) {
-        trc( @"%@:  resizing container %@ => %@", [self infoPathName],
-                PearlDescribeS( availableSize ), PearlDescribeS( containerSize ) );
-        CGRectSetSize( self.superview.bounds,
-            [self.superview frameForAlignmentRect:CGRectWithSize( self.superview.alignmentRect, containerSize )].size );
+        trc( @"%@:  resizing container alignment size %@ => %@", [self infoPathName],
+                PearlDescribeS( containerRect.size ), PearlDescribeS( desiredSpace ) );
+        CGRectSetSize( containerRect, desiredSpace );
+        CGRectSetSize( self.superview.bounds, [self.superview frameForAlignmentRect:containerRect].size );
       }
       else {
-        trc( @"%@:  refitting container %@ => %@", [self infoPathName],
-                PearlDescribeS( availableSize ), PearlDescribeS( containerSize ) );
+        trc( @"%@:  refitting container alignment size %@ => %@", [self infoPathName],
+                PearlDescribeS( containerRect.size ), PearlDescribeS( desiredSpace ) );
         objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
-                [NSValue valueWithCGSize:containerSize], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        CGRect containerRect = [self.superview alignmentRectForFrame:CGRectWithSize( self.superview.bounds, containerSize )];
+                [NSValue valueWithCGSize:desiredSpace], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+        CGRectSetSize( containerRect, desiredSpace );
         [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
         objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
                 nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
@@ -506,17 +506,18 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       // FIXME: This then causes a hard cut-off for the contentView (this view).  This is actually a good thing, but
       // FIXME: ideally we should be able to detect this situation in -fittingSizeIn: and avoid the bad intrinsicSize.
       wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
-          [self.superview infoName], [self infoName], NSStringFromCGSize( containerSize ), NSStringFromCGSize( availableSize ) );
+          [self.superview infoName], [self infoName], NSStringFromCGSize( desiredSpace ), NSStringFromCGSize( containerRect.size ) );
     }
 
-    containerSize = self.superview.alignmentRect.size;
+    containerRect = [self.superview alignmentRectForFrame:self.superview.bounds];
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
   CGRect frame = [self frameForAlignmentRect:
-      CGRectInCGSizeWithSizeAndMargins( containerSize, requestedSize, alignmentMargins )];
+      CGRectOffset( CGRectInCGSizeWithSizeAndMargins( containerRect.size, requestedSize, alignmentMargins ),
+          containerRect.origin.x, containerRect.origin.y )];
   trc( @"%@:  alignment %@ in container %@ => frame %@", [self infoPathName],
-      PearlDescribeIS( alignmentMargins, requestedSize ), PearlDescribeS( containerSize ), PearlDescribeR( frame ) );
+      PearlDescribeIS( alignmentMargins, requestedSize ), PearlDescribeR( containerRect ), PearlDescribeR( frame ) );
   if (CGAffineTransformIsIdentity( self.transform ))
     CGRectSet( self.frame, frame );
   else {
@@ -892,12 +893,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   CGSize marginSize = CGSizeMake(
       contentSize.width + marginSpace.left + marginSpace.right,
       contentSize.height + marginSpace.top + marginSpace.bottom );
-  CGSize alignmentSize = [self alignmentRectForFrame:CGRectWithSize( self.frame, marginSize )].size;
 
-  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@ => %@", [self infoPathName],
-      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ),
-      PearlDescribeS( marginSize ), PearlDescribeS( alignmentSize ) );
-  return alignmentSize;
+  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@", [self infoPathName],
+      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ), PearlDescribeS( marginSize ) );
+  return marginSize;
 }
 
 - (void)setBounds:(CGRect)bounds {

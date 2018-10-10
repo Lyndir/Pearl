@@ -93,7 +93,9 @@ static CGSize PearlNoIntrinsicMetric;
     if (!self.superview)
         return UIEdgeInsetsZero;
 
-    return UIEdgeInsetsFromCGRectInCGSize( self.alignmentRect, self.superview.bounds.size );
+    return UIEdgeInsetsFromCGRectInCGRect(
+        [self alignmentRectForFrame:self.frame],
+        [self.superview alignmentRectForFrame:self.superview.bounds] );
 }
 
 - (UIEdgeInsets)alignmentAnchors {

@@ -26,7 +26,7 @@
 
 - (void)setIgnoreTouches:(BOOL)ignoreTouches {
     objc_setAssociatedObject( self, @selector( ignoreTouches ), @(ignoreTouches), OBJC_ASSOCIATION_RETAIN );
-    PearlSwizzle( [self class], @selector( hitTest:withEvent: ), ^UIView *(UIView *self, CGPoint point, UIEvent *event), {
+    PearlSwizzle( [self class], @selector( hitTest:withEvent: ), ^UIView *, (UIView *self, CGPoint point, UIEvent *event), {
         UIView *hitView = [self hitTest:point withEvent:event];
         if (self.ignoreTouches && hitView == self)
             return (UIView *)nil;
@@ -41,7 +41,7 @@
 
 - (void)setAlignmentTouches:(BOOL)alignmentTouches {
     objc_setAssociatedObject( self, @selector( alignmentTouches ), @(alignmentTouches), OBJC_ASSOCIATION_RETAIN );
-    PearlSwizzleTR( [self class], @selector( pointInside:withEvent: ), ^BOOL(UIView *self, CGPoint point, UIEvent *event), {
+    PearlSwizzleTR( [self class], @selector( pointInside:withEvent: ), ^BOOL, (UIView *self, CGPoint point, UIEvent *event), {
       if (self.alignmentTouches)
         return CGRectContainsPoint( [self alignmentRectForFrame:self.bounds], point );
 

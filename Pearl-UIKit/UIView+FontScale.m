@@ -10,11 +10,11 @@
 + (void)load {
 
     for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
-        PearlSwizzle( type, @selector( updateConstraints ), ^(id self), {
+        PearlSwizzle( type, @selector( updateConstraints ), ^, (id self), {
             [self _pearl_fontMod_updateFont];
             [self updateConstraints];
         } );
-        PearlSwizzle( type, @selector( setFont: ), ^(UIView *self, UIFont *originalFont), {
+        PearlSwizzle( type, @selector( setFont: ), ^, (UIView *self, UIFont *originalFont), {
             UIFont *newFont = originalFont;
 
             if (!NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) &&

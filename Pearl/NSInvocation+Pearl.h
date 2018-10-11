@@ -26,10 +26,10 @@
  *
  * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
  */
-#define PearlSwizzleTR(type, sel, definition, imp, rv) ({                   \
+#define PearlSwizzleTR(type, sel, rv, args, imp, tr) ({                   \
     __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \
-    PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( definition {  \
-        return [PearlSwizzleIMP( _type, _sel, ^ imp ) rv];                  \
+    PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( rv args {  \
+        return [PearlSwizzleIMP( _type, _sel, rv imp ) tr];                  \
     } ) );                                                                  \
 })
 extern BOOL PearlSwizzleDo(Class type, SEL sel, IMP replacement);

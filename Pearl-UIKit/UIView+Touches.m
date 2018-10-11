@@ -41,7 +41,7 @@
 
 - (void)setAlignmentTouches:(BOOL)alignmentTouches {
     objc_setAssociatedObject( self, @selector( alignmentTouches ), @(alignmentTouches), OBJC_ASSOCIATION_RETAIN );
-    PearlSwizzleTR( [self class], @selector( pointInside:withEvent: ), ^BOOL(UIView *self, CGPoint point, UIEvent *event), {
+    PearlSwizzleTR( [self class], @selector( pointInside:withEvent: ), ^BOOL, (UIView *self, CGPoint point, UIEvent *event), {
       if (self.alignmentTouches)
         return CGRectContainsPoint( [self alignmentRectForFrame:self.bounds], point );
 

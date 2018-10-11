@@ -168,3 +168,103 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id _Nonnull block) {
               class_getInstanceMethod( type, proxySel ) );
       }
 }
+
+@implementation NSValue(Pearl)
+
+- (char)charValue {
+    char value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned char)unsignedCharValue {
+    unsigned char value;
+    [self getValue:&value];
+    return value;
+}
+
+- (short)shortValue {
+    short value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned short)unsignedShortValue {
+    unsigned short value;
+    [self getValue:&value];
+    return value;
+}
+
+- (int)intValue {
+    int value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned int)unsignedIntValue {
+    unsigned int value;
+    [self getValue:&value];
+    return value;
+}
+
+- (long)longValue {
+    long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned long)unsignedLongValue {
+    unsigned long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (long long)longLongValue {
+    long long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned long long)unsignedLongLongValue {
+    unsigned long long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (float)floatValue {
+    float value;
+    [self getValue:&value];
+    return value;
+}
+
+- (double)doubleValue {
+    double value;
+    [self getValue:&value];
+    return value;
+}
+
+- (BOOL)boolValue {
+    BOOL value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSInteger)integerValue {
+    NSInteger value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSUInteger)unsignedIntegerValue {
+    NSUInteger value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSString *)stringValue {
+    NSString *value;
+    [self getValue:&value];
+    return value;
+}
+
+@end

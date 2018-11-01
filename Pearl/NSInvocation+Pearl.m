@@ -93,80 +93,112 @@
 @end
 
 BOOL PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
-    Method method = class_getInstanceMethod( type, sel );
-    if (!method)
-        abort(/* `type` does not have a `fromSel` method */);
+  @synchronized (type) {
+        Method originalMethod = class_getInstanceMethod( type, sel );
+        if (!originalMethod)
+            abort(/* `type` does not have a `sel` method */);
+        const char *methodTypes = method_getTypeEncoding( originalMethod );
 
-    @synchronized (type) {
-        const char *methodTypes = method_getTypeEncoding( method );
+        // Create the proxy method on `type` with the `replacement` implementation.
         SEL proxySel = NSSelectorFromString( strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) ) );
         if (!class_addMethod( type, proxySel, replacement, methodTypes ))
+            // This method's swizzle was already installed.
             return NO;
+        Method proxyMethod = class_getInstanceMethod( type, proxySel );
+
+        // Copy the original implementation to `type` if before it existed on a supertype: we don't want to swizzle at the supertype level.
+        if (class_addMethod( type, sel, method_getImplementation( originalMethod ), methodTypes ))
+            originalMethod = class_getInstanceMethod( type, sel );
+
+        //trc( @"Swizzling %@ for %@:", NSStringFromSelector( sel ), type );
+        //trc( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
+        //trc( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
 
         // Do the swizzle!
-        class_addMethod( type, sel, method_getImplementation( method ), methodTypes );
-        method_exchangeImplementations( class_getInstanceMethod( type, sel ), class_getInstanceMethod( type, proxySel ) );
+        method_exchangeImplementations( originalMethod, proxyMethod );
         return YES;
     }
 }
 
+//static int depth = 0;
 NSValue *PearlSwizzleIMP(Class type, SEL sel, id _Nonnull block) {
     char *returnType = method_copyReturnType( class_getInstanceMethod( type, sel ) );
     SEL proxySel = NSSelectorFromString( strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) ) );
+    Method proxyMethod = class_getInstanceMethod( type, proxySel );
+    Method originalMethod = class_getInstanceMethod( type, sel );
     @try {
+        //trc( @"Handling swizzled %@:", NSStringFromSelector( sel ) );
+        //trc( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
+        //trc( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
+        //if (++depth > 10)
+        //    trc( @"stuck in recurse loop?" );
+
         // Temporarily restore the unswizzled state.
-        method_exchangeImplementations(
-              class_getInstanceMethod( type, proxySel ),
-              class_getInstanceMethod( type, sel ) );
+        method_exchangeImplementations( proxyMethod, originalMethod );
+        //trc( @"Restored original implementation:" );
+        //trc( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
+        //trc( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
 
         NSValue *returnValue = nil;
         NSUInteger size, alignment;
         NSGetSizeAndAlignment( returnType, &size, &alignment );
-          if (!size) // 0, void
-              ((void (^)(void))block)();
+        //trc( @"Invoking swizzled implementation." );
+        if (!size) // 0, void
+            ((void (^)(void))block)();
 
-          else if (size <= sizeof( char )) { // 1
-              char value = ((char (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( char )) { // 1
+            char value = ((char (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( int )) { // 2 - 4
-              int value = ((int (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( int )) { // 2 - 4
+            int value = ((int (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( id )) { // 5 - 8
-              id value = ((id (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( id )) { // 5 - 8
+            id value = ((id (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGSize )) { // 9 - 16
-              CGSize value = ((CGSize (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( CGSize )) { // 9 - 16
+            CGSize value = ((CGSize (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGRect )) { // 17 - 32
-              CGRect value = ((CGRect (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( CGRect )) { // 17 - 32
+            CGRect value = ((CGRect (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
-              CGAffineTransform value = ((CGAffineTransform (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
+            CGAffineTransform value = ((CGAffineTransform (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else
-              abort(/* return value size not yet supported. */);
+        else
+            abort(/* return value size not yet supported. */);
 
-          return returnValue;
-      }
-      @finally {
-          free( returnType );
-          // Restore the swizzled state.
-          method_exchangeImplementations(
-              class_getInstanceMethod( type, sel ),
-              class_getInstanceMethod( type, proxySel ) );
-      }
+        return returnValue;
+    }
+    @finally {
+        //--depth;
+        free( returnType );
+
+        // Restore the swizzled state.
+        method_exchangeImplementations( originalMethod, proxyMethod );
+        //trc( @"Restored swizzled implementation:" );
+        //trc( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
+        //trc( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
+    }
 }
 
 @implementation NSValue(Pearl)

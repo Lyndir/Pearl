@@ -816,6 +816,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 @interface AutoresizingContainerView()
 
 @property(nonatomic) UIEdgeInsets contentAlignmentMargins;
+@property(nonatomic) CGSize intrinsicContentSize;
 
 @end
 
@@ -873,8 +874,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 
 - (void)didSetSubview:(UIView *)subview autoresizingMaskFromSize:(CGSize)size
   andAlignmentMargins:(UIEdgeInsets)alignmentMargins options:(PearlLayoutOption)options {
-  if (subview == self.contentView)
+  if (subview == self.contentView) {
     self.contentAlignmentMargins = alignmentMargins;
+    [self invalidateIntrinsicContentSize];
+  }
 }
 
 - (BOOL)fitSubviews {
@@ -885,22 +888,26 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 }
 
 - (CGSize)intrinsicContentSize {
+  if (_intrinsicContentSize.width == UIViewNoIntrinsicMetric && _intrinsicContentSize.height == UIViewNoIntrinsicMetric) {
+    UIEdgeInsets marginSpace = [self spaceForMargins:self.contentAlignmentMargins];
+    NSValue *availableSizeValue = objc_getAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ) );
+    CGSize availableSize = availableSizeValue? [availableSizeValue CGSizeValue]: self.superview.bounds.size;
+    CGSize contentSize = [self.contentView fittingAlignmentSizeIn:availableSize marginSpace:marginSpace];
+    CGSize marginSize = CGSizeMake(
+        contentSize.width + marginSpace.left + marginSpace.right,
+        contentSize.height + marginSpace.top + marginSpace.bottom );
 
-  UIEdgeInsets marginSpace = [self spaceForMargins:self.contentAlignmentMargins];
-  NSValue *availableSizeValue = objc_getAssociatedObject( [UIView class], @selector( ownFittingSizeIn: ) );
-  CGSize availableSize = availableSizeValue? [availableSizeValue CGSizeValue]: self.superview.bounds.size;
-  CGSize contentSize = [self.contentView fittingAlignmentSizeIn:availableSize marginSpace:marginSpace];
-  CGSize marginSize = CGSizeMake(
-      contentSize.width + marginSpace.left + marginSpace.right,
-      contentSize.height + marginSpace.top + marginSpace.bottom );
+    trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@", [self infoPathName],
+        PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ), PearlDescribeS( marginSize ) );
+    _intrinsicContentSize = marginSize;
+  }
 
-  trc( @"%@:  intrinsicContentSize (availableSize: %@) %@ => %@", [self infoPathName],
-      PearlDescribeS( availableSize ), PearlDescribeIS( marginSpace, contentSize ), PearlDescribeS( marginSize ) );
-  return marginSize;
+  return _intrinsicContentSize;
 }
 
 - (void)setBounds:(CGRect)bounds {
   [super setBounds:bounds];
+  [self invalidateIntrinsicContentSize];
 
   if (![self isHidden] && !objc_getAssociatedObject( self.contentView, @selector( fittingAlignmentSizeIn:marginSpace: ) )) {
     trc( @"%@:  setBounds: %@ -> fitSubviews", [self infoPathName], PearlDescribeR( bounds ) );
@@ -934,6 +941,12 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   trc( @"%@:  updateConstraints", [self infoPathName] );
   [self invalidateIntrinsicContentSize];
   [super updateConstraints];
+}
+
+- (void)invalidateIntrinsicContentSize {
+  trc( @"%@:  invalidateIntrinsicContentSize", [self infoPathName] );
+  _intrinsicContentSize = CGSizeMake( UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric );
+  [super invalidateIntrinsicContentSize];
 }
 
 - (UIView *)contentView {

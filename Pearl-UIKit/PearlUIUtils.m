@@ -521,11 +521,12 @@ static NSMutableSet *dismissableResponders;
         [description appendFormat:@"b:%@, ", backgroundString];
     }
 
-    if (!CGSizeEqualToSize( self.intrinsicContentSize, (CGSize){ UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric } )) {
-        if (CGSizeEqualToSize( self.intrinsicContentSize, CGSizeZero))
+    CGSize intrinsicContentSize = self.intrinsicContentSize;
+    if (!CGSizeEqualToSize( intrinsicContentSize, (CGSize){ UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric } )) {
+        if (CGSizeEqualToSize( intrinsicContentSize, CGSizeZero ))
             [description appendFormat:@"c:ZERO, "];
         else
-            [description appendFormat:@"c:%@, ", NSStringFromCGSize( self.intrinsicContentSize )];
+            [description appendFormat:@"c:%@, ", NSStringFromCGSize( intrinsicContentSize )];
     }
     if (self.isHidden)
         [description appendString:@"hidden, "];

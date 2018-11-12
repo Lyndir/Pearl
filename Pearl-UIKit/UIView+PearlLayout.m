@@ -441,8 +441,8 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   // Determine the size available in the superview for our alignment rect.
   /// fittingSize = The measured size of the alignment rect based on the available space and given margins.
   UIEdgeInsets marginSpace = [self spaceForMargins:alignmentMargins];
-  NSValue *savedFittingSize = objc_getAssociatedObject( self, @selector(fittingAlignmentSizeIn:marginSpace:) );
   CGRect containerRect = [self.superview alignmentRectForFrame:self.superview.bounds];
+  NSValue *savedFittingSize = objc_getAssociatedObject( self, @selector( fittingAlignmentSizeIn:marginSpace: ) );
   CGSize fittingSize = savedFittingSize? [savedFittingSize CGSizeValue]:
                        [self fittingAlignmentSizeIn:containerRect.size marginSpace:marginSpace];
 
@@ -463,24 +463,12 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   };
   CGSize desiredSpace = CGSizeUnion( containerRect.size, requiredSpace );
   if (self.superview && self.autoresizingMask && !CGSizeEqualToSize( containerRect.size, desiredSpace )) {
-    if (0 == (options & PearlLayoutOptionConstrained)) {
-      if (!self.superview.autoresizingMask) {
-        trc( @"%@:  resizing container alignment size %@ => %@", [self infoPathName],
-                PearlDescribeS( containerRect.size ), PearlDescribeS( desiredSpace ) );
-        CGRectSetSize( containerRect, desiredSpace );
-        CGRectSetSize( self.superview.bounds, [self.superview frameForAlignmentRect:containerRect].size );
-      }
-      else {
-        trc( @"%@:  refitting container alignment size %@ => %@", [self infoPathName],
-                PearlDescribeS( containerRect.size ), PearlDescribeS( desiredSpace ) );
-        objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
-                [NSValue valueWithCGSize:desiredSpace], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-        CGRectSetSize( containerRect, desiredSpace );
-        [self.superview fitInAlignmentRect:containerRect margins:self.superview.alignmentMargins options:PearlLayoutOptionShallow];
-        objc_setAssociatedObject( self.superview, @selector( fittingAlignmentSizeIn:marginSpace: ),
-                nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-      }
+    if (PearlLayoutOptionConstrained != (options & PearlLayoutOptionConstrained)) {
+      trc( @"%@:  resizing container alignment size %@ to fit %@", [self infoPathName],
+          PearlDescribeS( containerRect.size ), PearlDescribeS( desiredSpace ) );
+      containerRect = [self.superview growForAlignmentRect:CGRectWithSize( containerRect, desiredSpace )];
     }
+
     else {
       // This warning should never occur.  If it does, the superview was not correctly fitted for this subview: find out why!
       // FIXME: Known causes:
@@ -508,8 +496,6 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
       wrn( @"Container: %@, is not large enough for constrained fit of: %@ (need %@, has %@), layout issues may ensue.",
           [self.superview infoName], [self infoName], NSStringFromCGSize( desiredSpace ), NSStringFromCGSize( containerRect.size ) );
     }
-
-    containerRect = [self.superview alignmentRectForFrame:self.superview.bounds];
   }
 
   // Resolve the alignment rect from the requested size and margin, and the frame from the alignment rect.
@@ -527,6 +513,23 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
     self.center = CGRectGetCenter( bounds );
     CGRectSetSize( self.bounds, bounds.size );
   }
+}
+
+- (CGRect)growForAlignmentRect:(CGRect)alignmentRect {
+  if (!self.autoresizingMask) {
+    trc( @"%@:  resizing container", [self infoPathName] );
+    CGRectSetSize( self.bounds, [self frameForAlignmentRect:alignmentRect].size );
+    return alignmentRect;
+  }
+
+  trc( @"%@:  refitting container", [self infoPathName] );
+  objc_setAssociatedObject( self, @selector( fittingAlignmentSizeIn:marginSpace: ),
+      [NSValue valueWithCGSize:alignmentRect.size], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+  [self fitInAlignmentRect:alignmentRect margins:self.alignmentMargins options:PearlLayoutOptionShallow];
+  objc_setAssociatedObject( self, @selector( fittingAlignmentSizeIn:marginSpace: ),
+      nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+
+  return [self alignmentRectForFrame:self.bounds];
 }
 
 - (CGSize)minimumAutoresizingSize {
@@ -880,6 +883,11 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
   }
 }
 
+- (CGRect)growForAlignmentRect:(CGRect)alignmentRect {
+  trc( @"%@:  ignoring container resize since container is managed by Auto Layout", [self infoPathName] );
+  return alignmentRect;
+}
+
 - (BOOL)fitSubviews {
   // Don't blindly trust `bounds` in case autolayout tries to squash our view; use fittingAlignmentSize instead (via intrinsicContentSize)
   return [self.contentView fitInAlignmentRect:(CGRect){ .origin.x = self.alignmentRectInsets.left, .origin.y = self.alignmentRectInsets.top,
@@ -935,6 +943,10 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 - (void)setNeedsLayout {
   [super setNeedsLayout];
   [self setNeedsUpdateConstraints];
+}
+
+- (void)setNeedsUpdateConstraints {
+  [super setNeedsUpdateConstraints];
 }
 
 - (void)updateConstraints {

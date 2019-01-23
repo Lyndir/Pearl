@@ -20,6 +20,10 @@
 
 @interface UIView (Touches)
 
+//! YES to make this view ignore touches (but not its subviews).
 @property(assign, nonatomic) IBInspectable BOOL ignoreTouches;
+
+//! YES to base touch tests on the alignment rectangle, not the frame.
+@property(assign, nonatomic) IBInspectable BOOL alignmentTouches;
 
 @end

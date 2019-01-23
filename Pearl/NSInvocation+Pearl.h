@@ -12,24 +12,29 @@
  *
  * @param type The class on which to install the swizzled implementation.
  * @param sel The selector of the method whose implementation should be interjected.
- * @param definition A block-style function definition of the method, ie. \code ^returnType(id self, methodArguments) \endcode
+ * @param rv A block-style return value representation of the swizzled method, ie. \code ^returnType \endcode
+ * @param args A block-style arguments definition of the swizzled method, ie. \code (id self, methodArguments) \endcode
  * @param imp A block-style method implementation, eg. \code { return arg + 5; } \endcode
+ *
+ * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
  */
-#define PearlSwizzle(type, sel, definition, imp) \
-    PearlSwizzleTR(type, sel, definition, imp, nonretainedObjectValue)
+#define PearlSwizzle(type, sel, rv, args, imp) \
+    PearlSwizzleTR(type, sel, rv, args, imp, nonretainedObjectValue)
 
 /** PearlSwizzle variant for non-id return value types.
  *
- * @param rv The method used for getting the return type's primitive value out of the object value.
+ * @param tr The method used for getting the return type's primitive value out of an NSValue.
+ *
+ * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
  */
-#define PearlSwizzleTR(type, sel, definition, imp, rv) ({                   \
+#define PearlSwizzleTR(type, sel, rv, args, imp, tr) ({                   \
     __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \
-    PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( definition {  \
-        return [PearlSwizzleIMP( _type, _sel, ^ imp ) rv];                  \
+    __block IMP _original = PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( rv args {  \
+        return [PearlSwizzleIMP( _type, _sel, _original, rv imp ) tr];                  \
     } ) );                                                                  \
 })
-extern BOOL PearlSwizzleDo(Class type, SEL sel, IMP replacement);
-extern NSValue *PearlSwizzleIMP(Class type, SEL sel, id block);
+extern IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement);
+extern NSValue *PearlSwizzleIMP(Class type, SEL sel, IMP original, id block);
 
 /**
  * Initialize an NSInvocation populated with the current varargs starting after `args`.
@@ -56,5 +61,26 @@ extern NSValue *PearlSwizzleIMP(Class type, SEL sel, id block);
 - (NSValue *)returnValue;
 /** Get the return value directly if it's of type id. */
 - (id)nonretainedObjectValue;
+
+@end
+
+@interface NSValue(Pearl)
+
+- (char)charValue;
+- (unsigned char)unsignedCharValue;
+- (short)shortValue;
+- (unsigned short)unsignedShortValue;
+- (int)intValue;
+- (unsigned int)unsignedIntValue;
+- (long)longValue;
+- (unsigned long)unsignedLongValue;
+- (long long)longLongValue;
+- (unsigned long long)unsignedLongLongValue;
+- (float)floatValue;
+- (double)doubleValue;
+- (BOOL)boolValue;
+- (NSInteger)integerValue;
+- (NSUInteger)unsignedIntegerValue;
+- (NSString *)stringValue;
 
 @end

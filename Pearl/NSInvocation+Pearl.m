@@ -92,69 +92,223 @@
 
 @end
 
-BOOL PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
-    Method method = class_getInstanceMethod( type, sel );
-    if (!method)
-        abort(/* `type` does not have a `fromSel` method */);
+IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
+  @synchronized (type) {
+        Method originalMethod = class_getInstanceMethod( type, sel );
+        if (!originalMethod)
+            abort(/* `type` does not have a `sel` method */);
+        const char *methodTypes = method_getTypeEncoding( originalMethod );
 
-    @synchronized (type) {
-        const char *methodTypes = method_getTypeEncoding( method );
+        // Create the proxy method on `type` with the `replacement` implementation.
         SEL proxySel = NSSelectorFromString( strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) ) );
         if (!class_addMethod( type, proxySel, replacement, methodTypes ))
-            return NO;
+            // This method's swizzle was already installed.
+            return NULL;
+        Method proxyMethod = class_getInstanceMethod( type, proxySel );
+
+        // Copy the original implementation to `type` if before it existed on a supertype: we don't want to swizzle at the supertype level.
+      IMP originalImplementation = method_getImplementation( originalMethod );
+      if (class_addMethod( type, sel, originalImplementation, methodTypes ))
+            originalMethod = class_getInstanceMethod( type, sel );
+
+        //NSLog( @"Swizzling %@ for %@:", NSStringFromSelector( sel ), type );
+        //NSLog( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
+        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
 
         // Do the swizzle!
-        class_addMethod( type, sel, method_getImplementation( method ), methodTypes );
-        method_exchangeImplementations( class_getInstanceMethod( type, sel ), class_getInstanceMethod( type, proxySel ) );
-        return YES;
+        method_exchangeImplementations( originalMethod, proxyMethod );
+        return originalImplementation;
     }
 }
 
-NSValue *PearlSwizzleIMP(Class type, SEL sel, id _Nonnull block) {
+//static int depth = 0;
+NSValue *PearlSwizzleIMP(Class type, SEL sel, IMP original, id _Nonnull block) {
     char *returnType = method_copyReturnType( class_getInstanceMethod( type, sel ) );
-    SEL proxySel = NSSelectorFromString( strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) ) );
+    NSString *proxySel = strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) );
+    Method proxyMethod = class_getInstanceMethod( type, NSSelectorFromString( proxySel ) );
+    Method originalMethod = class_getInstanceMethod( type, sel );
+    if (original == method_getImplementation( originalMethod ) ) {
+        // Proxy was called even though original implementation is installed!  This is bad.
+        // Some swizzled implementation blocks call back into themselves to invoke the original imp (which was temporarily restored
+        // before invoking the block).  Sometimes, however, Apple appears to have put a proxy there which re-triggers
+        // the swizzled implementation instead of the original implementation, causing infinite recursion.
+        // Sadly, I know of no way to avoid this or recover from it, so we just fail.
+        err( @"WARNING: Illegal call into swizzled proxy %@, bypassed ObjC messaging, falling back with nil return value.", proxySel );
+        return nil;
+    }
+
     @try {
+        //NSLog( @"Handling swizzled %@ (depth: %d):", NSStringFromSelector( sel ), depth );
+        //NSLog( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
+        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
+        //if (++depth > 9)
+        //    NSLog( @"stuck in recurse loop?" );
+
         // Temporarily restore the unswizzled state.
-        method_exchangeImplementations(
-              class_getInstanceMethod( type, proxySel ),
-              class_getInstanceMethod( type, sel ) );
+        method_exchangeImplementations( proxyMethod, originalMethod );
+
+        //NSLog( @"Restored original implementation:" );
+        //NSLog( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
+        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
 
         NSValue *returnValue = nil;
         NSUInteger size, alignment;
         NSGetSizeAndAlignment( returnType, &size, &alignment );
-          if (!size) // 0, void
-              ((void (^)(void))block)();
+        //NSLog( @"Invoking swizzled implementation." );
+        if (!size) // 0, void
+            ((void (^)(void))block)();
 
-          else if (size <= sizeof( id )) { // 1 - 8
-              id value = ((id (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( char )) { // 1
+            char value = ((char (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGSize )) { // 9 - 16
-              CGSize value = ((CGSize (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( int )) { // 2 - 4
+            int value = ((int (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGRect )) { // 17 - 32
-              CGRect value = ((CGRect (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( id )) { // 5 - 8
+            id value = ((id (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
-              CGAffineTransform value = ((CGAffineTransform (^)(void))block)();
-              returnValue = [NSValue value:&value withObjCType:returnType];
-          }
+        else if (size <= sizeof( CGSize )) { // 9 - 16
+            CGSize value = ((CGSize (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          else
-              abort(/* return value size not yet supported. */);
+        else if (size <= sizeof( CGRect )) { // 17 - 32
+            CGRect value = ((CGRect (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
 
-          return returnValue;
-      }
-      @finally {
-          free( returnType );
-          // Restore the swizzled state.
-          method_exchangeImplementations(
-              class_getInstanceMethod( type, sel ),
-              class_getInstanceMethod( type, proxySel ) );
-      }
+        else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
+            CGAffineTransform value = ((CGAffineTransform (^)(void))block)();
+            returnValue = [NSValue value:&value withObjCType:returnType];
+        }
+
+        else
+            abort(/* return value size not yet supported. */);
+
+        return returnValue;
+    }
+    @finally {
+        //--depth;
+        free( returnType );
+
+        // Restore the swizzled state.
+        method_exchangeImplementations( originalMethod, proxyMethod );
+        //NSLog( @"Restored swizzled implementation:" );
+        //NSLog( @"  - Original method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
+        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
+    }
 }
+
+@implementation NSValue(Pearl)
+
+- (char)charValue {
+    char value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned char)unsignedCharValue {
+    unsigned char value;
+    [self getValue:&value];
+    return value;
+}
+
+- (short)shortValue {
+    short value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned short)unsignedShortValue {
+    unsigned short value;
+    [self getValue:&value];
+    return value;
+}
+
+- (int)intValue {
+    int value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned int)unsignedIntValue {
+    unsigned int value;
+    [self getValue:&value];
+    return value;
+}
+
+- (long)longValue {
+    long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned long)unsignedLongValue {
+    unsigned long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (long long)longLongValue {
+    long long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (unsigned long long)unsignedLongLongValue {
+    unsigned long long value;
+    [self getValue:&value];
+    return value;
+}
+
+- (float)floatValue {
+    float value;
+    [self getValue:&value];
+    return value;
+}
+
+- (double)doubleValue {
+    double value;
+    [self getValue:&value];
+    return value;
+}
+
+- (BOOL)boolValue {
+    BOOL value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSInteger)integerValue {
+    NSInteger value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSUInteger)unsignedIntegerValue {
+    NSUInteger value;
+    [self getValue:&value];
+    return value;
+}
+
+- (NSString *)stringValue {
+    NSString *value;
+    [self getValue:&value];
+    return value;
+}
+
+@end

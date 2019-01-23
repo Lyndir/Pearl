@@ -15,13 +15,21 @@ static CGSize PearlNoIntrinsicMetric;
 
 + (UIView *)viewContaining:(UIView *)subview {
 
-    return [self viewContaining:subview withLayoutMargins:UIEdgeInsetsMake( 8, 8, 8, 8 )];
+    return [self viewContaining:subview init:nil];
 }
 
 + (UIView *)viewContaining:(UIView *)subview withLayoutMargins:(UIEdgeInsets)margins {
+    return [self viewContaining:subview init:^(UIView *container) {
+        [container setLayoutMargins:margins];
+    }];
+}
+
++ (UIView *)viewContaining:(UIView *)subview init:(void(^)(UIView *container))initBlock {
     UIView *container = [UIView new];
     [container addSubview:subview];
-    [container setLayoutMargins:margins];
+    if (initBlock)
+        initBlock(container);
+    UIEdgeInsets margins = container.layoutMargins;
     [container setFrame:CGRectMake( 0, 0,
         margins.left + subview.frame.size.width + margins.right, margins.top + subview.frame.size.height + margins.bottom )];
     CGRectSetOrigin( subview.frame, CGPointMake( margins.left, margins.top ) );

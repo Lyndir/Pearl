@@ -283,13 +283,13 @@ NSString *PearlDescribeCShort(const Class c) {
 
     NSString *name = nil;
     unsigned int count = 0;
-    Ivar *ivars = class_copyIvarList( [self class], &count );
-    for (unsigned int i = 0; i < count; ++i)
-        if ((__bridge void *)object_getIvar( self, ivars[i] ) == (__bridge void *)value) {
-            name = @( ivar_getName( ivars[i] ) );
-            break;
-        }
-    free( ivars );
+    for (Class type = [self class]; !name && type; type = class_getSuperclass(type)) {
+        Ivar *ivars = class_copyIvarList(type, &count);
+        for (unsigned int i = 0; !name && i < count; ++i)
+            if ((__bridge void *) object_getIvar(self, ivars[i]) == (__bridge void *) value)
+                name = @( ivar_getName(ivars[i]) );
+        free(ivars);
+    }
 
     return name;
 }

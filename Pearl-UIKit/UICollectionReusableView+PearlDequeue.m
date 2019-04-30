@@ -108,8 +108,8 @@
 + (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
                                      init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock {
 
-    __kindof UICollectionViewCell *view = [self dequeueFromCollectionView:collectionView indexPath:indexPath];
     [UIView setAnimationsEnabled:NO];
+    __kindof UICollectionViewCell *view = [self dequeueFromCollectionView:collectionView indexPath:indexPath];
     initBlock( view );
     [UIView setAnimationsEnabled:YES];
 

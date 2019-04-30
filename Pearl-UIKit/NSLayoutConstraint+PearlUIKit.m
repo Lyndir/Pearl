@@ -59,7 +59,7 @@
   return [self updateConstant:self.constant mulitplier:multiplier priority:self.priority];
 }
 
-- (NSLayoutConstraint *)updatePriority:(UILayoutPriority)priority {
+- (NSLayoutConstraint *)withPriority:(UILayoutPriority)priority {
 
   return [self updateConstant:self.constant mulitplier:self.multiplier priority:priority];
 }

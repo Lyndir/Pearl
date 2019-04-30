@@ -45,7 +45,7 @@
 * Update this constraint's priority with the given value, rebuilding it if necessary.
 * NOTE: If you hold a reference to this constraint, update it with this return value in case the constraint was rebuilt.
  */
-- (instancetype)updatePriority:(UILayoutPriority)priority;
+- (instancetype)withPriority:(UILayoutPriority)priority;
 
 /**
 * Update this constraint's constant, multiplier and priority with the given values, rebuilding it if necessary.

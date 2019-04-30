@@ -22,35 +22,41 @@
 - (void)updateDataSource:(NSMutableOrderedSetOrArrayType)dataSource toSections:(NSOrderedSetOrArrayType)newSections
              reloadItems:(NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation {
 
-    if (!newSections || [dataSource isEqual:newSections]) {
-        if ([reloadItems count]) {
-            [self beginUpdates];
-            if ([[reloadItems anyObject] isKindOfClass:[NSIndexPath class]])
-                [self reloadRowsAtIndexPaths:[reloadItems array] withRowAnimation:animation];
-            else
-                for (NSUInteger section = 0; section < [dataSource count]; ++section) {
-                    NSArray *sectionItems = dataSource[section];
-                    for (NSUInteger index = 0; index < [sectionItems count]; ++index)
-                        if (reloadItems == dataSource ||
-                            [reloadItems containsObject:sectionItems[index]] ||
-                            [reloadItems containsObject:sectionItems]) {
-                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
-                            trc( @"reload item %@", indexPath );
-                            [self reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:animation];
-                        }
-                }
-            [self endUpdates];
-        }
-        return;
-    }
-
     @try {
+        if (!newSections || [dataSource isEqual:newSections]) {
+            if ([reloadItems count]) {
+                [self beginUpdates];
+                if ([[reloadItems anyObject] isKindOfClass:[NSIndexPath class]])
+                    [self reloadRowsAtIndexPaths:[reloadItems array] withRowAnimation:animation];
+
+                else {
+                    NSMutableArray *reloadPaths = [NSMutableArray array];
+                    for (NSUInteger section = 0; section < [dataSource count]; ++section) {
+                        NSArray *sectionItems = (newSections?: dataSource)[section];
+                        for (NSUInteger index = 0; index < [sectionItems count]; ++index)
+                            if (reloadItems == dataSource ||
+                                [reloadItems containsObject:sectionItems[index]] ||
+                                [reloadItems containsObject:sectionItems]) {
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
+                                trc( @"reload item: %lu - %lu", indexPath.section, indexPath.item );
+                                [reloadPaths addObject:indexPath];
+                            }
+                        [dataSource replaceObjectAtIndex:section withObject:sectionItems];
+                    }
+                    [self reloadRowsAtIndexPaths:reloadPaths withRowAnimation:animation];
+                }
+                [self endUpdates];
+            }
+            return;
+        }
+
         [self beginUpdates];
 
         // Figure out how the section items have changed.
         NSMutableSet *oldItems = [NSMutableSet set];
         NSMutableArray *deletePaths = [NSMutableArray array];
         NSMutableDictionary *movedPaths = [NSMutableDictionary dictionary];
+        NSMutableArray *reloadPaths = [NSMutableArray array];
         for (NSUInteger section = 0; section < [dataSource count]; ++section) {
             NSArray *sectionItems = dataSource[section];
             for (NSUInteger index = 0; index < [sectionItems count]; ++index) {
@@ -63,12 +69,12 @@
                 if (!toIndexPath && section < [newSections count])
                     [deletePaths addObject:fromIndexPath];
 
-                else if (![fromIndexPath isEqual:toIndexPath])
-                    movedPaths[fromIndexPath] = toIndexPath;
+                else {
+                    if (![fromIndexPath isEqual:toIndexPath])
+                        movedPaths[fromIndexPath] = toIndexPath;
 
-                else if ([reloadItems containsObject:item]) {
-                    trc( @"reload item %@", toIndexPath );
-                    [self reloadRowsAtIndexPaths:@[ toIndexPath ] withRowAnimation:animation];
+                    if (reloadItems == dataSource || [reloadItems containsObject:item])
+                        [reloadPaths addObject:toIndexPath];
                 }
             }
         }
@@ -77,12 +83,10 @@
         NSMutableIndexSet *insertSet = [NSMutableIndexSet new], *deleteSet = [NSMutableIndexSet new];
         for (NSUInteger section = 0; section < MAX( [dataSource count], [newSections count] ); ++section) {
             if (section >= [dataSource count]) {
-                trc( @"insert section %d", (int)section );
                 [dataSource addObject:newSections[section]];
                 [insertSet addIndex:section];
             }
             else if (section >= [newSections count]) {
-                trc( @"delete section %d", (int)section );
                 [dataSource removeObjectAtIndex:[dataSource count] - 1];
                 [deleteSet addIndex:section];
             }
@@ -90,34 +94,50 @@
                 [dataSource setObject:newSections[section] atIndexedSubscript:section];
         }
 
-        // Prepare by ensuring all sections are present.
+        // Add new sections.
+        [insertSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *stop) {
+            trc( @"insert section: %lu (%lu items)", (unsigned long)section, (unsigned long)[newSections[section] count] );
+        }];
         [self insertSections:insertSet withRowAnimation:animation];
 
-        // First remove deleted rows.
-        for (NSIndexPath *path in deletePaths)
-            trc( @"delete item %@", path );
+        // Remove deleted rows.
+        [deletePaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+            trc( @"delete item: %lu - %lu", (unsigned long)indexPath.section, (unsigned long)indexPath.item );
+        }];
         [self deleteRowsAtIndexPaths:deletePaths withRowAnimation:animation];
 
-        // Then add inserted rows.
+        // Add inserted rows.
         for (NSUInteger section = 0; section < [newSections count]; ++section) {
             NSArray *newSectionItems = newSections[section];
             for (NSUInteger index = 0; index < [newSectionItems count]; ++index)
                 if (![oldItems tryRemoveObject:newSectionItems[index]]) {
                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
-                    trc( @"insert item %@", indexPath );
+                    trc( @"insert item: %lu - %lu", (unsigned long)indexPath.section, (unsigned long)indexPath.item );
                     [self insertRowsAtIndexPaths:@[ indexPath ] withRowAnimation:animation];
                 }
         }
 
-        // Then shuffle around moved rows.
+        // Shuffle around moved rows.
         [movedPaths enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *fromIndexPath, NSIndexPath *toIndexPath, BOOL *stop) {
-            trc( @"move item %@ -> %@", fromIndexPath, toIndexPath );
+            trc( @"move item: %lu - %lu -> %lu - %lu ",
+                    (unsigned long)fromIndexPath.section, (unsigned long)fromIndexPath.item,
+                    (unsigned long)toIndexPath.section, (unsigned long)toIndexPath.item );
             [self moveRowAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
         }];
 
-        // Clean up sections that were removed.
+        // Delete removed sections.
+        [deleteSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *stop) {
+            trc( @"delete section: %lu", (unsigned long)section );
+        }];
         [self deleteSections:deleteSet withRowAnimation:animation];
+
         [self endUpdates];
+
+        // Reload items.
+        [reloadPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+            trc( @"reload item: %lu - %lu", (unsigned long)indexPath.section, (unsigned long)indexPath.item );
+        }];
+        [self reloadRowsAtIndexPaths:reloadPaths withRowAnimation:animation];
     }
     @catch (NSException *e) {
         wrn( @"Exception while reloading sections for table.  Falling back to a full reload.\n%@", [e fullDescription] );

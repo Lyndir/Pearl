@@ -73,7 +73,7 @@
                     if (![fromIndexPath isEqual:toIndexPath])
                         movedPaths[fromIndexPath] = toIndexPath;
 
-                    if (reloadItems == dataSource || [reloadItems containsObject:item])
+                    if (toIndexPath && (reloadItems == dataSource || [reloadItems containsObject:item]))
                         [reloadPaths addObject:toIndexPath];
                 }
             }

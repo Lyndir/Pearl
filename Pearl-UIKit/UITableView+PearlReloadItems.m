@@ -64,7 +64,7 @@
                 [oldItems addObject:item];
 
                 NSIndexPath *fromIndexPath = [NSIndexPath indexPathForItem:index inSection:section];
-                NSIndexPath *toIndexPath = [self indexPathForItem:item inSections:newSections];
+                NSIndexPath *toIndexPath = [self findInDataSource:newSections item:item];
 
                 if (!toIndexPath && section < [newSections count])
                     [deletePaths addObject:fromIndexPath];
@@ -150,10 +150,10 @@
     }
 }
 
-- (NSIndexPath *)indexPathForItem:(id)item inSections:(id<NSOrderedSetOrArray>)sections {
+- (NSIndexPath *)findInDataSource:(NSOrderedSetOrArrayType)dataSource item:(id)item {
 
     NSUInteger section = 0;
-    for (id sectionItems in sections) {
+    for (id sectionItems in dataSource) {
         NSUInteger index = [sectionItems indexOfObject:item];
 
         if (index != NSNotFound)

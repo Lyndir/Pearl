@@ -32,7 +32,16 @@
  * @param newSections A new collection of the same structure as the dataSource.  nil to perform no dataSource changes.
  * @param reloadItems A collection of dataSource items, index paths or sections to reload.  Pass the dataSource itself to reload all items.
  */
-- (void)updateDataSource:(__nonnull NSMutableOrderedSetOrArrayType)dataSource toSections:(__nullable NSOrderedSetOrArrayType)newSections
-             reloadItems:(__nullable NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation;
+- (void)updateDataSource:(nonnull NSMutableOrderedSetOrArrayType)dataSource toSections:(nullable NSOrderedSetOrArrayType)newSections
+             reloadItems:(nullable NSSetOrArrayType)reloadItems withRowAnimation:(UITableViewRowAnimation)animation;
+
+/**
+ * Find the index path for an item in a data source.
+ *
+ * @param dataSource The collection that is backing your UITableViewDataSource delegate methods,
+ *                   must be an array (sections) of arrays (section rows).
+ * @param item The row data object to search for in the data source.
+ */
+- (nullable NSIndexPath *)findInDataSource:(nonnull NSOrderedSetOrArrayType)dataSource item:(nullable id)item;
 
 @end

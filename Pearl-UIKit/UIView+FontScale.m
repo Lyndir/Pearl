@@ -101,6 +101,12 @@
                 [self setNeedsUpdateConstraints];
             } );
 
+    // Not sure why this sometimes happens:
+    //* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=EXC_I386_GPFLT)
+    //  * frame #0: 0x000000010fdc8645 libobjc.A.dylib`objc_msgSend + 5
+    //    frame #1: 0x00000001146044e4 UIKitCore`-[_UILabelAttributedStringContent defaultValueForAttribute:] + 82
+    //    frame #2: 0x00000001145fc7b9 UIKitCore`-[UILabel font] + 58
+    //    frame #3: 0x000000010d80b03e MasterPassword`-[UIView(self=0x00007ffc26029a80, _cmd="_pearl_fontMod_updateFont") _pearl_fontMod_updateFont] at UIView+FontScale.m:104:27
     UIFont *appliedFont = [(UILabel *)self font];
 
     [(UILabel *)self setFont:[appliedFont fontWithSize:appliedFont.pointSize / self.appliedFontScale]];

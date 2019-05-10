@@ -16,10 +16,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AvailabilityMacros.h>
 
 @interface UIControl(PearlBlocks)
 
+- (void)addActionForControlEvents:(UIControlEvents)controlEvents
+                           action:(void ( ^ )(UIControl *sender, UIEvent *event))block;
+
+/** @deprecated */
 - (void)addTargetBlock:(void (^)(UIControl *sender, UIEvent *event))block
-      forControlEvents:(UIControlEvents)controlEvents;
+      forControlEvents:(UIControlEvents)controlEvents DEPRECATED_ATTRIBUTE;
 
 @end

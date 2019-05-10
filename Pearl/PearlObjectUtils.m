@@ -141,19 +141,27 @@ BOOL PearlNotMainQueueWait(void (^block)(void)) {
     return NO;
 }
 
-void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
+dispatch_block_t PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
 
     return PearlQueueAfter( seconds, dispatch_get_main_queue(), block );
 }
 
-void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
+dispatch_block_t PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void)) {
 
-    PearlQueueAfter( seconds, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), block );
+    return PearlQueueAfter( seconds, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), block );
 }
 
-void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void)) {
+dispatch_block_t PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void)) {
 
-    dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, block );
+    dispatch_block_t dispatch_block = dispatch_block_create( DISPATCH_BLOCK_ENFORCE_QOS_CLASS, block );
+    dispatch_after( dispatch_time( DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC) ), queue, dispatch_block );
+    return dispatch_block;
+}
+
+void PearlQueueCancel(dispatch_block_t block) {
+
+    if (block)
+        dispatch_cancel( block );
 }
 
 BOOL PearlIfNotRecursing(BOOL *recursing, void(^notRecursingBlock)(void)) {
@@ -283,12 +291,12 @@ NSString *PearlDescribeCShort(const Class c) {
 
     NSString *name = nil;
     unsigned int count = 0;
-    for (Class type = [self class]; !name && type; type = class_getSuperclass(type)) {
-        Ivar *ivars = class_copyIvarList(type, &count);
+    for (Class type = [self class]; !name && type; type = class_getSuperclass( type )) {
+        Ivar *ivars = class_copyIvarList( type, &count );
         for (unsigned int i = 0; !name && i < count; ++i)
-            if ((__bridge void *) object_getIvar(self, ivars[i]) == (__bridge void *) value)
-                name = @( ivar_getName(ivars[i]) );
-        free(ivars);
+            if ((__bridge void *)object_getIvar( self, ivars[i] ) == (__bridge void *)value)
+                name = @( ivar_getName( ivars[i] ) );
+        free( ivars );
     }
 
     return name;

@@ -206,11 +206,13 @@ extern BOOL PearlMainQueueWait(void (^block)(void));
 extern BOOL PearlNotMainQueueWait(void (^block)(void));
 
 /* Schedule a block to run on the main queue after x seconds from now. */
-extern void PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
+extern dispatch_block_t PearlMainQueueAfter(NSTimeInterval seconds, void (^block)(void));
 /* Schedule a block to run on the global queue after x seconds from now. */
-extern void PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
+extern dispatch_block_t PearlGlobalQueueAfter(NSTimeInterval seconds, void (^block)(void));
 /* Schedule a block to run on the given queue after x seconds from now. */
-extern void PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+extern dispatch_block_t PearlQueueAfter(NSTimeInterval seconds, dispatch_queue_t queue, void (^block)(void));
+/* Cancel a previously scheduled block. */
+extern void PearlQueueCancel(dispatch_block_t block);
 
 /* Schedule a block to run on the main queue.  If this block was previously scheduled but not yet completed, cancel it first. */
 #define PearlMainQueueSingularOperation(block) ({ \

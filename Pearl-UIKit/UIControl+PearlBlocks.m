@@ -49,16 +49,20 @@
 
 static char actionBlocksKey;
 
-- (void)addTargetBlock:(void (^)(UIControl *sender, UIEvent *event))block
-      forControlEvents:(UIControlEvents)controlEvents {
-
+- (void)addActionForControlEvents:(UIControlEvents)controlEvents action:(void ( ^ )(UIControl *sender, UIEvent *event))block {
     NSMutableArray *actionBlocks = objc_getAssociatedObject( self, &actionBlocksKey );
     if (!actionBlocks)
         objc_setAssociatedObject( self, &actionBlocksKey, actionBlocks = [NSMutableArray array], OBJC_ASSOCIATION_RETAIN_NONATOMIC );
 
     PearlActionBlock_UIControl *actionBlock = [[PearlActionBlock_UIControl alloc] initWithBlock:block];
-    [self addTarget:actionBlock action:@selector(actionFromSender:event:) forControlEvents:controlEvents];
+    [self addTarget:actionBlock action:@selector( actionFromSender:event: ) forControlEvents:controlEvents];
     [actionBlocks addObject:actionBlock];
+}
+
+- (void)addTargetBlock:(void (^)(UIControl *sender, UIEvent *event))block
+      forControlEvents:(UIControlEvents)controlEvents {
+
+    [self addActionForControlEvents:controlEvents action:block];
 }
 
 @end

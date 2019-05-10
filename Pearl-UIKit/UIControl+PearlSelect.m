@@ -56,7 +56,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
         [[self Pearl_controlsForSuperview] removeObject:[NSValue valueWithNonretainedObject:self]];
 
     if (!objc_getAssociatedObject( self, &selectionInSuperviewCandidateKey ))
-        [self addTargetBlock:^(id sender, UIEvent *event) {
+        [self addActionForControlEvents:UIControlEventTouchUpInside action:^(id sender, UIEvent *event) {
             UIControl *const senderControl = (UIControl *)sender;
             if (!senderControl.selectionInSuperviewCandidate)
                 return;
@@ -70,7 +70,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
                 for (NSValue *controlValue in [senderControl Pearl_controlsForSuperview]) {
                     UIControl *siblingControl = [controlValue nonretainedObjectValue];
                     if (siblingControl.superview != senderControl.superview)
-                            // This siblingControl no longer exists in the superview.
+                        // This siblingControl no longer exists in the superview.
                         continue;
 
                     if (siblingControl.selected)
@@ -78,7 +78,7 @@ static char selectionInSuperviewCandidateKey, selectionInSuperviewClearableKey;
                 }
                 senderControl.selected = YES;
             }
-        }   forControlEvents:UIControlEventTouchUpInside];
+        }];
 
     objc_setAssociatedObject( self, &selectionInSuperviewCandidateKey, @(providesSelection),
             OBJC_ASSOCIATION_RETAIN_NONATOMIC );

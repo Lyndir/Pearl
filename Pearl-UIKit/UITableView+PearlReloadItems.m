@@ -38,7 +38,7 @@
                                 [reloadItems containsObject:sectionItems[index]] ||
                                 [reloadItems containsObject:sectionItems]) {
                                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:section];
-                                trc( @"reload item: %lu - %lu", indexPath.section, indexPath.item );
+                                trc( @"reload item: %lu - %lu", (unsigned long)indexPath.section, (unsigned long)indexPath.item );
                                 [reloadPaths addObject:indexPath];
                             }
                         [dataSource replaceObjectAtIndex:section withObject:sectionItems];

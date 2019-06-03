@@ -17,7 +17,7 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma clang assume_nonnull begin
+NS_ASSUME_NONNULL_BEGIN
 
 @interface UICollectionReusableView(PearlDequeue)
 
@@ -54,4 +54,4 @@
 
 @end
 
-#pragma clang assume_nonnull end
+NS_ASSUME_NONNULL_END

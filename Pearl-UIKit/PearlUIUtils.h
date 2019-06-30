@@ -105,7 +105,6 @@ __END_DECLS
 @interface UIView(PearlUIUtils)
 
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch;
-- (void)unanimated:(void ( ^ )(void))actions;
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void ( ^ )(void))uiAnimations caAnimations:(void ( ^ )(void))caAnimations
                  completion:(void ( ^ )(BOOL finished))completion;
 

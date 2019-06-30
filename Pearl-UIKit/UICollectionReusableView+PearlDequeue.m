@@ -50,10 +50,11 @@
                                 indexPath:(NSIndexPath *)indexPath
                                      init:(void ( ^ )(__kindof UICollectionReusableView *cell))initBlock {
 
-    __kindof UICollectionReusableView *view = [self dequeueFromCollectionView:collectionView kind:kind indexPath:indexPath];
-    [UIView setAnimationsEnabled:NO];
-    initBlock( view );
-    [UIView setAnimationsEnabled:YES];
+    __block __kindof UICollectionReusableView *view;
+    [UIView performWithoutAnimation:^{
+        view = [self dequeueFromCollectionView:collectionView kind:kind indexPath:indexPath];
+        initBlock( view );
+    }];
 
     return view;
 }
@@ -108,10 +109,11 @@
 + (instancetype)dequeueFromCollectionView:(UICollectionView *)collectionView indexPath:(NSIndexPath *)indexPath
                                      init:(void ( ^ )(__kindof UICollectionViewCell *cell))initBlock {
 
-    [UIView setAnimationsEnabled:NO];
-    __kindof UICollectionViewCell *view = [self dequeueFromCollectionView:collectionView indexPath:indexPath];
-    initBlock( view );
-    [UIView setAnimationsEnabled:YES];
+    __block __kindof UICollectionViewCell *view;
+    [UIView performWithoutAnimation:^{
+        view = [self dequeueFromCollectionView:collectionView indexPath:indexPath];
+        initBlock( view );
+    }];
 
     return view;
 }

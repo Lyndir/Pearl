@@ -34,10 +34,11 @@
 
 + (instancetype)dequeueFromTableView:(UITableView *)tableView init:(void ( ^ )(__kindof UITableViewHeaderFooterView *view))initBlock {
 
-    __kindof UITableViewHeaderFooterView *view = [self dequeueFromTableView:tableView];
-    [UIView setAnimationsEnabled:NO];
-    initBlock( view );
-    [UIView setAnimationsEnabled:YES];
+    __block __kindof UITableViewHeaderFooterView *view;
+    [UIView performWithoutAnimation:^{
+        view = [self dequeueFromTableView:tableView];
+        initBlock( view );
+    }];
 
     return view;
 }
@@ -69,12 +70,13 @@
 + (instancetype)dequeueFromTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
                                 init:(void(^)(__kindof UITableViewCell *cell))initBlock {
 
-    __kindof UITableViewCell *cell = [self dequeueFromTableView:tableView indexPath:indexPath];
-    [UIView setAnimationsEnabled:NO];
-    initBlock( cell );
-    [UIView setAnimationsEnabled:YES];
+    __block __kindof UITableViewCell *view;
+    [UIView performWithoutAnimation:^{
+        view = [self dequeueFromTableView:tableView indexPath:indexPath];
+        initBlock( view );
+    }];
 
-    return cell;
+    return view;
 }
 
 @end

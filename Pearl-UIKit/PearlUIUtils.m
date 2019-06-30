@@ -298,19 +298,6 @@ static NSMutableSet *dismissableResponders;
     [responder resignFirstResponder];
 }
 
-- (void)unanimated:(void ( ^ )(void))actions {
-
-    BOOL animationsEnabled = [UIView areAnimationsEnabled];
-    if (animationsEnabled) {
-        [self layoutIfNeeded];
-        [UIView setAnimationsEnabled:NO];
-    }
-
-    actions();
-    [self layoutIfNeeded];
-    [UIView setAnimationsEnabled:animationsEnabled];
-}
-
 + (void)animateWithDuration:(NSTimeInterval)duration uiAnimations:(void ( ^ )(void))uiAnimations caAnimations:(void ( ^ )(void))caAnimations
                  completion:(void ( ^ )(BOOL finished))completion {
 

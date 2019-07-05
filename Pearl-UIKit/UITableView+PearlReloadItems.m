@@ -156,6 +156,9 @@
 
 - (NSIndexPath *)findInDataSource:(NSOrderedSetOrArrayType)dataSource item:(id)item {
 
+    if (!item)
+        return nil;
+
     NSUInteger section = 0;
     for (id sectionItems in dataSource) {
         NSUInteger index = [sectionItems indexOfObject:item];

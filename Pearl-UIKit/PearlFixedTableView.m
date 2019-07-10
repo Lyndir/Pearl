@@ -28,7 +28,7 @@
 
     [super setBounds:bounds];
 
-    if (self.bounds.size.height < self.contentSize.height)
+    if (!self.scrollEnabled & (self.scrollEnabled = self.bounds.size.height < self.contentSize.height))
         [self flashScrollIndicators];
 }
 

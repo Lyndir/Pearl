@@ -18,11 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PearlAppDelegate : UIResponder<UIApplicationDelegate, PearlConfigDelegate> {
-
-    UIWindow *_window;
-    UINavigationController *_navigationController;
-}
+@interface PearlAppDelegate : UIResponder<UIApplicationDelegate, PearlConfigDelegate>
 
 @property(nonatomic, readwrite, retain) IBOutlet UIWindow *window;
 @property(nonatomic, readwrite, retain) IBOutlet UINavigationController *navigationController;

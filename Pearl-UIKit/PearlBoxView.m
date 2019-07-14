@@ -21,8 +21,6 @@
 
 @implementation PearlBoxView
 
-@synthesize color = _color, width = _width, filled = _filled;
-
 + (id)boxed:(id)view {
 
     [view showBoundingBox];

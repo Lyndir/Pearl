@@ -26,11 +26,7 @@
 
 @end
 
-@interface PearlValidatingTextField : UITextField {
-
-    BOOL                            (^_isValid)(void);
-    UIView *_validView, *_invalidView;
-}
+@interface PearlValidatingTextField : UITextField
 
 @property(nonatomic, WEAK_OR_UNRETAINED) IBOutlet id<PearlValidatingTextFieldDelegate> validationDelegate;
 

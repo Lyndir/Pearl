@@ -38,8 +38,6 @@ static NSURL *iTunesAppURL(NSString *__app) {
 
 @implementation PearlAppDelegate
 
-@synthesize window = _window, navigationController = _navigationController;
-
 - (id)init {
 
     if (!(self = [super init]))
@@ -138,9 +136,6 @@ static NSURL *iTunesAppURL(NSString *__app) {
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
-    [[PearlAlert activeAlerts] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [obj cancelAlertAnimated:YES];
-    }];
 }
 
 - (void)showFeedback {
@@ -202,28 +197,19 @@ static NSURL *iTunesAppURL(NSString *__app) {
     [PearlConfig get].launchCount = @([[PearlConfig get].launchCount intValue] + 1);
     if ([[PearlConfig get].askForReviews boolValue] && [PearlConfig get].appleID) // Review asking enabled?
     if (![[PearlConfig get].reviewedVersion isEqualToString:[PearlInfoPlist get].CFBundleVersion]) // Version reviewed?
-    if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) // Sufficiently used?
-        [PearlAlert showAlertWithTitle:[PearlStrings get].reviewTitle
-                               message:strf( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
-                             viewStyle:UIAlertViewStyleDefault
-                             initAlert:nil tappedButtonBlock:^(UIAlertView *alert_, NSInteger buttonIndex_) {
-                    if (buttonIndex_ == [alert_ firstOtherButtonIndex] + 1) {
-                        // Comment
-                        [self showFeedback];
-                        return;
-                    }
-
-                    [PearlConfig get].reviewedVersion = [PearlInfoPlist get].CFBundleVersion;
-                    if (buttonIndex_ == [alert_ cancelButtonIndex])
-                        // No
-                        return;
-
-                    if (buttonIndex_ == [alert_ firstOtherButtonIndex]) {
-                        // Yes
-                        [self showReview];
-                    }
-                }          cancelTitle:[PearlStrings get].reviewNo
-                           otherTitles:[PearlStrings get].reviewYes, [PearlStrings get].reviewIssue, nil];
+    if (!([[PearlConfig get].launchCount intValue] % [[PearlConfig get].reviewAfterLaunches intValue])) { // Sufficiently used?
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[PearlStrings get].reviewTitle message:
+                        strf( [PearlStrings get].reviewMessage, [PearlInfoPlist get].CFBundleDisplayName )
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:[PearlStrings get].reviewNo style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:[PearlStrings get].reviewYes style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self showReview];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:[PearlStrings get].reviewIssue style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self showFeedback];
+        }]];
+        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

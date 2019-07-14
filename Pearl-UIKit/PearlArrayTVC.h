@@ -40,10 +40,7 @@ __END_DECLS
 
 @end
 
-@interface PearlArrayTVC : UITableViewController {
-
-    NSMutableArray *_sections;
-}
+@interface PearlArrayTVC : UITableViewController
 
 /**
  * Remove all rows and sections from the table.

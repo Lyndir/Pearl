@@ -17,10 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PearlAbstractStrings : NSObject {
-
-    NSString *_tableName;
-}
+@interface PearlAbstractStrings : NSObject
 
 - (id)initWithTable:(NSString *)tableName;
 

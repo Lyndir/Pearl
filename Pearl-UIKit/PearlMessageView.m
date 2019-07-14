@@ -19,9 +19,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PearlMessageView.h"
 
-@implementation PearlMessageView
-
-@synthesize corners = _corners, fill = _fill, radii = _radii;
+@implementation PearlMessageView {
+    BOOL _initialized;
+}
 
 - (id)initWithFrame:(CGRect)aFrame {
 

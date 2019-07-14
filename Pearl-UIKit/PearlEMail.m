@@ -139,14 +139,16 @@
             break;
 
         case MFMailComposeResultFailed: {
-            [PearlAlert showError:@"A problem occurred with your E-Mail."
-                tappedButtonBlock:^(UIAlertView *alert, NSInteger buttonIndex) {
-                    if (buttonIndex == [alert firstOtherButtonIndex])
-                        return;
-
-                    [controller dismissViewControllerAnimated:YES completion:nil];
-                    [[PearlEMail activeComposers] removeObject:self];
-                } otherTitles:@"Retry", nil];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"A problem occurred with your E-Mail."
+                                                                           message:[error localizedDescription]
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:PearlStrings.get.commonButtonOkay style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction *action) {
+                                                        [controller dismissViewControllerAnimated:YES completion:nil];
+                                                        [[PearlEMail activeComposers] removeObject:self];
+                                                    }]];
+            [alert addAction:[UIAlertAction actionWithTitle:PearlStrings.get.commonButtonRetry style:UIAlertActionStyleDefault handler:nil]];
+            [controller presentViewController:alert animated:YES completion:nil];
             return;
         }
     }

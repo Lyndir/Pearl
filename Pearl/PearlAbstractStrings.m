@@ -17,8 +17,6 @@
 
 @implementation PearlAbstractStrings
 
-@synthesize tableName = _tableName;
-
 - (id)initWithTable:(NSString *)tableName {
 
     if (!(self = [super init]))

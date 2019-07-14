@@ -30,7 +30,7 @@
             } );
     PearlAddNotificationObserverTo( layoutGuide, UIKeyboardWillShowNotification, nil, NSOperationQueue.mainQueue,
             ^(UILayoutGuide *layoutGuide, NSNotification *notification) {
-                NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]?: 0.3;
+                NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey]?: @0.3 doubleValue];
                 [view layoutIfNeeded];
                 [UIView animateWithDuration:duration animations:^{
                     for (NSLayoutConstraint *constraint in layoutConstraints)
@@ -40,7 +40,7 @@
             } );
     PearlAddNotificationObserverTo( layoutGuide, UIKeyboardWillHideNotification, nil, NSOperationQueue.mainQueue,
             ^(UILayoutGuide *layoutGuide, NSNotification *notification) {
-                NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue]?: 0.3;
+                NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey]?: @0.3 doubleValue];
                 [view layoutIfNeeded];
                 [UIView animateWithDuration:duration animations:^{
                     for (NSLayoutConstraint *constraint in layoutConstraints)

@@ -26,7 +26,10 @@
 #define PearlATVCRowContext     @"Pearl.ArrayTVC.context"
 #define PearlATVCCellStyle      @"Pearl.ArrayTVC.cellstyle"
 
-@implementation PearlArrayTVC
+@implementation PearlArrayTVC {
+
+    NSMutableArray *_sections;
+}
 
 - (id)init {
 

@@ -24,7 +24,10 @@
 
 @end
 
-@implementation PearlValidatingTextField
+@implementation PearlValidatingTextField {
+    BOOL                            (^_isValid)(void);
+    UIView *_validView, *_invalidView;
+}
 
 @synthesize validationDelegate;
 

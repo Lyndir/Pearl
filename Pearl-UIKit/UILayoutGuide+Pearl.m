@@ -11,6 +11,7 @@
                                      constraints:(NSArray <NSLayoutConstraint *> *( ^ )(UILayoutGuide *keyboardLayoutGuide))block {
 
     UILayoutGuide *layoutGuide = [self new];
+    layoutGuide.identifier = @"PearlKeyboardLayoutGuide";
     [view addLayoutGuide:layoutGuide];
 
     NSLayoutConstraint *keyboardTopConstraint = [[layoutGuide.topAnchor constraintEqualToAnchor:view.topAnchor] activate];

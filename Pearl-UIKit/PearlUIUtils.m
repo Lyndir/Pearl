@@ -586,7 +586,7 @@ static NSMutableSet *dismissableResponders;
             if (constraint.firstItem != self && constraint.secondItem != self)
                 continue;
 
-            [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder class], [constraint debugDescription]];
+            [layout appendFormat:@"\n  - [%@%@] %@", ancestry, [constraintHolder infoName], [constraint debugDescription]];
         }
 
     return layout;

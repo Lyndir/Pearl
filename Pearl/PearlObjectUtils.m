@@ -213,7 +213,10 @@ NSString *PearlDescribeC(const Class c) {
         swiftTypePattern = [NSRegularExpression regularExpressionWithPattern:@"^_T[^0-9]*" options:0 error:nil];
     } );
 
-    NSString *className = NSStringFromClass( c );
+    if (c == nil)
+        return nil;
+
+    NSString *className = NSStringFromClass( c )?: [NSString stringWithUTF8String:class_getName( c )];
     if (!className)
         return nil;
 
@@ -227,7 +230,7 @@ NSString *PearlDescribeC(const Class c) {
         NSMutableArray *decoded = [NSMutableArray new];
         for (NSUInteger index = 0; index < decoding.length;) {
             NSUInteger length = (NSUInteger)[[decoding substringFromIndex:index] integerValue];
-            NSUInteger lengthLength = length / 10 + 1;
+            NSUInteger lengthLength = (NSUInteger)log10( length ) + 1;
             [decoded addObject:[decoding substringWithRange:NSMakeRange( index + lengthLength, length )]];
             index += lengthLength + length;
         }

@@ -207,7 +207,7 @@ __END_DECLS
 - (NSString *)infoShortName;
 - (NSString *)infoPathName;
 - (NSString *)pointerPathName;
-/** Return a string that briefly describes this view's layout. */
+/** Return a string that briefly describes the constraints affecting this view's layout. */
 - (NSString *)layoutDescription;
 
 @end

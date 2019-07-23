@@ -67,7 +67,7 @@
 #endif
 	[CCDirector sharedDirector].openGLView          = [EAGLView viewWithFrame:self.window.rootViewController.view.frame
                                                                   pixelFormat:kEAGLColorFormatRGBA8];
-    [CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
+    //[CCDirector sharedDirector].deviceOrientation   = [UIApplication sharedApplication].statusBarOrientation;
     
     self.window.rootViewController.view.hidden = YES;
     [self.window addSubview:[CCDirector sharedDirector].openGLView];

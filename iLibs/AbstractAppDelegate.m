@@ -82,7 +82,7 @@
         [[AudioController get] playTrack:[Config get].currentTrack];
 
     if (!self.window) {
-        self.window = [[[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
+        self.window = [[[UIWindow alloc] init] autorelease];
         self.window.rootViewController = [[RootViewController new] autorelease];
     }
 }

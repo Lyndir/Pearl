@@ -230,6 +230,9 @@ NSString *PearlDescribeC(const Class c) {
         NSMutableArray *decoded = [NSMutableArray new];
         for (NSUInteger index = 0; index < decoding.length;) {
             NSUInteger length = (NSUInteger)[[decoding substringFromIndex:index] integerValue];
+            if (!length)
+                break;
+
             NSUInteger lengthLength = (NSUInteger)log10( length ) + 1;
             [decoded addObject:[decoding substringWithRange:NSMakeRange( index + lengthLength, length )]];
             index += lengthLength + length;

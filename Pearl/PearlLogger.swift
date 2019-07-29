@@ -33,7 +33,7 @@ public func dbg(_ message: String,
 @discardableResult
 public func dbg(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-        if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.debug.rawValue {
+    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.debug.rawValue {
         return nil;
     }
 
@@ -52,7 +52,7 @@ public func inf(_ message: String,
 @discardableResult
 public func inf(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-        if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.info.rawValue {
+    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.info.rawValue {
         return nil;
     }
 
@@ -71,7 +71,7 @@ public func wrn(_ message: String,
 @discardableResult
 public func wrn(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-        if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.warn.rawValue {
+    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.warn.rawValue {
         return nil;
     }
 
@@ -90,7 +90,7 @@ public func err(_ message: String,
 @discardableResult
 public func err(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-        if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.error.rawValue {
+    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.error.rawValue {
         return nil;
     }
 
@@ -109,7 +109,7 @@ public func ftl(_ message: String,
 @discardableResult
 public func ftl(format: String, _ args: Any?...,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-        if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.fatal.rawValue {
+    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.fatal.rawValue {
         return nil;
     }
 

@@ -25,12 +25,15 @@ static __weak UIResponder *_currentFirstResponder;
 + (UIResponder *)findFirstResponder {
 
     @synchronized ([UIResponder class]) {
-        _currentFirstResponder = nil;
-        // Sending an action to nil causes the first responder to handle it, if there is one.
-        [[UIApplication sharedApplication] sendAction:@selector(updateCurrentFirstResponder:) to:nil from:nil forEvent:nil];
-
+        [self updateCurrentFirstResponder];
         return _currentFirstResponder;
     }
+}
+
++ (void)updateCurrentFirstResponder {
+    _currentFirstResponder = nil;
+    // Sending an action to nil causes the first responder to handle it, if there is one.
+    [[UIApplication sharedApplication] sendAction:@selector(updateCurrentFirstResponder:) to:nil from:nil forEvent:nil];
 }
 
 - (void)updateCurrentFirstResponder:(id)sender {

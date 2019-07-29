@@ -177,8 +177,9 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
                     err(@"Cannot update %@: Value type is not supported by plists and is not codable: %@", selector, newValue);
         }
         [self.defaults setValue:newValue forKey:selector];
-        if ([self.delegate respondsToSelector:@selector(didUpdateConfigForKey:fromValue:)])
-            [self.delegate didUpdateConfigForKey:NSSelectorFromString( selector ) fromValue:currentValue];
+        id<PearlConfigDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(didUpdateConfigForKey:fromValue:)])
+            [delegate didUpdateConfigForKey:NSSelectorFromString( selector ) fromValue:currentValue];
 
 #ifdef PEARL_UIKIT
         NSString *resetTriggerKey = (self.resetTriggers)[selector];

@@ -40,9 +40,11 @@
 
     // Remove ourselves as children from former parents.
     NSArray *oldGoneParentRefs = [self getAssociatedObjectForSelector:@selector( goneParents )];
-    for (PearlWeakReference *oldGoneParentRef in oldGoneParentRefs)
-        if (![newGoneParents containsObject:PearlNotNull(oldGoneParentRef.object)])
-            [((UIView *)oldGoneParentRef.object).goneChildren removeObject:self];
+    for (PearlWeakReference *oldGoneParentRef in oldGoneParentRefs) {
+        UIView *object = oldGoneParentRef.object;
+        if (![newGoneParents containsObject:PearlNotNull(object)])
+            [object.goneChildren removeObject:self];
+    }
 
     // Add ourselves as children to new parents.
     NSMutableArray *newGoneParentRefs = [NSMutableArray arrayWithCapacity:newGoneParents.count];

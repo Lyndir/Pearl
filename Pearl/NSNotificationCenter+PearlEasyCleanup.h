@@ -43,8 +43,9 @@ static char NotificationObserversKey;
                 [[NSNotificationCenter defaultCenter] removeObserver:observer name:(_name) object:nil]; \
             observer = [[NSNotificationCenter defaultCenter] \
                     addObserverForName:(_name) object:(_object) queue:(_queue) usingBlock:^(NSNotification *note) { \
-                        if (wHost) \
-                            __noteblock(wHost, note); \
+                        __strong __typeof(_host) host = wHost; \
+                        if (host) \
+                            __noteblock(host, note); \
                         else \
                             [[NSNotificationCenter defaultCenter] removeObserver:observer]; \
                     }]; \

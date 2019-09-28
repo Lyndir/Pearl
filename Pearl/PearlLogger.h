@@ -19,24 +19,24 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
-#define trc(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelTrace) \
+#define trc(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelTrace) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        trc:(format), ##__VA_ARGS__]; })
-#define dbg(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelDebug) \
+                                                        trc:(format), ##__VA_ARGS__]; } while (0)
+#define dbg(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelDebug) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        dbg:(format), ##__VA_ARGS__]; })
-#define inf(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelInfo) \
+                                                        dbg:(format), ##__VA_ARGS__]; } while (0)
+#define inf(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelInfo) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        inf:(format), ##__VA_ARGS__]; })
-#define wrn(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelWarn) \
+                                                        inf:(format), ##__VA_ARGS__]; } while (0)
+#define wrn(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelWarn) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        wrn:(format), ##__VA_ARGS__]; })
-#define err(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelError) \
+                                                        wrn:(format), ##__VA_ARGS__]; } while (0)
+#define err(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelError) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        err:(format), ##__VA_ARGS__]; })
-#define ftl(format, ...)    ({ if ([PearlLogger get].minimumLevel <= PearlLogLevelFatal) \
+                                                        err:(format), ##__VA_ARGS__]; } while (0)
+#define ftl(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelFatal) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
-                                                        ftl:(format), ##__VA_ARGS__]; })
+                                                        ftl:(format), ##__VA_ARGS__]; } while (0)
 #define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
 #define dbg_return_tr(__ret, __to_id, ...) \
                             do { \

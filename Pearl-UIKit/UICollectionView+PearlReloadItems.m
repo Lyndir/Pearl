@@ -62,8 +62,10 @@
                     NSIndexPath *fromIndexPath = [NSIndexPath indexPathForItem:index inSection:section];
                     NSIndexPath *toIndexPath = [self indexPathForItem:item inSections:newSections];
 
-                    if (!toIndexPath && section < [newSections count])
-                        [deletePaths addObject:fromIndexPath];
+                    if (!toIndexPath) {
+                        if (section < [newSections count])
+                            [deletePaths addObject:fromIndexPath];
+                    }
 
                     else if (![fromIndexPath isEqual:toIndexPath])
                         movedPaths[fromIndexPath] = toIndexPath;

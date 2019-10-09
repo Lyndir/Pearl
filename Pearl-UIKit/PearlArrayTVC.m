@@ -90,8 +90,8 @@
             NSMutableArray *sectionRows = [[section allValues] lastObject];
 
             for (NSDictionary *row in sectionRows)
-                if ((aName == nil && row[PearlATVCRowName] == [NSNull null]) ||
-                    [row[PearlATVCRowName] isEqualToString:aName]) {
+                if ((!aName && row[PearlATVCRowName] == [NSNull null]) ||
+                        (aName && [row[PearlATVCRowName] isEqualToString:aName])) {
                     [sectionRows removeObject:row];
                     return;
                 }

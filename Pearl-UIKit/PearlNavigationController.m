@@ -29,7 +29,7 @@
     if (self.forwardInterfaceRotation && self.topViewController)
         return [self.topViewController shouldAutorotate];
 
-    if (_shouldAutorotate)
+    if (_shouldAutorotate != nil)
         return [_shouldAutorotate boolValue];
 
     return [super shouldAutorotate];
@@ -45,8 +45,8 @@
     if (self.forwardInterfaceRotation && self.topViewController)
         return [self.topViewController supportedInterfaceOrientations];
 
-    if (_supportedInterfaceOrientations)
-        return [_supportedInterfaceOrientations unsignedIntegerValue];
+    if (_supportedInterfaceOrientations != nil)
+        return (UIInterfaceOrientationMask)[_supportedInterfaceOrientations unsignedIntegerValue];
 
     return [super supportedInterfaceOrientations];
 }
@@ -58,7 +58,7 @@
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
 
-    UIInterfaceOrientation preferredInterfaceOrientationForPresentation = 0;
+    UIInterfaceOrientation preferredInterfaceOrientationForPresentation;
     UIInterfaceOrientationMask supportedInterfaceOrientations = [self supportedInterfaceOrientations];
 
     if (self.forwardInterfaceRotation && self.topViewController) {
@@ -67,8 +67,8 @@
             return preferredInterfaceOrientationForPresentation;
     }
 
-    if (_preferredInterfaceOrientationForPresentation) {
-        if (1 << (preferredInterfaceOrientationForPresentation = [_preferredInterfaceOrientationForPresentation integerValue]) &
+    if (_preferredInterfaceOrientationForPresentation != nil) {
+        if (1 << (preferredInterfaceOrientationForPresentation = (UIInterfaceOrientation)[_preferredInterfaceOrientationForPresentation integerValue]) &
             supportedInterfaceOrientations)
             return preferredInterfaceOrientationForPresentation;
     }

@@ -770,7 +770,7 @@ inline NSString *PearlDescribeO(const UIOffset ofs) {
 
     if (!assignDepth) {
       NSNumber *resetValue = objc_getAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ) );
-      if (resetValue) {
+      if (resetValue != nil) {
         objc_setAssociatedObject( self, @selector( resetPreferredMaxLayoutWidth ), nil, OBJC_ASSOCIATION_RETAIN );
         [(UILabel *)self setPreferredMaxLayoutWidth:[resetValue floatValue]];
       }

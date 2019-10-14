@@ -72,12 +72,12 @@ static CGSize PearlNoIntrinsicMetric;
 }
 
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets {
-    PearlSwizzleTR( [self class], @selector( alignmentRectInsets ), ^UIEdgeInsets, (UIView *self), {
-        return [objc_getAssociatedObject( self, @selector( setAlignmentRectInsets: ) ) UIEdgeInsetsValue];
-    }, UIEdgeInsetsValue );
-
-    objc_setAssociatedObject( self, @selector( setAlignmentRectInsets: ),
+    objc_setAssociatedObject( self, @selector( alignmentRectInsets ),
         [NSValue valueWithUIEdgeInsets:alignmentRectInsets], OBJC_ASSOCIATION_RETAIN );
+}
+
+- (UIEdgeInsets)alignmentRectInsets {
+    return [objc_getAssociatedObject( self, @selector( alignmentRectInsets ) ) UIEdgeInsetsValue];
 }
 
 - (void)setAlignmentRectOutsets:(UIEdgeInsets)alignmentRectOutsets {

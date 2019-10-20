@@ -10,4 +10,6 @@
 + (__nullable instancetype)installKeyboardLayoutGuideInView:(UIView *__nonnull)view constraints:
         (NSArray <NSLayoutConstraint *> *__nonnull ( ^ __nonnull )(UILayoutGuide *__nonnull keyboardLayoutGuide))block;
 
+- (void)uninstallKeyboardLayoutGuide;
+
 @end

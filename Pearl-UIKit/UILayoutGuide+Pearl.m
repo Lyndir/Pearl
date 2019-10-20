@@ -53,4 +53,8 @@
     return layoutGuide;
 }
 
+- (void)uninstallKeyboardLayoutGuide {
+    PearlRemoveNotificationObserversFrom( self );
+}
+
 @end

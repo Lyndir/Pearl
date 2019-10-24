@@ -18,6 +18,8 @@
 #import <UIKit/UIKit.h>
 #import <AvailabilityMacros.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIControl(PearlBlocks)
 
 - (void)addActionForControlEvents:(UIControlEvents)controlEvents
@@ -28,3 +30,5 @@
       forControlEvents:(UIControlEvents)controlEvents DEPRECATED_ATTRIBUTE;
 
 @end
+
+NS_ASSUME_NONNULL_END

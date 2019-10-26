@@ -8,117 +8,58 @@ import Foundation
 @discardableResult
 public func trc(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return trc( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
-}
-
-@discardableResult
-public func trc(format: String, _ args: Any?...,
-                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.trace.rawValue {
-        return nil;
-    }
-
-    return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.trace, format: format, args: $0 )
-    }
+    log( message, level: .trace, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
 public func dbg(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return dbg( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
-}
-
-@discardableResult
-public func dbg(format: String, _ args: Any?...,
-                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.debug.rawValue {
-        return nil;
-    }
-
-    return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.debug, format: format, args: $0 )
-    }
+    log( message, level: .debug, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
 public func inf(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return inf( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
-}
-
-@discardableResult
-public func inf(format: String, _ args: Any?...,
-                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.info.rawValue {
-        return nil;
-    }
-
-    return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.info, format: format, args: $0 )
-    }
+    log( message, level: .info, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
 public func wrn(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return wrn( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
-}
-
-@discardableResult
-public func wrn(format: String, _ args: Any?...,
-                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.warn.rawValue {
-        return nil;
-    }
-
-    return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.warn, format: format, args: $0 )
-    }
+    log( message, level: .warn, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
 public func err(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return err( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
-}
-
-@discardableResult
-public func err(format: String, _ args: Any?...,
-                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.error.rawValue {
-        return nil;
-    }
-
-    return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.error, format: format, args: $0 )
-    }
+    log( message, level: .error, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
 public func ftl(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    return ftl( format: "%@", message, inFile: file, atLine: line, fromFunction: f );
+    log( message, level: .fatal, inFile: file, atLine: line, fromFunction: f );
 }
 
 @discardableResult
-public func ftl(format: String, _ args: Any?...,
+public func log(_ message: String, level: PearlLogLevel,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
-    if PearlLogger.get().minimumLevel.rawValue > PearlLogLevel.fatal.rawValue {
+    log( format: "%@", message, level: level, inFile: file, atLine: line, fromFunction: f );
+}
+
+@discardableResult
+public func log(format: String, _ args: Any?..., level: PearlLogLevel,
+                inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
+    if PearlLogger.get().minimumLevel.rawValue > level.rawValue {
         return nil;
     }
 
     return withAnyVaList( args: args ) {
         PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
-                                  with: PearlLogLevel.fatal, format: format, args: $0 )
+                                  with: level, format: format, args: $0 )
     }
 }
 
-public func withAnyVaList<R>(args: [Any?], _ f: (CVaListPointer) -> R) -> R {
-    return withVaList( args.map( { return ($0 ?? "<nil>" as NSString) as? CVarArg ?? "<not an object>" } ), f )
+private func withAnyVaList<R>(args: [Any?], _ f: (CVaListPointer) -> R) -> R {
+    withVaList( args.map( { ($0 ?? "<nil>" as NSString) as? CVarArg ?? "<not an object>" } ), f )
 }

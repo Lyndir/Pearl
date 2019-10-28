@@ -271,8 +271,23 @@ static NSMutableSet *dismissableResponders;
 
 @implementation UIView(PearlUIUtils)
 
+//+ (void)load {
+//    PearlSwizzle( [UIView class], @selector( accessibilityIdentifier ), ^NSString *, (UIView *self), {
+//        @try {
+//            skipAccessibilityIdentifier = YES;
+//            return [self accessibilityIdentifier]?: [self infoShortName];
+//        } @finally {
+//            skipAccessibilityIdentifier = NO;
+//        }
+//    });
+//}
 - (NSString *)accessibilityIdentifier {
-    return [self infoShortName];
+    @try {
+        skipAccessibilityIdentifier = YES;
+        return [self infoShortName];
+    } @finally {
+        skipAccessibilityIdentifier = NO;
+    }
 }
 
 - (UILongPressGestureRecognizer *)dismissKeyboardOnTouch {
@@ -521,6 +536,7 @@ static NSMutableSet *dismissableResponders;
     return description;
 }
 
+static BOOL skipAccessibilityIdentifier = NO;
 - (NSString *)infoName {
     // Find the view controller
     NSString *property = nil;
@@ -529,11 +545,13 @@ static NSMutableSet *dismissableResponders;
         if ((property = [nextResponder ivarWithValue:self]))
             break;
 
-    NSString *name;
-    if (!property)
-        name = PearlDescribeC( [self class] );
-    else
-        name = strf(@"%@ %@", PearlDescribeCShort( [self class] ), property);
+    NSString *name = skipAccessibilityIdentifier? nil: [self accessibilityIdentifier];
+    if (!name.length) {
+        if (!property)
+            name = PearlDescribeC( [self class] );
+        else
+            name = strf(@"%@ %@", PearlDescribeCShort( [self class] ), property);
+    }
     if (nextResponder)
         name = strf(@"%@ @%@", name, PearlDescribeCShort( [nextResponder class] ));
     return name;

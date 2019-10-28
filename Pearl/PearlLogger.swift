@@ -5,6 +5,41 @@
 
 import Foundation
 
+extension PearlLogLevel: Strideable, CaseIterable, CustomStringConvertible {
+    public private(set) static var allCases = [ PearlLogLevel ]( (.trace)...(.fatal) )
+
+    public func distance(to other: PearlLogLevel) -> Int {
+        Int( other.rawValue ) - Int( self.rawValue )
+    }
+
+    public func advanced(by n: Int) -> PearlLogLevel {
+        PearlLogLevel( rawValue: UInt( Int( self.rawValue ) + n ) )!
+    }
+
+    public var description: String {
+        switch self {
+            case .trace:
+                return "Trace"
+            case .debug:
+                return "Debug"
+            case .info:
+                return "Info"
+            case .warn:
+                return "Warn"
+            case .error:
+                return "Error"
+            case .fatal:
+                return "Fatal"
+            @unknown default:
+                fatalError( "Unsupported log level: \(self.rawValue)" )
+        }
+    }
+
+    public var short: String {
+        String( validatingUTF8: PearlLogLevelStr( self ) )!
+    }
+}
+
 @discardableResult
 public func trc(_ message: String,
                 inFile file: String = #file, atLine line: Int = #line, fromFunction f: String = #function) -> PearlLogger? {
@@ -55,7 +90,7 @@ public func log(format: String, _ args: Any?..., level: PearlLogLevel,
     }
 
     return withAnyVaList( args: args ) {
-        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent, atLine: line, fromFunction: f,
+        PearlLogger.get().inFile( NSURL( fileURLWithPath: file ).lastPathComponent!, atLine: line, fromFunction: f,
                                   with: level, format: format, args: $0 )
     }
 }

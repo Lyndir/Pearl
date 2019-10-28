@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import <libgen.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #define trc(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelTrace) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                         trc:(format), ##__VA_ARGS__]; } while (0)
@@ -51,7 +53,7 @@
 
 __BEGIN_DECLS
 /** Levels that determine the importance of logging events. */
-typedef NS_ENUM(NSUInteger, PearlLogLevel) {
+typedef NS_ENUM( NSUInteger, PearlLogLevel ) {
     /** Trace internal operations. */
             PearlLogLevelTrace,
     /** Inform the developer of certain events and information. */
@@ -85,8 +87,15 @@ __END_DECLS
 - (id)initInFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
        withLevel:(PearlLogLevel)aLevel text:(NSString *)aMessage;
 
+/** Description of when the message was logged. */
 - (NSString *)occurrenceDescription;
+
+/** Description of the code that triggered the message. */
+- (NSString *)sourceDescription;
+
+/** Description of the message that was logged, its level, and the code that triggered it. */
 - (NSString *)messageDescription;
+
 @end
 
 /**
@@ -109,8 +118,8 @@ __END_DECLS
 /** Obtain the shared Logger instance. */
 + (instancetype)get;
 
-/** Obtain the logged events in a formatted string fit for display. Requires history to be enabled. */
-- (NSArray *)messagesWithLevel:(PearlLogLevel)level;
+/** Obtain the logged events. Requires history to be enabled. */
+- (NSArray<PearlLogMessage *> *)messagesWithLevel:(PearlLogLevel)level;
 
 /** Obtain the logged events in a formatted string fit for display. Requires history to be enabled. */
 - (NSString *)formatMessagesWithLevel:(PearlLogLevel)level;
@@ -121,7 +130,7 @@ __END_DECLS
 /** Register a listener invoked for each message that gets logged.
  *
  * @param listener A block that takes a message and returns YES if the message may be logged and passed to other listeners, or NO if its handling should be stopped and the message should not be logged. */
-- (void)registerListener:(BOOL (^)(PearlLogMessage *message))listener;
+- (void)registerListener:(BOOL ( ^ )(PearlLogMessage *__nonnull message))listener;
 
 /** Log a new event on a specified level. */
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function
@@ -131,21 +140,23 @@ __END_DECLS
 
 /** Log a new TRACE-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    trc:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    trc:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 /** Log a new DEBUG-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    dbg:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    dbg:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 /** Log a new INFO-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    inf:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    inf:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 /** Log a new WARNING-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    wrn:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    wrn:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 /** Log a new ERROR-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    err:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    err:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 /** Log a new FATAL-level event. */
 - (PearlLogger *)inFile:(const char *)fileName atLine:(long)lineNumber fromFunction:(const char *)function
-                    ftl:(NSString *)format, ... NS_FORMAT_FUNCTION(4, 5);
+                    ftl:(NSString *)format, ... NS_FORMAT_FUNCTION( 4, 5 );
 
 @end
+
+NS_ASSUME_NONNULL_END

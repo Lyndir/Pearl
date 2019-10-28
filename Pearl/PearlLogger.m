@@ -88,6 +88,11 @@ id returnArg(id arg) {
     return [[self occurrenceFormatter] stringFromDate:self.occurrence];
 }
 
+- (NSString *)sourceDescription {
+
+    return [NSString stringWithFormat:@"%s:%ld", self.fileName.UTF8String, self.lineNumber];
+}
+
 - (NSString *)messageDescription {
 
     return [NSString stringWithFormat:@"%30s:%-3ld %-3s | %@", //
@@ -113,14 +118,15 @@ id returnArg(id arg) {
         return nil;
 
     self.messages = [NSMutableArray arrayWithCapacity:20];
-    self.listeners = [NSMutableArray array];
-    self.minimumLevel = PearlLogLevelInfo;
+    self.listeners = [NSMutableArray arrayWithCapacity:1];
 #if DEBUG
     self.printLevel = PearlLogLevelDebug;
     self.historyLevel = PearlLogLevelDebug;
+    self.minimumLevel = PearlLogLevelTrace;
 #else
     self.printLevel = PearlLogLevelInfo;
     self.historyLevel = PearlLogLevelWarn;
+    self.minimumLevel = PearlLogLevelDebug;
 #endif
 
     return self;
@@ -181,6 +187,9 @@ id returnArg(id arg) {
 
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level text:(NSString *)text {
 
+    if (level < [PearlLogger get].minimumLevel)
+        return self;
+
     NSMutableDictionary *threadLocals = [[NSThread currentThread] threadDictionary];
     if (!threadLocals || [[threadLocals allKeys] containsObject:@"PearlDisableLog"])
         return self;
@@ -189,9 +198,7 @@ id returnArg(id arg) {
     @synchronized (self.listeners) {
         @try {
             threadLocals[@"PearlDisableLog"] = @YES;
-            for (
-                    BOOL (^listener)(PearlLogMessage *)
-                    in self.listeners)
+            for (BOOL (^listener)(PearlLogMessage *) in self.listeners)
                 if (!listener( message ))
                     return self;
         }
@@ -213,6 +220,9 @@ id returnArg(id arg) {
 }
 
 - (PearlLogger *)inFile:(NSString *)fileName atLine:(long)lineNumber fromFunction:(NSString *)function withLevel:(PearlLogLevel)level format:(NSString *)format args:(va_list)argList {
+
+    if (level < [PearlLogger get].minimumLevel)
+        return self;
 
     NSString *message;
     @try {

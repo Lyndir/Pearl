@@ -55,6 +55,7 @@
 
 - (void)uninstallKeyboardLayoutGuide {
     PearlRemoveNotificationObserversFrom( self );
+    [self.owningView removeLayoutGuide:self];
 }
 
 @end

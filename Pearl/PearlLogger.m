@@ -8,6 +8,8 @@
 * @license  http://www.gnu.org/licenses/lgpl-3.0.txt
 */
 
+#import <os/log.h>
+
 //
 //  PearlLogger.m
 //  Pearl
@@ -208,8 +210,23 @@ id returnArg(id arg) {
     }
 
     if (level >= self.printLevel)
-        @synchronized (self) {
-            fprintf( stderr, "%s\n", [[message description] cStringUsingEncoding:NSUTF8StringEncoding] );
+        switch (level) {
+            case PearlLogLevelTrace:
+            case PearlLogLevelDebug:
+                os_log_debug( OS_LOG_DEFAULT, "%@", message.messageDescription );
+                break;
+            case PearlLogLevelInfo:
+                os_log_info( OS_LOG_DEFAULT, "%@", message.messageDescription );
+                break;
+            case PearlLogLevelWarn:
+                os_log( OS_LOG_DEFAULT, "%@", message.messageDescription );
+                break;
+            case PearlLogLevelError:
+                os_log_error( OS_LOG_DEFAULT, "%@", message.messageDescription );
+                break;
+            case PearlLogLevelFatal:
+                os_log_fault( OS_LOG_DEFAULT, "%@", message.messageDescription );
+                break;
         }
     if (message.level >= self.historyLevel)
         @synchronized (self.messages) {

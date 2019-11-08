@@ -21,6 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#ifndef trc
 #define trc(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelTrace) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                         trc:(format), ##__VA_ARGS__]; } while (0)
@@ -39,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define ftl(format, ...)    do { if ([PearlLogger get].minimumLevel <= PearlLogLevelFatal) \
                                   [[PearlLogger get] inFile:basename((char *)__FILE__) atLine:__LINE__ fromFunction:__FUNCTION__ \
                                                         ftl:(format), ##__VA_ARGS__]; } while (0)
+#endif
+
 #define dbg_return(__ret, ...)   dbg_return_tr(__ret, )
 #define dbg_return_tr(__ret, __to_id, ...) \
                             do { \

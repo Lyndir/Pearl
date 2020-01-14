@@ -117,25 +117,25 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
         Method proxyMethod = class_getInstanceMethod( type, proxySel );
 
         // Copy the original implementation to `type` if before it existed on a supertype: we don't want to swizzle at the supertype level.
-        IMP originalImplementation = method_getImplementation( originalMethod );
-        if (class_addMethod( type, sel, originalImplementation, methodTypes ))
+        IMP original = method_getImplementation( originalMethod );
+        if (class_addMethod( type, sel, original, methodTypes ))
             originalMethod = class_getInstanceMethod( type, sel );
 
-        trc( @"Will swizzle %@ for %@, original state is:", NSStringFromSelector( sel ), type );
-        trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( originalMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]] =
-                        strf( @"orig %@", PearlDescribeCShort( type ) ),
-                @((long)method_getImplementation( originalMethod )) );
-        trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( proxyMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]] =
-                        strf( @"proxy %@", PearlDescribeCShort( type ) ),
-                @((long)method_getImplementation( proxyMethod )) );
+        imps[[NSValue valueWithPointer:original]] = strf( @"%@:orig", PearlDescribeCShort( type ) );
+        imps[[NSValue valueWithPointer:replacement]] = strf( @"%@:proxy", PearlDescribeCShort( type ) );
+        //trc( @"Will swizzle %@ for %@, original state is:", NSStringFromSelector( sel ), type );
+        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( originalMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
+        //        @((long)method_getImplementation( originalMethod )) );
+        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( proxyMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
+        //        @((long)method_getImplementation( proxyMethod )) );
 
         // Do the swizzle!
         method_exchangeImplementations( originalMethod, proxyMethod );
-        return originalImplementation;
+        return original;
     }
 }
 
@@ -157,15 +157,15 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id _Nonnull block) {
     }
 
     @try {
-        trc( @"Will handle swizzled %@ (depth: %d), state is:", NSStringFromSelector( sel ), depth );
-        trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( originalMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-                @((long)method_getImplementation( originalMethod )) );
-        trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( proxyMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-                @((long)method_getImplementation( proxyMethod )) );
+        //trc( @"Will handle swizzled %@ (depth: %d), state is:", NSStringFromSelector( sel ), depth );
+        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( originalMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
+        //        @((long)method_getImplementation( originalMethod )) );
+        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( proxyMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
+        //        @((long)method_getImplementation( proxyMethod )) );
         if (++depth > 99) {
             err( @"stuck in recurse loop?" );
             return nil;
@@ -173,20 +173,20 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id _Nonnull block) {
 
         // Temporarily restore the unswizzled state.
         method_exchangeImplementations( proxyMethod, originalMethod );
-        trc( @"Temporarily restored original implementation at the original method:" );
-        trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( originalMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-                @((long)method_getImplementation( originalMethod )) );
-        trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( proxyMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-                @((long)method_getImplementation( proxyMethod )) );
+        //trc( @"Temporarily restored original implementation at the original method:" );
+        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( originalMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
+        //        @((long)method_getImplementation( originalMethod )) );
+        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( proxyMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
+        //        @((long)method_getImplementation( proxyMethod )) );
 
         NSValue *returnValue = nil;
         NSUInteger size, alignment;
         NSGetSizeAndAlignment( returnType, &size, &alignment );
-        trc( @"Invoking swizzle block." );
+        //trc( @"Invoking swizzle block." );
         if (!size) // 0, void
             ((void ( ^ )(void))block)();
 
@@ -231,15 +231,15 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id _Nonnull block) {
 
         // Restore the swizzled state.
         method_exchangeImplementations( originalMethod, proxyMethod );
-        trc( @"Restored swizzled implementation at original method, state is:" );
-        trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( originalMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-                @((long)method_getImplementation( originalMethod )) );
-        trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-                NSStringFromSelector( method_getName( proxyMethod ) ),
-                imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-                @((long)method_getImplementation( proxyMethod )) );
+        //trc( @"Restored swizzled implementation at original method, state is:" );
+        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( originalMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
+        //        @((long)method_getImplementation( originalMethod )) );
+        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
+        //        NSStringFromSelector( method_getName( proxyMethod ) ),
+        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
+        //        @((long)method_getImplementation( proxyMethod )) );
     }
 }
 

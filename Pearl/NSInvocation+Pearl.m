@@ -121,7 +121,8 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
         if (class_addMethod( type, sel, original, methodTypes ))
             originalMethod = class_getInstanceMethod( type, sel );
 
-        imps[[NSValue valueWithPointer:original]] = strf( @"%@:orig", PearlDescribeCShort( type ) );
+        if (!imps[[NSValue valueWithPointer:original]])
+            imps[[NSValue valueWithPointer:original]] = strf( @"%@:orig", PearlDescribeCShort( type ) );
         imps[[NSValue valueWithPointer:replacement]] = strf( @"%@:proxy", PearlDescribeCShort( type ) );
         //trc( @"Will swizzle %@ for %@, original state is:", NSStringFromSelector( sel ), type );
         //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",

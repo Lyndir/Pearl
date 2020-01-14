@@ -14,7 +14,7 @@
     if (self.visible == visible)
         return;
 
-    PearlSwizzle( [self class], @selector( setAlpha: ), ^, (UIView *self, CGFloat desiredAlpha), {
+    PearlSwizzle( [UIView class], @selector( setAlpha: ), ^, (UIView *self, CGFloat desiredAlpha), {
         [self _pearl_visible_setDesiredAlpha:desiredAlpha];
 
         if (self.visible)

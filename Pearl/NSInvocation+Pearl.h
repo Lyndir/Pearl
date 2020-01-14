@@ -29,12 +29,12 @@
  */
 #define PearlSwizzleTR(type, sel, rv, args, imp, tr) ({                   \
     __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \
-    __block IMP _original = PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( rv args {  \
-        return [PearlSwizzleIMP( _type, _sel, _original, rv imp ) tr];                  \
+    PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( rv args {  \
+        return [PearlSwizzleIMP( _type, _sel, self, rv imp ) tr];                  \
     } ) );                                                                  \
 })
 extern IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement);
-extern NSValue *PearlSwizzleIMP(Class type, SEL sel, IMP original, id block);
+extern NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id block);
 
 /**
  * Initialize an NSInvocation populated with the current varargs starting after `args`.

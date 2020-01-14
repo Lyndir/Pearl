@@ -111,10 +111,10 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
       if (class_addMethod( type, sel, originalImplementation, methodTypes ))
             originalMethod = class_getInstanceMethod( type, sel );
 
-        //NSLog( @"Swizzling %@ for %@:", NSStringFromSelector( sel ), type );
-        //NSLog( @"  - Original method: %@, implementation: %p",
+        //trc( @"Will swizzle %@ for %@, original state is:", NSStringFromSelector( sel ), type );
+        //trc( @"  - Original method: %@ points to implementation: %p",
         //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
-        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //trc( @"  - Proxy method: %@ points to implementation: %p",
         //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
 
         // Do the swizzle!
@@ -123,44 +123,36 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
     }
 }
 
-//static int depth = 0;
-NSValue *PearlSwizzleIMP(Class type, SEL sel, IMP original, id _Nonnull block) {
+static int depth = 0;
+NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id _Nonnull block) {
     char *returnType = method_copyReturnType( class_getInstanceMethod( type, sel ) );
     NSString *proxySel = strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) );
     Method proxyMethod = class_getInstanceMethod( type, NSSelectorFromString( proxySel ) );
-    Method originalMethod = class_getInstanceMethod( type, sel );
-    if (original == method_getImplementation( originalMethod ) ) {
-        // Proxy was called even though original implementation is installed!  This is bad.
-        // Some swizzled implementation blocks call back into themselves to invoke the original imp (which was temporarily restored
-        // before invoking the block).  Sometimes, however, Apple appears to have put a proxy there which re-triggers
-        // the swizzled implementation instead of the original implementation, causing infinite recursion.
-        // Sadly, I know of no way to avoid this or recover from it, so we just fail.
-        err( @"WARNING: Illegal call into swizzled proxy %@, bypassed ObjC messaging, falling back with nil return value.", proxySel );
-        return nil;
-    }
+    Method originalMethod = class_getInstanceMethod( [host class], sel );
 
     @try {
-        //NSLog( @"Handling swizzled %@ (depth: %d):", NSStringFromSelector( sel ), depth );
-        //NSLog( @"  - Original method: %@, implementation: %p",
+        //trc( @"Will handle swizzled %@ (depth: %d), state is:", NSStringFromSelector( sel ), depth );
+        //trc( @"  - Original method: %@ points to implementation: %p",
         //    NSStringFromSelector( method_getName( originalMethod ) ), method_getImplementation( originalMethod ) );
-        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //trc( @"  - Proxy method: %@ points to implementation: %p",
         //    NSStringFromSelector( method_getName( proxyMethod ) ), method_getImplementation( proxyMethod ) );
-        //if (++depth > 9)
-        //    NSLog( @"stuck in recurse loop?" );
+        if (++depth > 99) {
+            err( @"stuck in recurse loop?" );
+            return nil;
+        }
 
         // Temporarily restore the unswizzled state.
         method_exchangeImplementations( proxyMethod, originalMethod );
-
-        //NSLog( @"Restored original implementation:" );
-        //NSLog( @"  - Original method: %@, implementation: %p",
+        //trc( @"Temporarily restored original implementation at the original method:" );
+        //trc( @"  - Original method: %@ points to implementation: %p",
         //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
-        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //trc( @"  - Proxy method: %@ points to implementation: %p",
         //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
 
         NSValue *returnValue = nil;
         NSUInteger size, alignment;
         NSGetSizeAndAlignment( returnType, &size, &alignment );
-        //NSLog( @"Invoking swizzled implementation." );
+        //trc( @"Invoking swizzle block." );
         if (!size) // 0, void
             ((void (^)(void))block)();
 
@@ -200,15 +192,15 @@ NSValue *PearlSwizzleIMP(Class type, SEL sel, IMP original, id _Nonnull block) {
         return returnValue;
     }
     @finally {
-        //--depth;
+        --depth;
         free( returnType );
 
         // Restore the swizzled state.
         method_exchangeImplementations( originalMethod, proxyMethod );
-        //NSLog( @"Restored swizzled implementation:" );
-        //NSLog( @"  - Original method: %@, implementation: %p",
+        //trc( @"Restored swizzled implementation at original method, state is:" );
+        //trc( @"  - Original method: %@ points to implementation: %p",
         //    NSStringFromSelector(method_getName( originalMethod )), method_getImplementation( originalMethod ) );
-        //NSLog( @"  - Swizzled method: %@, implementation: %p",
+        //trc( @"  - Proxy method: %@ points to implementation: %p",
         //    NSStringFromSelector(method_getName( proxyMethod )), method_getImplementation( proxyMethod ) );
     }
 }

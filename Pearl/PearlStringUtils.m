@@ -280,4 +280,11 @@ NSArray *NumbersRanging(double min, double max, double step, NSNumberFormatterSt
     return groups;
 }
 
+- (nullable const char *)cStringUsingEncoding:(NSStringEncoding)encoding length:(nullable NSUInteger *)length NS_RETURNS_INNER_POINTER {
+    if (length)
+        *length = [self lengthOfBytesUsingEncoding:encoding];
+
+    return [self cStringUsingEncoding:encoding];
+}
+
 @end

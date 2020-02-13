@@ -59,6 +59,8 @@ __END_DECLS
 - (NSString *)stringByReplacingMatchesOf:(NSString *)pattern withTemplate:(NSString *)templ;
 - (NSString *)stringByReplacingMatchesOfExpression:(NSRegularExpression *)expression withTemplate:(NSString *)templ;
 
+- (const char *)cStringUsingEncoding:(NSStringEncoding)encoding length:(NSUInteger *)length NS_RETURNS_INNER_POINTER;
+
 /** Returns an array with substrings of this string matching the capture groups in the expression for the first match of the expression against this string.
  * Note: Returns NSNull for groups that did not participate in the match. */
 - (NSArray<NSString *> *)firstMatchGroupsOfExpression:(NSRegularExpression *)expression;

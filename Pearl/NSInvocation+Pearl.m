@@ -95,14 +95,14 @@
 
 @end
 
-static int depth = 0;
-static NSMutableDictionary *imps;
+//static int depth = 0;
+//static NSMutableDictionary *imps;
 
 IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
 
     @synchronized (type) {
-        if (!imps)
-            imps = [NSMutableDictionary new];
+        //if (!imps)
+        //    imps = [NSMutableDictionary new];
 
         Method originalMethod = class_getInstanceMethod( type, sel );
         if (!originalMethod)
@@ -121,9 +121,9 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
         if (class_addMethod( type, sel, original, methodTypes ))
             originalMethod = class_getInstanceMethod( type, sel );
 
-        if (!imps[[NSValue valueWithPointer:original]])
-            imps[[NSValue valueWithPointer:original]] = strf( @"%@:orig", PearlDescribeCShort( type ) );
-        imps[[NSValue valueWithPointer:replacement]] = strf( @"%@:proxy", PearlDescribeCShort( type ) );
+        //if (!imps[[NSValue valueWithPointer:original]])
+        //    imps[[NSValue valueWithPointer:original]] = strf( @"%@:orig", PearlDescribeCShort( type ) );
+        //imps[[NSValue valueWithPointer:replacement]] = strf( @"%@:proxy", PearlDescribeCShort( type ) );
         //trc( @"Will swizzle %@ for %@, original state is:", NSStringFromSelector( sel ), type );
         //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
         //        NSStringFromSelector( method_getName( originalMethod ) ),
@@ -137,110 +137,6 @@ IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement) {
         // Do the swizzle!
         method_exchangeImplementations( originalMethod, proxyMethod );
         return original;
-    }
-}
-
-NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id _Nonnull block) {
-
-    char *returnType = method_copyReturnType( class_getInstanceMethod( type, sel ) );
-    NSString *proxySel = strf( @"%@_PearlSwizzleProxy_%@", NSStringFromClass( type ), NSStringFromSelector( sel ) );
-    Method proxyMethod = class_getInstanceMethod( type, NSSelectorFromString( proxySel ) );
-    Method originalMethod = nil;
-    for (Class hostType = [host class]; hostType; hostType = class_getSuperclass( hostType )) {
-        originalMethod = class_getInstanceMethod( hostType, sel );
-        if (originalMethod && imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]])
-            break;
-        originalMethod = nil;
-    }
-    if (!originalMethod) {
-        err( @"Couldn't find swizzled base method for %@ on %@", NSStringFromSelector( sel ), host );
-        return nil;
-    }
-
-    @try {
-        //trc( @"Will handle swizzled %@ (depth: %d), state is:", NSStringFromSelector( sel ), depth );
-        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( originalMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-        //        @((long)method_getImplementation( originalMethod )) );
-        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( proxyMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-        //        @((long)method_getImplementation( proxyMethod )) );
-        if (++depth > 99) {
-            err( @"stuck in recurse loop?" );
-            return nil;
-        }
-
-        // Temporarily restore the unswizzled state.
-        method_exchangeImplementations( proxyMethod, originalMethod );
-        //trc( @"Temporarily restored original implementation at the original method:" );
-        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( originalMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-        //        @((long)method_getImplementation( originalMethod )) );
-        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( proxyMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-        //        @((long)method_getImplementation( proxyMethod )) );
-
-        NSValue *returnValue = nil;
-        NSUInteger size, alignment;
-        NSGetSizeAndAlignment( returnType, &size, &alignment );
-        //trc( @"Invoking swizzle block." );
-        if (!size) // 0, void
-            ((void ( ^ )(void))block)();
-
-        else if (size <= sizeof( char )) { // 1
-            char value = ((char ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else if (size <= sizeof( int )) { // 2 - 4
-            int value = ((int ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else if (size <= sizeof( id )) { // 5 - 8
-            id value = ((id ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else if (size <= sizeof( CGSize )) { // 9 - 16
-            CGSize value = ((CGSize ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else if (size <= sizeof( CGRect )) { // 17 - 32
-            CGRect value = ((CGRect ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else if (size <= sizeof( CGAffineTransform )) { // 33 - 48
-            CGAffineTransform value = ((CGAffineTransform ( ^ )(void))block)();
-            returnValue = [NSValue value:&value withObjCType:returnType];
-        }
-
-        else
-            abort(/* return value size not yet supported. */);
-
-        return returnValue;
-    }
-    @finally {
-        --depth;
-        free( returnType );
-
-        // Restore the swizzled state.
-        method_exchangeImplementations( originalMethod, proxyMethod );
-        //trc( @"Restored swizzled implementation at original method, state is:" );
-        //trc( @"  - method: [base = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( originalMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( originalMethod )]],
-        //        @((long)method_getImplementation( originalMethod )) );
-        //trc( @"  - method: [prox = %@] --> impl: [%@ @%@]",
-        //        NSStringFromSelector( method_getName( proxyMethod ) ),
-        //        imps[[NSValue valueWithPointer:method_getImplementation( proxyMethod )]],
-        //        @((long)method_getImplementation( proxyMethod )) );
     }
 }
 

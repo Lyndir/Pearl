@@ -272,7 +272,7 @@ static NSMutableSet *dismissableResponders;
 @implementation UIView(PearlUIUtils)
 
 //+ (void)load {
-//    PearlSwizzle( [UIView class], @selector( accessibilityIdentifier ), ^NSString *, (UIView *self), {
+//    PearlSwizzle( UIView, @selector( accessibilityIdentifier ), NSString *, {
 //        @try {
 //            skipAccessibilityIdentifier = YES;
 //            return [self accessibilityIdentifier]?: [self infoShortName];

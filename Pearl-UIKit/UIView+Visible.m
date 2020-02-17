@@ -14,14 +14,11 @@
     if (self.visible == visible)
         return;
 
-    PearlSwizzle( [UIView class], @selector( setAlpha: ), ^, (UIView *self, CGFloat desiredAlpha), {
+    PearlSwizzle( UIView, @selector( setAlpha: ), void, {
         [self _pearl_visible_setDesiredAlpha:desiredAlpha];
 
-        if (self.visible)
-            [self setAlpha:desiredAlpha];
-        else
-            [self setAlpha:0];
-    } );
+        orig( self, sel, self.visible? desiredAlpha: 0 );
+    }, CGFloat desiredAlpha );
     objc_setAssociatedObject( self, @selector( visible ), @(visible), OBJC_ASSOCIATION_RETAIN );
     
     if (!visible)

@@ -47,8 +47,8 @@ static CGSize PearlNoIntrinsicMetric;
     objc_setAssociatedObject( self, @selector( minimumIntrinsicSize ),
         [NSValue valueWithCGSize:aMinimumIntrinsicSize], OBJC_ASSOCIATION_RETAIN );
 
-    PearlSwizzleTR( [self class], @selector( intrinsicContentSize ), ^CGSize, (UIView *self), {
-        CGSize intrinsicContentSize = [self intrinsicContentSize];
+    PearlSwizzle( UIView, @selector( intrinsicContentSize ), CGSize, {
+        CGSize intrinsicContentSize = orig( self, sel );
 
         CGSize minimumIntrinsicSize = self.minimumIntrinsicSize;
         if (minimumIntrinsicSize.width != UIViewNoIntrinsicMetric)
@@ -57,9 +57,9 @@ static CGSize PearlNoIntrinsicMetric;
             intrinsicContentSize.height = MAX( intrinsicContentSize.height, minimumIntrinsicSize.height );
 
         return intrinsicContentSize;
-    }, CGSizeValue );
-    PearlSwizzleTR( [self class], @selector( sizeThatFits: ), ^CGSize, (UIView *self, CGSize fitSize), {
-        CGSize fittingSize = [self sizeThatFits:fitSize];
+    } );
+    PearlSwizzle( UIView, @selector( sizeThatFits: ), CGSize, {
+        CGSize fittingSize = orig( self, sel, fitSize );
 
         CGSize minimumIntrinsicSize = self.minimumIntrinsicSize;
         if (minimumIntrinsicSize.width != UIViewNoIntrinsicMetric)
@@ -68,7 +68,7 @@ static CGSize PearlNoIntrinsicMetric;
             fittingSize.height = MAX( fittingSize.height, minimumIntrinsicSize.height );
 
         return fittingSize;
-    }, CGSizeValue );
+    }, CGSize fitSize );
 }
 
 - (void)setAlignmentRectInsets:(UIEdgeInsets)alignmentRectInsets {

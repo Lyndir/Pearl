@@ -5,36 +5,27 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 /** For the given type, trigger the given implementation when `sel` is called.
  *
- * You can call `sel` from the implementation block to invoke the original implementation.
+ * To invoke the original implementation at \code sel \endcode, call \code super( self, sel, <args> ) \endcode.
  *
- * @param type The class on which to install the swizzled implementation.
+ * @param type The literal class on which to install the swizzled implementation.
  * @param sel The selector of the method whose implementation should be interjected.
  * @param rv A block-style return value representation of the swizzled method, ie. \code ^returnType \endcode
- * @param args A block-style arguments definition of the swizzled method, ie. \code (id self, methodArguments) \endcode
  * @param imp A block-style method implementation, eg. \code { return arg + 5; } \endcode
- *
- * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
+ * @param args A block-style arguments definition of the swizzled method, eg. \code UIView *v, CGFloat a \endcode
  */
-#define PearlSwizzle(type, sel, rv, args, imp) \
-    PearlSwizzleTR(type, sel, rv, args, imp, nonretainedObjectValue)
-
-/** PearlSwizzle variant for non-id return value types.
- *
- * @param tr The method used for getting the return type's primitive value out of an NSValue.
- *
- * @return NO if type' sel has been previously swizzled by us.  In this case, no change is made.
- */
-#define PearlSwizzleTR(type, sel, rv, args, imp, tr) ({                   \
-    __typeof__(type) _type = (type); __typeof__(sel) _sel = (sel);          \
-    PearlSwizzleDo( _type, _sel, imp_implementationWithBlock( rv args {  \
-        return [PearlSwizzleIMP( _type, _sel, self, rv imp ) tr];                  \
-    } ) );                                                                  \
+#define PearlSwizzle(type, sel, rv, imp, ...) ({                   \
+    rv (__block *orig)( type*, SEL, ##__VA_ARGS__ ) = nil; SEL s##el = (sel);          \
+    orig = (__typeof__(orig))PearlSwizzleDo( [type class], sel, imp_implementationWithBlock( ^rv (type *self, ##__VA_ARGS__) imp ) ); \
+})
+#define PearlSwizzleD(type, sel, rv, imp, ...) ({                   \
+    rv (__block *orig)( id, SEL, ##__VA_ARGS__ ) = nil; SEL s##el = (sel);          \
+    orig = (__typeof__(orig))PearlSwizzleDo( type, sel, imp_implementationWithBlock( ^rv (id self, ##__VA_ARGS__) imp ) ); \
 })
 extern IMP PearlSwizzleDo(Class type, SEL sel, IMP replacement);
-extern NSValue *PearlSwizzleIMP(Class type, SEL sel, id host, id block);
 
 /**
  * Initialize an NSInvocation populated with the current varargs starting after `args`.

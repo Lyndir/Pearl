@@ -10,32 +10,31 @@
 + (void)load {
 
     for (Class type in @[ [UILabel class], [UITextField class], [UITextView class] ]) {
-        PearlSwizzle( type, @selector( updateConstraints ), ^, (id self), {
+        PearlSwizzleD( type, @selector( updateConstraints ), void, {
             [self _pearl_fontMod_updateFont];
-            [self updateConstraints];
+            orig( self, sel );
         } );
-        PearlSwizzle( type, @selector( setFont: ), ^, (UIView *self, UIFont *originalFont), {
+        PearlSwizzleD( type, @selector( setFont: ), void, {
             UIFont *newFont = originalFont;
 
             if (!NSNullToNil( [originalFont.fontDescriptor objectForKey:@"NSCTFontUIUsageAttribute"] ) &&
-                !([(id)self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] &&
-                    [(id)self adjustsFontForContentSizeCategory])) {
-                CGFloat appliedFontScale = self.appliedFontScale = self.noFontScale? 1: UIApp.preferredContentSizeCategoryFontScale;
-                newFont = [originalFont fontWithSize:originalFont.pointSize * appliedFontScale];
+                !([self respondsToSelector:@selector( adjustsFontForContentSizeCategory )] && [self adjustsFontForContentSizeCategory])) {
+                [self setAppliedFontScale:[self noFontScale]? 1: UIApp.preferredContentSizeCategoryFontScale];
+                newFont = [originalFont fontWithSize:originalFont.pointSize * [self appliedFontScale]];
             }
 
-            if (UIAccessibilityIsBoldTextEnabled() && !self.noFontBolding && !self.originalFont) {
-                UIFont *originalFont = self.originalFont = newFont;
-                UIFontDescriptor *boldFontDescriptor = [originalFont.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+            if (UIAccessibilityIsBoldTextEnabled() && ![self noFontBolding] && ![self originalFont]) {
+                [self setOriginalFont:newFont];
+                UIFontDescriptor *boldFontDescriptor = [newFont.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
                 newFont = [UIFont fontWithDescriptor:boldFontDescriptor size:0]?: newFont;
             }
-            if ((!UIAccessibilityIsBoldTextEnabled() || self.noFontBolding) && self.originalFont) {
-                newFont = newFont? [self.originalFont fontWithSize:newFont.pointSize]: self.originalFont;
-                self.originalFont = nil;
+            if ((!UIAccessibilityIsBoldTextEnabled() || [self noFontBolding]) && [self originalFont]) {
+                newFont = newFont? [[self originalFont] fontWithSize:newFont.pointSize]: [self originalFont];
+                [self setOriginalFont:nil];
             }
 
-          [(UILabel *)self setFont:newFont];
-        } );
+            orig( self, sel, newFont );
+        }, UIFont *originalFont );
     }
 }
 

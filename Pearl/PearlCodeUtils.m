@@ -228,7 +228,7 @@ uint64_t PearlSecureRandom() {
 
     NSMutableString *hex = [NSMutableString stringWithCapacity:self.length * 2];
     for (NSUInteger i = 0; i < self.length; ++i)
-        [hex appendFormat:@"%02hhx", ((char *)self.bytes)[i]];
+        [hex appendFormat:@"%02hhX", ((char *)self.bytes)[i]];
 
     return hex;
 }

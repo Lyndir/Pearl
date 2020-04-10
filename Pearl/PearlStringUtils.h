@@ -25,7 +25,7 @@ extern NSString *strtl(NSString *tableName, NSString *format, ...) NS_FORMAT_FUN
 extern NSMutableAttributedString *stra(id string, NSDictionary *attributes);
 extern NSMutableAttributedString *strra(id string, NSRange range, NSDictionary *attributes);
 extern NSMutableAttributedString *strarm(id string, id attributes, ...) NS_REQUIRES_NIL_TERMINATION;
-extern NSMutableAttributedString *straf(id format, ...); // Only supports %@ in format string.
+extern NSMutableAttributedString *straf(id format, ...) NS_REQUIRES_NIL_TERMINATION; // Only supports %@ in format string.
 
 #define PearlString(format, ...) strf( format, ##__VA_ARGS__ )
 #define PearlAttributeString(string, ...) stra( string, ##__VA_ARGS__ )

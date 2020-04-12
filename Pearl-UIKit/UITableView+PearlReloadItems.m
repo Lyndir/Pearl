@@ -146,6 +146,8 @@
     @catch (NSException *e) {
         wrn( @"Exception while reloading sections for table.  Falling back to a full reload.\n%@", [e fullDescription] );
         @try {
+            [dataSource removeAllObjects];
+            [dataSource addObjectsFromArray:newSections.array];
             [self reloadData];
         }
         @catch (NSException *e) {

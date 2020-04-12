@@ -35,10 +35,10 @@ UIEdgeInsets UIEdgeInsetsForRectSubtractingRect(CGRect insetRect, CGRect subtrac
     CGPoint topLeftInset = CGPointMinusCGPoint( bottomRightFrom, topLeftBounds );
     CGPoint bottomRightInset = CGPointMinusCGPoint( bottomRightBounds, topLeftFrom );
 
-    CGFloat top = topLeftFrom.y <= insetRect.origin.y && bottomRightFrom.y < insetRect.size.height? MAX( 0, topLeftInset.y ): 0;
-    CGFloat left = topLeftFrom.x <= insetRect.origin.x && bottomRightFrom.x < insetRect.size.width? MAX( 0, topLeftInset.x ): 0;
-    CGFloat bottom = topLeftFrom.y > insetRect.origin.y && bottomRightFrom.y >= insetRect.size.height? MAX( 0, bottomRightInset.y ): 0;
-    CGFloat right = topLeftFrom.x > insetRect.origin.y && bottomRightFrom.x >= insetRect.size.width? MAX( 0, bottomRightInset.x ): 0;
+    CGFloat top = topLeftFrom.y <= topLeftBounds.y && bottomRightFrom.y < bottomRightBounds.y? MAX( 0, topLeftInset.y ): 0;
+    CGFloat left = topLeftFrom.x <= topLeftBounds.x && bottomRightFrom.x < bottomRightBounds.x? MAX( 0, topLeftInset.x ): 0;
+    CGFloat bottom = topLeftFrom.y > topLeftBounds.y && bottomRightFrom.y >= bottomRightBounds.y? MAX( 0, bottomRightInset.y ): 0;
+    CGFloat right = topLeftFrom.x > topLeftBounds.x && bottomRightFrom.x >= bottomRightBounds.x? MAX( 0, bottomRightInset.x ): 0;
 
     return UIEdgeInsetsMake( top, left, bottom, right );
 }

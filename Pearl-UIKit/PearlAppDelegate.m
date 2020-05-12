@@ -266,7 +266,7 @@ static NSURL *iTunesAppURL(NSString *__app) {
     [PearlConfig get].notificationsSupported = YES;
     [PearlConfig get].notificationsChecked   = YES;
 
-    dbg(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
+    trc(@"APN Device Token Hex: %@", [deviceToken encodeHex]);
 }
 
 

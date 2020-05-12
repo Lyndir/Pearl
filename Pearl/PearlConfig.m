@@ -163,7 +163,6 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
         [anInvocation getArgument:&newValue atIndex:2];
         if (newValue == [NSNull null])
             newValue = nil;
-        dbg(@"%@.%@ = [%@ ->] %@", [self class], selector, currentValue, newValue);
 
         if (newValue && ![newValue isKindOfClass:[NSString class]] && ![newValue isKindOfClass:[NSNumber class]]
             && ![newValue isKindOfClass:[NSDate class]] && ![newValue isKindOfClass:[NSArray class]]

@@ -167,8 +167,8 @@
             BOOL restored = NO;
             // Find constraint holder for constraint: first common container for both items.
             for (UIView *constraintHolder = self; constraintHolder; constraintHolder = [constraintHolder superview])
-                if ((!constraint.firstItem || [constraint.firstItem isDescendantOfView:constraintHolder]) &&
-                    (!constraint.secondItem || [constraint.secondItem isDescendantOfView:constraintHolder])) {
+                if ((![constraint.firstItem isKindOfClass:[UIView class]] || [constraint.firstItem isDescendantOfView:constraintHolder]) &&
+                    (![constraint.secondItem isKindOfClass:[UIView class]] || [constraint.secondItem isDescendantOfView:constraintHolder])) {
                     [constraintHolder addConstraint:constraint];
                     restored = YES;
                     break;

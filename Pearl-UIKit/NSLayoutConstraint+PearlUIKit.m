@@ -114,8 +114,8 @@
   UIView *constraintHolder = nil;
   for (NSLayoutConstraint *constraint in layoutConstraints)
     if (!constraintHolder ||
-        ![constraint.firstItem isDescendantOfView:constraintHolder] ||
-        ![constraint.secondItem isDescendantOfView:constraintHolder])
+        !([constraint.firstItem isKindOfClass:[UIView class]] && [constraint.firstItem isDescendantOfView:constraintHolder]) ||
+        !([constraint.secondItem isKindOfClass:[UIView class]] && [constraint.secondItem isDescendantOfView:constraintHolder]))
       constraintHolder = [constraint constraintHolder];
 
   return constraintHolder;

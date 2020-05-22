@@ -7,7 +7,7 @@
 
 @interface PearlHangDetector : NSObject
 
-@property(nonatomic, assign, readonly) BOOL running;
+@property(atomic, assign, readonly) BOOL running;
 
 - (instancetype)init;
 - (instancetype)initWithHangAction:(void ( ^ )(NSTimeInterval hangTime))hangAction;

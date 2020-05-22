@@ -7,12 +7,12 @@
 
 @interface PearlHangDetector()
 
-@property(nonatomic, strong) NSDate *latestPing;
-@property(nonatomic, copy) VoidBlock pingBlock, pongBlock;
-@property(nonatomic, assign) dispatch_queue_t pingQueue, pongQueue;
-@property(nonatomic) NSTimeInterval pingInterval, pongInterval, hangTimeout;
-@property(nonatomic, copy) void (^hangAction)(NSTimeInterval);
-@property(nonatomic, assign) BOOL running;
+@property(atomic, strong) NSDate *latestPing;
+@property(atomic, copy) VoidBlock pingBlock, pongBlock;
+@property(atomic, assign) dispatch_queue_t pingQueue, pongQueue;
+@property(atomic) NSTimeInterval pingInterval, pongInterval, hangTimeout;
+@property(atomic, copy) void (^hangAction)(NSTimeInterval);
+@property(atomic, assign) BOOL running;
 
 @end
 
@@ -69,9 +69,7 @@
     self.running = YES;
     self.latestPing = [NSDate date];
 
-    Weakify( self );
     dispatch_async( self.pingQueue, self.pingBlock = dispatch_block_create( DISPATCH_BLOCK_NO_QOS_CLASS, ^{
-        Strongify( self );
         if (!self.running)
             return;
 
@@ -81,7 +79,6 @@
             PearlQueueAfter( self.pingInterval, self.pingQueue, self.pingBlock );
     } ) );
     dispatch_async( self.pongQueue, self.pongBlock = dispatch_block_create( DISPATCH_BLOCK_NO_QOS_CLASS, ^{
-        Strongify( self );
         if (!self.running)
             return;
 

@@ -6,6 +6,10 @@
 
 @implementation UIView(Visible)
 
+- (BOOL)hasVisibility {
+    return objc_getAssociatedObject( self, @selector( visible ) ) != nil;
+}
+
 - (BOOL)visible {
     return [objc_getAssociatedObject( self, @selector( visible ) )?: @YES boolValue];
 }
@@ -17,10 +21,15 @@
     PearlSwizzle( UIView, @selector( setAlpha: ), void, {
         [self _pearl_visible_setDesiredAlpha:desiredAlpha];
 
-        orig( self, sel, self.visible? desiredAlpha: 0 );
+        [UIView animateWithDuration:0 animations:^{
+            orig( self, sel, self.visible? desiredAlpha: 0 );
+        }                completion:^(BOOL finished) {
+            if ([self hasVisibility])
+                [self setHidden:!self.visible];
+        }];
     }, CGFloat desiredAlpha );
     objc_setAssociatedObject( self, @selector( visible ), @(visible), OBJC_ASSOCIATION_RETAIN );
-    
+
     if (!visible)
         [self setAlpha:self.alpha];
     else

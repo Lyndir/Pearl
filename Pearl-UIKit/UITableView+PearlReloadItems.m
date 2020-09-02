@@ -49,7 +49,7 @@
             }
             else if (newSections)
                 [dataSource replaceObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange( 0, dataSource.count )]
-                                        withObjects:newSections];
+                                        withObjects:newSections.array];
 
             return;
         }

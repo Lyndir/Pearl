@@ -196,8 +196,10 @@
     wrn(@"No attributes when creating keychain query.");
 
     NSMutableDictionary *query = [NSMutableDictionary dictionaryWithObject:(__bridge id)kSecClassValue forKey:(__bridge id)kSecClass];
-    [query addEntriesFromDictionary:kSecAttrDictionary];
-    [query addEntriesFromDictionary:kSecMatchDictionary];
+    if (kSecAttrDictionary)
+        [query addEntriesFromDictionary:kSecAttrDictionary];
+    if (kSecMatchDictionary)
+        [query addEntriesFromDictionary:kSecMatchDictionary];
 
     return query;
 }

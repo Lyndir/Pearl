@@ -70,6 +70,7 @@ NSString *const PearlConfigChangedNotification = @"PearlConfigChangedNotificatio
             NSStringFromSelector( @selector(askForReviews) )       : @NO,
             NSStringFromSelector( @selector(reviewAfterLaunches) ) : @10,
             NSStringFromSelector( @selector(reviewInApp) )         : @YES,
+            NSStringFromSelector( @selector(reviewedVersion) )     : @NO,
 
             NSStringFromSelector( @selector(fontSize) )            : @([[PearlStrings get].fontSizeNormal intValue]),
             NSStringFromSelector( @selector(largeFontSize) )       : @([[PearlStrings get].fontSizeLarge intValue]),

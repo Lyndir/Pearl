@@ -30,8 +30,8 @@ static char NotificationObserversKey;
     PearlAddNotificationObserverTo( self, _name, _object, _queue, _block )
 #define PearlAddNotificationObserverTo(_host, _name, _object, _queue, _block) \
     ( { \
-        id observer = nil; \
-        if (&_name) { \
+        __block id observer = nil; \
+        if (_host && &_name) { \
             __weak __typeof(_host) wHost = _host; \
             void (^__noteblock)(id _self, NSNotification *note) = (_block); \
             NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
@@ -46,7 +46,7 @@ static char NotificationObserversKey;
                         __strong __typeof(_host) host = wHost; \
                         if (host) \
                             __noteblock(host, note); \
-                        else \
+                        else if (observer) \
                             [[NSNotificationCenter defaultCenter] removeObserver:observer]; \
                     }]; \
             notificationObservers[(_name)] = observer; \
@@ -58,17 +58,21 @@ static char NotificationObserversKey;
 #define PearlRemoveNotificationObserver(_name) PearlRemoveNotificationObserverFrom( self, _name );
 #define PearlRemoveNotificationObserverFrom(_host, _name) \
     ( { \
-        NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
-        [[NSNotificationCenter defaultCenter] removeObserver:notificationObservers[(_name)] name:(_name) object:nil]; \
-        [notificationObservers removeObjectForKey:(_name)]; \
+        if (_host && &_name) { \
+            NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
+            [[NSNotificationCenter defaultCenter] removeObserver:notificationObservers[(_name)] name:(_name) object:nil]; \
+            [notificationObservers removeObjectForKey:(_name)]; \
+        } \
     } )
 
 /** Remove all notifications registered using the method above with 'self' as the host. */
 #define PearlRemoveNotificationObservers() PearlRemoveNotificationObserversFrom( self );
 #define PearlRemoveNotificationObserversFrom(_host) \
     ( { \
-        NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
-        for (id notificationObserver in [notificationObservers allValues]) \
-            [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver]; \
-        objc_setAssociatedObject( _host, &NotificationObserversKey, nil, OBJC_ASSOCIATION_RETAIN ); \
+        if (_host) { \
+            NSMutableDictionary *notificationObservers = objc_getAssociatedObject( _host, &NotificationObserversKey ); \
+            for (id notificationObserver in [notificationObservers allValues]) \
+                [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver]; \
+            objc_setAssociatedObject( _host, &NotificationObserversKey, nil, OBJC_ASSOCIATION_RETAIN ); \
+        } \
     } )
